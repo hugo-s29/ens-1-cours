@@ -1,0 +1,66 @@
+\documentclass{../../notes}
+
+\title{DM n°2 -- FDI}
+\author{Hugo \scshape Salou}
+
+\tikzset{
+  initial text=,
+  node distance=2cm,
+  auto,
+  every state/.style={draw=deepblue,thick},
+  every path/.style={draw=deepblue},
+}
+
+\begin{document}
+  \maketitle
+  \chapter*{Exercice 1.}
+
+  On pose, pour tout $n \in \mathds{N}$, le mot $v_n = 1^n 2$.
+  Montrons que les mots de la suite $(v_n)_{n \in \mathds{N}}$ sont deux-à-deux non-équivalents pour la relation de congruence $\equiv_L$.
+
+  Considérons les mots $v_n = 1^n 2$ et $v_m = 1^m 2$ pour $n \neq m$.
+  Sans perdre en généralité, supposons $n < m$.
+  Soit $z$ le mot $2^{m-1}$.
+  Remarquons que l'on a  $v_m z = 1^m 2^m \in L$ mais que $v_n z = 1^n 2^m \not\in L$.
+
+  Le théorème de \textsc{Myhill-Nerodes} démontre ainsi que l'automate minimal reconnaissant $L$ a un nombre infini d'états.
+  On en conclut que $L$ n'est pas rationnel.
+
+  \chapter*{Exercice 2.}
+
+  On applique l'algorithme de Moore en calculant les classes d'équivalences des relations $\equiv_i$ pour tout $i \in \mathds{N}$ jusqu'à sa stationnarité :
+  \begin{itemize}
+    \item \textsl{\color{deepblue} Étape $0$.} les classes sont $\{1,2,6\}$ et $\{3,4,5\}$ ;\label{ex2-step0}
+    \item \textsl{\color{deepblue} Étape $1$.} les classes sont $\{1,2\}$, $\{6\}$ et $\{3,4,5\}$ ;\label{ex2-step1}
+    \item \textsl{\color{deepblue} Étape $2$.} les classes sont $\{1\}$, $\{2\}$, $\{6\}$ et $\{3,4,5\}$ ;\label{ex2-step2}
+    \item \textsl{\color{deepblue} Étape $3$.} les classes sont $\{1\}$, $\{2\}$, $\{6\}$ et $\{3,4,5\}$.\label{ex2-step3}
+  \end{itemize}
+  On s'arrête à l'étape~\hyperref[ex2-step3]{3} car on a atteint un point fixe (${\equiv_{\hyperref[ex2-step2]{2}}} = {\equiv_{\hyperref[ex2-step3]{3}}}$).
+
+  On en déduit l'automate minimal : chaque état représente une classe d'équivalence pour la congruence de \textsc{Nerode}.
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state,initial] (q1) {1};
+      \node[state,right of=q1] (q2) {2};
+      \node[state,right of=q2,gray] (q6) {6};
+      \node[state,above of=q2,accepting,rounded rectangle] (q3) {\phantom{--}$3,4,5$\phantom{--}};
+
+      \draw[->]
+        (q1) edge node{$a$} (q2)
+        (q1) edge node{$b$} (q3)
+        (q2) edge node{$b$} (q3)
+        (q3) edge[loop above] node{$a$} (q3)
+        ;
+
+      \draw[->,gray]
+        (q3) edge[gray] node[swap]{$b$} (q6)
+        (q2) edge[gray] node{$a$} (q6)
+        (q6) edge[gray,loop right] node{$a,b$} (q6)
+        ;
+        
+    \end{tikzpicture}
+    \caption{Automate minimal équivalent}
+  \end{figure}
+\end{document}

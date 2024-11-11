@@ -1,0 +1,467 @@
+\documentclass{../../td}
+
+\title{TD n°1\\\itshape Théorie des catégories}
+\author{Hugo \textsc{Salou}\\ Dept. Informatique}
+
+\let\thechapter\relax
+\renewcommand\thesection{\arabic{chapter}.\Alph{section}}
+\renewcommand\theequation{\arabic{chapter}.\arabic{equation}}
+\usetikzlibrary{decorations.pathmorphing}
+
+\let\bm\boldsymbol
+
+\begin{document}
+  \maketitle
+
+  \tableofcontents
+
+  \chapter{Exercice 1.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Montrer que la composition de deux monomorphismes est un monomorphisme.
+    Énoncer et prouver l'énoncé dual.
+  \end{slshape}
+
+  Soit $\mathbf{C}$ une catégorie. Soient $u,v : A \to B$ deux morphismes et soient~$f : B \to C$ et $g : C \to D$ deux monomorphismes.
+  \[
+  \begin{tikzcd}
+    A \arrow[bend left]{r}{u}\arrow[bend right]{r}{v} \arrow[bend left=45]{rr}{f \circ u} \arrow[bend right=45]{rr}{f \circ v} & B \arrow[tail]{r}{f} & C \arrow[tail]{r}{g} & D
+  \end{tikzcd}
+  .\]
+
+  Supposons que $g\circ f \circ u = g \circ f \circ v$, alors (par associativité de $\circ$ et monomorphisme $g$) on a $f \circ u = f \circ v$.
+  Mais, par le monomorphisme~$f$, on en déduit que $u = v$.
+  Ceci montre que l'on $g\circ f$ est un monomorphisme.
+
+  La propriété duale est que la composition de deux épimorphismes est un épimorphisme.
+  Par dualité de la preuve précédente, on obtient le résultat.
+
+  \[
+    \begin{tikzcd}
+      A \arrow[two heads]{r}{g} & B \arrow[two heads]{r}{f} \arrow[bend left=55]{rr}{u \circ f}\arrow[bend right=55]{rr}{v\circ f} & C \arrow[bend left]{r}{u} \arrow[bend right]{r}{v} & D
+    \end{tikzcd}
+  .\]
+
+  \chapter{Exercice 2.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $F : \mathbf{C} \to \mathbf{D}$ et $G : \mathbf{D} \to \mathbf{E}$ deux foncteurs contravariants.
+    Montrer que $G \circ F : \mathbf{C} \to \mathbf{E}$ est covariant.
+  \end{slshape}
+
+  Soient $u$ et $v$ deux morphismes composables de $\mathbf{C}$.
+  On calcule 
+  \[
+  G \circ F(u \circ v) = G(F(v)\circ F(u)) = G(F(u)) \circ G(F(v))
+  .\]
+  On en déduit donc que le foncteur $G \circ F$ est covariant.
+
+  \chapter{Exercice 3.}
+  \begin{slshape}
+    \color{deepblue}
+    Montrer que si $F$ est un foncteur fidèle et si $F(f)$ est un monomorphisme alors $f$ est un monomorphisme.
+  \end{slshape}
+
+  Soit $F : \mathbf{C} \to \mathbf{D}$ un foncteur fidèle.
+  Soit de plus $(f : B \to C) \in \mathbf{C}_1$ tel que $F(f)$ soit un monomorphisme.
+  Soient $u,v : A \to B$ deux morphismes de $\mathbf{C}$.
+
+  \[
+   \begin{tikzcd}
+     A \arrow[bend left]{r}{u} \arrow[bend right]{r}{v} & B \arrow{r}{f} & C\\[5mm]
+     F(A) \arrow[bend left]{r}{F(u)} \arrow[bend right]{r}{F(v)} & F(B) \arrow[tail]{r}{F(f)} & F(C)
+   \end{tikzcd}
+  .\]
+
+  Supposons que $F(u) \circ F(f) = F(v) \circ F(f)$.
+  On sait donc, par le monomorphisme $F(f)$, que $F(u) = F(v)$.
+  Et par fidélité de $F$ (injectivité pour les morphismes), on en déduit que $u = v$.
+
+  On en déduit que $f$ est un monomorphisme.
+
+  \[
+   \begin{tikzcd}
+     A \arrow[bend left]{r}{u} \arrow[bend right]{r}{v} & B \arrow[tail]{r}{f} & C\\[5mm]
+     F(A) \arrow[bend left]{r}{F(u)} \arrow[bend right]{r}{F(v)} & F(B) \arrow[tail]{r}{F(f)} & F(C)
+   \end{tikzcd}
+  .\]
+
+  \chapter{Exercice 4.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soient $\mathbf{C}$ et $\mathbf{D}$ deux catégories.
+    Définir une catégorie $[\mathbf{C},\mathbf{D}]$ (aussi notée $\mathbf{Fun}(\mathbf{C},\mathbf{D})$) telle que ses objets sont les foncteurs de $\mathbf{C}$ vers~$\mathbf{D}$, et ses morphismes sont les transformations naturelles entre ces foncteurs.
+  \end{slshape}
+
+  On définit la catégorie $[\mathbf{C}, \mathbf{D}]$ par 
+  \begin{itemize}
+    \item ses objets sont les foncteurs de $\mathbf{C}$ vers $\mathbf{D}$ ;
+    \item ses morphismes sont les transformations naturelles entre foncteurs ;
+    \item sa loi de composition est, pour $\eta$ et $\varepsilon$ deux transformations naturelles, 
+      $(\varepsilon \circ \eta)_A = \varepsilon_A \circ \eta_A$ quel que soit $A \in \mathrm{ob}(\mathbf{C})$.
+  \end{itemize}
+
+  Nous devons montrer que l'opération $\circ_{[\mathbf{C},\mathbf{D}]}$ est associative et unitaire.
+  Mais, ces propriétés découlent clairement de l'associativité et de l'unitarité de la loi $\circ_\mathbf{C}$.
+
+  \chapter{Exercice 5.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soient $F,G : \mathbf{C} \to \mathbf{D}$ deux foncteurs.
+    On suppose que $F$ et $G$ sont isomorphes (il existe un isomorphisme naturel entre $F$ et $G$).
+    Montrer que $F$ est plein, ou fidèle, ou quasi-inversible si, et seulement si, $G$ l'est.
+  \end{slshape}
+
+  On procède en trois temps.
+  Pour chaque propriété, on ne démontre qu'une implication mais, vue la symétrie des propriétés (et car l'inverse d'un isomorphisme est un isomorphisme), ceci démontre l'équivalence.
+
+
+  \begin{equation}
+  \begin{tikzcd}
+    F(A) \arrow{r}{F(f)}\arrow[squiggly]{d}{\eta_A} & F(B) \arrow[squiggly]{d}{\eta_B}\\
+    G(A) \arrow{r}{G(f)} & G(B)
+  \end{tikzcd}\label{ex5-diagram}
+  \end{equation}
+  On note ici $\eta_A :F(A) \leadsto G(A)$ lorsque $\eta_A$ est un isomorphisme de~$F(A)$ à $G(A)$.
+
+  \section{Stabilité de "plein" par isomorphisme.}\label{ex5-A}
+  Supposons $F$ plein.
+
+  Soit $\alpha : A \to B$ un morphisme de $\mathbf{D}$.
+  Par surjectivité, il existe un morphisme $f$ tel que $F(f) = \alpha$.
+  On pose $g = \eta_{A}^{-1}\circ f\circ \eta_B$ de telle sorte que l'on ait $G g = \alpha$ (\textit{c.f.} diagramme commutatif~\ref{ex5-diagram}).
+
+  D'où, $G$ est plein.
+
+  \section{Stabilité de "fidèle" par isomorphisme.}\label{ex5-B}
+
+  Supposons $F$ fidèle.
+
+  Soient $f,g : A \to B$ dans $\mathbf{C}$ tels que $G(f) = G(g)$ (on notera l'hypothèse $(\star)${\makeatletter\def\@currentlabel{\ensuremath{\star}}\makeatother\label{ex5-b-hypstar}}).
+  Montrons que $f = g$.
+
+  On calcule \[
+    \eta_B \circ F(g) =_{(\ref{ex5-diagram})} G(g)\circ \eta_A =_{(\ref{ex5-b-hypstar})} G(f)\circ \eta_B =_{(\ref{ex5-diagram})} \eta_B \circ F(f)
+  .\]
+
+  D'où, $F(g) = F(f)$ car $\eta_A$ et $\eta_B$ sont des isomorphismes donc des monomorphismes.
+  On en déduit que $f = g$, car $F$ est supposé fidèle.
+
+  On en déduit que $G$ est fidèle.
+
+  \section{Stabilité de "quasi-inversible" par isomorphisme.}
+
+  Supposons $F$ quasi-inversible.
+  Par le théorème de caractérisation des équivalences, on sait que $F$ est pleinement fidèle et essentiellement surjective.
+  Pour montrer que $G$ est quasi-inversible, il suffit de montrer que :
+  \begin{itemize}
+    \item $G$ est plein (prouvé en \ref{ex5-A}) ;
+    \item $G$ est fidèle (prouvé en \ref{ex5-B}) ;
+    \item $G$ est essentiellement surjectif.
+  \end{itemize}
+
+  Il ne reste que le dernier point à démontrer.
+  Soit $Y$ un objet de $\mathbf{D}$, montrons qu'il existe $X \in \mathrm{ob}(\mathbf{C})$ tel que $G(X)$ et $Y$ sont isomorphes dans $\mathbf{D}$.
+  On sait qu'il existe $X \in \mathrm{ob}(\mathbf{C})$ tel que $G(X)$ et $Y$ sont isomorphes ; soit un tel $X$.
+
+  \[
+  \begin{tikzcd}
+    Y \arrow[squiggly]{r} & F(X) \arrow[squiggly]{r}{\eta_X} & G(X)
+  \end{tikzcd}
+  .\] 
+  Ainsi, par composition d'isomorphismes, on sait que $Y$ et $G(X)$ sont isomorphes.
+
+  On en conclut que $G$ est quasi-inversible.
+
+  \chapter{Exercice 6.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $\mathbf{C}$ une catégorie possédant un objet final $\mathds{F}$.
+    Montrer que tout morphisme $f : \mathds{F} \to X$ est un monomorphisme.
+    Énoncer et prouver l'énoncé dual.
+  \end{slshape}
+
+  Comme $\mathds{F}$ est final, on sait donc que $\# \mathrm{Hom}(X,\mathds{F}) = 1$ quel que soit l'objet~$X \in \mathrm{ob}(\mathbf{C})$.
+  Soit $f : \mathds{F} \to Z$ et soient $u,v : X \to \mathds{F}$ des morphismes quelconques.
+  Supposons que $f\circ u = f\circ v$.
+
+  \[
+  \begin{tikzcd}
+    X \arrow[bend left]{r}{u}\arrow[bend right]{r}{v} & \mathds{F}\arrow{r}{f} & Z
+  \end{tikzcd}
+  .\] 
+  Comme $u,v \in \mathrm{Hom}(X, \mathds{F})$ de cardinal 1, on en déduit que $u = v$.
+
+  D'où $f$ est un monomorphisme.
+
+  \[
+  \begin{tikzcd}
+    X \arrow[bend left]{r}{u}\arrow[bend right]{r}{v} & \mathds{F}\arrow[tail]{r}{f} & Z
+  \end{tikzcd}
+  .\] 
+
+  L'énoncé dual est : tout morphisme $g : X \to \mathds{I}$ est un épimorphisme, où $\mathds{I}$ est un objet initial de $\mathbf{C}$.
+  Pour le démontrer, il suffit de procéder par dualité : le dual d'un objet initial est un objet final et le dual d'un épimorphisme est un monomorphisme.
+  \[
+  \begin{tikzcd}
+    X \arrow[two heads]{r}{g} & \mathds{I} \arrow[bend left]{r}{u}\arrow[bend right]{r}{v} & Z
+  \end{tikzcd}
+  .\]
+
+  \chapter{Exercice 7.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $\mathbf{Ens_f}$ la sous-catégorie pleine de $\mathbf{Ens}$ dont les objets sont des ensembles finis.
+    On définit une sous-catérorie pleine $\mathbf{C}$ de $\mathbf{Ens_f}$ dont les objets sont les sous-ensembles de $\mathds{N}$ de la forme $\llbracket 1, n \rrbracket = \{1,\ldots,n\}$.
+    Prouver que le foncteur d'inclusion de $\mathbf{C}$ dans $\mathbf{Ens_f}$ est une équivalence, de sorte que $\mathbf{C}$ soit un squelette de $\mathbf{Ens_f}$.
+  \end{slshape}
+
+  Soit \begin{align*}
+    F: \mathbf{C} &\longrightarrow \mathbf{Ens_f} \\
+    A &\longmapsto A\\
+    (u : A \to B) &\longmapsto (u : A \to B)
+  \end{align*}
+  le foncteur d'inclusion de $\mathbf{C}$ dans $\mathbf{Ens_f}$.
+  On applique le critère d'équivalence.
+  Pour cela, il suffit de montrer que $F$ est pleinement fidèle et essentiellement surjectif.
+
+  \begin{itemize}
+    \item Le foncteur $F$ est pleinement fidèle.
+      En effet, l'application 
+      \begin{align*}
+        \mathrm{id}_{\mathrm{Hom}(A,B)}: \mathrm{Hom}(A,B) &\longrightarrow \mathrm{Hom}(F(A),F(B)) = \mathrm{Hom}(A,B) \\
+        f &\longmapsto f
+      \end{align*}
+      est trivialement injective et surjective.
+    \item Le foncteur $F$ est essentiellement surjectif.
+      En effet, soit un ensemble fini $Y \in \mathrm{ob}(\mathbf{Ens_f})$.
+      On pose la partie $X = \llbracket 1, n \rrbracket$ de~$\mathds{N}$ où $n = \# Y$ (qui existe car $Y$ fini).
+      On conclut par  \[ F(X) = \llbracket 1, \# Y \rrbracket \cong Y. \]
+  \end{itemize}
+  On en déduit que $F$ définit une équivalence.
+
+  Pour justifier que $\mathbf{C}$ est un squelette, il suffit de remarquer que l'on a $\llbracket 1, n \rrbracket \cong S$ si, et seulement si $n = \# S$ où $S \in \mathrm{ob}(\mathbf{Ens_f})$.
+
+
+
+  \chapter{Exercice 8.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Montrer que $\mathbf{Ens}$ n'est pas équivalente à $\mathbf{Ens}^\mathrm{op}$.
+  \end{slshape}
+
+  Par l'absurde, supposons les deux catégories équivalentes.
+
+  Soit $F : \mathbf{Ens} \to \mathbf{Ens}^\mathrm{op}$ un foncteur d'équivalence et soit $Y$ un ensemble fini non-vide.
+
+  Remarquons que 
+  \begin{itemize}
+    \item il existe une unique fonction de l'ensemble vide $\emptyset$ vers un autre ensemble quelconque $Y$ ;
+    \item il n'existe aucune fonction de $Y$ vers $\emptyset$.
+  \end{itemize}
+
+  Par équivalence et car un isomorphisme conserve le cardinal, 
+  \[ \# \mathrm{Hom}_\mathbf{Ens}(\emptyset, Y) = \# \mathrm{Hom}_{\mathbf{Ens}^\mathrm{op}}(\emptyset,Y) = \# \mathrm{Hom}_\mathbf{Ens}(Y, \emptyset). \]
+  Mais, ceci est absurde : $\# \mathrm{Hom}_\mathbf{Ens}(\emptyset,Y) = 1$ et $\# \mathrm{Hom}_\mathbf{Ens}(Y,\emptyset) = 0$ (car $Y$ supposé non vide).
+
+  \chapter{Exercice 9.}
+
+  \begin{slshape}
+    \color{deepblue}
+    \begin{enumerate}
+      \item Montrer que l'application qui, à un groupe $G$ associe son centre, et à un morphisme sa restriction au centre, n'est pas un foncteur.
+      \item Construire un foncteur $\mathbf{Grp} \to \mathbf{Ab}$ envoyant un groupe $G$ sur son "abélianisé" $G^\mathrm{ab} = G / D(G)$ où
+        \[
+        D(G) = \mleft\langle\, g h g^{-1} h^{-1}\;\middle|\; g,h \in G\,\mright\rangle 
+        .\] 
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item On procède par l'absurde.
+      On considère l'application 
+      \begin{align*}
+        \varphi: \mathrm{GL}_2(\mathds{R}) &\longrightarrow \mathrm{GL}_3(\mathds{R}) \\
+        \begin{pmatrix} a&b\\c&d \end{pmatrix}  &\longmapsto \begin{pmatrix} a & b & 0\\ c & d & 0\\ 0 & 0 & 1 \end{pmatrix} 
+      .\end{align*}
+      Or, on sait que le centre de $\mathrm{GL}_n(\mathds{R})$ est l'ensemble des matrices de la forme $\lambda \mathbf{I}_n$ où $\lambda \in \mathds{R}^\star$.
+      Ainsi, l'application $\varphi\big|_{Z(\mathrm{GL}_2(\mathds{R}))}$ \textbf{n'}est \textbf{pas} à valeur dans $Z(\mathrm{GL}_3(\mathds{R}))$.
+      
+      Par exemple, la matrice $\bm{A} = 2\mathbf{I}_2$ est dans le centre de $\mathrm{GL}_2(\mathds{R})$ mais la matrice 
+      \[
+        \bm{B} = \begin{pmatrix} \bm{A} & \mathbf{0}_{2\times 1} \\ \mathbf{0}_{1\times 2} & \mathbf{I}_1 \end{pmatrix} 
+      \] n'y est pas.
+    \item On pose l'application
+      \begin{align*}
+        \Psi: \mathbf{Grp} &\longrightarrow \mathbf{Ab} \\
+        G &\longmapsto G^\mathrm{ab}=G / D(G)\\
+        (u:G\to H) &\longmapsto (\Psi(u) : G^\mathrm{ab} \to H^\mathrm{ab})
+      .\end{align*}
+      Justifions de la construction de $\Phi(u)$.
+      On note $\pi_G : G \to G^\mathrm{ab}$ et $\pi_H : H \to H^\mathrm{ab}$ les projections canoniques sur $G^\mathrm{ab}$ et $H^\mathrm{ab}$ respectivement.
+      On pose $f = \pi_H \circ u : G \to H^\mathrm{ab}$.
+      Et, on factorise le morphisme $f$ par $D(G)$ :
+      \[
+      \begin{tikzcd}
+        G \arrow{rr}{f} \arrow{dr}{\pi_G} && H^\mathrm{ab}\\
+        & G^\mathrm{ab} \arrow{ur}{g}&
+      \end{tikzcd}
+      .\]
+      Ceci peut être effectué car :
+      \begin{itemize}
+        \item on a $D(G)\triangleleft G$ ;
+        \item on a $D(G) \subseteq \ker f$ car, pour $g,h \in G$, on a
+          \[
+            u(g\:h\:g^{-1}\:h^{-1}) = u(g)\:u(h)\:u(g)^{-1}\:u(h)^{-1} \in D(H)
+          ,\] d'où $\ker f = \ker(\pi_H \circ u) \supseteq D(G)$.
+      \end{itemize}
+
+      Il ne reste que deux points à vérifier :
+      \begin{itemize}
+        \item $\Psi(\mathrm{id}_G) = \mathrm{id}_{G^\mathrm{ab}}$, ce qui découle clairement de la définition de $\Psi$ pour les morphismes.
+        \item $\Psi(u \circ v) = \Psi(u) \circ \Psi(v)$, où $v : G \to H$ et $u: H \to K$.
+          \[
+          \begin{tikzcd}
+            G \arrow{r}{v}\arrow[bend left]{rr}{u \circ v} \arrow{d}{\pi_G} & H \arrow{r}{u} \arrow{d}{\pi_H} & K \arrow{d}{\pi_K}\\
+            \Psi(G) \arrow{r}{\Psi(v)}\arrow[bend right]{rr}{\Psi(u)\circ \Psi(v)} & \Psi(H) \arrow{r}{\Psi(y)} & \Psi(K)
+          \end{tikzcd}
+        \]
+        Pour démontrer l'égalité souhaitée, il suffit de remarquer que
+        \begin{align*}
+          (\Psi(v)\circ \Psi(u))(g\: D(G)) &= \Psi(v)(\Psi(u)(g\:D(G)))\\
+          &= \Psi(v)(u(g)\:D(H)) = v(u(g))\:D(K)
+        ,\end{align*}
+        car l'égalité $\Psi(u)(g\: D(G)) = u(g)\:D(H)$ est vérifiée (et de même pour $v$).
+      \end{itemize}
+  \end{enumerate}
+
+  \chapter{Exercice 10.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $G$ un groupe.
+    On considère la catégorie (encore notée $G$) où le seul objet est $\bullet$, et où $\mathrm{Hom}(\bullet,\bullet) = G$.
+    Plus précisément, les morphismes sont indexés par $G$, et si $g,h : \bullet \to \bullet$ sont deux morphismes, leur composé est $g\circ h = gh : \bullet \to \bullet$.
+    Soient $G$ et $H$ deux groupes vus comme des catégories.
+    \begin{enumerate}
+      \item Décrire les foncteurs de $G$ vers $H$.
+      \item Soit $S$ et $T$ deux foncteurs $G \to H$. Montrer qu'il existe une transformation naturelle $S \Rightarrow T$ si, et seulement si, $S$ et $T$ sont conjugués (\textit{i.e.} il existe $h \in H$ tel que, pour tout $g \in G$, on ait~$T(g) = h\:S(g)\:h^{-1}$).
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Les foncteurs $F$ de $G$ vers $H$ vérifient :
+      \begin{itemize}
+        \item $F(1_G) = 1_H$ ;
+        \item $F(gh) = F(g \circ h) = F(g) \circ F(h) = F(g)\:F(h)$ ;
+        \item $F(g^{-1}) = (F(g))^{-1}$, en effet: \[
+            \hspace{-1cm}
+          F(g^{-1}) \circ F(g) = F(g^{-1}\:g) = F(1_G) = F(g \: g^{-1}) = F(g) \circ F(g^{-1}).
+        \]
+      \end{itemize}
+      Ce sont donc les homomorphismes de groupes de $G$ vers $H$.
+    \item On procède par équivalence.
+
+      On a une transformation naturelle $\varphi : S \Rightarrow T$ si, et seulement si le diagramme 
+      \[
+      \begin{tikzcd}
+        \bullet \arrow{r}{S(g)} \arrow{d}{\varphi_\bullet} &\bullet \arrow{d}{\varphi_\bullet}\\
+        \bullet \arrow{r}{T(g)} & \bullet
+      \end{tikzcd}
+      \]
+      commute, ce qui est vrai si, et seulement si $\varphi_\bullet \circ T(g) = S(g) \circ \varphi_\bullet$.
+      Et, par définition de la catégorie $G$ et que $\varphi_\bullet$ est un morphisme de la catégorie $G$, il existe donc $h \in G$ tel que $\varphi_\bullet = h$.
+      Ceci termine l'équivalence : \[
+      \varphi : S \Rightarrow T \; \iff \; h\;T(g) = S(g)\;h \;\iff\; T(g) = h\;S(g)\;h^{-1}
+      .\] 
+  \end{enumerate}
+
+  \chapter{Exercice 11.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soient $A$ et $B$ deux ensembles, leur ensemble des parties peuvent être minis de l'ordre partiel $\subseteq$. On peut alors considérer leur catégorie posétale, toujours notées $\wp(A)$ et $\wp(B)$.
+    \begin{enumerate}
+      \item Représenter sous forme d'un graphe la catégorie $\wp(\{1,2,3\})$ (faire un dessin avec des points et des flèches).
+      \item Soit $f : A \to B$ une application.
+        Montrer que l'image directe et l'image réciproque définies ci-dessous définissent des foncteurs entre ces catégories :
+        \begin{align*}
+          f: \wp(A) &\longrightarrow \wp(B) &\; f^{-1} : \wp(B) &\longrightarrow \wp(A) \\
+          S&\longmapsto \{f(a)  \mid a \in S\}  & S &\longmapsto \{a \in A  \mid f(a) \in S\}
+        .\end{align*}
+        (N'oubliez pas de définir l'action de $f$ et $f^{-1}$ sur les morphismes de ces catégories !)
+      \item Conclure que l'ensemble des parties $\wp$ peut être vu comme un foncteur covariant $\mathbf{Ens}\to \mathbf{Cat}$, ou un foncteur contravariant~$\mathbf{Ens} \to \mathbf{Cat}$ en fonction de l'action sur les morphismes choisie.
+    \end{enumerate}
+  \end{slshape}
+  \begin{enumerate}
+    \item On dessine le graphe (simplifié par la transitivité et réflexivité de $\subseteq$) :
+      \[
+        \begin{tikzcd}[row sep={40,between origins}, column sep={40,between origins}]
+            & \emptyset \ar{rr}\ar{dd}\ar{dl} & & \{1\} \vphantom{\times_{S_1}} \ar{dd}\ar{dl} \\
+          \{2\}  \ar[crossing over]{rr} \ar{dd} & & \{1,2\}  \\
+            & \{3\}   \ar{rr} \ar{dl} & &  \{1,3\}  \ar{dl} \\
+          \{2,3\}  \ar{rr} && \{1,2,3\}  \ar[from=uu,crossing over].
+        \end{tikzcd}
+      \]
+    \item Procédons en deux temps. On se rappelle que l'on considère une catégorie \textit{posétale}.
+      \begin{itemize}
+        \item On définit 
+          \begin{align*}
+            f: \mathbf{Ens} &\longrightarrow \mathbf{Ens} \\
+            A &\longmapsto f(A)\\ 
+            (u: A \to B) &\longmapsto (f(u) : f(A) \to f(B))
+          .\end{align*}
+          Montrons que c'est un foncteur covariant.
+          \begin{itemize}
+            \item On a $f(\mathrm{id}_A) = \mathrm{id}_{f(A)}$ car $\mathrm{Hom}(A,A) = \{u_{A,A}=\mathrm{id}_A\}$ et $\mathrm{Hom}(f(A),f(A)) = \{u_{f(A),f(A)} = \mathrm{id}_{f(A)}\}$.
+            \item Si on a $a : X \to Y$ et $b : Y \to Z$, alors 
+              on a l'égalité~$f(b \circ a) = f(b) \circ f(a)$.
+              En effet, en langage ensembliste, on a $X \subseteq Y\subseteq Z$ et on
+              doit montrer que \[
+              f(X) \subseteq f(Y) \subseteq f(Z)
+              ,\] ce qui est vrai par croissance (pour $\subseteq$) de l'image directe.
+          \end{itemize}
+          On en conclut que $f$ est un foncteur covariant.
+        \item On définit 
+          \begin{align*}
+            f^{-1}: \mathbf{Ens} &\longrightarrow \mathbf{Ens} \\
+            A &\longmapsto f^{-1}(A)\\ 
+            (u: A \to B) &\longmapsto (f^{-1}(u) : f^{-1}(A) \to f^{-1}(B))
+          .\end{align*}
+          Montrons que c'est un foncteur covariant.
+          \begin{itemize}
+            \item On a $f^{-1}(\mathrm{id}_A) = \mathrm{id}_{f^{-1}(A)}$ car \[
+                \mathrm{Hom}(A,A) = \{u_{A,A}=\mathrm{id}_A\}
+              \]
+              et
+              \[
+                \mathrm{Hom}(f^{-1}(A),f^{-1}(A)) = \{u_{f^{-1}(A),f^{-1}(A)} = \mathrm{id}_{f^{-1}(A)}\}.
+            \]
+            \item Si on a $a : X \to Y$ et $b : Y \to Z$, alors 
+              on a l'égalité~$f^{-1}(b \circ a) = f^{-1}(b) \circ f^{-1}(a)$.
+              En effet, en langage ensembliste, on a $X \subseteq Y\subseteq Z$ et on
+              doit montrer que \[
+              f^{-1}(X) \subseteq f^{-1}(Y) \subseteq f^{-1}(Z)
+              ,\] ce qui est vrai par croissance (pour $\subseteq$) de l'image réciproque.
+          \end{itemize}
+          On en conclut que $f^{-1}$ est un foncteur covariant.
+      \end{itemize}
+    \item On pose le foncteur 
+      \begin{align*}
+        \wp: \mathbf{Ens} &\longrightarrow \mathbf{Cat} \\
+        A &\longmapsto \wp(A)\\
+        (u: A \to B) &\longmapsto \redQuestionBox
+      .\end{align*}
+      \begin{itemize}
+        \item Avec $\redQuestionBox = (\wp(u) : \wp(A) \to \wp(B))$ défini comme l'image directe, on définit un foncteur $\wp$ covariant.
+        \item Avec $\redQuestionBox = (\wp(u) : \wp(B) \to \wp(A))$ défini comme l'image réciproque, on définit un foncteur $\wp$ contravariant.
+      \end{itemize}
+  \end{enumerate}
+\end{document}

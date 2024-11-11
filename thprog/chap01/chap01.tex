@@ -1,0 +1,362 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Induction.}\label{sec:induction}
+
+  \minitoc
+
+  \section{Définitions inductives d'ensembles.}
+
+  Dans ce cours, les ensembles définis par induction représenteront les données utilisées par les programmes.
+  De plus, les notions d'ensembles et de types seront identiques : on identifiera :
+  \[
+    \underbrace{n \in \mathsf{nat}}_\text{ensemble} \quad\longleftrightarrow\quad \underbrace{n : \mathsf{nat}}_\text{type}
+  .\]
+
+  \begin{exm}[Types définis inductivement]
+    Dans le code ci-dessous, on définit trois types : le type $\mathsf{nat}$ représentant les entiers naturels (construction de Peano) ; le type $\mathsf{nlist}$ représentant les listes d'entiers naturels ; et le type $\mathsf{t}$ représentant les arbres binaires étiquetés par des entiers aux nœuds.
+
+    \begin{lstlisting}[language=caml,caption=Trois types définis inductivement]
+      type $\mathsf{nat}$ = Z | S of $\mathsf{nat}$
+      type $\mathsf{nlist}$ = Nil | Const of $\mathsf{nat} * \mathsf{nlist}$
+      type $\mathsf{t}_1$ = F | N of $\mathsf{t}_1 * \mathsf{nat} * \mathsf{t}_1$
+    \end{lstlisting}
+  \end{exm}
+
+  \begin{defn}
+    La \textit{définition inductive d'un ensemble $\mathsf{t}$} est la donnée de $k$ constructeurs $\mathtt{C}_1, \ldots, \mathtt{C}_k$, où chaque $\mathtt{C}_i$ a pour argument un $n_i$-uplet dont le type est $\mathsf{u}_1^i * \mathsf{u}_2^i * \cdots * \mathsf{u}_{n_i}^i$.
+    L'opération~"$*$" représente le produit cartésien, avec une notation "à la OCaml".
+    De plus, chaque $\mathsf{u}_j^i$ est, soit $\mathsf{t}$, soit un type pré-existant.
+  \end{defn}
+
+  \begin{exm}\label{exm:ind-t2-def}
+    ~
+    \begin{lstlisting}[language=caml,caption=Un exemple de type]
+      type $\mathsf{t}_2$ =
+      | F
+      | N2 of ($\mathsf{t} * \mathsf{nlist} * \mathsf{t}$)
+      | N3 of ($\mathsf{t} * \mathsf{nat} * \mathsf{t} * \mathsf{nat} * \mathsf{t}$)
+    \end{lstlisting}
+  \end{exm}
+
+  \begin{defn}
+    Les \textit{types algébriques} sont définis en se limitant à deux opérations :
+    \begin{itemize}
+      \item le produit cartésien "$*$" ;
+      \item le "ou", noté "$|$" ou "$+$", qui correspond à la somme disjointe ;
+    \end{itemize}
+  et un type :
+    \begin{itemize}
+      \item le type \texttt{unit}, noté $1$.
+    \end{itemize}
+  \end{defn}
+
+
+  \begin{exm}[Quelques types algébriques\ldots]
+    \begin{itemize}
+      \item Le type $\mathsf{bool}$ est alors défini par $1 + 1$.
+      \item Le type "jour de la semaine" est alors défini par l'expression $1 + 1 + 1 + 1 + 1 + 1 + 1$.
+      \item Le type $\mathsf{nat}$ vérifie l'équation $X = 1 + X$.
+      \item Le type $\mathsf{nlist}$ vérifie l'équation $X = 1 + \mathsf{nat} * X$.
+      \item Le type  $\mathsf{t\ option}$ est alors défini par $1 + \mathsf{t}$.
+    \end{itemize}
+  \end{exm}
+
+  Ces ensembles définis inductivement nous intéresse pour deux raisons :
+  \begin{itemize}
+    \item pour pouvoir calculer, c'est à dire définir des fonctions de $\mathsf{t}$ vers $\mathsf{t}'$ en faisant du \textit{filtrage} (\textit{i.e.} avec \texttt{match \ldots\ with})
+    \item raisonner / prouver des propriétés sur les éléments de $\mathsf{t}$ : "des preuves par induction".
+  \end{itemize}
+
+  \section{Preuves par induction sur un ensemble inductif.}
+
+  \begin{exm}
+    Intéressons nous à $\mathsf{nat}$. Pour prouver $\forall  x \in \mathsf{nat}, \mathcal{P}(x)$, il suffit de prouver \textit{deux} choses (parce que l'on a deux constructeurs à l'ensemble $\mathsf{nat}$) :
+    \begin{enumerate}
+      \item on doit montrer $\mathcal{P}(0)$ ;
+      \item et on doit montrer $\mathcal{P}(\mathtt{S}\ n)$ en supposant l'\textit{hypothèse d'induction} $\mathcal{P}(n)$.
+    \end{enumerate}
+  \end{exm}
+
+  \begin{rmk}
+    Dans le cas général, 
+    pour prouver  $\forall x \in  \mathsf{t}, \mathcal{P}(x)$, il suffit de prouver les $n$ propriétés ($n$ est le nombre de constructeurs de l'ensemble $\mathsf{t}$), où la $i$-ème propriété s'écrit :
+    \begin{quote}
+      On montre $\mathcal{P}(\mathtt{C}_i(x_1, \ldots, x_n))$ avec les hypothèses d'inductions $\mathcal{P}(x_j)$ lorsque $\mathsf{u}^i_j = \mathsf{t}$.
+    \end{quote}
+  \end{rmk}
+
+  \begin{exm}
+    Avec le type $\mathsf{t}_2$ défini dans l'exemple~\ref{exm:ind-t2-def}, on a trois constructeurs, donc trois cas à traiter dans une preuve par induction.
+    Le second cas s'écrit :
+    \begin{quote}
+      On suppose $\mathcal{P}(x_1)$ et $\mathcal{P}(x_3)$ comme hypothèses d'induction, et on montre $\mathcal{P}(\mathtt{N2}(x_1, k, x_3))$, où l'on se donne $k \in  \mathsf{nat}$.
+    \end{quote}
+  \end{exm}
+
+  \begin{exm}
+    On pose la fonction \texttt{red} définie par le code ci-dessous.
+    \begin{lstlisting}[language=caml,caption=Fonction de filtrage d'une liste]
+      let rec red $k$ $\ell$ = match $\ell$ with
+      | Nil -> Nil
+      | Cons($x$, $\ell$) -> let $\ell''$ = red $k$ $\ell''$ in
+                      if $x$ = $k$ then $\ell''$
+                      else Cons($x$, $\ell''$)
+    \end{lstlisting}
+    Cette fonction permet de supprimer toutes les occurrences de $k$ dans une liste $\ell$.
+
+    Démontrons ainsi la propriété
+    \[
+      \forall  \ell \in \mathsf{nlist}, \underbrace{\forall k \in \mathsf{nat}, \mathtt{size}(\mathtt{red}\ k\ \ell) \le \mathtt{size}\ \ell}_{\mathcal{P}(\ell)}
+    .\] 
+    Pour cela, on procède par induction. On a \textit{deux} cas.
+
+    \begin{enumerate}
+      \item Cas \texttt{Nil} : $\forall k \in \mathsf{nat}, \mathtt{size}(\mathtt{red}\ k\ \mathtt{Nil}) \le  \mathtt{size}\ \mathtt{Nil}$ ;
+      \item Cas $\mathtt{Cons}(x, \ell')$ : on suppose \[
+      \forall k \in \mathsf{nat}, \mathtt{size}(\mathtt{red}\ k\ \ell) \le \mathtt{size}\ \ell
+      ,\] et on veut montrer que \[
+        \forall k \in \mathsf{nat}, \mathtt{size}(\mathtt{red}\ k\ \mathtt{Cons}(x, \ell')) \le \mathtt{size}\ \mathtt{Cons}(x, \ell')
+      ,\] ce qui demandera deux sous-cas : si $x = k$ et si $x \neq k$.
+    \end{enumerate}
+  \end{exm}
+
+  \section{Définitions inductives de relations.}
+
+  Dans ce cours, les relations définies par inductions représenterons des propriétés sur des programmes.
+
+  \subsection*{Un premier exemple : notations et terminologies.}
+
+  Une relation est un sous-ensemble d'un produit cartésien.
+  Par exemple, la relation $\mathsf{le} \subseteq \mathsf{nat} * \mathsf{nat}$ est une relation binaire.
+  Cette relation représente $\le$, "\textit{lesser than or equal to}" en anglais.
+
+  \begin{nota}
+    On note $\mathsf{le}(n,k)$ dès lors que l'on a $(n,k) \in \mathsf{le}$.
+  \end{nota}
+
+  Pour définir cette relation, on peut écrire :
+  \begin{quote}
+    Soit $\mathsf{le} \subseteq \mathsf{nat} * \mathsf{nat}$ la relation qui vérifie :
+    \begin{enumerate}
+      \item $\forall n \in\mathsf{nat}, \mathsf{le}(n,n)$ ;
+      \item $\forall (n,k) \in\mathsf{nat} * \mathsf{nat}$, si $\mathsf{le}(n,k)$ alors $\mathsf{le}(n, \mathtt{S}\ k)$.
+    \end{enumerate}
+  \end{quote}
+  mais, on écrira plutôt :
+  \begin{quote}
+    Soit $\mathsf{le} \subseteq \mathsf{nat} * \mathsf{nat}$ la relation définie (inductivement) à partir des règles d'inférence suivantes :
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{L}_1]{\mathsf{le}(n,n)}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\mathsf{le}(n,k)}
+      \infer 1[\mathcal{L}_2]{ \mathsf{le}(n, \mathtt{S}\ k)}
+    \end{prooftree}
+    .\]
+  \end{quote}
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Dans la définition par règle d'inférence, chaque règle a \textit{une} conclusion de la forme $\mathsf{le}(\cdot ,\cdot )$.
+      \item Les \textit{métavariables} $n$ et $k$ sont quantifiées universellement de façon implicite.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{defn}
+    On appelle \textit{dérivation} ou \textit{preuve} un arbre construit en appliquant les règles d'inférence (ce qui fait intervenir l'\textit{instan\-tiation des métavariables}) avec des axiomes aux feuilles.
+  \end{defn}
+
+  \begin{exm}
+    Pour démontrer $\mathsf{le}(2,4)$, on réalise la dérivation ci-dessous.
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{L}_1]{\mathsf{le}(2,2)}
+      \infer 1[\mathcal{L}_2]{\mathsf{le}(2,3)}
+      \infer 1[\mathcal{L}_2]{\mathsf{le}(2,4)}
+    \end{prooftree}
+    \]
+  \end{exm}
+
+  \begin{exm}\label{exm:relation-triee-ind}
+    On souhaite définir une relation $\mathsf{tri\acute{e}e}$ sur $\mathsf{nlist}$.
+    Pour cela, on pose les trois règles ci-dessous :
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{T}_1]{\mathsf{tri\acute{e}e}\ \mathtt{Nil}}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \infer 0[\mathcal{T}_2]{\mathsf{tri\acute{e}e}\ \mathtt{Cons}(x, \mathtt{Nil})}
+    \end{prooftree}\ ,
+    \]
+    \[
+    \begin{prooftree}
+      \hypo{\mathsf{le}(x,y)}
+      \hypo{\mathsf{tri\acute{e}e}\ \mathtt{Cons}(x, \mathtt{Nil})}
+      \infer 2[\mathcal{T}_3]{\mathsf{tri\acute{e}e}\ \mathtt{Cons}(x, \mathtt{Cons}(y, \ell))}
+    \end{prooftree}
+    .\]
+
+    Ceci permet de dériver, modulo quelques abus de notations, que la liste \texttt{[1$;$3$;$4]} est triée :
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{L}_1]{1 \le 1}
+      \infer 1[\mathcal{L}_2]{1 \le 2}
+      \infer 1[\mathcal{L}_2]{1 \le 3}
+      \rewrite{\color{deepblue}\box\treebox}
+      \infer 0[\mathcal{L}_1]{3 \le 3}
+      \infer 1[\mathcal{L}_2]{3 \le 4}
+      \rewrite{\color{deepblue}\box\treebox}
+      \infer 0[\mathcal{R}_2]{\mathsf{tri\acute{e}e}\ \text{\texttt{[4]}}}
+      \infer 2[\mathcal{R}_3]{\mathsf{tri\acute{e}e}\ \text{\texttt{[3$;$4]}}}
+      \infer 2[\mathcal{R}_3]{\mathsf{tri\acute{e}e}\ \text{\texttt{[1$;$3$;$4]}}}
+    \end{prooftree}
+    .\] 
+    Les parties en bleu de l'arbre ne concernent pas la relation $\mathsf{tri\acute{e}e}$, mais la relation $\mathsf{le}$.
+  \end{exm}
+
+  \begin{exm}\label{exm:relation-mem-ind-1}
+    On définit la relation $\mathsf{mem}$ d'\textit{appartenance} à une liste.
+    Pour cela, on définit $\mathsf{mem} \subseteq \mathsf{nat} * \mathsf{nlist}$ par les règles d'inférences :
+    \[
+      \begin{prooftree}
+        \infer 0[\mathcal{M}_1]{\mathsf{mem}(k, \mathtt{Cons}(k, \ell))}
+      \end{prooftree}
+      \quad\quad
+      \begin{prooftree}
+        \hypo{\mathsf{mem}(k, \ell)}
+        \infer 1[\mathcal{M}_2]{\mathsf{mem}(k, \mathtt{Cons}(x,\ell))}
+      \end{prooftree}
+    .\]
+    On peut constater qu'il y a plusieurs manières de démontrer \[
+      \mathsf{mem}(0,\text{\texttt{[0$;$1$;$0]}})
+    .\] 
+    Ceci est notamment dû au fait qu'il y a deux `$0$' dans la liste.
+  \end{exm}
+
+  \begin{rmk}\label{rmk:pas-de-negation-dans-une-regle}
+    \textbf{Attention !}
+    Dans les prémisses d'une règle, on ne peut pas avoir "$\lnot \mathsf{r}(\ldots)$".
+    Les règles ne peuvent qu'être "constructive", donc pas de négation.
+  \end{rmk}
+
+  \begin{exm}\label{exm:relation-ne-ind}
+    On définit la relation $\mathsf{ne} \subseteq \mathsf{nat} * \mathsf{nat}$ de non égalité entre deux entiers.
+
+    On pourrait imaginer créer une relation d'égalité et de définir $\mathsf{ne}$ comme sa négation.
+    Mais non, c'est ce que nous dit la remarque~\ref{rmk:pas-de-negation-dans-une-regle}.
+
+    On peut cependant définir la relation $\mathsf{ne}$ par :
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{N}_1]{\mathsf{ne}(\mathtt{Z}, \mathtt{S}\ k)}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \infer 0[\mathcal{N}_2]{\mathsf{ne}(\mathtt{S}\ n, \mathtt{Z})}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\mathsf{ne}(n,k)}
+      \infer 1[\mathcal{N}_3]{\mathsf{ne}(\mathtt{S}\ n, \mathtt{S}\ k)}
+    \end{prooftree}
+    .\]
+
+    Il est également possible de définir $\mathsf{ne}$ à partir de la relation $\mathsf{le}$.
+  \end{exm}
+
+  \begin{exm}
+    En utilisant la relation $\mathsf{ne}$ (définie dans l'exemple~\ref{exm:relation-ne-ind}),
+    on peut revenir sur la relation d'appartenance et définir une relation alternative à celle de l'exemple~\ref{exm:relation-mem-ind-1}.
+    En effet, soit la relation $\mathsf{mem}'$ définie par les règles d'inférences ci-dessous :
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{M}_1']{\mathsf{mem}'(n, \mathtt{Cons}(n,\ell))}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\mathsf{mem}'(n,\ell)}
+      \hypo{\mathsf{ne}(k,n)}
+      \infer 2[\mathcal{M}_2']{\mathsf{mem}'(n, \mathtt{Cons}(k,\ell))}
+    \end{prooftree}
+    .\]
+
+    Il est (\textit{sans doute ?}) possible de montrer que :
+    \[
+      \forall (n,\ell) \in \mathsf{nat} * \mathsf{nlist}, \mathsf{mem}(n,\ell) \iff \mathsf{mem}'(n,\ell)
+    .\] 
+  \end{exm}
+
+  \begin{rmk}
+    Dans le cas général, une définition inductive d'une relation $\mathsf{Rel}$, c'est $k$ règles d'inférences de la forme :
+    \[
+    \begin{prooftree}
+      \hypo{H_1}
+      \hypo{\cdots}
+      \hypo{H_n}
+      \infer 3[\mathcal{R}_i]{\mathsf{Rel}(x_1, \ldots, x_m)}
+    \end{prooftree}
+    ,\] 
+    où chaque $H_j$ est :
+     \begin{itemize}
+       \item soit $\mathsf{Rel}(\ldots)$ ;
+       \item soit une autre relation pré-existante (\textit{c.f.} la définition de triée dans l'exemple~\ref{exm:relation-triee-ind}).
+    \end{itemize}
+    On appelle les $H_j$ les \textit{prémisses}, et $\mathsf{Rel}(x_1, \ldots, x_m)$ la \textit{conclusion}.
+    Elles peuvent faire intervenir des \textit{métavariables}.
+  \end{rmk}
+
+  \section{Preuves par induction sur une relation inductive.}
+
+  On souhaite établir une propriété de la forme \[
+  \forall (x_1, \ldots, x_m), \ \mathsf{Rel}(x_1, \ldots, x_m) \implies \mathcal{P}(x_1, \ldots, x_m)
+  .\] 
+  Pour cela, on établit autant de propriétés qu'il y a de règles d'inférences sur la relation $\mathsf{Rel}$.
+  Pour chacune de ces propriétés, on a une hypothèse d'induction pour chaque prémisse de la forme $\mathsf{Rel}(\ldots)$.
+
+  \begin{exm}[Induction sur la relation $\mathsf{le}$.]
+    Pour prouver une propriété \[
+    \forall (n,k) \in \mathsf{nat} * \mathsf{nat}, \quad \mathsf{le}(n,k) \implies \mathcal{P}(n,k)
+    ,\]
+    il suffit d'établir \textit{deux} propriétés :
+    \begin{enumerate}
+      \item $\forall n, \mathcal{P}(n,n)$ ;
+      \item pour tout $(n,k)$,  montrer $\mathcal{P}(n,\mathtt{S}\ k)$ en supposant $\mathcal{P}(n,k)$.
+    \end{enumerate}
+  \end{exm}
+
+  \begin{exm}
+    Supposons que l'on ait une fonction ayant pour signature $\mathtt{sort} : \mathsf{nlist} \to  \mathsf{nlist}$ qui trie une $\mathsf{nlist}$.
+    On souhaite démontrer la propriété :
+    \[
+    \forall \ell \in \mathsf{nlist}, \mathsf{tri\acute{e}e}(\ell) \implies \mathtt{sort}(\ell) = \ell
+    .\] 
+
+    On considère deux approches pour la démonstration : par induction sur $\ell$ et par induction sur la relation $\mathsf{tri\acute{e}e}$.
+    \begin{enumerate}
+      \item par induction sur la liste $\ell$, il y a \textit{deux} cas à traiter :
+        \begin{itemize}
+          \item montrer que $\mathsf{tri\acute{e}e}(\mathtt{Nil}) \implies \mathtt{sort}(\mathtt{Nil}) = \mathtt{Nil}$,
+          \item montrer que : \[
+          \mathsf{tri\acute{e}e}(\mathtt{Cons}(n,\ell)) \implies \mathtt{sort}(\mathtt{Cons}(n,\ell)) = \mathtt{Cons}(n,\ell)
+          ;\] 
+        \end{itemize}
+
+      \item par induction sur la relation $\mathsf{tri\acute{e}e}(\ell)$, il y a \textit{trois} cas à traiter :
+        \begin{itemize}
+          \item montrer $\mathtt{sort}(\mathtt{Nil}) = \mathtt{Nil}$,
+          \item montrer $\mathtt{sort}(\mathtt{Cons}(n,\mathtt{Nil})) = \mathtt{Cons}(n,\mathtt{Nil})$,
+          \item montrer $\mathtt{sort}(\mathtt{Cons}(x,\mathtt{Cons}(y, \ell)) = \mathtt{Cons}(x,\mathtt{Cons}(y,\ell)))$,
+            en supposant :
+            \begin{itemize}
+              \item $\mathsf{tri\acute{e}e}(\mathtt{Cons}(y,\ell))$ et $\mathcal{P}(\mathtt{Cons}(y,\ell))$, pour la première prémisse ;
+              \item $\mathsf{le}(x,y)$, pour la seconde prémisse.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+  \end{exm}
+
+\end{document}

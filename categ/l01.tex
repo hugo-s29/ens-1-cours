@@ -1,0 +1,349 @@
+\chapter{Introduction aux catégories.}
+
+\begin{defn}
+  Une \textit{catégorie} $\mathbf{C}$ est la donnée de
+  \begin{itemize}
+    \item une collection $C_0 = \mathrm{obj}(\mathbf{C})$ "d'objets",
+    \item une collection $C_1$ "de flèches".
+    \item d'une loi de composition $\circ_\mathrm{c}$, ou $\circ$, qui est associative et unitaire.
+  \end{itemize}
+
+  Une \textit{flèche} $f$ est muni d'un \textit{domaine} $\mathrm{dom}(f)$ et d'un  \textit{codomaine}~$\mathrm{cod}(f)$.
+
+  On dit que $(f_1, \ldots, f_n)$ est dit composable si $\mathrm{cod}(f_i) = \mathrm{dom}(f_{i+1})$, pour $i \in \llbracket 1, n-1\rrbracket$.
+
+  On dit qu'elle est associative si pour tout $(f,g,h)$ composable on a  \[
+    (h \circ g) \circ f = h \circ (g\circ f)
+  .\]
+
+  On dit qu'elle est unitaire si, pour tout objet $X$, on a une flèche $1_X = \mathrm{id}_X$ telle que, pour $(f, 1_X)$ et $(1_X, g_X)$ composables, on ait \[
+    f \circ 1_X = f  \quad\quad \text{et} \quad\quad 1_X \circ g = g
+  .\]
+
+  On appelle $\mathrm{Hom}(X,Y)$ la collection des $f$ vérifiant~$\mathrm{dom}(f) = X$ et $\mathrm{cod}(f) = Y$.
+\end{defn}
+
+\begin{exm}
+  \begin{itemize}
+    \item La catégorie $\mathbf{Set}$ est la catégories des ensembles, où les flèches sont des fonctions muni de la composition usuelle $f \circ g = x \mapsto f(g(x))$.
+    \item La catégorie $\mathbf{Grp}$ est la catégorie des groupes, où les flèches correspond aux morphismes de groupes muni de la loi de composition usuelle.
+    \item La catégorie $\mathbf{Ann}$ est la catégorie des anneaux, où les flèches correspond aux morphismes de anneaux muni de la loi de composition usuelle.
+    \item La catégorie $\mathbf{Co}$ est la catégorie des corps, où les flèches correspond aux morphismes de anneaux.
+    \item La catégorie $\mathbf{Vect}_\mathds{K}$ est la catégorie des $\mathds{K}$-espaces vectoriels,  où les flèches correspond aux applications linéaires.
+    \item La catégorie $\mathbf{Top}$ est la catégorie des corps, où les flèches correspond aux fonctions continues.
+  \end{itemize}
+\end{exm}
+
+Dans les exemples ci-dessus, les flèches sont des fonctions. Mais, ce n'est pas forcément le cas !
+On définit ci-dessous une catégorie où les flèches ne sont pas des fonctions, il n'y a pas de sens à "évaluer" une flèche dans les catégories.
+
+\begin{defn}
+  Soit $\le$ un ordre partiel sur un ensemble $X$. On appelle $\mathbf{Poset}(X)$ la catégorie suivante :
+  \begin{itemize}
+    \item les objets sont les éléments de $X$ ;
+    \item les flèches sont définies par : si $X \le Y$, alors \[
+        \mathrm{Hom}(X,Y) = \{ u_{X,Y} \} ;
+      \]
+    \item la loi de composition est : $u_{Y,Z} \circ u_{X,Y} = u_{X,Z}$.
+  \end{itemize}
+\end{defn}
+
+\section{Propriétés des morphismes.}
+
+\begin{defn}[Isomorphisme]
+  Deux objets $x$ et $y$ sont dits \textit{isomorphes} dans une catégorie $\mathbf{C}$ si on dispose de $x \xrightarrow{f} y$ et $y \xrightarrow g x$
+  telles que $g \circ f = 1_X$ et  $f \circ g = 1_Y$.
+  On note ainsi $x \cong y$.
+\end{defn}
+
+\begin{exm}
+  Dans $\mathbf{Set}$, $X$ et $Y$ sont isomorphes si on dispose d'une bijection entre  $X$ et $Y$.
+
+  Dans $\mathbf{Top}$, $X$ et $Y$ sont isomorphes s'il existe $f : X \to Y$ bijective et bicontinue (continue et réciproque $f^{-1}$ continue).
+\end{exm}
+
+\begin{defn}[Monomorphisme]
+  On dit que $Y \xrightarrow f Z$ est un \textit{monomorphisme} si, pour tout $(g,f)$ et  $(h,f)$ composables, on a 
+  \[
+  f \circ g = f \circ h \implies g = h
+  .\]
+  
+  \[
+    \begin{tikzcd}
+      X \arrow[bend right]{r}{g} \arrow[bend left]{r}{h} & Y \arrow{r}{f} & Z\\
+    \end{tikzcd}
+  .\]
+\end{defn}
+
+\begin{prop}
+  Dans $\mathbf{Set}$, les monomorphismes correspondent aux fonctions injectives.
+\end{prop}
+
+\begin{prv}
+  Soit $f : Y \to Z$ un monomorphisme.
+  Soient $x$ et $y$ tels que $f(x) = f(y)$.
+  On considère $X = \{*\}$, et on pose $g : * \mapsto x$ et $h : * \mapsto y$, et $f \circ g = f \circ h$, d'où  $f = h$ et donc  $x = y$.
+
+  L'autre sens est laissé en exercice.
+\end{prv}
+
+\begin{defn}
+  Une flèche $f$ est dit un \textit{épimorphisme} si \[
+    g \circ f = h \circ f \implies g = h
+  .\]
+  \[
+    \begin{tikzcd}
+      X \arrow{r}{f} & Y \arrow[bend right]{r}{g} \arrow[bend left]{r}{h} & Z\\
+    \end{tikzcd}
+  .\]
+\end{defn}
+
+\begin{prop}
+  Dans $\mathbf{Set}$, un épimorphisme correspond à une surjection.
+\end{prop}
+
+\begin{prv}
+  Laissé comme exercice au lecteur.
+\end{prv}
+
+\begin{defn}
+  Un objet $X$ est dit \textit{initial} si, pour tout objet $Y$, la collection $\mathrm{Hom}(X,Y)$ ne contient qu'un seul élément.
+\end{defn}
+
+\begin{exm}
+  \begin{itemize}
+    \item Dans $\mathbf{Set}$, l'ensemble vide $\emptyset$ est initial.
+    \item Dans $\mathbf{Grp}$, le groupe trivial $\{1\}$ est initial.
+    \item Dans $\mathbf{Vect}_\mathds{K}$, l'espace vectoriel trivial $( 0 )$ est initial.
+    \item Dans $\mathbf{Co}$, il n'y a pas d'objet initial.
+  \end{itemize}
+\end{exm}
+
+\begin{prop}
+  Si $X$ est initial, alors $\mathrm{Hom}(X,X) = \{1_X\}$.
+  Les objets initiaux sont uniques à isomorphismes près.
+\end{prop}
+
+\begin{prv}
+  Soient $X$ et $Y$ deux objets initiaux.
+  Ainsi, $\mathrm{Hom}(X,Y) = \{f\}$ et $\mathrm{Hom}(Y,X) = \{g\}$ ainsi $f \circ g = 1_Y$ et $g \circ f = 1_X$, d'où  $X \cong Y$.
+\end{prv}
+
+\begin{defn}
+  Un objet $X$ est \textit{final} ou \textit{terminal} si pour tout objet~$Y$, $\mathrm{Hom}(Y,X)$ est un singleton.
+\end{defn}
+
+\begin{prop}
+  Les objets terminaux sont uniques à isomorphisme près.
+\end{prop}
+
+\begin{prv}
+  Laissé comme exercice au lecteur.
+\end{prv}
+
+\begin{exm}
+  \begin{itemize}
+    \item Dans $\mathbf{Set}$, les éléments finaux sont les singletons.
+    \item Dans $\mathbf{Grp}$, l'élément final est le groupe trivial ${1}$, à isomorphisme près.
+  \end{itemize}
+\end{exm}
+
+\begin{defn}
+  Soient $\mathbf{C}$ et $\mathbf{D}$ deux catégories.
+  On dit que $F$ est un \textit{foncteur} de $\mathbf{C}$ vers $\mathbf{D}$, qu'on note $f : \mathbf{C} \to \mathbf{D}$ la donnée 
+  \begin{itemize}
+    \item d'une correspondance de la collection $C_0$ vers $D_0$ :
+      \begin{align*}
+        F: C_0 &\longrightarrow D_0 \\
+        X &\longmapsto F(X)
+      ,\end{align*}
+
+    \item d'une collection de correspondances indexées par les $(X,Y)$ de $\mathbf{C}$ :
+      \begin{align*}
+        \mathrm{Hom}(X,Y) &\longrightarrow \mathrm{Hom}(F(X),F(Y)) \\
+        (u : X \to Y) &\longmapsto (F(u) : F(X) \to F(Y))
+      ,\end{align*}
+      qui vérifie les conditions 
+      \begin{enumerate}
+        \item pour tout objet $X$ de $\mathbf{C}$,  on a $F(\mathrm{id}_X) = \mathrm{id}_{F(X)}$,
+        \item pour tous morphismes $u : X \to Y$ et $v : Y \to Z$, on a 
+          \[
+            F(v\circ u) = F(v) \circ F(u)
+          .\] 
+      \end{enumerate}
+  \end{itemize}
+  \[
+  \begin{tikzcd}
+    X \arrow{r}{u} \arrow[bend left]{rr}{v \circ u} & Y \arrow{r}{v} & Z
+  \end{tikzcd}
+  \]
+\end{defn}
+
+\begin{rmk}
+  Si $F : C \to D$ est un foncteur, et $f : X \to Y$ est un isomorphisme,
+  alors $F(f)$ est aussi un isomorphisme.
+\end{rmk}
+
+\begin{defn}
+  Soient $\mathbf{C}, \mathbf{D}$ et $\mathbf{E}$ trois catégories.
+  Soient $F : \mathbf{C} \to \mathbf{D}$ et $G : \mathbf{D} \to \mathbf{E}$ deux foncteurs.
+  On appelle \textit{composée} $G \circ F$ la fonction  $\mathbf{C} \to \mathbf{E}$ qui, 
+  \begin{itemize}
+    \item à tout objet $X$ de $\mathbf{C}$, associe $G(F(X))$ ;
+    \item et à tout morphisme $u : X \to Y$, associe $G(F(u)) : G(F(X)) \to G(F(Y))$.
+  \end{itemize}
+
+  En effet, pour tout objet $X$ de $\mathbf{C}$, on a $G(F(\mathrm{id}_X)) = G(\mathrm{id}_{F(X)}) = \mathrm{id}_{G(F(X))}$.
+  Et, pour tous morphismes $u : X \to Y$ et $v : Y \to Z$, on a \[
+    G(F(v \circ u)) = G(F(v) \circ F(u)) = G(F(v)) \circ G(F(u))
+  .\]
+\end{defn}
+
+\begin{exm}
+  \begin{item}
+    \item \textsl{Foncteurs d'oublis de structure.}
+      Soit $\mathbf{Top}$ la catégorie des espaces topologiques.
+      Notons
+      \begin{itemize}
+        \item les objets de $\mathbf{Top}$, $(X,\mathcal{O}(X))$ ;
+        \item les morphismes de $\mathbf{Top}$, $(X,\mathcal{O}(X)) \xrightarrow{f} (Y, \mathcal{O}(Y))$ avec $f : X \to Y$ et $f^{-1} : \mathcal{O}(X) \to \mathcal{O}(Y)$ ;
+      \end{itemize}
+
+      Le foncteur d'oubli $\mathcal{U} : \mathbf{Top} \to \mathbf{Ens}$ est définit comme suit :
+      \begin{itemize}
+        \item $\mathcal{U}((X,\mathcal{O}(X))) = X$ pour tout objet $(X,\mathcal{O}(X))$ de $\mathbf{Top}$ ;
+        \item $\mathcal{U}(f : (X, \mathcal{O}(X)) \to (Y, \mathcal{O}(Y))) = (f : X \to Y)$ pour tout morphisme de $\mathbf{Top}$.
+      \end{itemize}
+    \item Les fonctions croissantes entre deux catégories posétales sont des foncteurs.
+      Soient $(X,\le)$ et $(Y,\le)$ deux catégories posétales et $f$ une application croissante de $(X,\le)$ vers $(Y, \le)$.
+      Pour tous éléments $x,y$ de  $(X, \le)$ tels que $x \le y$, on a $f(x) \le f(y)$.
+
+      Notons $\mathrm{Hom}(x,y) = \{u_{x,y}\}$.
+      Dire que $f(x) \le f(y)$ si $x \le y$; c'est se donner une application $u_{x,y} \to u_{f(x),f(y)}$.
+      On a \[
+        f(\mathrm{id}_x) = f(u_{x,x}) = u_{f(x),f(x)} = \mathrm{id}_{f(X)}
+      .\] 
+      Si on a $u_{x,y}$ et $u_{y,z}$, alors $u_{x,z}$, c'est-à-dire  \[
+        f(u_{x,z}) = u_{f(x),f(z)} = f(u_{y,z} \circ  u_{x,y}) = u_{f(y),f(z)} \circ u_{f(x),f(y)}
+      .\]
+  \end{item}
+\end{exm}
+
+\begin{defn}
+  Soient $\mathbf{C}$ une catégorie, on définit la catégorie \textit{opposée} de $\mathbf{C}$, qu'on note $\mathbf{C}^\mathrm{op}$.
+  C'est la catégorie dont les objets sont ceux des $\mathbf{C}$, et les morphismes de la forme suivante $f^\mathrm{op} : Y\to X$ avec $f : X \to Y$ un morphisme de $\mathbf{C}$.
+
+  La loi de composition est $f^\mathrm{op} \circ g^\mathrm{op} : Z \to X$ avec $g : Y \to Z$ et $f : X \to Y$.
+
+  \[
+  \begin{tikzcd}
+    X \arrow{r}{f} \arrow{dr}{g\circ f} & Y \arrow{d}{g}\\
+    & Z
+  \end{tikzcd}
+  \quad\quad
+  \begin{tikzcd}
+    X & Y \arrow{l}{f^\mathrm{op}}\\
+    & Z \arrow{u}{g^\mathrm{op}} \arrow{ul}{f^\mathrm{op}\circ g^\mathrm{op} = (g \circ f)^\mathrm{op}}
+  \end{tikzcd}
+  .\]
+\end{defn}
+
+\begin{exm}
+  \begin{itemize}
+    \item \textsl{Foncteur contravariant.}
+      Soient $\mathbf{C}$ et $\mathbf{D}$ deux catégories.
+      On dit que $F$ est un foncteur contravariant de $\mathbf{C}$ vers $\mathbf{D}$ s'il est la donnée
+      \begin{itemize}
+        \item d'une correspondance $C_0 \to D_0 ; X \mapsto F(X)$ ;
+        \item d'une collection de correspondances 
+          \begin{align*}
+            \mathrm{Hom}(X,Y) &\longrightarrow \mathrm{Hom}(F(X),F(Y)) \\
+            (u : X \to Y) &\longmapsto (F(u) : F(Y) \to F(X))
+          ,\end{align*}
+          pour tous objets  $X,Y$ de  $\mathbf{C}$, tels que 
+          \begin{itemize}
+            \item pour tout objet $X$ de $\mathbf{C}$ , $F(\mathrm{id}_X) = \mathrm{id}_{F(X)}$ ;
+            \item pour tous morphismes $u : X \to Y$ et $v : Y \to Z$, on ait $F(v \circ u) = F(u) \circ F(v)$.
+          \end{itemize}
+      \end{itemize}
+
+      \[
+      \begin{tikzcd}
+        X \arrow{r}{u} \arrow{dr}{v\circ u} & Y \arrow{d}{v}\\
+        & Z
+      \end{tikzcd}
+        \implies
+      \begin{tikzcd}
+        F(Z) & \arrow{l}{F(u)} F(Y)\\
+        & F(X) \arrow{u}{F(v)} \arrow{ul}{F(v\circ u)}
+      \end{tikzcd}
+      .\] 
+  \end{itemize}
+\end{exm}
+
+\begin{rmk}
+  Un foncteur contravariant $F : \mathbf{C} \to \mathbf{D}$ est un foncteur $F : \mathbf{C}^{\mathrm{op}} \to \mathbf{D}$ ou $F : \mathbf{C} \to \mathbf{D}^{\mathrm{op}}$.
+\end{rmk}
+
+\begin{exm}
+  \begin{enumerate}
+    \item Un foncteur de dualité de la catégorie $\mathbf{Vect}_\mathds{K}$.
+      Soit $(-)^\star$ définie comme suit
+       \begin{align*}
+         (-)^\star: (\mathrm{Vect}_\mathds{K})_0 &\longrightarrow (\mathrm{Vect}_\mathds{K})_0  \\
+         V&\longmapsto  V^\star = \mathrm{Hom}_\mathds{K}(V,\mathds{K})
+      \end{align*}
+      où $\mathrm{Hom}_\mathds{K}(V,W)$ est l'ensemble des applications $\mathds{K}$-linéaires de $V$ vers $W$.
+
+      Montrons que $(-)^\star$ est un foncteur contravariant.
+      Soit $X$ un $\mathbb{K}$ espace vectoriel.
+      Ainsi, $(\mathrm{id}_X)^\star $
+
+      On définit l'application 
+      \begin{align*}
+        (-)^\mathrm{t} : (\mathrm{Vect}_\mathds{K})_1 &\longrightarrow (\mathrm{Vect}_\mathds{K})_1 \\
+        (u : V \to W) &\longmapsto 
+        \left(
+        \begin{array}{rl}
+          {}^\mathrm{t} u : W^\star &\to U^\star \\
+          \alpha &\mapsto \alpha \circ u
+        \end{array}
+        \right)
+      .\end{align*}
+
+      \[
+        \begin{tikzcd}
+          V \arrow{d}{u}\arrow{dr}{\alpha \circ u = {}^\mathrm{t}u(\alpha)}  \\
+          W \arrow{r}{\alpha} & \mathds{K}
+        \end{tikzcd}
+      .\]
+
+      Soient $u$ et $v$ deux applications $\mathds{K}$-linéaires.
+      \[
+        \begin{tikzcd}
+          X \arrow{r}{u} & Y \arrow{d}{v}\\
+                         &Z
+        \end{tikzcd}
+      .\]
+      Montrons que ${}^\mathrm{t}(v\circ u) = {}^\mathrm{t}u \circ {}^\mathrm{t}v$.
+      On a 
+      \begin{align*}
+        {}^\mathrm{t} (v \circ u) : \alpha \mapsto \alpha \circ v \circ u &= (\alpha \circ v) \circ u \\
+        &= {}^\mathrm{t} u(\alpha \circ v) \\
+        &= {}^\mathrm{t}u({}^\mathrm{t}v(\alpha)) \\
+      ,\end{align*}
+      donc on a bien ${}^\mathrm{t}(v\circ u) = {}^\mathrm{t}u \circ {}^\mathrm{t}v$.
+  \end{enumerate}
+\end{exm}
+
+\begin{defn}
+  On dit qu'une catégorie $\mathbf{C}$ est \textit{localement petite} si, pour tous objets $X$ et $Y$ de $\mathbf{C}$, la collection des morphismes entre $X$ et $Y$ forme un ensemble qu'on va noter $\mathrm{Hom}_\mathbf{C}(X,Y)$.
+
+  On dit qu'ne catégorie est petite si la collection des objets $C_0$ et des morphismes $C_1$ forment des ensembles.
+\end{defn}
+
+\begin{exm}
+  Les catégories $\mathbf{Grp}, \mathbf{Top}, \mathbf{Ens}, \mathbf{Vect}_\mathds{K}$ et $\mathbf{Ann}$ sont localement petites.
+
+  Les catégories posétales, et les topologies munies de l'inclusion sont des catégories petites.
+\end{exm}

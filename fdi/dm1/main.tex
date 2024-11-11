@@ -1,0 +1,131 @@
+\documentclass{../../notes}
+
+\title{DM n°1 -- FDI}
+\author{Hugo \scshape Salou}
+
+\tikzset{
+  initial text=,
+  node distance=2cm,
+  auto,
+  every state/.style={draw=deepblue,thick},
+  every path/.style={draw=deepblue},
+}
+
+\begin{document}
+  \maketitle
+  \chapter*{Exercice 1.}
+
+  On applique l'algorithme d'éliminations d'états sur l'automate.
+  Les différentes étapes sont représentées.
+
+  On commence par "détourer" l'automate (on ajoute $q_\mathrm{i}$ et $q_\mathrm{f}$).
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state,initial] (init) {$q_\mathrm{i}$};
+      \node[state,right of=init] (q1) {$1$};
+      \node[state,below right=1.5cm and 1.2cm of q1] (q3) {$3$};
+      \node[state,above right=1.5cm and 1.2cm of q3] (q2) {$2$};
+      \node[state,accepting,left of=q3] (final) {$q_\mathrm{f}$};
+
+      \draw[->] (init) edge node{$\varepsilon$} (q1)
+      (q1) edge node{$a$} (q2)
+      (q2) edge[bend left] node{$b$} (q3)
+      (q3) edge[bend left] node{$a$} (q2)
+      (q1) edge node[swap]{$b$} (q3)
+      (q3) edge node{$\varepsilon$} (final);
+    \end{tikzpicture}
+  \end{figure}
+
+  On supprime l'état $2$.
+  \vspace{-1.2cm}
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state,initial] (init) {$q_\mathrm{i}$};
+      \node[state,right of=init] (q1) {$1$};
+      \node[state,right=2cm of q1] (q3) {$3$};
+      \node[state,accepting,right of=q3] (final) {$q_\mathrm{f}$};
+
+      \draw[->] (init) edge node{$\varepsilon$} (q1)
+      (q1) edge node[swap]{$b\mid ab$} (q3)
+      (q3) edge[loop above] node{$ab$} (q3)
+      (q3) edge node{$\varepsilon$} (final);
+    \end{tikzpicture}
+  \end{figure}
+
+  On supprime les états $2$ et $3$.
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state,initial] (init) {$q_\mathrm{i}$};
+      \node[state,accepting,right=3cm of init] (final) {$q_\mathrm{f}$};
+
+      \draw[->] (init) edge node{$(b \mid ab) (ab)^\star$} (final);
+    \end{tikzpicture}
+  \end{figure}
+
+  On en déduit une expression régulière équivalente à l'automate initial : \[
+    (b  \mid ab) (ab)^\star
+  .\]
+
+  \chapter*{Exercice 2.}
+  \vspace{-0.5cm}
+  On procède en deux temps :
+  \begin{enumerate}
+    \item on réalise un DFA $\mathcal{A}_\text{\ref{step1}}$ reconnaissant le langage $\mathcal{L}((aba)^\star) = L$ ; \label{step1}
+    \item et on inverse les états finaux et non finaux (donnant $\mathcal{A}_\text{\ref{step2}}$).\label{step2}
+  \end{enumerate}
+  L'automate déterministe obtenu reconnaitra le langage $\Sigma^\star \setminus L$.
+
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state,initial,accepting] (q1) {1};
+      \node[state,right of=q1] (q2) {2};
+      \node[state,right of=q2] (q3) {3};
+      \node[state,below of=q2,gray] (trash) {4};
+
+      \draw[->]
+        (q1) edge node{$a$} (q2)
+        (q2) edge node{$b$} (q3)
+        (q3) edge[bend right=45] node[swap]{$a$} (q1)
+        ;
+
+      \draw[->,gray]
+        (q3) edge[gray,bend left=10] node{$b$} (trash)
+        (q1) edge[gray,bend right=10] node[swap]{$b$} (trash)
+        (q2) edge[gray] node {$a$} (trash)
+        (trash) edge[gray,loop left] node{$a,b$} (trash)
+        ;
+    \end{tikzpicture}
+    \caption{Automate fini déterministe pour l'étape \ref{step1}}
+  \end{figure}
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state,initial] (q1) {1};
+      \node[state,right of=q1,accepting] (q2) {2};
+      \node[state,right of=q2,accepting] (q3) {3};
+      \node[state,below of=q2,accepting] (trash) {4};
+
+      \draw[->]
+        (q1) edge node{$a$} (q2)
+        (q2) edge node{$b$} (q3)
+        (q3) edge[bend right=45] node[swap]{$a$} (q1)
+        (q3) edge[bend left=10] node{$b$} (trash)
+        (q1) edge[bend right=10] node[swap]{$b$} (trash)
+        (q2) edge node {$a$} (trash)
+        (trash) edge[loop left] node{$a,b$} (trash)
+        ;
+    \end{tikzpicture}
+    \caption{Automate fini déterministe pour l'étape \ref{step2}}
+  \end{figure}
+
+
+\end{document}

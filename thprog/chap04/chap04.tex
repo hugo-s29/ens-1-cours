@@ -1,0 +1,1793 @@
+% FELA DE LA YASIIN MARVIN PTCQ THE PARACYDE
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Sémantique opérationnelle.}
+
+  \minitoc
+
+  Depuis le début du cours, on s'est intéressé à la \textit{méthode inductive}.
+  On essaie d'appliquer cette méthode à "l'exécution" des "programmes".
+
+  On définira un programme comme un ensemble inductif : un programme est donc une structure de donnée.
+  L'exécution d'un programme sera décrit comme des relations inductives (essentiellement binaires) sur les programmes.
+  Définir ces relations, cela s'appelle la \textit{sémantique opérationnelle}.
+
+  On considèrera deux sémantiques opérationnelles
+  \begin{itemize}
+    \item la sémantique à grands pas, où l'on associe un résultat à un programme ;
+    \item la sémantique à petits pas, où l'on associe un programme "un peu plus tard" à un programme.
+  \end{itemize}
+
+  Notre objectif, dans un premier temps, est de définir OCaml, ou plutôt un plus petit langage fonctionnel inclus dans OCaml.
+
+  \section{Sémantique opérationnelle pour les expressions arithmétiques simples ($\mathsf{EA}$).}
+
+  On se donne l'ensemble $\mathds{Z}$ (on le prend comme un postulat).
+  On définit l'ensemble $\mathsf{EA}$ en Rocq par :
+  \begin{lstlisting}[language=coq,caption=Définition des expressions arithmétiques simples]
+    Inductive $\mathsf{EA}$ : Set :=
+    | $\mathtt{Cst}$ : $\mathds{Z}$ -> $\mathsf{EA}$
+    | $\mathtt{Add}$ : $\mathsf{EA}$ -> $\mathsf{EA}$ -> $\mathsf{EA}$.
+  \end{lstlisting}
+
+  \begin{note}
+    On se donne $\mathds{Z}$ et on note $k \in \mathds{Z}$ (vu comme une métavariable).
+    On définit (inductivement) l'ensemble $\mathsf{EA}$ des expressions arithmétiques, notées $a, a', a_1, \ldots$ par la grammaire
+    \[
+      a ::= \ubar{k}  \mid a_1 \oplus a_2
+    .\] 
+  \end{note}
+
+  \begin{exm}
+    L'expression $\ubar 1 \oplus (\ubar 3 \oplus \ubar 7)$ représente l'expression Rocq 
+    \[
+    \mathtt{Add}(\mathtt{Cst}\ 1, \mathtt{Add}\ (\mathtt{Cst}\ 3)\ (\mathtt{Cst}\ 7))
+    ,\]
+    que l'on peut représenter comme l'arbre de syntaxe\ldots
+  \end{exm}
+
+  \begin{rmk}
+    Dans le but de définir un langage minimal, il n'y a donc pas d'intérêt à ajoute $\ominus$ et $\otimes$, représentant la soustraction et la multiplication.
+  \end{rmk}
+
+  \subsection{Sémantique à grands pas sur $\mathsf{EA}$.}
+
+  On définit la sémantique opérationnelle à grands pas pour $\mathsf{EA}$.
+  L'intuition est d'associer l'exécution d'un programme avec le résultat.
+  On définit la relation d'évaluation ${\Downarrow} \subseteq \mathsf{EA} * \mathds{Z}$, avec une notation infixe, définie par les règles d'inférences suivantes :
+  \[
+  \begin{prooftree}
+    \infer 0{\ubar k \Downarrow k}
+  \end{prooftree}
+  \quad \text{et} \quad
+  \begin{prooftree}
+    \hypo{a_1 \Downarrow k_1}
+    \hypo{a_2 \Downarrow k_2}
+    \infer 2{a_1 \oplus a_2 \Downarrow k}
+  \end{prooftree}
+  ,\]
+  où, dans la seconde règle d'inférence, $k = k_1 + k_2$.
+  Attention, le $+$ est la somme dans $\mathds{Z}$, c'est une opération \textit{externalisée}.
+  Vu qu'on ne sait pas comment la somme a été définie dans $\mathds{Z}$ (on ne sait pas si elle est définie par induction/point fixe, ou pas du tout), on ne l'écrit pas dans la règle d'inférence.
+
+  La forme générale des règles d'inférences est la suivante :
+  \[
+  \begin{prooftree}
+    \hypo{P_1}
+    \hypo{\ldots}
+    \hypo{P_m}
+    \infer[left label=\text{Cond. App.}] 3[\mathcal{R}_i]{C}
+  \end{prooftree}
+  \] 
+  où l'on donne les conditions d'application (ou \textit{side condition} en anglais).
+  Les $P_1,\ldots,P_m,C$ sont des relations inductives, mais les conditions d'applications \textbf{ne sont pas} forcément inductives.
+
+  \begin{exm}
+    \[
+    \begin{prooftree}
+      \hypo{\ubar 3 \Downarrow 3}
+      \hypo{\ubar 2 \Downarrow 2}
+      \hypo{\ubar 5 \Downarrow 5}
+      \infer[left label={2 + 5 = 7}] 2{(\ubar 2 \oplus \ubar 5) \Downarrow 7}
+      \infer[left label={3 + 7 = 10}] 2{\ubar 3 \oplus (\ubar 2 \oplus \ubar 5) \Downarrow 10}
+    \end{prooftree}
+    .\]
+  \end{exm}
+
+  \subsection{Sémantique à petits pas sur $\mathsf{EA}$.}
+
+  On définit ensuite la sémantique opérationnelle à \textit{petits pas} pour $\mathsf{EA}$.
+  L'intuition est de faire un pas exactement (la relation n'est donc pas réflexive) dans l'exécution d'un programme et, si possible, qu'elle soit déterministe.
+
+  Une relation \textit{déterministe} (ou \textit{fonctionnelle}) est une relation $\mathcal{R}$ telle que, si $a \mathrel{\mathcal{R}} b$ et $a \mathrel{\mathcal{R}} c$ alors $b = c$.
+
+  La relation de réduction ${\to} \subseteq \mathsf{EA} * \mathsf{EA}$, notée infixe, par les règles d'inférences
+  suivantes 
+
+  \[
+  \begin{prooftree}
+    \infer[left label={k = k_1 + k_2}] 0[\mathcal{A}]{\ubar{k}_1 \oplus \ubar{k}_2 \to \ubar{k}}
+  \end{prooftree},
+  \]\[
+  \begin{prooftree}
+    \hypo{a_2 \to a_2'}
+    \infer 1[\mathcal{C}_\mathrm{d}]{a_1 \oplus a_2 \to a_1 \oplus a_2'}
+  \end{prooftree}
+  \quad\text{et}\quad
+  \begin{prooftree}
+    \hypo{a_1 \to a_1'}
+    \infer 1[\mathcal{C}_\mathrm{g}]{a_1 \oplus \ubar k \to a_1' \oplus \ubar k}
+  \end{prooftree}
+  .\] 
+
+  Il faut le comprendre par "quand c'est fini à droite, on passe à gauche".
+
+  Les règles $\mathcal{C}_\mathrm{g}$ et $\mathcal{C}_\mathrm{d}$ sont nommées respectivement \textit{règle contextuelle droite} et \textit{règle contextuelle gauche}.
+  Quand $a \to a'$, on dit que $a$ se \textit{réduit} à $a'$.
+
+  \begin{rmk}
+    La notation $\ubar k \not\to$ indique que, quelle que soit l'expression $a \in \mathsf{EA}$ ,on n'a pas $\ubar k \to a$.
+    Les constantes ne peuvent pas être exécutées.
+  \end{rmk}
+
+  \begin{exo}
+    Et si on ajoute la règle \[
+    \begin{prooftree}
+      \hypo{a_1 \to a_1'} \hypo{a_2 \to a_2'}
+      \infer 2{a_1 \oplus a_2 \to a_1' \oplus a_2'}
+    \end{prooftree}
+    ,\]
+    appelée \textit{réduction parallèle}, que se passe-t-il ?
+  \end{exo}
+
+  \begin{rmk}
+    Il n'est pas possible de démontrer $\ubar 2 \oplus (\ubar 3 \oplus \ubar 4) \to \ubar 9$.
+    En effet, on réalise \textit{deux} pas.
+  \end{rmk}
+
+  \subsection{Coïncidence entre grands pas et petits pas.}
+
+  On définit la clôture réflexive et transitive d'une relation binaire $\mathcal{R}$ sur un ensemble $E$, notée $\mathcal{R}^\star$.
+  On la définit par les règles d'inférences suivantes :
+  \[
+  \begin{prooftree}
+    \infer 0{x \mathrel{\mathcal{R}^\star} x}
+  \end{prooftree}
+  \quad\text{et}\quad
+  \begin{prooftree}
+    \hypo{x \mathrel{\mathcal{R}} y}
+    \hypo{y \mathrel{\mathcal{R}^\star} z}
+    \infer 2{x \mathrel{\mathcal{R}^\star} z}
+  \end{prooftree}
+  .\]
+
+  \begin{lem}\label{lem:petit-pas-trans-transitif}
+    La relation $\mathcal{R}^\star$ est transitive.
+  \end{lem}
+  \begin{prv}
+    On démontre \[
+      \forall x,y \in E, \quad \text{si } x \mathrel{\mathcal{R}^\star} y \text{ alors } \underbrace{\forall z, \ y \mathrel{\mathcal{R}^\star} z \implies x \mathrel{\mathcal{R}^\star} z}_{\mathcal{P}(x,y)}
+    \] par induction sur $x \mathrel{\mathcal{R}^\star} y$.
+    Il y a \textit{deux} cas.
+    \begin{itemize}
+      \item \textsl{Réflexivité}. On a donc $x = y$ et, par hypothèse, $y \mathrel{\mathcal{R}^\star} z$.
+      \item \textsl{Transitivité}.
+        On sait que $x \mathrel{\mathcal{R}} a$ et $a \mathrel{\mathcal{R}^\star} y$.
+        De plus, on a l'hypothèse d'induction \[\mathcal{P}(a,y) : \forall z, y \mathrel{\mathcal{R}^\star} z \implies a \mathrel{\mathcal{R}^\star} z.\]
+        Montrons $\mathcal{P}(x,y)$.
+        Soit $z$ tel que $y \mathrel{\mathcal{R}^\star} z$. Il faut donc montrer $x \mathrel{\mathcal{R}^\star} z$.
+        On sait que $x \mathrel{\mathcal{R}} a$ et, par hypothèse d'induction, $a \mathrel{\mathcal{R}^\star} z$.
+        Ceci nous donne $x \mathrel{\mathcal{R}^\star} z$ en appliquant la seconde règle d'inférence.
+    \end{itemize}
+  \end{prv}
+
+  \begin{lem} \label{lem:petit-pas-trans-compose}
+    Quelles que soient $a_2$ et $a_2'$, si $a_2 \to^\star a_2'$, alors pour tout $a_1$, on a $a_1 \oplus a_2 \to^\star a_1 \oplus a_2'$.
+  \end{lem}
+  \begin{prv}
+    On procède par induction sur $a_2 \to^\star a_2'$.
+    Il y a \textit{deux} cas.
+    \begin{enumerate}
+      \item On a $a_2' = a_2$.
+        Il suffit donc de montrer que l'on a \[a_1 \oplus a_2 \to^\star a_1 \oplus a_2,\] ce qui est vrai par réflexivité.
+      \item On sait que $a_2 \to a$ et $a \to^\star a_2'$.
+        On sait de plus que \[
+        \forall a_1, \quad a_1 \oplus a \to^\star a_1 \oplus a_2'
+        \] par hypothèse d'induction.
+        On veut montrer que \[
+        \forall a_1, \quad a_1 \oplus a_2 \to^\star a_1 \oplus a_2'
+        .\]
+        On se donne $a_1$.
+        On déduit de $a_2 \to a$ que $a_1 \oplus a_2 \to a_1 \oplus a$ par $\mathcal{C}_\mathrm{d}$.
+        Par hypothèse d'induction, on a $a_1 \oplus a \to^\star a_1 \oplus a_2'$.
+        Par la seconde règle d'inférence, on conclut.
+    \end{enumerate}
+  \end{prv}
+
+  \begin{lem}\label{lem:petit-pas-trans-plus}
+    Quelles que soient les expressions $a_1$ et $a_1'$, si $a_1 \to^\star a_1'$ alors, pour tout $k$, $a_1 \oplus \ubar k \to^\star a_1' \oplus \ubar k$.
+    \qed
+  \end{lem}
+
+  Attention, le lemme précédent est faux si l'on remplace $\ubar k$ par une expression $a_2$.
+  En effet, $a_2$ ne peut pas être "spectateur" du calcul de $a_1$.
+
+  \begin{prop}
+    Soient $a$ une expression et $k$ un entier.
+    On a l'implication \[
+    a \Downarrow k \implies a \to^\star \ubar k
+    .\]
+  \end{prop}
+
+  \begin{prv}
+    On le démontre par induction sur la relation $a\Downarrow k$.
+    Il y a \textit{deux} cas.
+    \begin{enumerate}
+      \item Dans le cas $a = \ubar k$, alors on a bien $\ubar k \to^\star \ubar k$.
+      \item On sait que $a_1 \Downarrow k_1$ et $a_2 \Downarrow k_2$, avec $k = k_1 + k_2$.
+        On a également deux hypothèses d'induction : 
+        \begin{itemize}
+          \item $(H_1)$ : $a_1 \to^\star \ubar{k}_1$ ;
+          \item $(H_2)$ : $a_2 \to^\star \ubar{k}_2$.
+        \end{itemize}
+        On veut montrer $a_1 \oplus a_2 \to^\star \ubar{k}$, ce que l'on peut faire par :
+        \[
+          a_1 \oplus a_2
+          \xrightarrow{\smash{(H_2) + \text{lemme~\ref{lem:petit-pas-trans-compose}}}}^\star
+          a_1 \oplus \ubar{k}_2
+          \xrightarrow{\smash{(H_1) + \text{lemme~\ref{lem:petit-pas-trans-plus}}}}^\star
+          \ubar{k}_1 \oplus \ubar{k}_2
+          \xrightarrow{\mathcal{A}} \ubar k
+        .\] 
+    \end{enumerate}
+  \end{prv}
+
+  \begin{prop}
+    Soient $a$ une expression et $k$ un entier.
+    On a l'implication \[
+    a \to^\star \ubar k \implies a \Downarrow k
+    .\]
+    \qed
+  \end{prop}
+
+  \subsection{L'ensemble $\mathsf{EA}$ avec des erreurs à l'exécution.}
+
+  On exécute des programmes de $\mathsf{EA}$.
+  On considère que $\ubar{k}_1 \oplus \ubar{k}_2$ s'évalue comme \[
+    \frac{(k_1+k_2) \times k_2}{k_2}
+  .\]
+  Le cas $k_2 = 0$ est une situation d'erreur, une "\textit{\textbf{situation catastrophique}}".
+  (C'est une convention : quand un ordinateur divise par zéro, il explose !)
+
+  \subsubsection{Relation à grands pas.}
+
+  On note encore $\Downarrow$ la relation d'évaluation sur $\mathsf{EA} * \mathds{Z}_\bot$, où l'on définit l'ensemble $\mathds{Z}_\bot  = \mathds{Z} \cup \{\bot\}$.
+  Le symbole $\bot$ est utilisé pour représenter un cas d'erreur.
+
+  Les règles d'inférences définissant $\Downarrow$ sont :
+  \[
+  \begin{prooftree}
+    \infer 0{\ubar k \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{a_1 \Downarrow k_1}
+    \hypo{a_2 \Downarrow k_2}
+    \infer[left label={\begin{array}{r}k = k_1 + k_2\\ k \neq 0\end{array}}] 2{a_1 \oplus a_2 \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{a_1 \Downarrow k_1}
+    \hypo{a_2 \Downarrow 0}
+    \infer 2{a_1 \oplus a_2 \Downarrow \bot}
+  \end{prooftree}
+  ,\] 
+  et les règles de propagation du $\bot$ :
+  \[
+  \begin{prooftree}
+    \hypo{a_1 \Downarrow \bot}
+    \hypo{(a_2 \Downarrow r)}
+    \infer 2{a_1 \oplus a_2 \Downarrow \bot}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{(a_1 \Downarrow r)}
+    \hypo{a_2 \Downarrow \bot}
+    \infer 2{a_1 \oplus a_2 \Downarrow \bot}
+  \end{prooftree}
+  .\]
+
+  \subsubsection{Relation à petits pas.}
+
+  On (re)-définit la relation ${\to} \subseteq \mathsf{EA} * \mathsf{EA}_\bot$, où $\mathsf{EA}_\bot = \mathsf{EA} \cup \{\bot\}$, par les règles d'inférences 
+  \[
+  \begin{prooftree}
+    \infer[left label={\begin{array}{r}k = k_1 + k_2\\ k_2 \neq 0\end{array}}] 0{\ubar{k}_1 \oplus \ubar{k}_2 \to \ubar k}
+  \end{prooftree}
+  \quad
+  \begin{prooftree}
+    \hypo{a_2 \to a_2'}
+    \infer[left label=a_2 \neq \bot] 1{a_1 \oplus a_2 \to a_1 \oplus a_2'}
+  \end{prooftree}
+  \]
+  \[
+  \begin{prooftree}
+    \hypo{a_1 \to a_1'}
+    \infer[left label=a_1 \neq \bot] 1{a_1 \oplus \ubar k \to a_1' \oplus \ubar k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \infer 0{\ubar{k}_1 \oplus \ubar{0} \to \bot}
+  \end{prooftree}
+  ,\] et les règles de propagation du $\bot$ :
+  \[
+  \begin{prooftree}
+    \hypo{a_1 \to \bot}
+    \infer 1{a_1 \oplus \ubar{k} \to \bot}
+  \end{prooftree}
+  \quad\text{et}\quad
+  \begin{prooftree}
+    \hypo{a_2 \to \bot}
+    \infer 1{a_1 \oplus a_2 \to \bot}
+  \end{prooftree}
+  .\] 
+
+  Pour démontrer l'équivalence des relations grand pas et petits pas, ça semble un peu plus compliqué\ldots
+
+  \subsection{Sémantique contextuelle pour $\mathsf{EA}$.}
+  
+  On définit la relation ${\mapsto} : \mathsf{EA} \times \mathsf{EA}$ par la règle :
+  \[
+  \begin{prooftree}
+    \infer[left label ={k=k_1 + k_2}] 0{E[\ubar{k}_1 \oplus \ubar{k}_2] \mapsto E[\ubar{k}]}
+  \end{prooftree}
+  ,\]
+  où $E$ est un \textit{contexte d'évaluation} que l'on peut définir par la grammaire \[
+    E ::= [\;]  \mid \redQuestionBox
+  .\]
+  Le \textit{trou} est une constante, notée $[\;]$ qui n'apparaît qu'une fois par contexte d'évaluation.
+  Pour $E$ un contexte d'évaluation et $a \in \mathsf{EA}$, alors $E[a]$ désigne l'expression arithmétique obtenue en remplaçant le trou par $a$ dans $E$.
+
+  \begin{exm}
+    On note $E_0 = \ubar 3 \oplus ([\;] \oplus \ubar 5)$ et $a_0 = \ubar 1 \oplus \ubar 2$.
+    Alors \[
+      \ubar 3 \oplus ((\ubar 1 \oplus \ubar 2) \oplus \ubar 5)
+    .\] 
+  \end{exm}
+
+  \textbf{Que faut-il mettre à la place de $\redQuestionBox$ ?}
+
+  \begin{exm}[Première tentative]
+    On pose \[
+      E ::= [\;]  \mid \ubar{k}  \mid E_1 \oplus E_2
+    .\]
+    Mais, ceci peut introduire \textit{plusieurs} trous (voire aucun) dans un même contexte.
+    C'est raté.
+  \end{exm}
+
+  \begin{exm}[Seconde tentative]
+    On pose \[
+      E ::= [\;]  \mid a \oplus E \mid E \oplus a
+    .\]
+    Mais, on pourra réduire une expression à droite avant de réduire à gauche.
+    C'est encore raté.
+  \end{exm}
+
+  \begin{exm}[Troisième (et dernière) tentative]
+    On pose \[
+      E ::= [\;]  \mid a \oplus E \mid E \oplus \ubar k
+    .\]
+    Là, c'est réussi !
+  \end{exm}
+
+  \begin{lem}
+    Pour toute expression arithmétique $a \in \mathsf{EA}$ qui n'est pas une constante, il existe un unique triplet $(E, k_1, k_2)$ tel que \[
+      a = E[\ubar{k}_1 \oplus \ubar{k}_2]
+    .\]
+  \end{lem}
+
+  Ceci permet de justifier la proposition suivante, notamment au niveau des notations.
+
+  \begin{prop}
+    Pour tout $a, a'$, on a \[
+    a \to a' \quad \text{si, et seulement si,} \quad a \mapsto a'
+    .\]
+  \end{prop}
+  
+  \begin{prv}
+    Pour démontrer cela, on procède par double implication :
+    \begin{itemize}
+      \item "$\implies$" par induction sur $a \to a'$ ;
+      \item "$\impliedby$" par induction sur $E$.
+    \end{itemize}
+  \end{prv}
+
+  \section{Sémantique opérationnelle des expressions arithmétiques avec déclarations locales ($\mathsf{LEA}$).}
+
+  On suppose donnés $\mathds{Z}$ les entiers relatifs et $\mathcal{V}$ un ensemble infini de variables (d'identifiants/d'identificateurs/de noms).
+
+  On définit $\mathsf{LEA}$ par la grammaire suivante :
+  \[
+  a ::= \ubar k  \mid a_1 \oplus a_2  \mid\letin x {a_1} {a_2} \mid  x
+  ,\]
+  où $x \in \mathcal{V}$ et $k \in \mathds{Z}$.
+
+  En Rocq, on peut définir :
+  \begin{lstlisting}[language=Coq,caption=Définition inductive de $\mathsf{LEA}$]
+Inductive $\mathsf{LEA}$ : Set :=
+| $\mathtt{Cst}$ : $\mathds{Z}$ -> $\mathsf{LEA}$
+| $\mathtt{Add}$ : $\mathsf{LEA}$ -> $\mathsf{LEA}$ -> $\mathsf{LEA}$
+| $\mathtt{Let}$ : $\mathcal{V}$ -> $\mathsf{LEA}$ -> $\mathsf{LEA}$ -> $\mathsf{LEA}$
+| $\mathtt{Var}$ : $\mathcal{V}$ -> $\mathsf{LEA}$.
+  \end{lstlisting}
+
+  \begin{exm}
+    Voici quelques exemples d'expressions avec déclarations locales :
+    \begin{enumerate}
+      \item $\letin x 3 x \oplus x$ ;
+      \item $\letin x {\ubar 2} \letin y {x \oplus \ubar 2} x \oplus y$ ;
+      \item $\letin x {(\letin y {\ubar 5} y \oplus y)} (\letin z {\ubar 6} z \oplus \ubar 2) \oplus x $ ;
+      \item $\letin {\tikzmarknode{xodef}x} {\ubar 7 \oplus \ubar 2} (\letin {\tikzmarknode{xidef}x} 5 {\tikzmarknode{xiused1}x \oplus \tikzmarknode{xiused2}x}) \oplus \tikzmarknode{xoused}x$.
+    \begin{tikzpicture}[overlay, remember picture,shorten >= 5pt,shorten <= 5pt,]
+      \draw[->] (xidef.south) to[bend right=15] (xiused1.south);
+      \draw[->] (xidef.south) to[bend right=15] (xiused2.south);
+      \draw[->] (xodef.south) to[bend right=15] (xoused.south);
+    \end{tikzpicture}
+    \end{enumerate}
+    \vspace{0.5cm}
+  \end{exm}
+
+  \subsection{Sémantique à grands pas sur $\mathsf{LEA}$.}
+  On définit une relation d'\textit{évaluation} ${\Downarrow} : \mathsf{LEA} * \mathds{Z}$\footnote{On surcharge encore les notations.}
+  définie par :
+  \[
+  \begin{prooftree}
+    \infer 0{\ubar k \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{a_1\Downarrow k_1}
+    \hypo{a_2\Downarrow k_2}
+    \infer[left label={k=k_1+k_2}] 2{a_1 \oplus a_2 \Downarrow k}
+  \end{prooftree}
+  ,\] et on ajoute une règle pour le $\letin x \ldots \ldots$ :
+  \[
+  \begin{prooftree}
+    \hypo{a_1 \Downarrow k_1}
+    \hypo{a_2\left[\sfrac{\ubar{k}_1}{x}\right] \Downarrow k_1}
+    \infer 2{(\letin x {a_1} {a_2}) \Downarrow k_2}
+  \end{prooftree}
+  .\]
+  On note ici $a[\sfrac{\ubar{k}}{x}]$ la substitution de $\ubar k$ à la place de $x$ dans l'expression $a$.
+  Ceci sera défini après.
+
+  Attention : on n'a pas de règles de la forme \[
+    \cancel{
+      \begin{prooftree}
+        \infer 0{x \Downarrow \redQuestionBox}
+      \end{prooftree}
+    }
+  ,\]
+  les variables sont censées disparaitre avant qu'on arrivent à elles.
+
+  \begin{defn}
+    Soit $a \in \mathsf{LEA}$.
+    L'ensemble des \textit{variables libres} d'une expression $a$ noté $\Vl(a)$, et est défini par induction sur $a$ de la manière suivante :
+    \begin{itemize}
+      \item $\Vl(\ubar k) = \emptyset$ ;
+      \item $\Vl(x) = \{x\}$ ;
+      \item $\Vl(a_1 \oplus a_2) = \Vl(a_1) \cup \Vl(a_2)$ ;
+      \item $\Vl(\letin x {a_1} {a_2}) = \Vl(a_1) \cup (\Vl(a_2) \setminus \{x\})$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    \[
+      \Vl(\letin {\tikzmarknode{xdef}x} {\ubar3} \letin {\tikzmarknode{ydef}y} {\tikzmarknode{xused}x \oplus \ubar2} \tikzmarknode{yused}y \oplus (z \oplus \underline{15})) = \{z\} 
+    .\] 
+    \begin{tikzpicture}[overlay, remember picture,shorten >= 5pt,shorten <= 5pt,]
+      \draw[<-] (xdef.south) to[bend right] (xused.south);
+      \draw[<-] (ydef.north) to[bend left] (yused.north);
+    \end{tikzpicture}
+  \end{exm}
+
+  \begin{defn}
+    Une expression $a \in \mathsf{LEA}$ est \textit{close} si $\Vl(a) = \emptyset$.
+    On note $\mathsf{LEA}_0 \subseteq \mathsf{LEA}$ l'ensemble des expressions arithmétiques de closes.
+  \end{defn}
+
+  \begin{defn}
+    Soient $a \in \mathsf{LEA}$, $x \in \mathcal{V}$ et $k \in \mathds{Z}$.
+    On définit par induction sur $a$ (\textit{quatre cas}) le résultat de la \textit{substitution} de $x$ par~$\ubar k$ dans $a$, noté $a[\sfrac{\ubar k}{x}]$ de la manière suivante :
+    \begin{itemize}
+      \item $\ubar{k'}[\sfrac{\ubar k}{x}] = \ubar{k'}$ ;
+      \item $(a_1 \oplus a_2)[\sfrac{\ubar k}{x}] = (a_1[\sfrac{\ubar k}{x}]) \oplus (a_2[\sfrac{\ubar k}{x}])$ ;
+      \item $y[\sfrac{\ubar k}{x}] = \begin{cases}
+          \ubar k \quad& \text{si}\ x = y\\
+          y \quad& \text{si}\ x \neq y\: ;
+      \end{cases}$
+    \item $(\letin y {a_1} {a_2})[\sfrac{\ubar k}{x}] = \begin{cases}
+        \letin y {a_1[\sfrac{\ubar k}{x}]} a_2 & \text{si}\ x = y\\
+        \letin y {a_1[\sfrac{\ubar k}{x}]} a_2[\sfrac{\ubar k}{x}] & \text{si}\ x \neq y.
+    \end{cases}$
+    \end{itemize}
+  \end{defn}
+
+  \subsection{Sémantique à petits pas sur $\mathsf{LEA}$.}
+
+  On définit la relation ${\to} \subseteq \mathsf{LEA} * \mathsf{LEA}$ inductivement par :
+  \[
+  \begin{prooftree}
+    \infer[left label={k = k_1 + k_2}] 0[\mathcal{A}]{\ubar{k}_1 \oplus \ubar{k}_2 \to \ubar{k}}
+  \end{prooftree},
+  \]\[
+  \begin{prooftree}
+    \hypo{a_2 \to a_2'}
+    \infer 1[\mathcal{C}_\mathrm{d}]{a_1 \oplus a_2 \to a_1 \oplus a_2'}
+  \end{prooftree}
+  \quad\text{et}\quad
+  \begin{prooftree}
+    \hypo{a_1 \to a_1'}
+    \infer 1[\mathcal{C}_\mathrm{g}]{a_1 \oplus \ubar k \to a_1' \oplus \ubar k}
+  \end{prooftree}
+  ,\] 
+  puis les nouvelles règles pour le $\letin x \ldots \ldots$ :
+  \[
+  \begin{prooftree}
+    \hypo{a_1 \to a_1'}
+    \infer 1[\mathcal{C}_\mathrm{l}]{\letin x {a_1} {a_2} \to \letin x {a_1'} {a_2}}
+  \end{prooftree}
+  \] 
+  \[
+  \begin{prooftree}
+    \infer 0{\letin x {\ubar k} a \to a[\sfrac{\ubar k}{x}]}
+  \end{prooftree}
+  .\]
+
+  On peut démontrer l'équivalence des sémantiques à grands pas et à petits pas.
+
+  \subsection{Sémantique contextuelle pour $\mathsf{LEA}$.}
+
+  On définit les contextes d'évaluations par la grammaire suivante :
+  \begin{align*}
+    E ::= \ &\ [\;]\\
+          \mid&\ a \oplus E\\
+          \mid&\ E \oplus \ubar k\\
+          \mid&\ \letin x E a
+  .\end{align*}
+  % À FAIRE : Refaire la présentation de cette grammaire
+
+  On définit \textit{deux} relations $\mapsto_\mathrm{a}$ et $\mathrel{\color{deepblue}\mapsto}$ par les règles :
+  \[
+  \begin{prooftree}
+    \infer[left label={k = k_1 + k_2}] 0{\ubar k_1 \oplus \ubar k_2 \mapsto_\mathrm{a} k_2}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \infer 0 {\letin x {\ubar k} a \mapsto_\mathrm{a} a[\sfrac{\ubar k}{x}]}
+  \end{prooftree}
+  ,\]
+  et \[
+  \begin{prooftree}
+    \hypo{a \mapsto_\mathrm{a} a'}
+    \infer 1{E[a] \mathrel{\color{deepblue}\mapsto} E[a']}
+  \end{prooftree}
+  .\] 
+
+
+  \subsection{Sémantique sur $\mathsf{LEA}$ avec environnement.}
+
+  \begin{defn}
+    Soient $A$ et $B$ deux ensembles.
+    Un \textit{dictionnaire} sur $(A,B)$ est une fonction partielle à domaine fini de $A$ dans $B$.
+
+    Si $D$ est un dictionnaire sur $(A,B)$, on note $D(x) = y$ lorsque $D$ associe $y \in B$ à $x \in A$.
+
+    Le domaine d'un dictionnaire $D$ est \[
+    \mathrm{dom}(D) = \{x \in A \mid \exists y \in B, D(x) = y \} 
+    .\]
+
+    On note $\emptyset$ le dictionnaire vide.
+
+    Pour un dictionnaire $D$ sur $(A,B)$, deux éléments $x \in A$ et $y \in B$, on note $D[x \mapsto y]$ est le dictionnaire $D'$ défini par 
+    \begin{itemize}
+      \item $D'(x) = y$ ;
+      \item $D'(z) = D(z)$ pour $z \in \mathrm{dom}(D)$ tel que $z \neq x$.
+    \end{itemize}
+  \end{defn}
+
+  On ne s'intéresse pas à la construction d'un tel type de donné, mais juste son utilisation.
+
+  On se donne un ensemble $\mathrm{Env}$ d'\textit{environnements} notés $\mathcal{E}, \mathcal{E}', \ldots$ qui sont des dictionnaires sur $(\mathcal{V}, \mathds{Z})$.
+
+  \subsubsection{Sémantique à grands pas sur $\mathsf{LEA}$ avec environnements.}
+
+  On définit la relation ${\Downarrow} \subseteq \mathsf{LEA} * \mathrm{Env} * \mathds{Z}$, noté $a, \mathcal{E} \Downarrow k$ ("$a$ s'évalue en $k$ dans $\mathcal{E}$") défini par \[
+  \begin{prooftree}
+    \infer 0{\ubar k, \mathcal{E} \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{a_1, \mathcal{E} \Downarrow k_1}
+    \hypo{a_2, \mathcal{E} \Downarrow k_2}
+    \infer[left label={k = k_1 + k_2}] 2{a_1 \oplus a_2, \mathcal{E} \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \infer[left label={\mathcal{E}(x) = k}] 0{x, \mathcal{E} \Downarrow k}
+  \end{prooftree}
+  ,\] 
+  \[
+  \begin{prooftree}
+    \hypo{a_1, \mathcal{E} \Downarrow k_1}
+    \hypo{a_2, \mathcal{E}[x \mapsto k_1] \Downarrow k_2}
+    \infer 2{\letin x {a_1} {a_2} \Downarrow k_2}
+  \end{prooftree}
+  .\]
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Dans cette définition, on n'a pas de substitutions (c'est donc plus facile à calculer).
+      \item Si $\Vl(a) \subseteq \mathrm{dom}(\mathcal{E})$, alors il existe $k \in \mathds{Z}$ tel que $a, \mathcal{E} \Downarrow k$.
+      \item On a $a\Downarrow k$ (sans environnement) si, et seulement si $a, \emptyset \Downarrow k$ (avec environnement).
+    \end{itemize}
+  \end{rmk}
+
+  Pour les petits pas avec environnements, c'est un peu plus compliqué\ldots On verra ça en TD. (Écraser les valeurs dans un dictionnaire, ça peut être problématique avec les petits pas.)
+
+  \section{Un petit langage fonctionnel : $\mathsf{FUN}$.}
+  
+  On se rapproche de notre but final en considérant un petit langage fonctionnel, nommé $\mathsf{FUN}$.
+
+  On se donne l'ensemble des entiers relatifs $\mathds{Z}$ et un ensemble infini de variables $\mathcal{V}$.
+  L'ensemble des expressions de $\mathsf{FUN}$, notées $e$, $e'$ ou $e_i$,  est défini 
+  par la grammaire suivante :
+  \[
+    e ::= k  \mid e_1 + e_2  \mid \underbrace{\fun x e}_{\mathclap{\text{Fonction / Abstraction}}} \mid \overbrace{e_1\ e_2}^{\mathclap{\text{Application}}}  \mid x
+  .\]
+
+  \begin{note}
+    On simplifie la notation par rapport à $\mathsf{EA}$ ou $\mathsf{LEA}$ : on ne souligne plus les entiers, on n'entoure plus les plus.
+
+    On notera de plus $e_1\ e_2\ e_3$ pour $(e_1\ e_2)\ e_3$.
+    Aussi, l'expression~$\fun {x\ y} e$ représentera l'expression $\fun x (\fun y e)$.
+    On n'a pas le droit à plusieurs arguments pour une fonction, mais on applique la curryfication.
+  \end{note}
+
+  \subsection{Sémantique opérationnelle "informellement".}
+
+  \begin{exm}
+    Comment s'évalue $(\fun x x + x)(7 + 7)$ ?
+    \begin{itemize}
+      \item D'une part, $7 + 7$ s'évalue en $14$.
+      \item D'autre part, $(\fun x x + x)$ s'évalue en elle même.
+      \item On procède à une substitution de $(x + x)[\sfrac{14}{x}]$ qui s'évalue en 28.
+    \end{itemize}
+  \end{exm}
+
+  \begin{exm}
+    Comment s'évalue l'expression \[
+      (\overbrace{(\fun f \underbrace{(\fun x x + (f\ x))}_B)}^A\ \underbrace{(\fun y y + y)}_C)\ 7\ 
+    ?\]
+    On commence par évaluer $A$ et $C$ qui s'évaluent en $A$ et $C$ respectivement.
+    On continue en calculant la substitution 
+    \[
+      (\fun x x + (f\ x))[\sfrac{\fun y y + y}{f}]
+    ,\] ce qui donne \[
+      (\fun x x + ((\fun y y + y)\ x))
+    .\]
+    Là, on \textbf{ne simplifie pas}, car c'est du code \textit{dans} une fonction.
+    On calcule ensuite la substitution \[
+      (x + ((\fun y y + y)\ x))[\sfrac{7}{x}]
+    ,\]
+    ce qui donne \[
+      7 + ((\fun y y + y)\ 7)
+    .\]
+    On termine par la substitution \[
+      (y + y)[\sfrac{7}{y}] = 7 + 7
+    .\]
+    On conclut que l'expression originelle s'évalue en $21$.
+      
+  \end{exm}
+
+  \begin{rmk}
+    Dans $\mathsf{FUN}$, le résultat d'un calcul (qu'on appellera \textit{valeur}) n'est plus forcément un entier, ça peut aussi être une fonction.
+
+    L'ensemble des valeurs, notées $v$, est défini par la grammaire \[
+      v ::= k  \mid \fun x e
+    .\]
+    \textsc{Les fonctions sont des valeurs !} Et, le "contenu" la fonction n'est pas forcément une valeur.
+
+    On peut remarquer que l'ensemble des valeurs est un sous-ensemble des expressions de $\mathsf{FUN}$.
+  \end{rmk}
+
+  \subsection{Sémantique opérationnelle de $\mathsf{FUN}$ (version 1).}
+
+  \begin{defn}
+    On définit l'ensemble des \textit{variables libres} $\Vl(e)$ d'une expression $e$ par (on a 5 cas) :
+    \begin{itemize}
+      \item $\Vl(x) = \{x\}$ ;
+      \item $\Vl(k) = \emptyset$ ;
+      \item $\Vl(e_1 + e_2) = \Vl(e_1) \cup \Vl(e_2)$ ;
+      \item $\Vl(e_1\ e_2) = \Vl(e_1) \cup \Vl(e_2)$ ;
+      \item $\Vl(\fun x e) = \Vl(e) \setminus \{x\}$.\footnote{L'expression $\fun x e$ est un \textit{lieur} : $x$ est liée dans $e$.}
+    \end{itemize}
+
+    On dit que $e$ est \textit{close} si $\Vl(e) = \emptyset$.
+  \end{defn}
+
+  \begin{defn}
+    Pour $e \in \mathsf{FUN}$, $x \in \mathcal{V}$ et $v$ une valeur \textbf{close}, on définit la \textit{substitution} $e[\sfrac{v}{x}]$ de $x$ par $v$ dans $e$ par :
+    \begin{itemize}
+      \item $k[\sfrac{v}{x}] = k$ ;
+      \item $y[\sfrac{v}{x}] = \begin{cases}
+          v & \text{si}\ x = y\\
+          y & \text{si}\ x \neq y\ ;
+      \end{cases}$
+      \item $(\fun y e)[\sfrac{v}{x}] = \begin{cases}
+          \fun y e & \text{si}\ x = y\\
+          \fun y e[\sfrac{e}{x}] & \text{si}\ x \neq y ;
+      \end{cases}$
+      \item $(e_1 + e_2)[\sfrac{v}{x}] = (e_1[\sfrac{v}{x}]) + (e_2[\sfrac{v}{x}])$ ;
+      \item $(e_1 \ e_2)[\sfrac{v}{x}] = (e_1[\sfrac{v}{x}]) \ (e_2[\sfrac{v}{x}])$.
+    \end{itemize}
+  \end{defn}
+
+  \subsubsection{Grands pas pour $\mathsf{FUN}$.}
+
+  On définit la relation $\Downarrow$ sur couples (expression, valeur) par :
+  \[
+  \begin{prooftree}
+    \hypo{e_1 \Downarrow k_1}
+    \hypo{e_2 \Downarrow k_2}
+    \infer[left label={k = k_1 + k_2}] 2{e_1 + e_2 \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \infer 0{v \Downarrow v}
+  \end{prooftree}
+  \]
+  \[
+  \begin{prooftree}
+    \hypo{e_1 \Downarrow \fun x e}
+    \hypo{e_2 \Downarrow v_2}
+    \hypo{e[\sfrac{v_2}{x}] \Downarrow v}
+    \infer 3{e_1\ e_2 \Downarrow v.}
+  \end{prooftree}
+  \]
+
+  \begin{rmk}
+    Certaines expressions ne s'évaluent pas : \[
+    x \not\Downarrow \quad\quad \text{et}\quad\quad z + (\fun x x) \not\Downarrow
+    \] par exemple.
+  \end{rmk}
+
+  \subsubsection{Petits pas pour $\mathsf{FUN}$.}
+
+  On définit la relation ${\to} \subseteq \mathsf{FUN} * \mathsf{FUN}$ par :
+  \[
+    \begin{prooftree}
+      \infer[left label={k = k_1 + k_2}] 0[\mathcal{R}_\mathrm{pk}] {k_1 + k_2 \to k}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \infer 0[\mathcal{R}_\beta] {(\fun x e)\ v \to e[\sfrac{v}{x}]}
+    \end{prooftree}
+  \]\[
+    \begin{prooftree}
+      \hypo{e_2 \to e_2'}
+      \infer 1[\mathcal{R}_\mathrm{pd}]{e_1 + e_2 \to e_1 + e_2'}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{e_1 \to e_1'}
+      \infer 1[\mathcal{R}_\mathrm{pg}]{e_1 + k \to e_1' + k}
+    \end{prooftree}
+  \]\[
+    \begin{prooftree}
+      \hypo{e_2 \to e_2'}
+      \infer 1[\mathcal{R}_\mathrm{ad}]{e_1\ e_2 \to e_1\ e_2'}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{e_1 \to e_1'}
+      \infer 1[\mathcal{R}_\mathrm{ag}]{e_1\ v \to e_1'\ v}
+    \end{prooftree}
+  .\]
+
+  \begin{rmk}
+    Il existe des expressions que l'on ne peut pas réduire :
+    \begin{enumerate}
+      \item $k \not\to \quad$ ;
+      \item $(\fun x x) \not\to \quad$ ;
+      \item $e_1 + (\fun x x) \not\to \quad$ ;
+      \item $3\ (5 + 7) \to 3\ 12 \not\to \quad$.
+    \end{enumerate}
+
+    Dans les cas 1. et 2., c'est cohérent : on ne peut pas réduire des valeurs.
+  \end{rmk}
+
+
+  \begin{lem}
+    On a \[
+    e \Downarrow v \quad\quad \text{si, et seulement si,} \quad\quad e \to^\star v
+    .\] 
+  \end{lem}
+
+  \begin{rmk}
+    Soit $e_0 = (\fun x x\ x)\ (\fun x x\ x)$.
+    On remarque que $e_0 \to e_0$.
+
+    En $\mathsf{FUN}$, il y a des divergences : il existe $(e_n)_{n \in \mathds{N}}$ telle que l'on ait $e_n \to e_{n+1}$.
+  \end{rmk}
+
+  La fonction\footnote{Pour indiquer cela, il faudrait démontrer que la relation $\Downarrow$ est déterministe.} définie par $\Downarrow$ est donc partielle.
+
+
+  \begin{rmk}[Problème avec la substitution]
+    On a la chaîne de réductions :
+    \begin{align*}
+      &((\fun y (\fun x x + y))\ (x+7))\ 5\\
+      (\star)\quad\quad\to\;&(\fun x x + (x+7))\ 5\\
+      \to\;&5 + (5 + 7)\\
+      \to\mathllap{^\star}\;& 17
+    .\end{align*}
+    Attention ! Ici, on a triché : on a substitué avec l'expression $x + 7$ mais ce n'est pas une valeur (dans la réduction $(\star)$) !
+
+    Mais, on a la chaîne de réductions 
+    \begin{align*}
+      &(\fun f (\fun x (f\ 3) + x))\ (\fun t x + 7)\ 5\\
+      \to\;& (\fun x ((\fun t x + 7)\ 3) + x)\ 5\\
+      \to\;& (\fun x ((\fun t x + 7)\ 3) + x)\ 5
+    .\end{align*}
+    Et là, c'est le drame, on a \textbf{capturé la variable libre}.
+    D'où l'hypothèse de $v$ close dans la substitution.
+  \end{rmk}
+
+  \begin{rmk}
+    Les relations $\Downarrow$ et $\to$ sont définies sur des expressions \textbf{closes}.
+    Et on a même ${\to} \subseteq \mathsf{FUN}_0 * \mathsf{FUN}_0$.\footnote{Il faudrait ici justifier que la réduction d'une formule close est close. C'est ce que nous allons justifier.}
+  \end{rmk}
+
+  \begin{lem}
+    \begin{itemize}
+      \item Si $v$ est close et si $x \not\in \Vl(e)$ alors $e[\sfrac{v}{x}] = e$.
+      \item Si $v$ est close, $\Vl(e[\sfrac{v}{x}]) = \Vl(e) \setminus \{x\}$.
+      \qed
+    \end{itemize}
+  \end{lem}
+
+  \begin{lem}
+    Si $e \in \mathsf{FUN}_0$ et $e \to e'$ alors $e' \in \mathsf{FUN}_0$.
+  \end{lem}
+
+  \begin{prv}
+    Montrons que, quelles que soient $e$ et $e'$, on a : si $e \to e'$ alors $(e \in \mathsf{FUN}_0) \implies(e' \in \mathsf{FUN}_0)$
+    On procède par induction sur la relation $e \to e'$.
+    Il y a 6 cas :
+    \begin{enumerate}
+      \item Pour $\mathcal{R}_\beta$, on suppose $(\fun x e)\ v$ est close, alors
+        \begin{itemize}
+          \item $(\fun x e)$ est close ;
+          \item $v$ est close.
+        \end{itemize}
+        On sait donc que $\Vl(e) \subseteq \{x\}$, d'où par le lemme précédent, $\Vl(e[\sfrac{v}{x}]) = \emptyset$ et donc $e[\sfrac{v}{x}]$ est close.
+      \item[2--6.] Pour les autres cas, on procède de la même manière.
+    \end{enumerate}
+  \end{prv}
+
+  \begin{rmk}
+    De même, si $e \Downarrow v$ où $e$ est close, alors $v$ est close.
+
+    Les relations $\Downarrow$ et $\to$ sont définies sur les expressions et les valeurs closes.
+  \end{rmk}
+
+  \begin{defn}[Définition informelle de l'$\alpha$-conversion]
+    On définit l'$\alpha$-conversion, notée $e =_\alpha e'$ :
+    on a $\fun x e =_\alpha \fun y e'$ si, et seulement si,
+    $e'$ s'obtient en replaçant $x$ par $y$ dans $e$
+    à condition que $y \not\in \Vl(e)$.\footnote{C'est une "variable fraîche".}
+
+    On étend $e =_\alpha e'$ à toutes les expressions : "on peut faire ça partout".
+  \end{defn}
+
+  \begin{exm}[\textit{Les variables liées sont muettes.}]
+    On a :
+    \begin{align*}
+      \fun x x + z &=_\alpha \fun y y + z\\
+      &=_\alpha \fun t t + z\\
+      &\neq _\alpha \fun z z + z
+    .\end{align*}
+  \end{exm}
+  
+  L'intuition est, quand on a $\mathsf{fun}\ x \to e$ et qu'on a besoin de renommer la variable $x$, pour cela on prend $x' \not\in \Vl(e)$.
+
+  \begin{not-lem}
+    Si $E_0 \subseteq \mathcal{V}$ est un ensemble fini de variables, alors il existe $z \not\in E_0$ et $e' \in \mathsf{FUN}$ tel que $\fun x e =_\alpha \fun z e'$.
+    \qed
+  \end{not-lem}
+
+  \begin{rmk}[\textbf{Fondamental}]
+    En fait $\mathsf{FUN}$ désigne l'ensemble des expressions décrites par la grammaire initiale \textit{quotientée} par $\alpha$-conversion.
+  \end{rmk}
+
+  \begin{rmk}
+    On remarque que \[
+      (e =_\alpha e') \implies \Vl(e) = \Vl(e')
+    .\]
+  \end{rmk}
+
+  D'après le ``lemme'', on peut améliorer notre définition de la substitution.
+
+  \begin{defn}
+    Pour $e \in \mathsf{FUN}$, $x \in \mathcal{V}$ et $v$ une valeur \textbf{close}, on définit la \textit{substitution} $e[\sfrac{v}{x}]$ de $x$ par $v$ dans $e$ par :
+    \begin{itemize}
+      \item $k[\sfrac{v}{x}] = k$ ;
+      \item $y[\sfrac{v}{x}] = \begin{cases}
+          v & \text{si}\ x = y\\
+          y & \text{si}\ x \neq y\ ;
+      \end{cases}$
+    \item $(\fun x e)[\sfrac{v}{x}] = (\fun y e)[\sfrac{v}{x}]$ lorsque $x \neq y$ ;
+      \item $(e_1 + e_2)[\sfrac{v}{x}] = (e_1[\sfrac{v}{x}]) + (e_2[\sfrac{v}{x}])$ ;
+      \item $(e_1 \ e_2)[\sfrac{v}{x}] = (e_1[\sfrac{v}{x}]) \ (e_2[\sfrac{v}{x}])$.
+    \end{itemize}
+  \end{defn}
+
+  \subsection{Ajout des déclarations locales ($\mathsf{FUN}+\mathtt{let}$).}
+
+  On ajoute les déclarations locales (comme pour $\mathsf{EA}\to \mathsf{LEA}$) à notre petit langage fonctionnel.
+  Dans la grammaire des expressions de $\mathsf{FUN}$, on ajoute :
+  \[
+    e ::= \cdots  \mid \letin x {e_1} {e_2}
+  .\]
+
+  Ceci implique d'ajouter quelques éléments aux différentes opérations sur les expressions définies ci-avant :
+  \begin{itemize}
+    \item on définit $\Vl(\letin x {e_1} {e_2}) = \Vl(e_1) \cup (\Vl(e_2) \setminus \{x\})$ ;
+    \item on ne change pas les valeurs : une déclaration locale n'est pas une valeur ;
+    \item on ajoute $\letin x {e_1} {e_2} =_\alpha \letin y {e_1} {e_2'}$, où l'on remplace $x$ par $y$ dans $e_2$ pour obtenir $e_2'$ ;
+    \item pour la substitution, on pose lorsque $x\neq y$ (que l'on peut toujours supposer modulo $\alpha$-conversion) \[
+        (\letin y {e_1} {e_2})[\sfrac{v}{x}] = (\letin y {e_1[\sfrac{v}{x}]} e_2[\sfrac{v}{x}])
+    .\]
+    \item pour la sémantique à grands pas, c'est comme pour $\mathsf{LEA}$ ;
+    \item pour la sémantique à petits pas, on ajoute les deux règles :
+      \[
+      \begin{prooftree}
+        \infer 0[\mathcal{R}_\mathrm{lv}] {\letin x v {e_2} \to e_2[\sfrac{v}{x}]}
+      \end{prooftree}
+      \] 
+      et
+      \[
+      \begin{prooftree}
+        \hypo{e_1 \to e_1'}
+        \infer 1[\mathcal{R}_\mathrm{lg}] {\mathtt{let}\ x = e_1 \ \mathtt{in}\ e_2 \to \mathtt{let}\ x = e_1' \ \mathtt{in}\ e_2}
+      \end{prooftree}
+      .\] 
+      Attention ! On n'a pas de règle \[
+        \cancel{
+          \begin{prooftree}
+            \hypo{e_2 \to e_2'}
+            \infer 1[\mathcal{R}_\mathrm{ld}] {\mathtt{let}\ x = e_1 \ \mathtt{in}\ e_2 \to \mathtt{let}\ x = e_1 \ \mathtt{in}\ e_2'}
+          \end{prooftree}
+        }
+      ,\] 
+      on réduit d'abord l'expression $e_1$ jusqu'à une valeur, avant de passer à $e_2$.
+  \end{itemize}
+
+  Le langage que l'on construit s'appelle $\mathsf{FUN}+\mathtt{let}$.
+
+  \subsubsection{Traduction de $\mathsf{FUN}+\mathtt{let}$ vers $\mathsf{FUN}$.}
+
+  On définit une fonction qui, à toute expression de $e$ dans $\mathsf{FUN}+\mathtt{let}$ associe une expression notée $\trad e$ dans $\mathsf{FUN}$ (on supprime les expressions locales).
+  L'expression $\trad e$ est définie par induction sur $e$. Il y a 6 cas :
+  \begin{itemize}
+    \item $\trad k = k$ ;
+    \item $\trad x = x$ ;
+    \item $\trad{e_1+e_2} = \trad e_1 + \trad e_2$ ;
+    \item $\trad{e_1\ e_2} = \trad e_1\ \trad e_2$ ;
+    \item $\trad{\fun x e} = \fun x {\trad e}$ ;
+    \item $\trad{\letin x {e_1} {e_2}} = (\fun x {\trad{e_2}})\ \trad{e_1}$.
+  \end{itemize}
+
+  \begin{lem}\label{lem:trad}
+    Pour tout $e \in (\mathsf{FUN}+\mathtt{let})$,
+    \begin{itemize}
+      \item $\trad e$ est une expression de $\mathsf{FUN}$\footnote{\textit{i.e.} $\trad e$ n'a pas de déclarations locales} ;
+      \item on a $\Vl(\trad e) = \Vl (e)$ ;
+      \item $\trad e$ est une valeur \textit{ssi} $e$ est une valeur ;
+      \item $\trad{e[\sfrac{v}{x}]} = \trad e [\sfrac{\trad v}{x}]$\footnote{On le prouve par induction sur $e$, c'est une induction à $6$ cas}.
+    \qed
+    \end{itemize}
+  \end{lem}
+
+  Pour démontrer le lemme~\ref{lem:trad}, on procède par induction sur $e$.
+  C'est long et rébarbatif, mais la proposition ci-dessous est bien plus intéressante.
+
+  \begin{prop}
+    Pour toutes expressions $e, e'$ de $\mathsf{FUN}+\mathtt{let}$, si on a la réduction $e \to_{\mathsf{FUN}+\mathtt{let}} e'$ alors $\trad e \to_{\mathsf{FUN}} \trad{e'}$.
+  \end{prop}
+
+  \begin{prv}
+    On procède par induction sur $e \to e'$ dans $\mathsf{FUN}+\mathtt{let}$.
+    Il y a $8$ cas car il y a 8 règles d'inférences pour $\to$ dans $\mathsf{FUN}+\mathtt{let}$.
+    \begin{itemize}
+      \item \textsl{Cas $\mathcal{R}_\mathrm{lv}$.}
+        Il faut montrer que $\trad{\letin x v {e_2}} \to_{\mathsf{FUN}} \trad{e[\sfrac{v}{x}]}$.
+        Par définition, l'expression de droite vaut \[
+          (\fun x {\trad e_2})\ \trad v \xrightarrow{\mathcal{R}_\beta}_{\mathsf{FUN}} \trad e_2 [\sfrac{\trad v}{x}]
+        ,\] 
+        car $\trad v$ est une valeur
+        par le lemme~\ref{lem:trad}, ce qui justifie $\mathcal{R}_\beta$. De plus, encore par le lemme~\ref{lem:trad}, on a l'égalité entre $\trad e_2 [\sfrac{\trad v}{x}] = \trad{e[\sfrac{v}{x}]}$.
+      \item \textsl{Cas $\mathcal{R}_\mathrm{lg}$.}
+        On sait que $e_1 \to e_1'$ et, par hypothèse d'induction, on a $\trad{e_1} \to \trad {e_1'}$.
+        Il faut montrer que \[
+          \trad{\letin x {e_1} {e_2}} \to \trad{\letin x {e_1'} {e_2}}
+        .\]
+        L'expression de droite vaut \[
+          (\fun x {\trad {e_2}})\ \trad {e_1} \xrightarrow{\mathcal{R}_\mathrm{ad}\ \&\ \text{hyp. ind.}}
+          (\fun x {\trad {e_2}})\ \trad{e_1'}
+        .\] 
+        Et, par définition de $\trad \cdot$, on a l'égalité :
+        \[
+          \trad{\letin x {e_1'} {e_2}} =
+          (\fun x {\trad {e_2}})\ \trad{e_1'}
+        .\] 
+      \item Les autres cas sont laissées en exercice.
+    \end{itemize}
+  \end{prv}
+
+  \begin{prop}
+    Si $\trad e \to \trad{e'}$ alors $e \to e'$.
+  \end{prop}
+  \begin{prv}
+    La proposition ci-dessus est mal formulée pour être prouvée par induction, on la ré-écrit.
+    On démontre, par induction sur la relation $f \to f'$ la propriété suivante :
+    \begin{quote}
+      "quel que soit $e$, si $f = \trad e$ alors il existe  $e'$ une expression telle que $f' = \trad {e'}$ et  $e \to e'$ (dans $\mathsf{FUN}+\mathtt{let}$)",
+    \end{quote}
+    qu'on notera $\mathcal{P}(f,f')$.
+
+    Pour l'induction sur $f \to f'$, il y a $6$ cas.
+    \begin{itemize}
+      \item \textsl{Cas de la règle $\mathcal{R}_\mathrm{ad}$.}
+        On suppose $f_2 \to f_2'$ et par hypothèse d'induction $\mathcal{P}(f_2,f_2')$.
+        On doit montrer $\mathcal{P}(f_1\ f_2, f_1\ f_2')$.
+        On suppose donc $\trad e = f_1\ f_2$.
+        On a deux sous-cas.
+        \begin{itemize}
+          \item \textit{1\textsuperscript{er} sous-cas.}
+            On suppose $e = e_1\ e_2$ et $\trad{e_1} = f_1 = f_2$.
+            Par hypothèse d'induction et puisque $\trad{e_2} = f_2$, il existe $e_2'$ tel que $e_2 \to e_2'$ et $\trad{e_2'} = f'_2$.
+            De $e_2\to e_2'$, on en déduit par $\mathcal{R}_\mathrm{ad}$ que $e_1\ e_2 \to e_1\ e_2'$.
+            On pose~$e' = e_1\ e_2'$ et on a bien $\trad{e'} = \trad{e_1}\ \trad{e_2'}$.
+          \item \textit{2\textsuperscript{ème} sous-cas.}
+            On suppose $e = \letin x {e_1} {e_2}$.
+            Alors,  \[
+              \trad e = \underbrace{(\fun x {\trad{e_2}})}_{f_1}\ \underbrace{\trad{e_1}}_{f_2}
+            .\]
+            Par hypothèse d'induction, il existe $e_1'$ tel que $e_1 \to e_1'$ et $\trad{e_1'} = f_2'$.
+            Posons $e' = (\letin x {e_1'} {e_2})$.
+            On doit vérifier~$\trad e \to \trad{e'}$ ce qui est vrai par $\mathcal{R}_\mathrm{ad}$ et que~$\trad{e'} = f_1\ f_2'$, ce qui est vrai par définition.
+        \end{itemize}
+      \item \textsl{Cas de la règle $\mathcal{R}_\mathrm{ag}$.}
+        On suppose $f_1 \to f_1'$ et l'hypothèse d'induction $\mathcal{P}(f_1, f_1')$.
+        On doit vérifier que $\mathcal{P}(f_1\ v, f_1'\ v)$.
+        On suppose $\trad e = f_1\ v$ et on a deux sous-cas.
+        \begin{itemize}
+          \item \textit{1\textsuperscript{er} sous-cas.}
+            On suppose $e = e_1\ e_2$ et alors $\trad e = \trad {e_1}\ \trad {e_2}$ par le lemme~\ref{lem:trad} et parce que $e_2$ est une valeur (car $\trad {e_2} = v$).
+            On raisonne comme pour la règle $\mathcal{R}_\mathrm{ad}$ dans le premier sous-cas, en appliquant $\mathcal{R}_\mathrm{ag}$.
+          \item \textit{2\textsuperscript{nd} sous-cas}.
+            On suppose $e = (\letin x {e_1} {e_2})$ alors \[
+              \trad e = \underbrace{\fun x {\trad{e_2}}}_{f_1}\ \underbrace{\trad{e_1}}_{f_2}
+            .\]
+            On vérifie aisément ce que l'on doit montrer.
+        \end{itemize}
+      \item Les autres cas se font de la même manière (attention à $\mathcal{R}_\beta$).
+    \end{itemize}
+  \end{prv}
+
+  \section{Typage en $\mathsf{FUN}$.}
+  \subsection{Définition du système de types.}
+
+  L'ensemble $\mathsf{Typ}$ des types, notés $\tau, \tau_1, \tau',\ldots$, est définit par la grammaire suivante : \[
+  \tau ::= \mathtt{int}  \mid  \tau_1 \to \tau_2
+  .\]
+
+  \begin{note}
+    Attention ! Le type $\tau_1 \to \tau_2 \to \tau_3$ n'est pas égal au type $(\tau_1 \to \tau_2) \to \tau_3$.
+    En effet, dans le premier cas, c'est une fonction qui renvoie une fonction ; et, dans le second cas, c'est une fonction qui prend une fonction.
+  \end{note}
+
+  \begin{defn}
+    Un \textit{environnent de typage}, noté $\Gamma, \Gamma_1, \Gamma',\ldots$, est un dictionnaire sur $(\mathcal{V}, \mathsf{Typ})$, où $\mathsf{Typ}$ est l'ensemble des types.
+
+    Une \textit{hypothèse de typage}, notée $x:\tau$, est un couple $(x,\tau)$.
+
+    On note $\Gamma, x : \tau$ l'extension de $\Gamma$ avec l'hypothèse de typage $x : \tau$ qui n'est définie que lorsque  $x \not\in \operatorname{dom} \Gamma$.\footnote{La définition de $\Gamma, x : \tau$ est "comme on le pense".}
+  \end{defn}
+
+  \begin{rmk}
+    On peut voir/implémenter $\Gamma$ comme des listes finies de couples $(x, \tau)$.
+  \end{rmk}
+
+  \begin{defn}
+    La \textit{relation de typage}, notée $\Gamma \vdash e : \tau$ ("sous les hypothèses $\Gamma$, l'expression $e$ a le type $\tau$") est définie par les règles d'inférences suivantes.
+
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{T}_\mathrm{k}]{\Gamma \vdash k : \mathtt{int}}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer[left label={\Gamma(x)=\tau}] 0[\mathcal{T}_\mathrm{v}]{\Gamma \vdash x : \tau}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma, x : \tau_1\footnote{On peut toujours étendre $\Gamma$ ainsi, modulo $\alpha$-conversion.} \vdash e_2}
+      \infer 1[\mathcal{T}_\mathrm{f}]{\Gamma \vdash \fun x e : \tau_1 \to \tau_2}
+    \end{prooftree}
+    \]
+
+    \[
+    \begin{prooftree}
+      \hypo{\Gamma \vdash  e_1 : \mathtt{int}}
+      \hypo{\Gamma \vdash  e_2 : \mathtt{int}}
+      \infer 2[\mathcal{T}_\mathrm{p}]{\Gamma \vdash e_1 + e_2 : \mathtt{int}}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\Gamma \vdash e : \tau_1 \to \tau_2}
+      \hypo{\Gamma \vdash e' : \tau_1}
+      \infer 2[\mathcal{T}_\mathrm{a}]{\Gamma \vdash  e\ e' : \tau_2}
+    \end{prooftree}.
+    \]
+  \end{defn}
+
+  \begin{rmk}
+    Pour l'instant, on parle uniquement d'expressions et pas du tout de valeurs ou de sémantique opérationnelle.
+  \end{rmk}
+
+  \begin{rmk}
+    \begin{enumerate}
+      \item On dit que $e$ est \textit{typable} s'il existe $\Gamma$ et $\tau$ tel que $\Gamma \vdash e : \tau$.
+      \item Il y a une règle de typage par construction du langage des expressions.
+    \end{enumerate}
+  \end{rmk}
+
+  \begin{exm}
+    \begin{enumerate}
+      \item L'expression $\fun x x$ est particulière : on peut la typer avec  $\tau \to \tau$ quel que soit $\tau$.
+        Par exemple,
+         \[
+        \begin{prooftree}
+          \infer 0[\mathcal{T}_\mathrm{v}]{x : \mathtt{int} \vdash x : \mathtt{int}}
+          \infer 1[\mathcal{T}_\mathrm{f}]{\emptyset \vdash \fun x x : \mathtt{int} \to \mathtt{int}}
+        \end{prooftree}
+        .\]
+        On aurait pu faire de même avec le type $(\mathtt{int} \to  \mathtt{int}) \to (\mathtt{int} \to  \mathtt{int})$.
+      \item Quel est le type de $\fun g g\ (g\ 7)$ ?
+        {
+          \fontsize{9pt}{9pt}
+        \[
+          \hspace{-3em}
+        \begin{prooftree}
+          \infer 0[\mathcal{T}_\mathrm{v}]{g : \mathtt{int}\to \mathtt{int} \vdash  g : \mathtt{int}\to \mathtt{int}}
+          \infer 0[\mathcal{T}_\mathrm{v}]{\Gamma\vdash g : \mathtt{int}\to \mathtt{int}}
+          \infer 0[\mathcal{T}_\mathrm{k}]{\Gamma\vdash 7 : \mathtt{int}}
+          \infer 2[\mathcal{T}_\mathrm{p}]{g : \mathtt{int}\to \mathtt{int} \vdash g\ 7 : \mathtt{int}}
+          \infer 2[\mathcal{T}_\mathrm{a}]{g : \mathtt{int}\to \mathtt{int} \vdash g\ (g\ 7)}
+          \infer 1[\mathcal{T}_\mathrm{f}]{\emptyset \vdash \fun g g\ (g\ 7) : (\mathtt{int} \to \mathtt{int}) \to \mathtt{int}}
+        \end{prooftree}
+        .\]
+        }
+    \end{enumerate}
+  \end{exm}
+
+  \subsection{Propriétés du système de types.}
+
+  % Henk Barendregt
+
+  \begin{lem}
+    \begin{itemize}
+      \item Si $\Gamma \vdash e : \tau$ alors $\Vl(e) \subseteq \operatorname{dom}(\Gamma)$.
+      \item \textsl{Affaiblissement.}
+        Si $\Gamma \vdash e : \tau$ alors \[
+          \forall x \not\in \operatorname{dom}(\Gamma),\;\forall \tau_0,\quad \Gamma, x : \tau_0 \vdash e : \tau
+        .\]
+      \item \textsl{Renforcement.}
+        Si $\Gamma, x : \tau_0 \vdash e : \tau$, et si $x\not\in \Vl(e)$ alors on a le typage $\Gamma \vdash  e: \tau$.
+    \end{itemize}
+  \end{lem}
+  \begin{prv}
+    Par induction sur la relation de typage (5 cas).
+  \end{prv}
+
+  \subsection{Propriété de progrès.}
+
+  \begin{lem}
+    \begin{enumerate}
+      \item Si $\emptyset\vdash e: \mathtt{int}$ et $e \not\to$ alors, il existe $k \in \mathds{Z}$ tel que $e = k$.
+      \item Si $\emptyset \vdash  e : \tau_1 \to \tau_2$ et $e \not\to$ alors il existe $x$ et $e_0$ tels que l'on ait $e = \fun x e_0$.
+    \end{enumerate}
+  \end{lem}
+  \begin{prv}
+    Vu en TD.
+  \end{prv}
+
+  \begin{prop}[Propriété de progrès]
+    Si $\emptyset \vdash e : \tau$ alors on a la disjonction :
+    \begin{enumerate}
+      \item soit $e$ est une valeur ;
+      \item soit il existe $e'$ telle que $e \to e'$.
+    \end{enumerate}
+  \end{prop}
+
+  \begin{rmk}~
+    \begin{itemize}
+      \item Si $\emptyset \vdash e_1\ e_2 : \tau$ alors il existe $e'$ tel que $e_1\ e_2 \to e'$.
+      \item Si $\emptyset \vdash e_1 + e_2 : \tau$ alors il existe $e'$ tel que $e_1 + e_2 \to e'$.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{rmk}
+    Par le typage, on a exclu les expressions bloquées car "mal formées" (\textit{e.g.} $3\ 2$ ou $3 + (\fun x x)$).
+  \end{rmk}
+
+  \subsection{Propriété de préservation.}
+
+  Cette propriété a plusieurs noms : préservation du typage, réduction assujettie, \textit{subject reduction}.
+
+  \begin{lem}[typage et substitution]
+    Si l'on a le typage $\emptyset \vdash v : \tau_0$ et $\Gamma, x : \tau_0 \vdash e : \tau$
+    alors on a $\Gamma \vdash e[\sfrac{v}{x}] : \tau$
+  \end{lem}
+  \begin{prv}
+    On prouve cette propriété par induction sur $e$. Il y a 5 cas.
+    \begin{itemize}
+      \item \textsl{Cas $e = y$.} On a deux sous-cas.
+        \begin{itemize}
+          \item \textit{1\textsuperscript{er} sous-cas $x \neq y$.}
+            Dans ce cas, $e[\sfrac{v}{x}] = y$. Il faut montrer $\Gamma \vdash y : \tau$ sachant que $\Gamma, x : \tau_0 \vdash y : \tau$. On applique le lemme de renforcement.
+          \item \textit{2\textsuperscript{nd} sous-cas $x = y$.}
+            Dans ce cas, $e[\sfrac{v}{x}] = v$. Il faut montrer que $\Gamma \vdash v : \tau$.
+            Or, on sait que $\Gamma, x : \tau_0 \vdash  x : \tau$ (d'où $\tau = \tau_0$) et $\emptyset \vdash v : \tau_0$.
+            On conclut par affaiblissement.
+        \end{itemize}
+      \item Les autres cas sont en exercice.
+    \end{itemize}
+  \end{prv}
+
+  \begin{prop}[Préservation du typage]
+    Si $\emptyset \vdash e : \tau$, et $e \to e'$ alors $\emptyset \vdash e' : \tau$.
+  \end{prop}
+  \begin{prv}
+    On montre la propriété par induction sur $\emptyset \vdash e : \tau$.
+    Il y a 5 cas.
+    \begin{itemize}
+      \item \textsl{Cas $\mathcal{T}_\mathrm{v}$.} C'est absurde ! (On n'a pas $\emptyset \vdash x : \tau$.)
+      \item \textsl{Cas $\mathcal{T}_\mathrm{f}$.} Si $(\fun x e)\to e'$ alors \ldots\ On peut conclure immédiatement car les fonctions sont des valeurs, elles ne se réduisent donc pas.
+      \item \textsl{Cas $\mathcal{T}_\mathrm{k}$.} C'est le même raisonnement.
+      \item \textsl{Cas $\mathcal{T}_\mathrm{a}$.} On a $e = e_1\ e_2$.
+        On sait qu'il existe $\tau_0$ un type tel que $\emptyset \vdash e_1 : \tau_0 \to \tau$ ($H_1$) et $\emptyset \vdash e_2 : \tau_0$ ($H_2$).
+        On a également les hypothèses d'induction :
+        \begin{itemize}
+          \item $(H'_1)$ : si $e_1 \to e_1'$ alors $\emptyset\vdash e_1' : \tau_0 \to \tau$ ;
+          \item $(H'_2)$ : si $e_2 \to e_2'$ alors $\emptyset\vdash e_2' : \tau_0$.
+        \end{itemize}
+        On doit montrer que si $e_1 \ e_2 \to e'$ alors $\emptyset \vdash e' : \tau$.
+        Supposons que $e_1\ e_2 \to e'$, il y a 3 sous-cas.
+        \begin{itemize}
+          \item \textit{Sous-cas $\mathcal{R}_\mathrm{ad}$.}
+            Cela veut dire que $e_2 \to e_2'$ et $e' = e_1\ e_2'$.
+            On conclut $\emptyset \vdash e_1 \ e_2' : \tau$ par $(H_2')$ et $(H_1)$.
+          \item \textit{Sous-cas $\mathcal{R}_\mathrm{ag}$.}
+            Cela veut dire que $e_1 \to e_1'$ et $e' = e_1'\ e_2$.
+            On conclut $\emptyset \vdash e_1'\ e_2 : \tau$ par $(H_1')$ et $(H_2)$.
+          \item \textit{Sous-cas $\mathcal{R}_\beta$.}
+            On a $e_1 = \fun x e_0$, $e_2 = v$ et finalement $e' = e_0[\sfrac{v}{x}]$.
+            On doit montrer $\emptyset \vdash e_0[\sfrac{v}{x}] : \tau$.
+            De plus, $(H_1)$ s'énonce par $\emptyset \vdash \fun x e_0 : \tau_0 \to \tau$.
+            Nécessairement (c'est un "\texttt{inversion}" en Rocq), cela provient de $x : \tau_0 \vdash e_0 : \tau$.
+            On en conclut par le lemme de substitution.
+        \end{itemize}
+      \item \textsl{Cas $\mathcal{T}_\mathrm{p}$.} Laissé en exercice.
+    \end{itemize}
+  \end{prv}
+
+
+  \begin{rmk}
+    Avec les propriétés de progrès et préservation implique qu'il n'y a pas de "mauvaises surprises" à l'exécution.
+    On a, en un sens, nettoyé le langage $\mathsf{FUN}$.
+
+    % TODO(Hugo) : faire la figure
+    % FUN + FUN0 + valeur + typés & clos
+
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \fill[fill=deepblue,very nearly transparent] plot[closed hobby] coordinates {
+        (3.9,10.8) (2.5,8.9) (2.8,5.4) (5.7,5.3) (7.6,8.1) (6,10.5) };
+        \fill[fill=deepgreen,very nearly transparent] plot[closed hobby] coordinates {
+        (5.9,11) (4.9,8.3) (6.1,6.9) (7.8,6.3) (9.6,8.5) (8.6,10.8) (7.5,11.5) };
+        \fill[fill=deepred,very nearly transparent] plot[closed hobby] coordinates {
+        (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+
+        \draw[deepblue] plot[closed hobby] coordinates {
+        (3.9,10.8) (2.5,8.9) (2.8,5.4) (5.7,5.3) (7.6,8.1) (6,10.5) };
+        \draw[deepgreen] plot[closed hobby] coordinates {
+        (5.9,11) (4.9,8.3) (6.1,6.9) (7.8,6.3) (9.6,8.5) (8.6,10.8) (7.5,11.5) };
+        \draw[deepred] plot[closed hobby] coordinates {
+        (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+
+        \begin{scope}
+          \clip plot[closed hobby] coordinates {
+          (3.9,10.8) (2.5,8.9) (2.8,5.4) (5.7,5.3) (7.6,8.1) (6,10.5) };
+          \clip plot[closed hobby] coordinates {
+          (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+          \fill[thick,deeppurple, very nearly transparent] plot[closed hobby] coordinates {
+          (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+          \draw[thick,deeppurple] plot[closed hobby] coordinates {
+          (3.9,10.8) (2.5,8.9) (2.8,5.4) (5.7,5.3) (7.6,8.1) (6,10.5) };
+          \draw[thick,deeppurple] plot[closed hobby] coordinates {
+          (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+          \node[text=deeppurple,rotate=45] at (6,6.7) {typées \textit{et} closes};
+        \end{scope}
+
+        \node[text=deepred] at (7,4.4) {closes};
+        \node[text=deepgreen] at (8,10.6) {valeurs};
+        \node[text=deepblue] at (3.2,8.5) {typées};
+        \node at (10.2,3.8) {expressions $\mathsf{FUN}$};
+
+        \draw (1, 12) rectangle (12, 3.5);
+      \end{tikzpicture}
+    \end{figure}
+
+    C'est la considération d'un langage \textit{statiquement typé}.
+    On aime savoir qu'OCaml ou Rust ont, pour la sémantique et le système de types, une propriété de progrès et de préservation.
+  \end{rmk}
+
+  \begin{exo}
+    Trouver $e$ et $e'$ deux expressions telles que $\emptyset : e' : \tau$ et $e \to e'$ mais que l'on ait pas $\emptyset \vdash e : \tau$.
+  \end{exo}
+  \begin{sol}
+    Il suffit de trouver une valeur non typable $e_1$, par exemple $\fun x (x\ x)$ ou  $\fun x (19\ 27)$, puis de considérer \[
+      e = (\fun x 3)\ e_1 \to 3
+    .\]
+    Or, $3$ est typable mais $e$ non.
+  \end{sol}
+
+  \subsection{Questions en lien avec la relation de typage.}
+
+  \begin{itemize}
+    \item \textit{Typabilité.} Pour $e$ donné, existe-t-il $\Gamma, \tau$ tels que $\Gamma \vdash  e : \tau$ ?
+    \item \textit{Vérification/Inférence de types.}
+      Pour $\Gamma$ et $e$ donnés, existe-t-il  $\tau$ tel que l'on ait $\Gamma \vdash e : \tau$ ? ($\triangleright$ OCaml)
+    \item \textit{Habitation.} Pour $\tau$ donné, existe-t-il  $e$ tel que $\emptyset \vdash e : \tau$ ? ($\triangleright$~Rocq\footnote{On peut voir une preuve d'un théorème en Rocq comme fournir une preuve qu'il existe une expression $e$ avec type $\tau$.}\showfootnote)
+  \end{itemize}
+
+  \subsection{Inférence de types.}
+
+  \subsubsection{Typage et contraintes.}
+
+  \begin{exm}
+    Dans une version étendue de $\mathsf{FUN}$ (on se rapproche plus au OCaml), si l'on considère le programme :
+    \begin{align*}
+    &\texttt{let rec}\ f\ x\ g \texttt{=}\\
+    &\quad \ldots g\ x\ \ldots\\
+    &\quad \ldots \texttt{if}\ g\ f\ \texttt{then}\ \ldots\ \texttt{else}\ \ldots\\
+    &\quad\ldots\letin h {x\ 7} \ldots
+    \end{align*}
+    On remarque que 
+    \begin{itemize}
+      \item $x$ et $f$ ont le même type ;
+      \item $g$ a un type ${?} \to \mathtt{bool}$ ;
+      \item $x$ a un type $\mathtt{int} \to {?}$.
+    \end{itemize}
+
+    On doit donc lire le programme, et "prendre des notes".
+    Ces "notes" sont des contraintes que doivent vérifier le programme.
+  \end{exm}
+
+  \begin{exm}
+    On souhaite déterminer le type $\tau$ tel que  \[
+    \emptyset\vdash \fun g g\ (g\ 7) : \tau
+    .\]
+    (On sait que $\tau = (\mathtt{int} \to \mathtt{int}) \to \mathtt{int}$.)
+
+    On construit l'arbre de l'expression (l'AST) :
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[sibling distance=30mm]
+        \node[fill=deepblue,text=white,ellipse] (L0){\texttt{fun}}
+        child { node[draw,rectangle] (L11) {$g$} }
+          child { node[fill=deepblue,text=white,ellipse] (L12){\texttt{app}}
+            child { node[fill=deepblue,text=white,ellipse] (L21){\texttt{var}} child { node[draw,rectangle] {$g$} }}
+            child { node[fill=deepblue,text=white,ellipse] (L22){\texttt{app}}
+              child { node[fill=deepblue,text=white,ellipse] (L31){\texttt{var}} child { node[draw,rectangle] {$g$} }}
+              child { node[fill=deepblue,text=white,ellipse] (L32){\texttt{cst}} child { node[draw,rectangle] {$7$} }}
+            }
+          };
+        \tikzset{node distance = 1cm and 1cm}
+        \node[right of=L0] {\color{deepgreen}$T_0$};
+        \node[left of=L11] {\color{deepgreen}$T_g$};
+        \node[right of=L12] {\color{deepgreen}$T_1$};
+        \node[right of=L22] {\color{deepgreen}$T_3$};
+        \node[right of=L21] {\color{deepred}$T_g$};
+        \node[right of=L31] {\color{deepred}$T_g$};
+        \node[right of=L32] {\color{deepred}$\mathtt{int}$};
+      \end{tikzpicture}
+    \end{figure}
+
+    On procède en plusieurs étapes :
+    \begin{enumerate}
+      \item On ajoute des inconnues de types $T_1$, $T_2$ $T_3$, \textit{etc} (en vert).
+      \item On écrit des contraintes faisant intervenir les $T_i$ (en orange/marron).
+        \begin{gather*}
+          \color{deepred}
+          T_0 = T_g \to T_1\\
+          \color{deepred}
+          T_g = T_2 \to T_1\\
+          \color{deepred}
+          T_g = \mathtt{int} \to T_1
+        .\end{gather*}
+      \item On résout les contraintes pour obtenir \[
+          T_0 = (\mathtt{int} \to \mathtt{int}) \to \mathtt{int}
+        .\] 
+    \end{enumerate}
+  \end{exm}
+
+  \begin{exm}[Cas limites]
+    \begin{itemize}
+      \item L'expression $\fun x 7$ admet une infinité de types ($T_x \to \mathtt{int}$).
+      \item L'expression $(\fun x 7)\ (\fun z z)$ a toujours le type $\mathtt{int}$ mais admet une infinité de dérivations.
+    \end{itemize}
+  \end{exm}
+
+  \begin{exm}[Et quand ça ne marche pas ?]
+    On essaie d'inférer le type de l'expression \[
+      \fun x x + (x\ 2)
+    .\]
+
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[sibling distance=30mm]
+        \node[fill=deepblue,text=white,ellipse] (L0){\texttt{fun}}
+        child { node[draw,rectangle] (L11) {$x$} }
+          child { node[fill=deepblue,text=white,ellipse] (L12){\texttt{add}}
+            child { node[fill=deepblue,text=white,ellipse] (L21){\texttt{var}} child { node[draw,rectangle] {$x$} }}
+            child { node[fill=deepblue,text=white,ellipse] (L22){\texttt{app}}
+              child { node[fill=deepblue,text=white,ellipse] (L31){\texttt{var}} child { node[draw,rectangle] {$x$} }}
+              child { node[fill=deepblue,text=white,ellipse] (L32){\texttt{cst}} child { node[draw,rectangle] {$7$} }}
+            }
+          };
+        \tikzset{node distance = 1cm and 1cm}
+        \node[right of=L0] {\color{deepgreen}$T_0$};
+        \node[left of=L11] {\color{deepgreen}$T_x$};
+        \node[right of=L12] {\color{deepgreen}$T_1$};
+        \node[right of=L22] {\color{deepgreen}$T_3$};
+        \node[right of=L21] {\color{deepred}$T_x$};
+        \node[right of=L31] {\color{deepred}$T_x$};
+        \node[right of=L32] {\color{deepred}$~\mathtt{int}$};
+      \end{tikzpicture}
+    \end{figure}
+
+    Les contraintes sont :
+    \begin{gather*}
+      \color{deepred}
+      T_0 = T_x  \to T_1\\
+      \color{deepred}
+      T_1 = T_x = T_2 = \mathtt{int}\\
+      \color{deepred}
+      T_x = \mathtt{int} \to T_2
+    .\end{gather*}
+    \textit{\textbf{Catastrophe !}} On ne peut pas résoudre ce système de contraintes (on ne peut pas avoir $T_x = \mathtt{int}$ et $T_x = \mathtt{int} \to T_2$ en même temps).
+    L'expression n'est donc pas typable.
+  \end{exm}
+
+  \begin{defn}
+    \begin{itemize}
+      \item On se donne un ensemble infini $\mathrm{IType}$ d'\textit{inconnues de type}, notées $T, T_1, T', \textit{etc}$.
+      \item On définit les \textit{types étendus}, notés $\hat{\tau}$, par la grammaire : \[
+          \hat{\tau} ::= \mathtt{int}  \mid \hat{\tau}_1 \to \hat{\tau}_2  \mid T
+        .\]
+      \item L'ensemble des types (\textit{resp}. étendus) est noté $\mathsf{Typ}$ (\textit{resp}.~$\widehat{\mathsf{Typ}}$).
+      \item Les environnement de types étendus sont notés $\widehat{\Gamma}$.
+      \item Ainsi défini, tout $\tau$ est un  $\hat{\tau}$, tout $\Gamma$ est un $\widehat{\Gamma}$.
+      \item Un $\hat{\tau}$ est dit \textit{constant} s'il ne contient pas d'inconnue de type (\textit{i.e.} si c'est un $\tau$).
+    \end{itemize}
+  \end{defn}
+
+  \begin{defn}
+    Une \textit{contrainte de typage} est une paire de types étendus, notée $\hat{\tau}_1 \qeq \hat{\tau}_2$, ou parfois $\hat{\tau}_1 = \hat{\tau}_2$.
+
+    On se donne $e \in \mathsf{FUN}$. On suppose que toutes les variables liées de $e$ sont :
+    \begin{itemize}
+      \item distinctes deux à deux ;
+      \item différentes de toutes les variables libres de $e$.
+    \end{itemize}
+
+    On se donne $\widehat{\Gamma}$ tel que $\Vl(e) \subseteq \mathrm{dom}(\widehat{\Gamma})$.
+    On choisit $T \in \mathrm{IType}$.
+
+    On définit un ensemble de contraintes, notée $\mathsf{CT}(e, \widehat{\Gamma}, T)$ par induction sur $e$, il y a 5 cas :
+    \begin{itemize}
+      \item $\begin{array}{rl}\\
+          \mathsf{CT}(e_1 + e_2, \widehat{\Gamma}, T) =& \mathsf{CT}(e_1, \widehat{\Gamma}, T_1) \cup \mathsf{CT}(e_2, \widehat{\Gamma}, T_2)\\ &{}\cup \{T_1 \qeq \mathtt{int}, T_2 \qeq \mathtt{int}, T \qeq \mathtt{int}\} 
+        \end{array}$
+      \item $\begin{array}{rl}\\
+          \mathsf{CT}(e_1\ e_2, \widehat{\Gamma}, T) =& \mathsf{CT}(e_1, \widehat{\Gamma}, T_1) \cup \mathsf{CT}(e_2, \widehat{\Gamma}, T_2)\\ &{}\cup \{T_1 \qeq T_2 \to T\} 
+        \end{array}$
+      \item $\mathsf{CT}(x, \widehat{\Gamma}, T) = \{T \qeq \widehat{\Gamma}(x)\}$ 
+      \item $\mathsf{CT}(k, \widehat{\Gamma}, T) = \{T \qeq \mathtt{int}\}$ 
+      \item $\begin{array}{rl}\\
+          \mathsf{CT}(\fun x e, \widehat{\Gamma}, T) =& \mathsf{CT}(e, (\widehat{\Gamma}, x: T_x), T_2)\\ &{}\cup \{T \qeq T_1 \to T_2\} 
+        \end{array}$
+    \end{itemize}
+    où les variables $T_1, T_2, T_x$ sont \textit{fraîches} (on notera par la suite \fresh\ $T_1$, $T_2$, $T_x$).
+  \end{defn}
+
+  \begin{rmk}
+    On peut résumer les cas "plus", "application" et "abstraction".
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \node[fill=deepblue,text=white,ellipse] (T0) {\texttt{add}}
+          child { node {$T_1$} }
+          child { node {$T_2$} };
+          \node[right of=T0] {$T_0$};
+          \node[below=2cm of T0] {$T_0 = T_1 = T_2 = \mathtt{int}$};
+      \end{tikzpicture}
+      $\quad$
+      \begin{tikzpicture}
+        \node[fill=deepblue,text=white,ellipse] (T0) {\texttt{app}}
+          child { node {$T_1$} }
+          child { node {$T_2$} };
+          \node[right of=T0] {$T_0$};
+          \node[below=2cm of T0] {$T_1 = T_2 \to T_0$};
+      \end{tikzpicture}
+      $\quad$
+      \begin{tikzpicture}
+        \node[fill=deepblue,text=white,ellipse] (T0) {\texttt{fun}}
+          child { node {$T_1$} }
+          child { node {$T_2$} };
+          \node[right of=T0] {$T_0$};
+          \node[below=2cm of T0] {$T_0 = T_1 \to T_2$};
+      \end{tikzpicture}
+    \end{figure}
+  \end{rmk}
+
+  \begin{defn}
+    Soit $C$ un ensemble de contraintes de typage. On note $\mathrm{Supp}(C)$, le \textit{support} de $C$, l'ensemble des inconnues de type mentionnées dans $C$.
+
+    Une \textit{solution} $\sigma$ de $C$ est un dictionnaire sur $(\mathrm{ITyp}, \widehat{\mathsf{Typ}})$ tel que~$\mathrm{dom}(\sigma) \supseteq \mathrm{Supp}(C)$ et que $\sigma$ égalise toutes les contraintes de $C$.
+
+    Pour $(\hat{\tau}_1 \qeq \hat{\tau}_2) \in C$, on dit que $\sigma$ égalise $\hat{\tau}_1 \qeq \hat{\tau}_2$ signifie que $\sigma(\hat{\tau}_1)$ et $\sigma(\hat{\tau}_2)$ sont le même type étendu.
+
+    Il reste à définir $\sigma(\hat{\tau})$, le résultat de l'application de $\sigma$ à $\hat{\tau}$, par induction sur $\hat{\tau}$, il y a trois cas :
+    \begin{itemize}
+      \item $\sigma(\hat{\tau}_1 \to \hat{\tau}_2) = \sigma(\hat{\tau}_1) \to \sigma(\hat{\tau}_2)$ ;
+      \item $\sigma(\mathtt{int}) = \mathtt{int}$ ;
+      \item $\sigma(T)$ est le type étendu associé à $T$ dans $\sigma$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Avec $\sigma = [T_1 \mapsto \mathtt{int}, T_2 \mapsto (\mathtt{int} \to T_3)]$, on a donc \[
+    \sigma(T_1 \to T_2) = \mathtt{int} \to (\mathtt{int} \to T_3)
+    .\]
+  \end{exm}
+  \begin{exm}
+    La contrainte $T_1 \qeq T_2 \to T_3$ est égalisée par la solution $\sigma = [T_1 \mapsto T_2 \to \mathtt{int}, T_3 \mapsto \mathtt{int}]$.
+  \end{exm}
+
+  \begin{defn}
+    Une \textit{solution constante} de $C$ est un dictionnaire sur $(\mathrm{ITyp}, \mathsf{Typ})$ (et pas $(\mathrm{ITyp}, \widehat{\mathsf{Typ}})$) qui est une solution de $C$.
+  \end{defn}
+
+  \begin{prop}
+    Soit $e \in \mathsf{FUN}$ et soit $\Gamma$ tel que $\Vl(e) \subseteq \mathrm{dom}(\Gamma)$.
+    Soit $T \in \mathrm{ITyp}$.
+    Si $\sigma$ est une solution constante de $\mathsf{CT}(e, \Gamma, T)$, alors $\Gamma \vdash e : \tau$ où $\tau = \sigma(T)$.
+  \end{prop}
+
+  \begin{prv}
+    On procède par induction sur $e$ ; il y a 5 cas.
+    \begin{itemize}
+      \item Dans le cas $e = e_1\ e_2$, on écrit \[
+          \small
+        \mathsf{CT}(e, \Gamma, T) = \mathsf{CT}(e_1, \Gamma, T_1) \cup \mathsf{CT}(e_2, \Gamma, T_2) \cup \{T_1 \qeq T_2 \to T\}
+        ,\]
+        où \fresh\ $T_1$, $T_2$.
+        Soit $\sigma$ une solution constante de  $\mathsf{CT}(e, \Gamma, T)$.
+        Alors, 
+        \begin{itemize}
+          \item $\sigma$ est une solution constante de $\mathsf{CT}(e_1, \Gamma, T_1)$ ;
+          \item $\sigma$ est une solution constante de $\mathsf{CT}(e_2, \Gamma, T_1)$.
+        \end{itemize}
+        Et, par induction, on sait que 
+        \begin{itemize}
+          \item $\Gamma \vdash e_1 : \sigma(T_1)$ ;
+          \item $\Gamma \vdash e_2 : \sigma(T_2)$.
+        \end{itemize}
+        Par ailleurs, $\sigma(T_1) = \sigma(T_2) \to \sigma(T)$.
+        On en conclut en appliquant $\mathcal{T}_\mathrm{a}$.
+      \item Les autres cas se traitent similairement.
+    \end{itemize}
+  \end{prv}
+
+  \begin{prop}
+    Supposons $\Gamma \vdash e : \tau$.
+    Alors, pour tout $T \in \mathrm{ITyp}$, il existe $\sigma$ une solution constante de  $\mathsf{CT}(e, \Gamma, T)$ telle que l'on ait l'égalité $\sigma(T) = \tau$.
+  \end{prop}
+
+  \begin{prv}
+    On procède par induction sur $e$. Il y a 5 cas.
+    \begin{itemize}
+      \item Dans le cas $e = e_1\ e_2$, supposons $\Gamma \vdash  e_1\ e_2 : \tau$.
+        Nécessairement, cette dérivation provient de $\Gamma \vdash e_1 : \tau_2 \to \tau$ et aussi $\Gamma \vdash e_2 : \tau_2$.
+
+        Soit $T_0 \in \mathrm{ITyp}$, on a \[
+          \small
+          \mathsf{CT}(e, \Gamma, T_0) = \mathsf{CT}(e_1, \Gamma, T_1) \cup \mathsf{CT}(e_2, \Gamma, T_2) \cup \{T_1 \qeq T_2 \to T_0\}
+        .\]
+        Et, par induction, on a $\sigma_1$ et $\sigma_2$ des solutions constantes de~$\mathsf{CT}(e_1, \Gamma, T_1)$ et $\mathsf{CT}(e_2, \Gamma, T_2)$ avec $\sigma_1(T_1) = \tau_2 \to \tau$ et $\sigma_2(T_2) = \tau_2$.
+
+        On définit $\sigma$ en posant :
+         \begin{itemize}
+          \item $\sigma(T) = \sigma_1(T)$ si $T \in \mathrm{Supp}(\mathsf{CT}(e_1, \Gamma, T_1))$ ;
+          \item $\sigma(T) = \sigma_2(T)$ si $T \in \mathrm{Supp}(\mathsf{CT}(e_2, \Gamma, T_2))$ ;
+          \item $\sigma(T_0) = \tau$.
+        \end{itemize}
+        On vérifie bien que $\sigma$ est solution constante de $\mathsf{CT}(e, \Gamma, T_0)$.
+      \item Les autres cas se traitent similairement.
+    \end{itemize}
+  \end{prv}
+
+  \begin{thm}
+    On a $\Gamma \vdash e : \tau$ si, et seulement si $\forall T \in \mathrm{ITyp}$, l'ensemble de contraintes $\mathsf{CT}(e, \Gamma, T)$ admet une solution constante $\sigma$ tel que $\sigma(T) = \tau$.
+    \qed
+  \end{thm}
+
+  \begin{rmk}
+    On a caractérisé l'ensemble des dérivations de~$\Gamma \vdash e : \tau$ avec l'ensemble des solutions constantes de~$\mathsf{CT}(e, \Gamma, T)$.
+  \end{rmk}
+
+  \subsubsection{Termes et unification.}
+
+  \begin{defn}
+    On se donne
+    \begin{itemize}
+      \item un ensemble fini $\Sigma$ de  \textit{constantes}, notées $f, g, a, b$ où chaque constante  $f \in \Sigma$ a un entier naturel nommé \textit{arité} ;
+      \item un ensemble infini $V$ d'\textit{inconnues}/de \textit{variables}/de \textit{variables d'unification}; notées $X, Y, Z$ (mais parfois $x, y,z$).
+    \end{itemize}
+
+    L'ensemble $\mathsf{T}(\Sigma, V)$ des \textit{termes} sur $(\Sigma, V)$, notés  $t$, $u$, \textit{etc}, est défini de manière inductive, ce qui est décrit par la grammaire : \[
+    t ::= f^k (t_1, \ldots, t_k) \mid X
+    ,\] 
+    où $f$ est une constante d'arité $k$.
+  \end{defn}
+
+  \begin{rmk}
+    L'intuition est que l'on étend, comme lors du passage de $\mathsf{Typ}$ à $\widehat{\mathsf{Typ}}$, un langage de départ pour ajouter des inconnues.
+    La définition inductive a $|\Sigma| + 1$ constructeurs.
+
+    Intuitivement, les  $X \in V$ ne fait pas partie du langage de départ.
+    Il n'y a pas de liens pour $X$.
+  \end{rmk}
+
+  \begin{exm}
+    Avec $\Sigma = \{f^2, g^1, a^0, b^°\}$, \[
+      t_0 := f(g(a), f(X, f(Y, g(X)))) \in \mathsf{T}(\Sigma, V)
+    \]
+    est un terme.
+  \end{exm}
+
+  \begin{defn}
+    On définit $\mathsf{Vars}(t)$ l'ensemble des inconnues/variables de $t$ par induction sur $t$.
+    Il y a deux familles de cas :
+    \begin{itemize}
+      \item $\mathsf{Vars}(f(t_1, \ldots, t_k)) = \mathsf{Vars}(t_1) \cup \cdots \cup \mathsf{Vars}(t_k)$ ;
+      \item $\mathsf{Vars}(X) = \{X\}$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{defn}
+    Une \textit{substitution}, notée $\sigma, \sigma_1, \sigma',$ \textit{etc}, est un dictionnaire sur $(V, \mathsf{T}(\Sigma, V))$.
+
+    Si $X \in \mathrm{dom}(\sigma)$, on dit que $\sigma$ est \textit{définie} en $X$.
+
+    Soit $\sigma$ une substitution et $t \in \mathsf{T}(\Sigma, V)$.
+    Le résultat de l'application de $\sigma$ à $t$, noté $\sigma(t)$, est défini par induction sur $t$, il y a deux familles de cas :
+    \begin{itemize}
+      \item $\sigma(f(t_1, \ldots, t_k)) = f(\sigma(t_1), \ldots, \sigma(t_k))$ ;
+      \item $\sigma(X) = X$ si  $X \not\in \mathrm{dom}(\sigma)$ ;
+      \item $\sigma(X)$ est le terme associé à $X$ dans $\sigma$ si $X \in \mathrm{dom}(\sigma)$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Avec $\sigma = \{X \mapsto g(Y), Y \mapsto b\}$, on a \[
+      \sigma(t_0) = f(g(a), f(\underbrace{g(Y)},f(b,g(\underbrace{g(Y)}))))
+    .\] 
+    \textit{\textbf{Attention !}} On n'a pas de terme en $g(b)$ : c'est une substitution \textit{simultanée}.
+  \end{exm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
+
+

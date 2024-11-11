@@ -1,0 +1,39 @@
+Algèbre 𝒜 (de Boole) :
+→ ∅ ∈ 𝒜
+→ A ∈ 𝒜 => Aᶜ ∈ 𝒜
+→ A,B ∈ 𝒜 => A ∪ B ∈ 𝒜
+
+σ-algèbre = tribu 𝒜 :
+→ ∅ ∈ 𝒜
+→ A ∈ 𝒜 => Aᶜ ∈ 𝒜
+→ ∀ i ∈ ℕ, Aᵢ ∈ 𝒜 => ⋃ Aᵢ ∈ 𝒜
+
+Classe monotone (ou λ-système) 𝒩 :
+→ X ∈ 𝒩
+→ A,B ∈ 𝒩, A ⊆ B => B ⧵ A ∈ 𝒩
+→ A₀ ⊆ A₁ ⊆ A₂ ⊆ ⋯ ⊆ Aₙ ⊆ ⋯ dans 𝒩 alors ⋃ Aₙ ∈ 𝒩
+
+Mesure μ : 𝒜 ⟶ [0, +∞]
+→ μ(∅) = 0
+→ μ(⨆ Aᵢ) = ∑ μ(Aᵢ)      (=> σ-additivité)
+
+Mesure extérieure μ⁺ : ℘(X) ⟶ [0, +∞]
+→ μ⁺(∅) = 0
+→ A ⊆ B => μ⁺(A) ≤ μ⁺(B) (=> croissance)
+→ μ(⋃ Aᵢ) ≤ ∑ μ(Aᵢ)      (=> σ-sous-additivité)
+
+A est μ⁺-mesurable si ∀ B ⊆ X, μ⁺(E) = μ⁺(E ∩ A) + μ⁺(E ⧵ A)
+
+Mesure extérieure ⟶ mesure : (théorème de Carathéodory)
+    (X, ℳ(μ⁺), μ⁺) est un espace mesuré
+    où ℳ(μ⁺) = { A ⊆ X | A est μ⁺-mesurable }
+
+Lemme des classes monotones :
+    si 𝒞 ⊆ ℘(X) est stable par intersections finies
+    alors 𝑚(𝒞) = σ(𝒞).
+
+
+                 _
+Truibu complétée 𝒜̄̄ = σ(𝒜 ∪ 𝒩(μ))
+où 𝒩(μ) = { A ⊆ X | ∃ B ⊆ A, μ(B) = 0 }.
+

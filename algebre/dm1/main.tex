@@ -1,0 +1,241 @@
+\documentclass{../../td}
+
+\title{DM n°1 -- Algèbre 1}
+\author{Hugo {\scshape Salou}\\ Dept. Informatique}
+
+\begin{document}
+  \maketitle
+
+  \chapter*{Exercice 1.}
+
+  \begin{enumerate}
+    \item Afin de montrer que l'application $\alpha : \bar{k} \mapsto \bar{k} \cdot (g_0,\ldots,g_{p-1})$ est une action, nous devons montrer deux propriétés :
+      \begin{itemize}
+        \item L'application $\alpha$ est un morphisme de groupe.
+          En effet, pour un élément $x = (g_0, \ldots, g_{p-1}) \in X$, on a
+          \begin{align*}
+            \big(\alpha(-\bar{\ell})\circ\alpha(\bar{k})\big)(x)
+            &= \alpha(\overline{-\ell})(g_{k},\ldots,g_{p+k-1}) \\
+            &= (g_{k-\ell}, \ldots, g_{p+k-\ell-1}) \\
+            &= \alpha(\bar{k} - \bar\ell)(x) \\
+          .\end{align*}
+        \item Pour $\bar{k} \in \mathds{Z} / p \mathds{Z}$, l'application $f_{\bar{k}} x \mapsto \alpha(\bar{k})(x)$ est une bijection.
+          En effet, l'application $g_{\bar{k}} : x \mapsto \alpha(-\bar{k})(x)$ vérifie l'égalité $g_{\bar{k}} \circ f_{\bar{k}} = f_{\bar{k}} \circ g_{\bar{k}} = \mathrm{id}_X$.
+          Autrement dit, $f_{\bar{k}}$ est bijective.
+      \end{itemize}
+      On en déduit que $\alpha$ est bien une action de groupe.
+    \item 
+      \begin{enumerate}
+        \item Soit $x  = (g_0,\ldots,g_{p-1})\in X$. On sait que $\operatorname{Stab} x \le \mathds{Z} / p \mathds{Z}$.
+          Ainsi, par le théorème de Lagrange, on a $\#\mathrm{Stab}\ x \in \{1, p\}$ car $p$ premier.
+          On a donc deux cas à considérer.
+          \begin{itemize}
+            \item Si $\# \mathrm{Stab}\ x = p$, alors on a un sous-groupe de $\mathds{Z} / p \mathds{Z}$ de même cardinal, d'où $\mathrm{Stab}\ x = \mathds{Z}/p\mathds{Z}$.
+              Et, les éléments~$x = (g_0,\ldots,g_{p-1})$ qui vérifient la condition sur le cardinal du stabilisateur sont les $x = (g_0, \ldots, g_0)$ qui vérifient ${g_0}^p = e$.
+              Ainsi, ce sont les éléments d'ordre $p$, ou l'identité.
+            \item Sinon $\# \mathrm{Stab}\ x = 1$, et alors le stabilisateur est un sous-groupe de $\mathds{Z} / p \mathds{Z}$ de cardinal 1, c'est donc le groupe trivial $\{\bar{0}\}$.
+          \end{itemize}
+        \item On applique la formule des classes \[
+          \# X = \sum_{x \in G} \frac{\#(\mathds{Z}/p\mathds{Z})}{\#(\mathrm{Stab}\ x)}
+          .\]
+          D'une part, on dénombre $\# X = \# G^{p-1}$ car $(g_0,\ldots, g_{p-2})$ détermine entièrement l'élément $g_{p-1}$ pour que $(g_0, \ldots, g_{p-1}) \in X$.
+
+          D'autre part, on peut disjoindre les cas en fonction de l'élément $x \in G$ :
+          \begin{itemize}
+            \item soit $x$ est d'ordre $p$ et alors $\#\mathrm{Stab}\ x = p$ (il y en a $\mathrm{ord}_p (G)$) ;
+            \item soit $x$ est l'élément neutre et alors $\#\mathrm{Stab}\ x = p$ (il y en a 1) ;
+            \item sinon, on a $\# \mathrm{Stab}\ x = 1$.
+          \end{itemize}
+
+          On en déduit \[
+            \# G^{p-1} = (1 + \mathrm{ord}_p G)\cdot \frac{p}{p} + p \cdot \# { x \in G  \mid \# \mathrm{Stab}\ x = 1 }
+          ,\] 
+          d'où par passage modulo $p$,
+          \[
+          \# G^{p-1} \equiv 1 + \mathrm{ord}_p G \pmod p
+          .\]
+      \end{enumerate}
+    \item On procède en deux temps.
+      \begin{itemize}
+        \item D'une part, si $p  \mid \# G$, alors $\mathrm{ord}_p G \equiv -1 \pmod p$, il a donc au moins un élément d'ordre $p$.
+        \item D'autre part, si $G$ a un élément d'ordre $p$, alors $p  \mid \# G$, car l'ordre d'un élément divise l'ordre du groupe.
+      \end{itemize}
+      D'où l'équivalence.
+  \end{enumerate}
+
+  \chapter*{Exercice 2.}
+  \begin{enumerate}
+    \item Soit $G$ un groupe abélien. Alors, \[[g,h] = g h g^{-1} g^{-1} = g g^{-1} h h^{-1} = e,\] pour deux éléments $g, h \in G$.
+      On en déduit que $D(G) = \{e\}$ le groupe trivial.
+    \item On sait que $D(G)$ est un sous-groupe.
+      Soit $x \in G$. Montrons que $x D(G) x^{-1} = D(G)$.
+
+      On calcule, pour $g,h \in G$ :
+      \[
+        x [g,h] x^{-1} = \overbrace{x g x^{-1}} \overbrace{x h x^{-1}} \overbrace{x g^{-1} x^{-1}} \overbrace{x h^{-1} x^{-1}} = [x g x^{-1}, x h x^{-1}]
+      .\]
+
+      On sait que l'application $y \mapsto x y x^{-1}$ est un isomorphisme d'où l'égalité 
+      \[
+        x D(G) x^{-1} = \langle x[g,h]x^{-1} \rangle_{g,h \in G} = \langle [x g x^{-1}, x h x^{-1}] \rangle_{g,h \in G} = D(G)
+      .\] 
+      On en déduit que $D(G)$ est un sous-groupe distingué de $G$.
+    \item On calcule 
+      \[
+        g h = g h g^{-1} h^{-1} h g = [g,h] h g
+      .\]
+      D'où, $G / D(G)$ est abélien.
+    \item Soit $A$ un groupe abélien, et soient $x,g,h \in G$.
+      On a \[
+        \varphi(x [g,h]) = \varphi(x) \cdot \varphi(g)\: \varphi(h)\: \varphi(g)^{-1}\: \varphi(h)^{-1} = \varphi(x)
+      .\]
+      Ainsi, on en déduit que l'application 
+      \begin{align*}
+        \bar\varphi:\quad\quad G^\mathrm{ab} &\longrightarrow A \\
+        x\: D(G) &\longmapsto \varphi(x)
+      .\end{align*}
+      est bien définie. De plus, c'est bien un morphisme car $\varphi$ l'est. \label{ex2-q4}
+    \item Soit $H \triangleleft G$ tel que $G / H$ est abélien.
+      Ainsi, pour deux éléments quelconques $g,h \in G$, on a $g h H = h g H$ donc $g h g^{-1} h^{-1} \in H$, et on en déduit que $D(G) \subseteq H$ car $D(G)$ est engendré par les commutateurs.
+    \item On construit l'isomorphisme 
+      \begin{align*}
+        \Phi: G^* &\longrightarrow (G^\mathrm{ab})^* \\
+        \varphi &\longmapsto \bar\varphi
+      ,\end{align*}
+      où l'application $\bar{\varphi}$ est définie en question \ref{ex2-q4}. (On peut l'appliquer car $\mathds{C}^\times$ est un groupe abélien).
+      Vue la définition précédente de $\bar\varphi$, l'application $\Phi$ est un morphisme.
+      Montrons que $\Phi$ est un isomorphisme.
+      \begin{itemize}
+        \item D'une part, $\Phi$ est injective. En effet, soit $\psi \in \ker \Phi$.
+          Ainsi, on a $\bar\psi = 0$, ce qui implique que $\psi = 0$ (sinon un élément d'image non nul impliquerai, après passage au quotient, une image non nulle).
+        \item D'autre part, $\Phi$ est surjective.
+          En effet, pour $\bar\varphi \in (G^\mathrm{ab})^*$, on pose $\psi = \pi \circ \varphi$, où $\pi : G \to G / D(G)$ est la projection canonique.
+          On a bien $\bar\psi = \bar\varphi$ car l'application $\varphi$ passe au quotient.
+      \end{itemize}
+      D'où l'isomorphisme.
+  \end{enumerate}
+
+  \chapter*{Exercice 3.}
+
+  \begin{enumerate}
+    \item Soient $x,y,z,x',y,',z' \in \mathds{Z}/p\mathds{Z}$.
+      On calcule \[
+      \begin{pmatrix}
+        1 & x & y\\
+        0 & 1 & z\\
+        0 & 0 & 0\\
+      \end{pmatrix} \cdot 
+      \begin{pmatrix}
+        1 & x' & y'\\
+        0 & 1 & z'\\
+        0 & 0 & 0\\
+      \end{pmatrix} =\cdot 
+      \begin{pmatrix}
+        1 & x + x' + 0 & y + y' + x z'\\
+        0 & 1 & z + z' + 0\\
+        0 & 0 & 1
+      \end{pmatrix} 
+      ,\]
+      d'où \[
+        h(x,y,z) \cdot  h(x',y',z') = h(x+y', y+y'+xz', z+z')
+      .\]
+      De plus, $\mathrm{I}_3 = h(\bar0,\bar0,\bar0)$.
+      Aussi, $\det h(x,y,z) = 1 \neq 0$, la matrice admet donc un inverse.
+      Finalement, on remarque que \[
+      \begin{pmatrix}
+        1 & x & y\\
+        0 & 1 & z\\
+        0 & 0 & 0\\
+      \end{pmatrix} \cdot 
+      \begin{pmatrix}
+        1 & -x & - y + xz \\
+        0 & 1 & - z \\
+        0 & 0 & 1
+      \end{pmatrix} = \mathrm{I}_3
+      ,\]
+      d'où $h(x,y,z)^{-1} = h(-x, -y + xz, -z)$.
+
+      Ainsi, $G$ est bien un sous-groupe de $\mathrm{GL}_3(\mathds{Z} / p \mathds{Z})$.
+    \item
+      \begin{enumerate}
+        \item On procède par récurrence pour montrer la formule pour $n \in \mathds{N}$ et $-n \in \mathds{N}$.
+          \begin{itemize}
+            \item On a $h(x,y,z)^0 = h(0,0,0) = \mathrm{I}_3$.
+            \item On a
+              {
+                \small
+              \begin{align*}
+                \hspace{-3em}
+                h(x,y,z)^{n+1} &= h(x,y,z)^n \cdot h(x,y,z)\\
+                &= h\left(n x + x, ny + \frac{n(n-1)}{2} xz + y + x z, n z + z\right) \\
+                &= h\left((n+1)x, (n+1)y + \frac{(n+1)n}{2} xz, (n+1)z\right) \\
+              .\end{align*}
+              }
+            \item On a
+              {
+                \footnotesize
+              \begin{align*}
+                \hspace{-3em}
+                h(x,y,z)^{-(n+1)} &= h(x,y,z)^{-n} \cdot h(x,y,z)^{-1}\\
+                &= h\left(-n x - x, -ny + \frac{n(n-1)}{2} xz - y + x z, -n z - z\right) \\
+                &= h\left(-(n+1)x, -(n+1)y + \frac{(n+1)n}{2} xz, -(n+1)z\right) \\
+              .\end{align*}
+              }
+          \end{itemize}
+          On en conclut par récurrence.
+        \item Soit $p$ premier impair.
+          Soient $x,y,z \in \mathds{Z} / p\mathds{Z}$.
+          On cherche le plus petit $k \in \mathds{N}$ tel que $h(x,y,z)^k = h(\bar0,\bar0,\bar0)$, ce qui est vrai si et seulement si $k x = \bar{0}$ et $k y + k(k-1) x z / 2 = \bar{0}$ et $k z = \bar{0}$.
+          On procède à une disjonction de cas.
+
+          \begin{itemize}
+            \item Si $x = y = z = \bar{0}$ alors, l'ordre de $h(x,y,z)$ est $1$.
+            \item Si $y \neq x = z = \bar{0}$ alors, par primalité de $p$ et imparité de $p$, l'ordre de $h(x,y,z)$ est $p$.
+            \item Sinon ($x \neq \bar{0}$ ou $z \neq \bar{0}$), alors par primalité de $p$, l'ordre de $h(x,y,z)$ est $p$.
+          \end{itemize}
+        \item Soit $p$ premier pair, donc $p = 2$.
+          On procède à tous les cas : il n'y a que 8 éléments dans $G$.
+          \begin{itemize}
+            \item L'ordre de $h(\bar0,\bar0,\bar0)$ est 1.
+            \item L'ordre de $h(\bar0,\bar0,\bar1)$ est 2.
+            \item L'ordre de $h(\bar0,\bar1,\bar0)$ est 2.
+            \item L'ordre de $h(\bar0,\bar1,\bar1)$ est 2.
+            \item L'ordre de $h(\bar1,\bar0,\bar0)$ est 2.
+            \item L'ordre de $h(\bar1,\bar0,\bar1)$ est 4.
+            \item L'ordre de $h(\bar1,\bar1,\bar0)$ est 2.
+            \item L'ordre de $h(\bar1,\bar1,\bar1)$ est 4.
+          \end{itemize}
+      \end{enumerate}
+    \item On calcule l'ensemble \[
+        Z(G) = \mleft\{\, A \in G \;\middle|\; \forall B \in G, AB = BA\,\mright\} 
+      .\] 
+      On pose $A = h(x,y,z)$ et $B = h(x',y',z')$ deux éléments de $G$.
+      On a $AB = BA$ si et seulement si $x z' = z x'$ (les autres conditions sont symétriques et ont des opérations commutatives). La contrainte que $A$ commute pour tout $B$ implique que $x = 0 = z$.
+      D'où, \[
+        Z(G) = \mleft\{\,h(0,y,0) \;\middle|\; y \in  \mathds{Z}/ p \mathds{Z} \,\mright\} 
+      .\]
+    \item Soient $A, B \in G$.
+      On calcule 
+      \[
+        [A,B] = A B A^{-1} B^{-1} = h(0, \underbrace{x z' - x' z}_c, 0)
+      .\]
+      On en déduit que $D(G) = \{h(0,c,0)  \mid c \in \mathds{Z} / p \mathds{Z}\}$.
+      On remarque que $D(G) = Z(G)$.
+    \item On a \[
+    G / D(G) \cong \mleft\{\,h(x,\bar0,z) \;\middle|\;x,z \in \mathds{Z}/p\mathds{Z} \,\mright\} \cong (\mathds{Z} / p \mathds{Z})^2
+    .\]
+  \end{enumerate}
+
+  \vfill
+
+  \begin{center}
+    \color{deepblue}
+    \boxed{
+      \textbf{\textit{Fin du DM.}}
+    }
+  \end{center}
+
+
+  \vfill
+
+\end{document}

@@ -1,0 +1,605 @@
+\documentclass{../../../notes}
+
+\title{Cours particuliers\hspace{1em}\textit{Séance 8}}
+\author{Hugo \textsc{Salou}}
+
+\newlength\stextwidth
+\newcommand\makesamewidth[3][c]{%
+  \settowidth{\stextwidth}{#2}%
+  \makebox[\stextwidth][#1]{#3}%
+}
+
+\newcounter{questioncounter}
+\setcounter{questioncounter}{0}
+
+\newcommand\question[1]{
+  \vspace{1em}
+  \refstepcounter{questioncounter}
+  \makesamewidth[r]{\textbf{Q99.}}{\textbf{Q\thequestioncounter.}}~
+  \parbox[t]{11cm}{#1}
+  \vspace{1em}
+}
+
+\newcommand\monoit[1]{ \texttt{\textit{#1}} }
+
+\newcommand\indication[2]{
+  \textit{Indication #1.}
+
+  \raisebox{\depth}{\rotatebox{180}{\parbox{12.3cm}{#2}}}
+}
+
+\setlength\tabcolsep{1em}
+
+\usepackage{mathdots}
+
+\begin{document}
+  Voici le support utilisé pour cette séance.
+  Il consiste en trois exercices "type khôlle", le premier sur la \textbf{NP}-complétude et les réductions polynomiales ; le second sur l'apprentissage ; et le dernier sur les deux.
+
+  En théorie, chaque exercice devrait pouvoir se faire en $1\:\mathrm{h}$ (environ).
+  Mais, c'est assez difficile de prévoir la durée d'un sujet (et encore plus un sujet d'oral).
+
+  J'ai laissé quelques indications pour les questions plus complexes des exercices.
+
+  \begingroup
+  \let\clearpage\relax
+  \tableofcontents
+  \endgroup
+
+  \chapter{\textbf{NP}-complétude du problème Solitaire.}
+  \label{exo:np}
+
+  \question{\hspace{0.001mm}{\color{deepblue} [\textsl{Question de cours.}]}
+    Soient $P$ et $Q$ deux problèmes.
+    (Re)démontrer la propriété suivante :
+    \begin{quote}
+      si $P \preceq_\mathrm{p} Q$ et que $P$ est un problème~\textbf{NP}-difficile, alors $Q$ l'est aussi.
+    \end{quote}
+  }
+
+  On considère un jeu, qu'on appelle "jeu du solitaire".
+  Ce jeu se joue sur une grille de taille $n \times m$.
+  Sur chaque case de la grille, il peut y avoir :
+  \begin{itemize}
+    \item un pion bleu, qu'on représentera par "\tikz \fill[deepblue] (0,0) circle (3pt);" dans la case ;
+    \item un pion rouge, qu'on représentera par "\tikz \fill[nicered] (0,0) circle (3pt);" dans la case ;
+    \item aucun pion, qu'on représentera par ne rien avoir dans la case.
+  \end{itemize}
+
+  Dans ce jeu, on part d'une configuration initiale et, à chaque tour, on retire un pion.
+  Le but est d'arriver à une configuration \textit{gagnante}. Une configuration est dit gagnante si les deux conditions sont vérifiées
+  \begin{enumerate}
+    \item \textcolor{deepblue}{\textsl{contrainte de couverture :}} sur chaque ligne, il y a au moins un pion ;
+    \item \textcolor{deepblue}{\textsl{contrainte de monochromie :}} sur chaque colonne, tous les pions sont de la même couleurs.
+  \end{enumerate}
+
+  On dit qu'une configuration initiale est \textit{admissible} s'il est possible d'arriver à une position gagnante à partir de cette position initiale.
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \draw (0, 0) grid (6, 4);
+
+      \fill[deepblue] (0.5, 3.5) circle (3mm);
+      \fill[deepblue] (0.5, 1.5) circle (3mm);
+      \fill[deepblue] (1.5, 3.5) circle (3mm);
+      \fill[deepblue] (1.5, 2.5) circle (3mm);
+      \fill[deepblue] (2.5, 2.5) circle (3mm);
+      \fill[deepblue] (2.5, 1.5) circle (3mm);
+      \fill[deepblue] (5.5, 2.5) circle (3mm);
+
+      \fill[nicered] (2.5, 3.5) circle (3mm);
+      \fill[nicered] (3.5, 0.5) circle (3mm);
+      \fill[nicered] (4.5, 2.5) circle (3mm);
+      \fill[nicered] (5.5, 0.5) circle (3mm);
+      \fill[nicered] (5.5, 1.5) circle (3mm);
+
+    \end{tikzpicture}
+    \caption{Une configuration initiale admissible}
+    \label{fig:np-conf-init-adm}
+  \end{figure}
+
+  La configuration initiale en figure~\ref{fig:np-conf-init-adm} est admissible.
+  En effet, il est possible, en partant de cette configuration, d'arriver dans une position gagnante, comme le montre la figure~\ref{fig:np-move-sequence}.
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=0.3]
+      \draw (0, 0) grid (6, 4);
+
+      \fill[deepblue] (0.5, 3.5) circle (3mm);
+      \fill[deepblue] (0.5, 1.5) circle (3mm);
+      \fill[deepblue] (1.5, 3.5) circle (3mm);
+      \fill[deepblue] (1.5, 2.5) circle (3mm);
+      \fill[deepblue] (2.5, 2.5) circle (3mm);
+      \fill[deepblue] (2.5, 1.5) circle (3mm);
+      \fill[deepblue] (5.5, 2.5) circle (3mm);
+
+      \fill[nicered] (2.5, 3.5) circle (3mm);
+      \fill[nicered] (3.5, 0.5) circle (3mm);
+      \fill[nicered] (4.5, 2.5) circle (3mm);
+      \fill[nicered] (5.5, 0.5) circle (3mm);
+      \fill[nicered] (5.5, 1.5) circle (3mm);
+    \end{tikzpicture}
+    \begin{tikzpicture}[scale=0.3]
+      \draw (0, 0) grid (6, 4);
+
+      \fill[deepblue] (0.5, 3.5) circle (3mm);
+      \fill[deepblue] (0.5, 1.5) circle (3mm);
+      \fill[deepblue] (1.5, 3.5) circle (3mm);
+      \fill[deepblue,fill opacity=0.5] (1.5, 2.5) circle (3mm);
+      \fill[deepblue] (2.5, 2.5) circle (3mm);
+      \fill[deepblue] (2.5, 1.5) circle (3mm);
+      \fill[deepblue] (5.5, 2.5) circle (3mm);
+
+      \fill[nicered] (2.5, 3.5) circle (3mm);
+      \fill[nicered] (3.5, 0.5) circle (3mm);
+      \fill[nicered] (4.5, 2.5) circle (3mm);
+      \fill[nicered] (5.5, 0.5) circle (3mm);
+      \fill[nicered] (5.5, 1.5) circle (3mm);
+    \end{tikzpicture}
+    \begin{tikzpicture}[scale=0.3]
+      \draw (0, 0) grid (6, 4);
+
+      \fill[deepblue] (0.5, 3.5) circle (3mm);
+      \fill[deepblue] (0.5, 1.5) circle (3mm);
+      \fill[deepblue] (1.5, 3.5) circle (3mm);
+      \fill[deepblue,fill opacity=0.5] (2.5, 2.5) circle (3mm);
+      \fill[deepblue] (2.5, 1.5) circle (3mm);
+      \fill[deepblue] (5.5, 2.5) circle (3mm);
+
+      \fill[nicered] (2.5, 3.5) circle (3mm);
+      \fill[nicered] (3.5, 0.5) circle (3mm);
+      \fill[nicered] (4.5, 2.5) circle (3mm);
+      \fill[nicered] (5.5, 0.5) circle (3mm);
+      \fill[nicered] (5.5, 1.5) circle (3mm);
+    \end{tikzpicture}
+    \begin{tikzpicture}[scale=0.3]
+      \draw (0, 0) grid (6, 4);
+
+      \fill[deepblue] (0.5, 3.5) circle (3mm);
+      \fill[deepblue] (0.5, 1.5) circle (3mm);
+      \fill[deepblue] (1.5, 3.5) circle (3mm);
+      \fill[deepblue] (2.5, 1.5) circle (3mm);
+      \fill[deepblue,fill opacity=0.5] (5.5, 2.5) circle (3mm);
+
+      \fill[nicered] (2.5, 3.5) circle (3mm);
+      \fill[nicered] (3.5, 0.5) circle (3mm);
+      \fill[nicered] (4.5, 2.5) circle (3mm);
+      \fill[nicered] (5.5, 0.5) circle (3mm);
+      \fill[nicered] (5.5, 1.5) circle (3mm);
+    \end{tikzpicture}
+    \begin{tikzpicture}[scale=0.3]
+      \draw (0, 0) grid (6, 4);
+
+      \fill[deepblue] (0.5, 3.5) circle (3mm);
+      \fill[deepblue] (0.5, 1.5) circle (3mm);
+      \fill[deepblue] (1.5, 3.5) circle (3mm);
+      \fill[deepblue] (2.5, 1.5) circle (3mm);
+
+      \fill[nicered,fill opacity=0.5] (2.5, 3.5) circle (3mm);
+      \fill[nicered] (3.5, 0.5) circle (3mm);
+      \fill[nicered] (4.5, 2.5) circle (3mm);
+      \fill[nicered] (5.5, 0.5) circle (3mm);
+      \fill[nicered] (5.5, 1.5) circle (3mm);
+    \end{tikzpicture}
+    \begin{tikzpicture}[scale=0.3]
+      \draw (0, 0) grid (6, 4);
+
+      \fill[deepblue] (0.5, 3.5) circle (3mm);
+      \fill[deepblue] (0.5, 1.5) circle (3mm);
+      \fill[deepblue] (1.5, 3.5) circle (3mm);
+      \fill[deepblue] (2.5, 1.5) circle (3mm);
+
+      \fill[nicered] (3.5, 0.5) circle (3mm);
+      \fill[nicered] (4.5, 2.5) circle (3mm);
+      \fill[nicered] (5.5, 0.5) circle (3mm);
+      \fill[nicered] (5.5, 1.5) circle (3mm);
+    \end{tikzpicture}
+    \caption{Suite de mouvement permettant de gagner}
+    \label{fig:np-move-sequence}
+  \end{figure}
+
+
+  \question{ Donner un exemple de configuration initiale non vide qui n'est pas admissible. }
+
+  Formellement, le plateau de jeu, comme décrit précédemment, est représenté par l'ensemble $G = \llbracket 1, n \rrbracket \times \llbracket 1, m \rrbracket$.
+  Une case est identifiée par le couple $(i,j) \in G$ où $i$ est son numéro de ligne et $j$ son numéro de colonne.
+  
+  Une \textit{configuration} ou \textit{disposition des pions} sur un plateau $G$ est un couple $\mathcal{C} = (B, R)$ où $B, R \subseteq G$ et $B \cap R = \emptyset$.
+  L'ensemble $B$ représente les cases où il y a un pion bleu ; l'ensemble $R$ représente les cases où il y a un pion rouge.
+
+  \question{
+    On considère une configuration $\mathcal{C} = (B,R)$ et une configuration initiale $\mathcal{C}_0 = (B_0, R_0)$.
+    À quelle condition~$\mathcal{C}$ peut-elle être atteinte depuis la disposition initiale $\mathcal{C}_0$ ?
+  }
+
+  \question{
+    Soit $\mathcal{C}$ une configuration.
+    À quelle(s) condition(s) $\mathcal{C}$ est-elle gagnante ?
+  }
+
+  On s'intéresse au problème défini formellement par :
+
+  \problem[solitaire]{pb:solitaire}{
+    Une configuration $\mathcal{C}_0 = (B_0, R_0)$ sur une grille de taille $n \times m$.
+  }{
+    La configuration $\mathcal{C}_0$ est-elle admissible ?
+  }
+
+  Dans la suite de cet exercice, on montre que le problème~\hyperref[pb:solitaire]{\textsc{solitaire}} est \textbf{NP}-complet.
+
+  \question{
+    Justifier que le problème~\hyperref[pb:solitaire]{\textsc{solitaire}} est dans \textbf{NP}.
+  }
+
+  \question{
+    Démontrer que le problème~\hyperref[pb:solitaire]{\textsc{solitaire}} est \textbf{NP}-difficile.
+    Pour cela, on admettra la \textbf{NP}-difficulté du problème~\hyperref[pb:cnf-sat]{\textsc{cnf-sat}} rappelé ci-dessous.
+  }
+
+  \problem[cnf-sat]{pb:cnf-sat}{
+    Une formule $\varphi$ sous forme normale conjonctive.
+  }{
+    La formule $\varphi$ est-elle satisfiable ?
+  }
+
+  \indication 1{
+    Pour une formule $\varphi$ sous $n$-CNF contenant $m$ variables, on construit une grille ayant $n$ lignes et $m$ colonnes.
+  }
+
+  \indication 2{
+    Satisfaire une clause de $\varphi$, c'est dire qu'un littéral est valué à vrai.
+    Équivalent de cette condition pour la grille construite ?
+  }
+
+  \indication 3{
+    Dans une valuation $\rho$, chaque variable vaut soit vrai, soit faux.
+    Équivalent de cette condition pour la grille construite ?
+  }
+
+  \indication 4{
+    Avoir uniquement des pions bleus dans la colonne $j$ représente le fait qu'on choisisse $x_j$ valué à vrai.
+    Avoir uniquement des pions rouges dans la colonne $j$ représente le fait qu'on choisisse $x_j$ valué à faux.
+  }
+
+  \question{Conclure quant à la \textbf{NP}-complétude du problème~\hyperref[pb:solitaire]{\textsc{solitaire}}.}
+
+  \begin{center}
+    \color{deepblue}
+    \textsl{--- Fin de l'exercice~\ref{exo:np} ---}
+  \end{center}
+
+  \setcounter{questioncounter}{0}
+
+  \chapter{Application d'$\mathsf{ID}_3$ à des situations différentes.}
+  \label{exo:app}
+
+
+  \question{\hspace{0.001mm}{\color{deepblue} [\textsl{Questions de cours.}]}
+    \begin{enumerate}
+      \item Définir ce qu'est l'apprentissage supervisé/non-supervisé.
+      \item Rappeler les algorithmes d'apprentissage vus en cours.
+      \item Parmi ces algorithmes, lesquels réalisent de l'apprentissage supervisé/non-supervisé.
+    \end{enumerate}
+  }
+
+  Dans cet exercice, on s'intéresse à l'algorithme $\mathsf{ID}_3$ appliqué au problème de classification suivant : des objets sont répartis en deux classes, notées
+  "\tikz\node[scale=0.75,regular polygon,regular polygon sides=6,fill=nicered] {};"
+  et 
+  "\tikz\node[scale=0.75,regular polygon,regular polygon sides=4,fill=deepblue] {};", selon deux attributs prenant des valeurs continues dans $[0,1]^2$.
+  On pourra ainsi représenter ces objets par des points (carrés ou hexagones) dans le plan.
+
+  \question{
+    Peut-on appliquer $\mathsf{ID}_3$ directement aux données initiales afin d'obtenir un modèle permettant de les classer ?
+    Expliquer votre réponse.
+  }
+
+  \question{
+    Proposer une méthode naïve permettant d'appliquer $\mathsf{ID}_3$ sur un tel jeu de données.
+    Est-ce raisonnable ?
+    \label{Q:app-id3-naive}
+  }
+
+  \question{
+    Dans la suite, on souhaite classer les données à l'aide d'un arbre de décision obligatoirement binaire.
+    Donner une méthode moins naïve que celle de la question~\ref{Q:app-id3-naive} permettant d'atteindre ce but.
+  }
+
+  \begin{figure}[H]
+    \begin{subfigure}[b]{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \pgfmathsetseed{2}
+        \newcommand\size{4}
+        \draw[->] (-0.1*\size,0) -- (1.2*\size, 0) node[right]{$x$};
+        \draw[->] (0,-0.1*\size) -- (0,1.2*\size) node[above]{$y$};
+        \draw (\size,0.1) -- (\size,-0.1) node[below]{$1$};
+        \draw (0.1,\size) -- (-0.1,\size) node[left]{$1$};
+        \foreach \x in {1,2,...,16}{
+          \node[scale=0.35,regular polygon,regular polygon sides=6,fill=nicered] at (rnd * \size/2,rnd * \size) {};
+          \node[scale=0.35,regular polygon,regular polygon sides=4,fill=deepblue] at (rnd * \size/2+\size/2,rnd * \size) {};
+        }
+      \end{tikzpicture}
+      \caption{}
+      \label{fig:data-ex-1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \pgfmathsetseed{4}
+        \newcommand\size{4}
+        \draw[->] (-0.1*\size,0) -- (1.2*\size, 0) node[right]{$x$};
+        \draw[->] (0,-0.1*\size) -- (0,1.2*\size) node[above]{$y$};
+        \draw (\size,0.1) -- (\size,-0.1) node[below]{$1$};
+        \draw (0.1,\size) -- (-0.1,\size) node[left]{$1$};
+        \foreach \x in {1,2,...,8}{
+          \node[scale=0.35,regular polygon,regular polygon sides=6,fill=nicered] at (rnd * \size/4.2,rnd * \size) {};
+          \node[scale=0.35,regular polygon,regular polygon sides=4,fill=deepblue] at (rnd * \size/2.4+\size/4,rnd * \size) {};
+          \node[scale=0.35,regular polygon,regular polygon sides=4,fill=deepblue] at (rnd * \size/2.4+\size/4,rnd * \size) {};
+          \node[scale=0.35,regular polygon,regular polygon sides=6,fill=nicered] at (rnd * \size/4.2 + \size*3/4,rnd * \size) {};
+        }
+      \end{tikzpicture}
+      \caption{}
+      \label{fig:data-ex-2}
+    \end{subfigure}
+    \caption{Deux exemples de jeux de données}
+  \end{figure}
+
+  \question{
+    Quel résultat obtiendrait-on avec cette méthode sur la figure~\ref{fig:data-ex-1} ? Et sur la figure~\ref{fig:data-ex-2} ? Est-ce satisfaisant ?
+  }
+
+  \question{
+    Proposer une méthode permettant de mieux classer les données dans le cas où celles-ci sont réparties de manière similaire à celles de la figure~\ref{fig:data-ex-2}. Argumenter quant à sa terminaison.
+    \label{Q:app-id3-amelio}
+  }
+
+  \question{
+    Dessiner la frontière entre les deux classes que la méthode de la question~\ref{Q:app-id3-amelio} calculerait sur la figure~\ref{fig:data-ex-3}. Est-ce satisfaisant ?
+  }
+
+  \begin{figure}[H]
+    \begin{subfigure}[b]{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \pgfmathsetseed{8}
+        \newcommand\size{4}
+        \draw[->] (-0.1*\size,0) -- (1.2*\size, 0) node[right]{$x$};
+        \draw[->] (0,-0.1*\size) -- (0,1.2*\size) node[above]{$y$};
+        \draw (\size,0.1) -- (\size,-0.1) node[below]{$1$};
+        \draw (0.1,\size) -- (-0.1,\size) node[left]{$1$};
+        \foreach \x in {1,2,...,16}{
+          \pgfmathrnd
+          \node[scale=0.35,regular polygon,regular polygon sides=6,fill=nicered] at (\pgfmathresult * \size, \pgfmathresult * \size * 0.7 + rnd/1.2) {};
+          \node[scale=0.35,regular polygon,regular polygon sides=4,fill=deepblue] at (\pgfmathresult * \size, \pgfmathresult * \size * 0.7 + rnd/1.2 + 0.3 * \size) {};
+        }
+      \end{tikzpicture}
+      \caption{}
+      \label{fig:data-ex-3}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \pgfmathsetseed{6}
+        \newcommand\size{4}
+        \draw[->] (-0.1*\size,0) -- (1.2*\size, 0) node[right]{$x$};
+        \draw[->] (0,-0.1*\size) -- (0,1.2*\size) node[above]{$y$};
+        \draw (\size,0.1) -- (\size,-0.1) node[below]{$1$};
+        \draw (0.1,\size) -- (-0.1,\size) node[left]{$1$};
+        \foreach \x in {1,2,...,16}{
+          \node[scale=0.35,regular polygon,regular polygon sides=6,fill=nicered] at ($(\size/2,\size/2) + (360*rnd:\size/2 - rnd*\size/8)$) {};
+          \node[scale=0.35,regular polygon,regular polygon sides=4,fill=deepblue] at ($(\size/2,\size/2) + (360*rnd:\size/3 - rnd*\size/8)$) {};
+        }
+      \end{tikzpicture}
+      \caption{}
+      \label{fig:data-ex-4}
+    \end{subfigure}
+    \caption{Deux exemples supplémentaires de jeux de données}
+  \end{figure}
+
+  \question{
+    Expliquer comment transformer le jeu de données de la figure~\ref{fig:data-ex-3} de sorte à pouvoir tracer une frontière bien plus simple à l'aide de la méthode décrite à la question~\ref{Q:app-id3-amelio}.
+  }
+
+  \indication 1{
+    Penser à une transformation géométrique, qui permet de se ramener aux hypothèses de la question~\ref{Q:app-id3-amelio}.
+  }
+
+  \question{
+    Et dans le cas de la figure~\ref{fig:data-ex-4}, que peut-on faire ?
+  }
+
+  \vspace{-0.2cm}
+
+  \indication 2{
+    Utiliser un changement de coordonnées très utilisé en physique.
+  }
+
+  \vspace{-0.2cm}
+
+  \begin{center}
+    \color{deepblue}
+    \textsl{--- Fin de l'exercice~\ref{exo:app} ---}
+  \end{center}
+
+  \setcounter{questioncounter}{0}
+  \chapter{\textbf{NP}-complétude du problème DecisionTree}
+  \label{exo:dt}
+
+  \question{\hspace{0.001mm}{\color{deepblue} [\textsl{Question de cours.}]}
+    Pour quelles valeurs de $k \in \mathds{N}$, le problème~\hyperref[pb:k-sat]{\textsc{$k$-sat}}, est-il \textbf{NP}-complet ?
+    Justifier votre réponse.
+  }
+
+  \problem[$k$-sat]{pb:k-sat}{
+    Une formule $\varphi$ sous $k$-CNF.
+  }{
+    La formule $\varphi$ est-elle satisfiable ?
+  }
+
+
+  Dans cet exercice, on souhaite démontrer la \textbf{NP}-complétude du problème~\hyperref[pb:dt]{\textsc{decision-tree}} défini ci-dessous.
+
+  \problem[\hspace{-2em}decision-tree]{pb:dt}{
+    Un jeu de données $\mathcal{D} = \{x_1, \ldots, x_n\} \subseteq \mathds{B}^{p+1}$ et un réel $K$ ;
+  }{
+    Existe-t-il un arbre de décision pour $\mathcal{D}$ de coût inférieur ou égal à $K$ ?
+  }
+
+  Le coût d'un arbre de décision $A$ est défini comme la somme des longueur des chemins partant de la racine à chacune de ces feuilles.
+
+  \question{
+    Justifier que le problème~\hyperref[pb:dt]{\textsc{decision-tree}} est dans \textbf{NP}.
+  }
+
+  Afin de démontrer la \textbf{NP}-difficulté de~\hyperref[pb:dt]{\textsc{decision-tree}}, on va procéder à une réduction au problème~\hyperref[pb:ec3]{\textsc{exact-cover-3}}.
+
+  Étant donnés un ensemble $X$ et un sous-ensemble $\mathcal{R}$ de $\wp(X)$, on dit que $\mathcal{R}^\star \subseteq \mathcal{R}$ est une \textit{couverture exacte} de $X$ dès lors que, pour tout élément $x \in X$, il existe un unique $R \in \mathcal{R}^\star$ tel que $x \in R$.
+
+  \problem[\hspace{-2.5em}exact-cover-3]{pb:ec3}{
+    Un ensemble $X$ et $\mathcal{R} \subseteq \wp(X)$ tel que tout élément de $\mathcal{R}$ est un sous-ensemble ayant \textit{exactement} trois éléments.
+  }{
+    Existe-t-il $\mathcal{R}^\star \subseteq \mathcal{R}$ une couverture exacte de l'ensemble $X$ ?
+  }
+
+  On admet la \textbf{NP}-difficulté d'\hyperref[pb:ec3]{\textsc{exact-cover-3}}, qui peut se déduire (par réduction) de la \textbf{NP}-difficulté de \textsc{3DM} (\textit{3 dimensional matching}).
+
+  Considérons une entrée $(X,\mathcal{R})$ du problème~\hyperref[pb:ec3]{\textsc{exact-cover-3}}.
+  On essaie de trouver un sous-ensemble $\mathcal{S}$ de $\mathcal{R}$ tel que 
+  \[
+  \bigsqcup_{R \in \mathcal{S}} R = X
+  .\]
+  On rappelle que la réunion $\sqcup$ (et par extension $\bigsqcup$) désigne la réunion d'ensembles disjoints deux-à-deux.
+
+  Posons $X' = X \sqcup \{a,b,c\}$, où $a,b,c \not\in X$ puis \[
+    \mathcal{R}' = \mathcal{R} \sqcup \big\{\, \{x\}  \;\big|\; x \in X'\,\big\}.
+  \]
+  Ainsi, $\mathcal{R}'$ ne contient que des sous-ensembles de cardinal $1$ ou $3$.
+  L'intuition est que nos éléments de $\mathcal{R}'$ représentent des tests à effectuer sur les éléments de $X$.
+
+  \question{
+    On pose $f(n)$ le coût minimal d'un arbre de décision sur un jeu de données à $n$ éléments.
+    Justifier la relation de récurrence, pour $n \ge 4$, \[
+      f(n) = \min_{i \in \llbracket 1, 3 \rrbracket} \big( f(n-i) + f(i) + n\big)
+    .\]
+  }
+
+  \indication 1{
+    L'indice $i$ représente la taille du sous-ensemble choisi comme test à la racine.
+  }
+
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|cccccccc}
+      $n$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ &  $8$\\
+      \hline
+      $f(n)$ &  $0$ & $2$ & $5$ & $8$ & $12$ & $16$ & $20$ & $25$\\
+    \end{tabular}
+  \end{table}
+
+  \question{
+    Montrer que, pour $n \ge 7$, un ensemble à trois éléments doit être choisi à la racine d'un arbre de décision de coût optimal.
+    \label{Q:dt-root-three}
+  }
+
+  \question{
+    Comment passer d'un ensemble $\mathcal{R}'$ de tests à un ensemble de données $\mathcal{D} \subseteq \mathds{B}^{p+1}$ ?
+  }
+
+  \indication 2{
+    On note $p = \operatorname{card} \mathcal{R}'$ et on définit, coordonnée par coordonnée, un vecteur $b_x \in \mathds{B}^{p+1}$ qui représente un élément $x \in X$.
+  }
+
+  \question{
+    Étant donné une couverture exacte $\{T_{i_1}, \ldots, T_{i_k}\}$, justifier que la forme de l'arbre de décision correspondant est un quasi-peigne (comme montré sur la figure~\ref{fig:dt-peigne}).
+  }
+
+  \question{
+    L'arbre en figure~\ref{fig:dt-peigne} vérifie-t-il la condition donnée en question~\ref{Q:dt-root-three} ?
+    Quel est le coût de l'arbre ?
+    En déduire l'optimalité de l'arbre.
+  }
+
+  \vspace{-0.2cm}
+
+  \indication 3{
+    Démontrer que le coût de l'arbre est d'exactement $f(|X'|)$.
+  }
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[rounded rectangle,thick,draw=deepblue] (T1) {$x \in T_{i_1}$};
+      \node[rounded rectangle,thick,draw=deepblue,below left=1cm and 1cm of T1] (T2) {$x \in T_{i_2}$};
+      \node[rounded rectangle,thick,draw=deepblue,below left=1cm and 1cm of T2] (T3) {$x \in T_{i_3}$};
+      \node[below left=1cm and 1cm of T3] (T4) {$\iddots$};
+      \node[rounded rectangle,thick,draw=deepblue,below left=1cm and 1cm of T4] (T5) {$x \in T_{i_k}$};
+      \draw (T1) -- (T2) -- (T3) -- (T4) -- (T5);
+
+      \node[circle,scale=0.5,fill=deepblue,below left=0.5cm and 0.5cm of T5] (T5A) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T5A] (T5AO) {};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.5cm and 0.5cm of T5A] (T5A1){};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.25cm and 0.25cm of T5AO] (T5A2) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.25cm and 0.25cm of T5AO] (T5A3) {};
+      \draw (T5) -- (T5A) -- (T5A1);
+      \draw (T5A) -- (T5AO) -- (T5A2);
+      \draw (T5AO) -- (T5A3);
+
+      \node[below=0.15cm of T5A1] {$a$};
+      \node[below=0.15cm of T5A2] {$b$};
+      \node[below=0.15cm of T5A3] {$c$};
+
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T5] (T5B) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T5B] (T5BO) {};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.5cm and 0.5cm of T5B] (T5B1){};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.25cm and 0.25cm of T5BO] (T5B2) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.25cm and 0.25cm of T5BO] (T5B3) {};
+      \draw (T5) -- (T5B) -- (T5B1);
+      \draw (T5B) -- (T5BO) -- (T5B2);
+      \draw (T5BO) -- (T5B3);
+
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T3] (T3B) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T3B] (T3BO) {};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.5cm and 0.5cm of T3B] (T3B1){};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.25cm and 0.25cm of T3BO] (T3B2) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.25cm and 0.25cm of T3BO] (T3B3) {};
+      \draw (T3) -- (T3B) -- (T3B1);
+      \draw (T3B) -- (T3BO) -- (T3B2);
+      \draw (T3BO) -- (T3B3);
+
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T2] (T2B) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T2B] (T2BO) {};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.5cm and 0.5cm of T2B] (T2B1){};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.25cm and 0.25cm of T2BO] (T2B2) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.25cm and 0.25cm of T2BO] (T2B3) {};
+      \draw (T2) -- (T2B) -- (T2B1);
+      \draw (T2B) -- (T2BO) -- (T2B2);
+      \draw (T2BO) -- (T2B3);
+
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T1] (T1B) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.5cm and 0.5cm of T1B] (T1BO) {};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.5cm and 0.5cm of T1B] (T1B1){};
+      \node[circle,scale=0.5,fill=deepblue,below left=0.25cm and 0.25cm of T1BO] (T1B2) {};
+      \node[circle,scale=0.5,fill=deepblue,below right=0.25cm and 0.25cm of T1BO] (T1B3) {};
+      \draw (T1) -- (T1B) -- (T1B1);
+      \draw (T1B) -- (T1BO) -- (T1B2);
+      \draw (T1BO) -- (T1B3);
+    \end{tikzpicture}
+    \caption{Arbre de décision correspondant}
+    \label{fig:dt-peigne}
+  \end{figure}
+
+  \question{
+    Déduire de la construction et des questions précédentes que l'on a réalisé une réduction polynomiale.
+  }
+
+  \question{
+    Conclure quant à la \textbf{NP}-complétude du problème~\hyperref[pb:dt]{\textsc{decision-tree}}.
+  }
+
+  \begin{center}
+    \color{deepblue}
+    \textsl{--- Fin de l'exercice~\ref{exo:dt} ---}
+  \end{center}
+\end{document}

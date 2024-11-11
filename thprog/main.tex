@@ -1,0 +1,42 @@
+\documentclass{../notes}
+
+\title{Théorie de la programmation}
+\author{Basé sur le cours de Daniel \textsc{Hirschkoff}\\ Notes prises par Hugo \textsc{Salou}}
+
+\usepackage{subfiles}
+
+\ifSubfilesClassLoaded{%
+  \renewcommand\thesection{\arabic{section}}
+  \renewcommand\thepart{\Roman{part}}
+  \renewcommand\thechapter{\phantom}
+  \renewcommand\theequation{\arabic{section}.\arabic{equation}}
+}{}
+
+
+\DeclareFontFamilySubstitution{OT2}{cmr}{wncyr}
+\newcommand{\textcyr}[1]{%
+  \begin{hyphenrules}{nohyphenation}%
+    \fontencoding{OT2}\selectfont #1%
+  \end{hyphenrules}%
+}
+
+% Question Equal =^?
+\newcommand\qeq{\ensuremath{\mathrel{\overset ? =}}}
+\newcommand\fresh{\textcyr{I}}
+
+\begin{document}
+  \maketitle
+
+  \dominitoc
+  \tableofcontents
+
+  \pagebreak
+
+  \subfile{chap00/chap00.tex}
+  \subfile{chap01/chap01.tex}
+  \subfile{chap02/chap02.tex}
+  \subfile{chap03/chap03.tex}
+  \subfile{chap04/chap04.tex}
+
+\end{document}
+

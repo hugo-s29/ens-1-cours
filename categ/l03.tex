@@ -1,0 +1,35 @@
+\chapter{Diagramme dans une catégorie.}
+
+\begin{defn}
+  Soit $\mathbf{J}$ une petite catégorie, on appelle $\mathbf{J}$-diagramme dans une catégorie $\mathbf{C}$ tout foncteur $F : \mathbf{J} \to  \mathbf{C}$.
+\end{defn}
+
+\begin{exm}
+  \begin{itemize}
+    \item 
+      Le diagramme \[
+      \begin{tikzcd}
+        A_1\arrow[loop above]{}{\mathrm{id}_{A_1}}
+        &
+        A_2\arrow[loop above]{}{\mathrm{id}_{A_2}}
+      \end{tikzcd}
+      ,\] 
+      est défini par : $J_0 = \{1,2\}$ et $J_1 = \{\mathrm{id}_1, \mathrm{id}_2\}$ avec 
+      \begin{align*}
+        F: \mathbf{J} &\longrightarrow \mathbf{C} \\
+        i &\longmapsto A_i\\
+        \mathrm{id}_i &\longmapsto \mathrm{id}_{A_i}
+      .\end{align*}
+    \item 
+      \[
+      \begin{tikzcd}
+        A_1 \arrow{r}{} & A_2 \arrow{r}{} & A_3
+      \end{tikzcd}
+      .\] 
+  \end{itemize}
+\end{exm}
+
+\begin{defn}
+  On dit qu'un diagramme $F : \mathbf{J} \to \mathbf{C}$ est \textit{commutatif} si pour tous $F(L)$ et $F(K)$ avec $L$ et $K$ deux objets de $\mathbf{J}$,
+  tous les morphismes de source $F(L)$ et de but $F(K)$ sont égaux.
+\end{defn}

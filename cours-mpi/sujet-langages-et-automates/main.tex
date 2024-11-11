@@ -1,0 +1,176 @@
+\documentclass{../notes}
+
+\title{Cours particuliers -- Séance 3}
+
+\newlength\stextwidth
+\newcommand\makesamewidth[3][c]{%
+  \settowidth{\stextwidth}{#2}%
+  \makebox[\stextwidth][#1]{#3}%
+}
+
+\newcounter{questioncounter}
+\setcounter{questioncounter}{0}
+
+\newcommand\question[1]{
+  \vspace{1em}
+  \refstepcounter{questioncounter}
+  \makesamewidth[r]{\textbf{Q99.}}{\textbf{Q\thequestioncounter.}}~
+  \parbox[t]{11cm}{#1}
+  \vspace{1em}
+}
+
+\newcommand\monoit[1]{ \texttt{\textit{#1}} }
+
+\makeatletter
+\providecommand*{\shuffle}{%
+  \mathbin{\mathpalette\shuffle@{}}%
+}
+\newcommand*{\shuffle@}[2]{%
+  % #1: math style
+  % #2: unused
+  \sbox0{$#1\vcenter{}$}%
+  \kern .15\ht0 % side bearing
+  \rlap{\vrule height .25\ht0 depth 0pt width 2.5\ht0}%
+  \raise.1\ht0\hbox to 2.5\ht0{%
+    \vrule height 1.75\ht0 depth -.1\ht0 width .17\ht0 %
+    \hfill
+    \vrule height 1.75\ht0 depth -.1\ht0 width .17\ht0 %
+    \hfill
+    \vrule height 1.75\ht0 depth -.1\ht0 width .17\ht0 %
+  }%
+  \kern .15\ht0 % side bearing
+}
+\makeatother
+
+\newcommand\indication[2]{
+  \textit{Indication #1.}
+
+  \raisebox{\depth}{\rotatebox{180}{\parbox{12.3cm}{#2}}}
+}
+
+\begin{document}
+  Le but de ce document est d'être un sujet d'\textit{entraînement}.
+  Il devrait être réalisable en 1h ou 1h30, mais estimer la durée d'un sujet est un problème complexe.
+  Quelques questions de code OCaml sont présentes dans le sujet.
+
+  Ce sujet se divise en trois parties \textit{quasi-indépendantes}.
+  
+  \section{Quelques questions de cours.}
+
+  \question{
+    Déterminiser l'automate représenté en figure~\ref{fig:auto-exemple}.
+  }
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[initial text=,accepting/.style=accepting by arrow,node distance=2cm,auto]
+      \node[state,initial] (q_0) {$q_0$};
+      \node[state] (q_1) [above right=of q_0] {$q_1$};
+      \node[state,accepting] (q_2) [below right=of q_0] {$q_2$};
+      \node[state,accepting] (q_3) [above right=of q_2] {$q_3$};
+
+      \path[->] (q_0) edge [loop above] node {$\monoit a$} ()
+                      edge node {$\monoit b$} (q_1)
+                      edge node [swap] {$\monoit b$} (q_2)
+                (q_1) edge node {$\monoit b$} (q_2)
+                (q_1) edge node {$\monoit a$} (q_3)
+                (q_3) edge[loop above] node {$\monoit b$} ()
+                (q_2) edge[loop left] node {$\monoit b$} ();
+    \end{tikzpicture}
+    \caption{Un automate exemple $\mathcal{A}$.}
+    \label{fig:auto-exemple}
+  \end{figure}
+
+  \question{
+    On fixe un alphabet $\Sigma = \{\monoit a, \monoit b\}$.
+    Construire un automate déterministe reconnaissant le langage des mots contenants un nombre $n$ de `$\monoit a$', où $n \equiv 3 \pmod 5$.
+  }
+
+  \question{
+    On pose $\Sigma = \{\mathtt{0},\mathtt{1}\}$. Le langage \[
+    L = \mleft\{\, \mathtt{0}^{n_1} \mathtt{1}^{m_1} \mathtt{0}^{n_2} \mathtt{1}^{m_2} \cdots \mathtt{0}^{n_k} \mathtt{1}^{m_k}  \;\middle|\; 
+    \begin{array}{l}
+      k \ge 0\\
+      \forall i \in \llbracket 1, k \rrbracket, n_i > 0\\
+      \forall j \in \llbracket 1, k \rrbracket, m_j > 0
+    \end{array}\,\mright\} 
+    \] est-il régulier ? Justifier.
+  }
+
+  \section{Automates produits.}
+  \label{sec:auto-prod}
+  
+  L'objectif des automates produits est de pouvoir prouver quelques propriétés de clôture sur les langages reconnaissables.
+
+  \subsection{Fonction de transition.}
+
+  \question{
+    Étant donné un automate non déterministe $\mathcal{A}$, quelle(s) condition(s) doit(/doivent) vérifier $\mathcal{A}$ pour qu'il soit déterministe ?
+  }
+
+  \question{
+    Démontrer que l'ensemble des transitions $\delta$ d'un automate déterministe et complet est équivalent à une fonction de la forme $\delta' : Q \times \Sigma \to Q$.
+  } \label{q:fonc-trans}
+
+  \question{
+    Écrire un type \texttt{nfa} (\textit{non-deterministic finite automaton}) représentant un automate fini non déterministe.
+    On pourra représenter les états par des entiers et les lettres de $\Sigma$ par des caractères.
+    \label{q:nfa-type}
+  }
+
+  \question{
+    Similairement à la question~\ref{q:nfa-type}, définir un type \texttt{dfa} (\textit{deterministic finite automaton}) qui représente un automate fini déterministe et complet.
+    On représentera l'ensemble des transitions $\delta$ par la fonction de transition (\textit{c.f.} question~\ref{q:fonc-trans})
+  }
+
+  \question{
+    Écrire une fonction OCaml \lstinline[language=caml]!dfa_of_nfa : nfa -> dfa! qui transforme un automate fini déterministe représenté par le type \texttt{nfa} en sa représentation avec le type \texttt{dfa}.
+    On s'assurera que l'automate est bien déterministe. S'il ne l'est pas, on renverra une exception
+  }
+
+  \subsection{Construction de l'automate. }
+
+  On considère deux automates déterministes $\mathcal{A}$ et $\mathcal{B}$, de même alphabet $\Sigma$ fini.
+
+  On construit l'automate $\mathcal{C} = (Q_\mathcal{C}, \Sigma, \delta_\mathcal{C}, I_\mathcal{C}, F_\mathcal{C})$ par
+  \begin{itemize}
+    \item $Q_\mathcal{C} = Q_\mathcal{A} \times Q_\mathcal{B}$ ;
+    \item $I_\mathcal{C} = I_\mathcal{A} \times I_\mathcal{B}$ ;
+    \item $F_\mathcal{C} = F_\mathcal{A} \times F_\mathcal{B}$ ;
+    \item $\delta_\mathcal{C}((p,q), \sigma) = (\delta_\mathcal{A}(p, \sigma), \delta_\mathcal{B}(q, \sigma))$ pour $(p,q) \in \mathcal{Q}_\mathcal{C}$ et $\sigma \in \Sigma$.
+  \end{itemize}
+
+  \question{
+    Démontrer que l'automate $\mathcal{C}$ est déterministe.
+  }
+
+  \question{
+    Démontrer que $\mathcal{L}(\mathcal{C}) = \mathcal{L}(\mathcal{A}) \cap \mathcal{L}(\mathcal{B})$ par double inclusion.
+  }
+
+  L'automate $\mathcal{C}$ est appelé "\textit{automate produit}" : il est similaire à un produit cartésien des automates $\mathcal{A}$ et $\mathcal{B}$ (hormis pour la fonction de transition $\delta$).
+
+  \question{
+    En modifiant la construction de l'automate $\mathcal{C}$, construire un automate $\mathcal{D}$ déterministe dont le langage est $\mathcal{L}(\mathcal{A}) \mathrel\triangle \mathcal{L}(\mathcal{B})$, où $\triangle$ désigne la  \textit{différence symétrique} ensembliste.
+  }
+
+  \section{Stabilité par mélange parfait.}
+
+  On définit une opération, appelée \textit{mélange parfait}.
+  Le \textit{mélange parfait} de deux langages $A$ et $B$, avec $A,B \subseteq \Sigma^\star$, est \[
+    A \shuffle B = \mleft\{\,a_1 b_1 a_2 b_2 \ldots a_n b_n \;\middle|\; 
+    \begin{array}{rl}
+      a = a_1 a_2 \ldots a_n &\in A\\
+      b = b_1 b_2 \ldots b_n &\in B
+    \end{array}\,\mright\} 
+  ,\] où chaque $a_i$ et $b_j$ (pour $i \in \llbracket 1, n \rrbracket$) est un élément de $\Sigma$.
+
+  \question{
+    Démonter que la classe des langages réguliers est close sous l'opération "mélange parfait".
+    \label{q:perfect-suffle}
+  }
+
+  \indication 1{On pourra partir de deux automates $\mathcal{A}$ et $\mathcal{B}$ reconnaissant les langages $A$ et $B$ respectivement, et construire un automate reconnaissant $A \shuffle B$.}
+
+  \indication 2{Repenser à la section~\ref{sec:auto-prod}, et réaliser une construction similaire.}
+\end{document}

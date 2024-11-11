@@ -1,0 +1,998 @@
+\documentclass{../../td}
+
+\title{TD n°2\\\itshape Théorie des catégories}
+\author{Hugo \textsc{Salou}\\ Dept. Informatique}
+
+\renewcommand\thesection{\arabic{chapter}.\Alph{section}}
+\renewcommand\thepart{\Roman{part}}
+\renewcommand\thechapter{\phantom}
+\renewcommand\theequation{\arabic{chapter}.\arabic{equation}}
+\usetikzlibrary{decorations.pathmorphing}
+
+\let\bm\boldsymbol
+\makeatletter
+\newcommand\showfootnote{%
+  \tfn@tablefootnoteprintout% 
+  \gdef\tfn@fnt{0}% 
+}
+\makeatother
+
+\declaretheorem[style=thmredbox, name=Lemme, numbered=no]{lemm}
+
+\newcommand\pullback{\arrow[very near start,description,phantom]{dr}{\lrcorner}}
+\newcommand\pushout{\arrow[very near start,description,phantom]{ul}{\ulcorner}}
+
+\newcommand\id{\ensuremath{\operatorname{id}}}
+
+\begin{document}
+  \maketitle
+  
+  {
+    \small
+    \tableofcontents
+  }
+
+
+  \part{Un peu de chasse au diagramme.}
+  \chapter{Exercice 1.}
+
+  \begin{slshape}
+    \color{deepblue}
+    \begin{enumerate}
+      \item Soient $X, Y$ des objets dans une catégorie tels que $X \times Y$ existe.
+        Montrer que $Y \times X$ existe et est canoniquement isomorphe à $X \times Y$.
+        Énoncer l'énoncé dual.
+      \item Soient $X,Y,Z$ des objets tels que  $X \times Y$ et $Y \times Z$ existent.
+        Montrer que si $X \times (Y \times Z)$ existe alors $(X \times Y) \times Z$ existe et est canoniquement isomorphe à $X \times (Y \times Z)$.
+        Énoncer l'énoncé dual.
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Le produit $X \times Y$ est en réalité un triplet $(A, \pi_X, \pi_Y)$.
+      Construisons le produit $Y \times X$ comme le triplet $(A, \pi_Y, \pi_X)$.
+      Ces deux produits sont clairement isomorphes (il suffit d'inverser le rôle de $\pi_X$ et de $\pi_Y$).
+      Montrons que l'on a bien construit $Y \times X$ comme un produit.
+
+      Soit $B$ un objet de la catégorie considérée.
+      Soient également deux morphismes $u : B \to X$ et $v : B \to Y$.
+
+      \[
+    \begin{tikzcd}
+      B \arrow[dashed]{dr}{} \arrow[bend left]{drr}{u}\arrow[bend right]{rdd}{v}\\
+      & {Y\times X} \arrow{r}{\pi_X}\arrow{d}{\pi_Y} & X \\
+      & Y
+    \end{tikzcd}
+    \quad\quad
+    \begin{tikzcd}
+      B \arrow[dashed]{dr}{f} \arrow[bend left]{drr}{v}\arrow[bend right]{rdd}{u}\\
+      & {X \times Y} \arrow{r}{\pi_Y}\arrow{d}{\pi_X} & Y \\
+      & X
+    \end{tikzcd}
+      \]
+      Pour montrer qu'il existe un unique morphisme $f : B \to Y \times X$ faisant commuter le diagramme de gauche (ci-dessus), il suffit de considérer la propriété universelle de $X \times Y$, qui assure l'unicité d'un morphisme $f : B \to X \times Y$ faisant commuter le diagramme de droite (ci-avant).
+
+      L'énoncé dual est : si $X \sqcup Y$ existe, alors $Y \sqcup X$ aussi et il est canoniquement isomorphe à $X \sqcup Y$.
+
+    \item Supposons que $X \times (Y \times Z)$ existe.
+      Soit ainsi un tel élément, sous la forme d'un triplet, $(X \times (Y \times Z), \pi_X, \pi_{Y \times Z})$ (il n'est pas forcément unique, mais il l'est à isomorphisme près).
+      Soient de plus $(Y \times Z, \pi_Y, \pi_Z)$ et $(X \times Y, \rho_X, \rho_Y)$.
+
+      \[
+      \begin{tikzcd}
+        X \times (Y \times Z) \arrow{r}{\pi_{Y \times Z}}\arrow{d}{\pi_X} & Y \times Z\arrow{d}{\pi_Y}\arrow{r}{\pi_Z} & Z\\
+        X & Y
+      \end{tikzcd}
+      .\]
+
+      On définit le produit $(X \times Y) \times Z$ comme le triplet \[
+        (X \times (Y \times Z), \rho_{X \times Y}, \rho_Z)
+      .\]
+      Construisons les morphismes $\rho_{X \times Y}$ et $\rho_Z$.
+       \begin{itemize}
+        \item D'une part, pour $\rho_{X \times Y} : (X \times Y) \times Z \to X \times Y$, on applique la propriété universelle du produit $X \times Y$, comme indiqué ci-dessous.
+          \[
+          \begin{tikzcd}
+            X \times (Y \times Z) \arrow[bend left]{rrd}{\pi_Y \circ \pi_{Y \times Z}}
+            \arrow[bend right]{rdd}{\pi_X} \arrow[dashed]{dr}{\rho_{X \times Y}}\\
+            & X \times Y \arrow{r}{\rho_Y} \arrow{d}{\rho_X} & Y\\
+            & X
+          \end{tikzcd}
+          .\]
+        \item D'autre part, pour $\rho_Z : (X \times Y) \times Z \to Z$, on le définit comme $\pi_Z \circ \pi_{Y \times Z}$.
+          \[
+          \begin{tikzcd}
+            X \times (Y \times Z) \arrow{r}{\pi_{Y \times Z}}\arrow[bend left]{rr}{\rho_{Z}} & Y \times Z \arrow{r}{\pi_Z} & Z
+          \end{tikzcd}
+          .\] 
+      \end{itemize}
+      Le diagramme suivant représente ainsi le produit construit.
+      \[
+      \begin{tikzcd}
+        (X \times Y) \times Z\arrow{r}{\rho_Z}\arrow{d}{\rho_{X \times Y}} & Z\\
+        X \times Y\arrow{r}{\rho_Y}\arrow{d}{\rho_X} & Y\\
+         X
+      \end{tikzcd}
+      .\]
+      Il ne reste qu'à montrer que $(X \times Y) \times Z$ vérifie la propriété universelle.
+      Soient $u : A \to X \times Y$ et $z : A \to Z$.
+      On pose ensuite $x = u \circ \rho_X : A \to X$ et $y = u \circ \rho_Y : A \to Y$.
+      \[
+      \begin{tikzcd}
+        A \arrow[bend left]{drrr}{z} \arrow[bend right]{ddr}{y}\arrow[bend right=60]{ddddrr}{x} \arrow[dashed]{drr}{f}\\
+        &&(X \times Y) \times Z\arrow{r}{\rho_Z}\arrow{d}{\rho_{X \times Y}} & Z\\
+        &Y&X \times Y\arrow{l}{\rho_Y}\arrow{dd}{\rho_X}\\\\
+        && X
+      \end{tikzcd}
+      \]
+      On procède en deux temps.
+      \begin{itemize}
+        \item D'une part, par la propriété universelle de $Y \times Z$, il existe un unique morphisme $v : A \to Y \times Z$ faisant commuter le diagramme ci-dessous.
+          \[
+          \begin{tikzcd}
+            A \arrow[bend left]{drr}{z} \arrow[bend right]{ddr}{y} \arrow[dashed]{dr}{v}\\
+            & Y \times Z \arrow{d}{\pi_Y}\arrow{r}{\pi_Z} & Z\\
+            & Y 
+          \end{tikzcd}
+          \] 
+        \item D'autre part, par la propriété universelle de $X \times (Y \times Z)$, il existe un unique morphisme $f : A \to X \times (Y \times Z)$ faisant commuter le diagramme ci-dessous.
+          \[
+          \begin{tikzcd}
+            A \arrow[bend left]{drr}{v} \arrow[bend right]{ddr}{x} \arrow[dashed]{dr}{f}\\
+            & X \times (Y \times Z) \arrow{d}{\pi_X}\arrow{r}{\pi_{Y \times Z}} & Y \times Z\\
+            & X 
+          \end{tikzcd}
+          .\]
+      \end{itemize}
+      Par construction de $(X \times Y) \times Z$, le morphisme $f$ est donc aussi l'unique (à isomorphisme près) de la forme $f : A \to (X \times Y) \times Z$.
+
+      L'énoncé dual est : si $X \sqcup Y$, $Y \sqcup Z$ et $X \sqcup (Y \sqcup Z)$ existent alors, $(X \sqcup Y) \sqcup Z$ existe et est canoniquement isomorphe au coproduit $X \sqcup (Y \sqcup Z)$.
+  \end{enumerate}
+
+  \chapter{Exercice 2.}
+  \begin{slshape}
+    \color{deepblue}
+    Soient $X$, $Y$ et $S$ des objets d'une catégorie telle que $X \times_S Y$ existe.
+    Montrer que $Y \times_S X$ existe et est canoniquement isomorphe à $X \times_S Y$.
+    Énoncer l'énoncé dual.
+  \end{slshape}
+
+  Soit $X \times_S Y$ muni de ses deux projections $\pi_X$, $\pi_Y$ et des deux morphismes~$u : X \to S$ et $v : Y \to S$.
+  On définit $Y \times_S X$ comme le quintuplet $(X \times_S Y, \pi_Y, \pi_X, v, u)$.
+  Ils sont canoniquement isomorphes.
+  On sait, par construction (il suffit d'inverser la place de $X$ et $Y$ pour retrouver exactement le diagramme d'un produit fibré), que le diagramme suivant commute.
+  \[
+  \begin{tikzcd}
+    Y \times_S X \arrow{r}{\pi_X}\arrow{d}{\pi_Y} & X\arrow{d}{u}\\
+    Y \arrow{r}{v} & S
+  \end{tikzcd}
+  \]
+  Montrons enfin qu'il respecte la propriété universelle pour les produits fibrés.
+  Soit $A$ un objet de la catégorie considérée et soient deux morphismes $x: A \to X$ et~$y: A \to Y$.
+  \[
+  \begin{tikzcd}
+    A\arrow[dashed]{dr}{f} \arrow[bend left]{drr}{x} \arrow[bend right]{ddr}{y}\\
+    & Y \times_S X \arrow{r}{\pi_X}\arrow{d}{\pi_Y} & X\arrow{d}{u}\\
+    &Y \arrow{r}{v} & S
+  \end{tikzcd}
+  \quad\quad
+  \begin{tikzcd}
+    A\arrow[dashed]{dr}{f} \arrow[bend left]{drr}{y} \arrow[bend right]{ddr}{x}\\
+    & X \times_S Y \arrow{r}{\pi_Y}\arrow{d}{\pi_X}\pullback & Y\arrow{d}{v}\\
+    &X \arrow{r}{u} & S
+  \end{tikzcd}
+  \]
+  Par la propriété universelle de $X \times_S Y$, il existe un unique morphisme $f$ faisant commuter le diagramme à droite.
+  On remarque que $f$ fait aussi commuter le diagramme de gauche.
+  De plus, $f$ est l'unique morphisme à faire commuter le diagramme de gauche (car sinon, on pourrait le retranscrire sur le diagramme de gauche, et obtiendrait une contradiction avec la propriété universelle).
+
+  L'énoncé dual est :
+  si $X +_S Y$ existe alors  $Y +_S X$ existe et est canoniquement isomorphe à  $X +_S Y$.
+
+  \chapter{Exercice 3.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $\mathbf{C}$ une catégorie possédant un objet final $\bm{\mathit{1}}$.
+    Montrer que, pour tout objet $A$ de $\mathbf{C}$, le produit de $\bm{\mathit{1}}$ et $A$ est $A$.
+  \end{slshape}
+
+  Soit $A$ un objet de $\mathbf{C}$.
+  Comme on ne suppose pas que $\bm{\mathit{1}} \times A$ existe, on le construit.
+  On construit $\bm{\mathit{1}} \times A$ le produit, que l'on défini comme le triplet $(A, \pi_A, \pi_{\bm{\mathit{1}}})$ où $\pi_A = \mathrm{id}_A : A \to A$ et $\pi_{\bm{\mathit{1}}} : A \to \bm{\mathit{1}}$ est l'unique élément de $\mathrm{Hom}(A, \bm{\mathit{1}})$.
+
+  Il reste deux propriétés à démontrer : que $\bm{\mathit{1}} \times A$ défini ainsi vérifie la propriété universelle ; puis que le produit est unique à isomorphisme près.
+  \begin{itemize}
+    \item Soit $B$ un objet de $\mathbf{C}$ et soient deux morphismes $u : B \to A$ et~$v : B \to \bm{\mathit{1}}$.
+      Posons $f : B \to \bm{\mathit{1}} \times A$ comme étant égal à $u$.
+      On vérifie que le diagramme suivant commute.
+      \[
+      \begin{tikzcd}
+        B \arrow[bend left]{drr}{u} \arrow[bend right]{ddr}{v} \arrow[dashed]{dr}{f}\\
+        & \bm{\mathit{1}} \times A \arrow{r}{\pi_A} \arrow{d}{\pi_{\bm{\mathit{1}}}} & A\\
+        & \bm{\mathit{1}}
+      \end{tikzcd}
+      .\] 
+      En effet, on a $\mathrm{id}_A \circ f = f = u$ ($\star$) par la définition de $\circ$ dans $\mathbf{C}$ ; puis, $\pi_{\bm{\mathit{1}}} \circ f = v$ par l'unicité de l'élément dans $\mathrm{Hom}(B, \bm{\mathit{1}})$.
+      L'unicité de $f$ découle de ($\star$).
+
+      D'où, $\bm{\mathit{1}} \times A$ vérifie la propriété universelle.
+    \item En toute généralité, l'unicité du produit de deux objets (sous réserve d'existence et à isomorphisme près) découle de l'argument ci-après.
+      Soient $A$ et $B$ deux objets de $\mathbf{C}$.
+      Supposons que $\Pi$ et~$\Gamma$ sont deux objets de $\mathbf{C}$ vérifiant les propriétés d'un produit de $A$ et $B$.
+      On suppose $\Pi$ et $\Gamma$ munis des morphismes $(\pi_A, \pi_B)$ et $(\gamma_A, \gamma_B)$ respectivement.
+      Ainsi, les deux diagrammes ci-après commutent :
+      \[
+      \begin{tikzcd}
+        \Pi \arrow[dashed]{dr}{f}\arrow[bend left]{drr}{\pi_A}\arrow[bend right]{ddr}{\pi_B} \\
+        & \Gamma \arrow{r}{\gamma_A} \arrow{d}{\gamma_B} & A\\
+        & B
+      \end{tikzcd}
+      \quad\quad
+      \begin{tikzcd}
+        \Gamma \arrow[dashed]{dr}{g}\arrow[bend left]{drr}{\gamma_A}\arrow[bend right]{ddr}{\gamma_B} \\
+        & \Pi \arrow{r}{\pi_A} \arrow{d}{\pi_B} & A\\
+        & B
+      \end{tikzcd}
+      ,\]
+      où les morphismes $f$ et $g$ existent et sont uniques d'après la propriété universelle pour chacun des produits.
+
+      Ainsi, $f \circ g : \Pi \to \Pi$ est l'identité $\mathrm{id}_\Pi$.
+      En effet, par l'absurde, supposons que $f \circ g$ est différent de l'identité.
+      Alors, $f \circ g \circ f : \Gamma \to \Gamma$ est différent de $f$.
+      Mais, la propriété universelle implique l'unicité de $f$.
+      Absurde !
+
+      De même, $g \circ f : \Gamma \to \Gamma$ est l'identité $\mathrm{id}_\Gamma$.
+
+      On en déduit l'unicité, à isomorphisme près, du produit (et par dualité, du coproduit).
+  \end{itemize}
+
+  \chapter{Exercice 4.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Démontrer la réciproque du \textit{Pasting Lemma} (rappelé ci-après).
+  \end{slshape}
+
+  \begin{lemm}[\textit{Pasting Lemma}]
+    Supposons que le diagramme donné ci-dessous commute :
+    \[
+    \begin{tikzcd}
+      A \arrow{r}{f}\arrow{d}{\alpha} & B\arrow{r}{g}\arrow{d}{\beta}\pullback & C\arrow{d}{\gamma}\\
+      D \arrow{r}{f'} & E\arrow{r}{g'} & F
+    \end{tikzcd}
+    ,\] 
+    où le carré à droite est un \textit{pullback}.
+    Alors, le carré gauche est un \textit{pullback} si, et seulement si, le rectangle l'est aussi.
+  \end{lemm}
+
+  Supposons que le rectangle \[
+  \begin{tikzcd}
+    A \arrow{rr}{g\circ f} \arrow{d}{\alpha}\pullback && C \arrow{d}{\gamma}\\
+    D \arrow{rr}{g'\circ f'} &~& F
+  \end{tikzcd}
+  \] 
+  soit un \textit{pullback}. Montrons que le carré de gauche est un \textit{pullback}.
+  Pour cela, soit $X$ un objet de $\mathbf{C}$ et soient $\psi_B : X \to B$ et $\psi_D : X \to D$ deux morphismes tels que $\beta \circ \psi_B = f' \circ \psi_D$.
+  On cherche à montrer qu'il existe un unique morphisme~$\phi$ faisant commuter le diagramme ci-dessous.
+  \[
+    \begin{tikzcd}
+      X \arrow[dashed]{dr}{\phi} \arrow[bend left]{drr}{\psi_B} \arrow[bend right]{ddr}{\psi_D}\\
+      &A \arrow{r}{f}\arrow{d}{\alpha} & B\arrow{r}{g}\arrow{d}{\beta}\pullback & C\arrow{d}{\gamma}\\
+      &D \arrow{r}{f'} & E\arrow{r}{g'} & F
+    \end{tikzcd}
+  .\]
+
+  Pour cela, on procède en deux temps.
+  On définit $\psi_C := g \circ \psi_B : X \to C$, qui fait commuter le diagramme ci-dessous.
+  \begin{equation}\label{ex4-diag1}
+    \begin{tikzcd}
+      X \arrow[dashed]{dr}{\phi} \arrow[bend left]{drr}{\psi_B} \arrow[bend right]{ddr}{\psi_D} \arrow[bend left=40]{drrr}{\psi_C}\\
+      &A \arrow{r}{f}\arrow{d}{\alpha} & B\arrow{r}{g}\arrow{d}{\beta}\pullback & C\arrow{d}{\gamma}\\
+      &D \arrow{r}{f'} & E\arrow{r}{g'} & F
+    \end{tikzcd}
+  \end{equation}
+  Or, par la propriété universelle du \textit{pullback} ci-dessous, \[
+    \begin{tikzcd}
+      X \arrow[dashed]{dr}{\phi} \arrow[bend left]{drrr}{\psi_C} \arrow[bend right]{ddr}{\psi_D}\\
+      &A \arrow{rr}{g\circ f} \arrow{d}{\alpha}\pullback && C \arrow{d}{\gamma}\\
+      &D \arrow{rr}{g'\circ f'} &~& F
+    \end{tikzcd}
+  .\]
+  on a l'existence d'un morphisme $\phi : X \to A$ dans $\mathbf{C}$, faisant commuter le diagramme ci-dessus, donc le diagramme~\ref{ex4-diag1} aussi.
+  De plus, un tel morphisme $\phi$ est unique par la propriété universelle du \textit{pullback}~"$A\:C\:D\:F$".
+
+  D'où la réciproque.
+
+
+  \chapter{Exercice 5.}
+
+  \begin{slshape}
+    \color{deepblue}
+    \begin{enumerate}
+      \item Soit $f : X \to Y$ un morphisme.
+        Montrer que $f$ est un monomorphisme si, et seulement si, le diagramme suivant est un~\textit{pullback} :
+        \begin{equation}
+        \begin{tikzcd}
+          X \arrow{r}{\mathrm{id}_X} \arrow{d}{\mathrm{id}_X} & X\arrow{d}{f}\\
+          X \arrow{r}{f} & Y
+        \end{tikzcd}
+        \label{ex5-diag1}
+        \end{equation}
+      \item Montrer que si $F$ préserve les \textit{pullbacks} alors $F$ préserve les monomorphismes.
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item On procède en deux temps.\label{ex5-Q1}
+
+      Soit $A$ un objet muni de deux morphismes $u_0 : A \to X$ et $u_1 : A \to X$.
+      Le diagramme \ref{ex5-diag1} est un \textit{pullback} si, et seulement si, il existe un unique morphisme $u : A \to X$ tel que le diagramme \[
+      \begin{tikzcd}
+        A \arrow[bend left]{drr}{u_0} \arrow[bend right]{ddr}{u_1} \arrow[dashed]{dr}{u}\\
+        & X \arrow{r}{\mathrm{id}_X} \arrow{d}{\mathrm{id}_X} & X\arrow{d}{f}\\
+        & X \arrow{r}{f} & Y
+      \end{tikzcd}
+      \]
+      commute.
+      Ceci est vrai, si, et seulement si $u$ est unique, et si l'égalité $f \circ u_0 = f \circ u_1$ est vérifiée.
+
+      Si $f \circ u_0 = f\circ u_1$ et $f$ est un monomorphisme, alors $u_0 = u_1$ donc l'unicité de $u$ et donc la propriété universelle du \textit{pullback}.
+
+      Si le diagramme \ref{ex5-diag1} est un \textit{pullback}, alors $u$ est unique. Donc, si $u_0 \circ f = u_1 \circ f$, on a donc $u_0 = u_1$ par unicité.
+      D'où, $f$ est un monomorphisme.
+
+      D'où l'équivalence.
+    \item Soient $\mathbf{C}$ et $\mathbf{D}$ deux catégories et $F : \mathbf{C} \to \mathbf{D}$ un foncteur qui préserve les \textit{pullbacks}.
+      Montrons que $F$ préserve les monomorphismes.
+      Soit $f : X \to Y$ un monomorphisme de $\mathbf{C}$.
+
+      D'après la question~\ref{ex5-Q1}, on peut considérer le \textit{pullback} de $\mathbf{C}$ ci-dessous :
+      \[
+        \begin{tikzcd}
+          X \arrow{r}{\mathrm{id}_X} \arrow{d}{\mathrm{id}_X}\pullback & X\arrow{d}{f}\\
+          X \arrow{r}{f} & Y
+        \end{tikzcd}
+      .\] 
+      Comme $F$ préserve les \textit{pullbacks}, on obtient le \textit{pullback} ci-dessous dans $\mathbf{D}$ :
+      \[
+        \begin{tikzcd}
+          F(X) \arrow{r}{\mathrm{id}_{F(X)}} \arrow{d}{\mathrm{id}_{F(X)}}\pullback & F(X)\arrow{d}{F(f)}\\
+          F(X) \arrow{r}{F(f)} & F(Y)
+        \end{tikzcd}
+      \]
+      car $F(\mathrm{id}_X) = \mathrm{id}_{F(X)}$
+
+      Montrons que $F(f) : F(X) \to F(Y)$ est un monomorphisme.
+      Par la question~\ref{ex5-Q1}, on sait que $F(f)$ est un monomorphisme si, et seulement si le diagramme 
+      \[
+        \begin{tikzcd}
+          F(X) \arrow{r}{\mathrm{id}_{F(X)}} \arrow{d}{\mathrm{id}_{F(X)}}\pullback & F(X)\arrow{d}{F(f)}\\
+          F(X) \arrow{r}{F(f)} & F(Y)
+        \end{tikzcd}
+      \]
+      est un \textit{pullback}.
+      On en conclut que $F(f)$ est un monomorphisme.
+  \end{enumerate}
+
+  \chapter{Exercice 6.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soient $f : X \to S$ et $u : Y \to S$ deux morphismes d'une catégorie $\mathbf{C}$, et supposons que le produit fibré $X \times_S Y$ existe. Montrer que si $u$ est un monomorphisme alors $f^\star u$ aussi :
+    \[
+    \begin{tikzcd}
+      X \times_S Y \arrow{r}{} \arrow{d}{f^\star u} & Y \arrow[tail]{d}{u}\\
+      X \arrow{r}{f} & S
+    \end{tikzcd}
+    .\] 
+
+    Énoncer et montrer l'énoncé dual.
+  \end{slshape}
+
+  Supposons $u$ un monomorphisme. Par la suite, on notera $\pi_Y$ la projection $X \times_S Y \to Y$.
+
+  Soient $A$ un objet de $\mathbf{C}$ et $x,y : A \to X \times_S Y$ deux morphismes de $\mathbf{C}$.
+  Supposons que $f^\star u \circ x = f^\star u \circ y$.
+
+  \[
+  \begin{tikzcd}
+    A \arrow[bend left]{dr}{x} \arrow[bend right,swap]{dr}{y}\\
+    &X \times_S Y \arrow{r}{\pi_Y} \arrow{d}{f^\star u} & Y \arrow[tail]{d}{u}\\
+    &X \arrow{r}{f} & S
+  \end{tikzcd}
+  .\] 
+
+  Premièrement, on a $f \circ f^\star u \circ x = f \circ f^\star u \circ y$,
+  et, car le diagramme commute, $u \circ \pi_Y \circ x = u \circ \pi_Y \circ y$,
+  mais, comme $u$ est un monomorphisme, on a que $\pi_Y \circ x = \pi_Y \circ y$.
+
+  Deuxièmement, on pose, d'une part, le morphisme $\phi_X := f^\star \circ x = f^\star \circ y$ puis, d'autre part, $\phi_Y := \pi_Y \circ x = \pi_Y \circ y$.
+
+  Troisièmement, on applique la propriété universelle du produit fibré.
+
+  \[
+  \begin{tikzcd}
+    A \arrow[bend left]{dr}{x} \arrow[bend right,swap]{dr}{y} \arrow[bend right=60,swap]{ddr}{\phi_X} \arrow[bend left=60]{drr}{\phi_Y} \arrow[dashed]{dr}{}\\
+    &X \times_S Y \arrow{r}{\pi_Y} \arrow{d}{f^\star u} & Y \arrow[tail]{d}{u}\\
+    &X \arrow{r}{f} & S
+  \end{tikzcd}
+  .\] 
+
+  On obtient l'unicité du morphisme $A \to X \times_S Y$ faisant commuter le diagramme précédent.
+  Et, par égalité des définitions de $\phi_X$ et $\phi_Y$ (entre celle utilisant $x$ et celle utilisant $y$), on a que $x = y$.
+
+  On en conclut que $f^\star u$ est un monomorphisme.
+
+  L'énoncé dual est : 
+  \begin{quote}
+    Soient $f : S \to X$ et $u : S \to Y$ deux morphismes et supposons que la somme amalgamée $X +_S Y$ existe.
+    Montrons que si  $u$ est un épimorphisme, alors $f^\star u$ l'est aussi :
+    \[
+    \begin{tikzcd}
+      S \arrow{d}{f} \arrow[two heads]{r}{u} & Y \arrow{d}{\iota_Y}\\
+      X \arrow{r}{f^\star u} & X +_S Y\pushout
+    \end{tikzcd}
+    .\]
+  \end{quote}
+  On peut le démontrer aisément par dualité : le dual d'une somme amalgamée est un produit fibré, et le dual d'un épimorphisme est un monomorphisme.
+  La propriété duale de la propriété universelle de la somme amalgamée est exactement la propriété universelle du produit fibré.
+
+  \chapter{Exercice 7.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $\mathbf{C}$ une catégorie localement petite et complète (\textit{i.e.} possédant toutes les petites limites, autrement dit, tout diagramme $F : \mathbf{J} \to  \mathbf{C}$ avec $\mathbf{J}$ petite\footnote{On appelle un tel diagramme un "petit diagramme".}\showfootnote, possède une limite) et $A \in \mathrm{ob}(\mathbf{C})$.
+    Montrer que le foncteur $h_A := \mathrm{Hom}(A, \cdot) : \mathbf{C} \to \mathbf{Ens}$ est continu.
+    En déduire que le foncteur $h^A := \mathrm{Hom}(\cdot, A)$ transforme colimite en limite.
+    Montrer qu'alors, dans la catégorie des $\mathds{k}$-espaces vectoriels (ou plus généralement des $R$-modules), on a \[
+    \Big( \bigoplus_{i \in I} E_i\Big)^\star = \prod_{i \in I} E_i^\star
+    ,\] 
+    où $\bigoplus E_i$ désigne la somme ou le coproduit des $E_i$.
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Montrons que $h_A := \mathrm{Hom}(A, \cdot): \mathbf{C} \to \mathbf{Ens}$ est continu.
+      Ce que l'on veut démontrer, c'est que $h_A$ transforme limite en limite.
+
+      Considérons un diagramme $F : \mathbf{J} \to \mathbf{C}$ donc on suppose que la limite $\lim F$ existe, et que cet objet est muni, pour $X \in \mathrm{ob}(\mathbf{J})$, d'un morphisme $\phi_X : \lim F \to X$.
+      \begin{equation}
+        \begin{tikzcd}
+          & \lim F \arrow[swap]{dl}{\phi_X} \arrow{dr}{\phi_Y}\\
+          F(X) \arrow{rr}{F(v)} && F(Y)
+        \end{tikzcd}
+        \label{eq:ex7-diag1}
+      \end{equation}
+
+      Considérons $A$ un objet quelconque de $\mathbf{C}$.
+
+      Posons $L = \mathrm{Hom}(A, \lim F)$ muni des morphismes \begin{align*}
+        \psi_X = \psi_X \circ -: \mathrm{Hom}(A, \lim F) &\longrightarrow \mathrm{Hom}(A, F(X)) \\
+        u : A \to \lim F &\longmapsto \phi_X \circ u : A \to D(X)
+      .\end{align*}
+      Montrons que $L$ est un cône limite.
+      \begin{itemize}
+        \item Commençons par montrer que le diagramme \[
+          \begin{tikzcd}
+            & L \arrow[swap]{dl}{\psi_X} \arrow{dr}{\psi_Y}\\
+            \mathrm{Hom}(A, D(X)) \arrow{rr}{F(v)\circ -} && \mathrm{Hom}(A, D(Y))
+          \end{tikzcd}
+          \] 
+          commute, où $v : X \to Y$.
+          On a :
+          \[
+            ((F(v)\circ -) \circ (\phi_X \circ -))(u) = 
+            F(v)\circ \phi_X \circ u = \phi_Y \circ u = (\phi_Y \circ -)(u)
+          ,\] quel que soit le morphisme $u$, car le diagramme~\ref{eq:ex7-diag1} commute.
+          D'où, le diagramme précédent commute, et ceci démontrer que~$L$ est (la pointe d') un cône.
+        \item Montrons que le cône $L$ est un cône limite en montrant qu'il vérifie la propriété universelle.
+          Considérons un autre cône $W \in \mathbf{Ens}$ muni, pour $X$ un objet de $\mathbf{J}$, d'un morphisme $\mu_X : W \to \mathrm{Hom}(A, D(X))$.
+
+          Considérons $w \in W$ quelconque.
+          Alors, pour $X \in \mathrm{ob}(\mathbf{J})$, on a un morphisme $\mu_X(w) : A \to F(X)$.
+          On obtient donc un cône car \[
+            F(v)\circ \mu_X(w) = ((F(v)\circ -) \circ \mu_X)(w) = \mu_Y(w)
+          ,\] car le cône en $W$ commute.
+          Ceci implique, par propriété universelle de $\lim F$,
+          il existe un unique morphisme de la forme  $f_w : A \to \lim F$, tel que le diagramme \[
+          \begin{tikzcd}
+            & A \arrow[dashed]{d}{f_w} \arrow[bend right,swap]{ddl}{\mu_X(w)} \arrow[bend left]{ddr}{\mu_Y(w)}\\
+            & \lim F \arrow[swap]{dl}{\phi_X} \arrow{dr}{\phi_Y}\\
+            X \arrow{rr}{v} & & Y
+          \end{tikzcd}
+          \]
+          commute.
+          
+          En réalisant cette construction pour tout $w \in W$, on peut définir $f : W \to \mathrm{Hom}(A, \lim F)$ par $f(w) := f_w$.
+          De plus, le diagramme suivant commute :
+          \[
+          \begin{tikzcd}
+            & W \arrow[dashed]{d}{f} \arrow[bend right,swap]{ddl}{\mu_X} \arrow[bend left]{ddr}{\mu_Y}\\
+            & L \arrow[swap]{dl}{\psi_X} \arrow{dr}{\psi_Y}\\
+            \mathrm{Hom}(A, F(X)) \arrow{rr}{F(v)\circ-} & & \mathrm{Hom}(A, F(Y))
+          \end{tikzcd}
+          .\]
+          En effet, ceci est assuré car $\psi_X \circ f = \mu_X$ (il suffit de ré-écrire l'égalité pour tout $w \in W$ et on retrouve le la commutativité du diagramme précédent) quel que soit $X \in \mathrm{ob}(\mathbf{J})$.
+      \end{itemize}
+
+      On en conclut que le morphisme $h_A$ envoie une limite sur une limite, d'où sa continuité.
+
+    \item Montrons que $h^A := \mathrm{Hom}(\cdot, A)$ transforme colimite en limite. \label{ex7-p2}
+      Par dualité, le morphisme $h^A : \mathbf{C}^\mathrm{op} \to \mathbf{Ens}$ envoie une limite de~$\mathbf{C}^\mathrm{op}$ sur une limite.
+      Mais, une limite de $\mathbf{C}^\mathrm{op}$ est une colimite de $\mathbf{C}$.
+      On a donc exactement ce que l'on voulait démontrer.
+
+    \item Montrons que $\big(\!\bigoplus E_i\big)^\star = \prod E_i^\star$ dans la catégorie des  $\mathds{k}$-espaces vectoriels.
+      Considérons le diagramme discret $F$ suivant \[
+        \begin{tikzcd}
+          E_{i_1} \arrow[loop above]{}{\mathrm{id}_{E_{i_1}}} &
+          E_{i_2} \arrow[loop above]{}{\mathrm{id}_{E_{i_2}}} &
+          E_{i_3} \arrow[loop above]{}{\mathrm{id}_{E_{i_3}}} &
+          E_{i_4} \arrow[loop above]{}{\mathrm{id}_{E_{i_4}}} & \cdots 
+        \end{tikzcd}
+      .\]
+      On sait que $\mathds{k}$ est un $\mathds{k}$-espace vectoriel. On applique donc le morphisme $h^\mathds{k}$.
+      Et on a donc \[
+        \Big(\bigoplus_{i \in I} E_i\Big)^\star = h^\mathds{k}(\operatorname{colim} F) \underset {\text{Q\ref{ex7-p2}}} = \lim h^\mathds{k} \circ F = \prod_{i \in I} E_i^\star
+      ,\] car $E^\star = h^\mathds{k}(E) = \mathrm{Hom}(E, \mathds{k})$ quel que soit le $\mathds{k}$-espace vectoriel~$E$.
+  \end{enumerate}
+
+
+  \chapter{Exercice 8.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $F : \mathbf{J} \to \mathbf{C}$ un diagramme, et supposons que $\mathbf{J}$ possède un objet initial $\bm{\mathit{1}}$. Montrer que $\lim F$ existe et calculer cette limite.
+  \end{slshape}
+
+  Commençons par montrer que la limite $\lim F$ existe et de la calculer.
+  Pour cela, on définit cette objet, et on montre que c'est bien une limite.
+
+  Pour chaque objet $A \in \mathrm{ob}(\mathbf{J})$, il existe un unique morphisme de la forme $h_A : \bm{\mathit{1}} \to A$ dans $\mathbf{J}$, car $\bm{\mathit{1}}$ est un objet initial dans $\mathbf{J}$.
+
+  On pose $L = F(\bm{\mathit{1}})$ muni des morphismes $\psi_A := F(h_A) : L \to F(A)$, pour $A \in \mathrm{ob}(\mathbf{J})$. On obtient le diagramme
+  \[
+    \forall A,B \in \mathrm{ob}(\mathbf{J}), \quad\quad
+  \begin{tikzcd}
+    & L \arrow[swap]{dl}{\psi_A} \arrow{dr}{\psi_B}\\
+    F(A) \arrow{rr}{F(f)} && F(B)
+  \end{tikzcd},
+  \]
+  qui commute par unicité du morphisme $\bm{\mathit{1}} \to B$. En effet, par morphisme, on a l'égalité~$F(f) \circ \psi_A = F(f \circ h_A)$ avec $f\circ h_A : \bm{\mathit{1}} \to B$, d'où $f\circ h_A = h_B$.
+
+  Montrons que $L$ muni des morphismes $\psi_A$ est bien une limite.
+  Considérons $X$ muni des morphismes $\chi_A : X \to A$, pour $A \in \mathrm{ob}(\mathbf{J})$.
+  Supposons que $F(f)\circ \chi_A = \chi_B$ pour $f : A \to B$, quel que soient les objets~$A$ et $B$ de $\mathbf{J}$. 
+
+  En particulier, pour $A = \bm{\mathit{1}}$, on a \[
+    \begin{tikzcd}
+      & X \arrow[bend right,swap]{ddl}{\chi_{\bm{\mathit{1}}}} \arrow[bend left]{ddr}{\chi_B} \arrow[dashed]{d}{u}\\
+      & L\arrow[swap]{dl}{\psi_{\bm{\mathit{1}}}} \arrow{dr}{\psi_B}\\
+      L\arrow{rr}{F(h_B)} & & B
+    \end{tikzcd}
+  ,\]
+  ce qui nous assure l'unicité de $u := \chi_{\bm{\mathit{1}}} : X \to L$.
+  En effet, pour tout objet $B \in \mathrm{ob}(\mathbf{J})$, on a $\chi_B = F(h_B) \circ \chi_{\bm{\mathit{1}}}$.
+  Ainsi, la famille $(\chi_B)_{B \in \mathrm{ob}(\mathbf{J})}$ est entièrement déterminée par $\chi_{\bm{\mathit{1}}}$, d'où l'unicité.
+
+  On en déduit que, comme $L$ vérifie la propriété universelle, on a \[
+    F(\bm{\mathit{1}}) =: L = \lim F
+  .\] 
+
+
+
+  \part{Constructions des limites inductives et projectives dans les ensembles.}
+  \chapter{Exercice 9.}\label{exo-9}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $(I, \le )$ un ensemble ordonné filtrant, et pour tout $i \in I$, fixons $E_i$ un ensemble, et notons $f_{i,j} : E_j \to E_i$ l'unique application $E_j \to E_i$ si $i \le j$ (on vient juste de se donner un système projectif).
+    Considérons \[
+    L := \mleft\{\, (x_i)_{i \in I} \in \prod_{i \in I} E_i \;\middle|\; \forall i \le j, f_{i,j}(x_j) = x_i\,\mright\} 
+    .\] 
+    Montrer que $L$ muni des projections est la limite projective du diagramme $I \to \mathbf{Ens}$.
+  \end{slshape}
+
+
+  
+
+  On considère le diagramme ci-dessous, où l'on suppose $\varphi_i = f_{i,j}\circ \varphi_j$.
+  \begin{equation}
+    \forall i\le j, \quad\quad
+    \begin{tikzcd}
+      & Y \arrow[dashed]{d}{\Phi} \arrow[bend right,swap]{ddl}{\varphi_j} \arrow[bend left]{ddr}{\varphi_i}\\
+      & L \arrow[swap]{dl}{\pi_j} \arrow{dr}{\pi_i}\\
+      E_j \arrow{rr}{f_{i,j}} & & E_i
+    \end{tikzcd}
+    \label{ex5-diag1}
+  \end{equation}
+  Afin de montrer que $L$ muni des projections est la limite projective du diagramme $I \to \mathbf{Ens}$, on procède en trois temps.
+  \begin{enumerate}
+    \item On construit les projections $\pi_i$ pour $i \in I$.
+      Pour $i \in I$ et pour une famille $x = (x_{i'})_{i' \in I} \in L$, on pose $\pi_i(x) = x_i$.
+      On construit bien des projections de $L$ dans $E_i$, pour $i \in I$.
+
+    \item Montrons que le diagramme~\ref{ex5-diag1} commute (où l'on néglige le morphisme $\Phi$ pour l'instant).
+      Pour cela, il suffit que l'on ait l'égalité $f_{i,j} \circ \pi_j = \pi_i$ quels que soient $i \le j$.
+      Ainsi, on doit montrer que, quel que soit $(x_i)_{i \in I} \in L$, on ait $f_{i,j}(x_j) = x_i$.
+      C'est vrai car $(x_i)_{i \in I}$ est un élément de $L$.
+    \item Montrons qu'il existe un unique morphisme $u : Y \to L$ tel que le diagramme~\ref{ex5-diag1} commute.
+      On procède par analyse-syntèse.
+      \begin{itemize}
+        \item \textbf{\textsl{\color{deepblue}Analyse.}}
+          Supposons avoir un morphisme $\Phi : Y \to L$ qui fait commuter le diagramme~\ref{ex5-diag1}.
+          Alors, $\varphi_j = \pi_j \circ \Phi$ et donc, pour tout $y \in Y$, on a : $[u(y)]_j = \varphi_j(y)$, quel que soit $j \in I$.
+          On note ici $[\;\cdot\;]_j = \pi_j$ pour insister sur le fait que, en parcourant tous les $j \in I$, on construit $\Phi(y)$ coordonnée par coordonnée.
+        \item \textbf{\textsl{\color{deepblue}Synthèse.}}
+          On définit l'application
+          \begin{align*}
+            \Phi: Y &\longrightarrow L \\
+            y &\longmapsto \big(\varphi_i(y)\big)_{i \in I}
+          .\end{align*}
+          On constate que cette définition fait commuter le diagramme.
+          En effet, on a bien $\Phi(y) \in L$ quel que soit $y \in Y$ car $f_{i,j}(\varphi_j(y)) = \varphi_i(y)$ par hypothèse.
+      \end{itemize}
+  \end{enumerate}
+
+  Par ce que l'on a démontré, on définit bien une limite projective et \[
+  L = \varprojlim_{i \in I} X_i
+  .\]
+
+  \chapter{Exercice 10.}
+
+  \begin{slshape}
+    \color{deepblue}
+    On reprend exactement les mêmes notations que l'exercice précédent, mais cette fois-ci on suppose que tous les $E_i$ sont des anneaux et que les $f_{i,j}$ sont des morphismes d'anneaux, montrer qu'alors $L$ possède une structure d'anneau telle que toutes les projections sont des morphismes d'anneaux.
+  \end{slshape}
+
+  Comme dans l'exercice~\hyperref[exo-9]{9}, on définit \[
+    L := \mleft\{\, (x_i)_{i \in I} \in \prod_{i \in I} E_i \;\middle|\; \forall i \le j, f_{i,j}(x_j) = x_i\,\mright\} 
+  ,\]
+  muni des projections \begin{align*}
+    \pi_i: L &\longrightarrow E_i \\
+    (x_j)_{j \in I} &\longmapsto x_i
+  .\end{align*}
+
+  Avant de commencer, remarquons que $L$ est non-vide.
+  En effet, pour tout $i \in I$, $E_i$ contient l'élément $1_{E_i}$, et $f_{i,j}(1_{E_i}) = 1_{E_j}$.
+  Ainsi, $(1_{E_i})_{i \in I}$ est un élément de $L$.
+
+  Montrons que $L$ a une structure d'anneau.
+  Pour cela, on peut montrer que $L$ est un sous-anneau de $E := \prod_{i \in I} E_i$.\footnote{Un peu plus de détail : les opérations $+$ et $\cdot$ sont réalisées composantes par composantes (mais elles peuvent être différentes pour $i \neq j$). Il est clair que les propriétés d'anneaux des $E_i$ permettent d'en déduire que $E$ est un anneau.}\showfootnote\ 
+  Démontrer cela demande de montrer trois propriétés.
+  \begin{enumerate}
+    \item Montrons que $L$ est un sous-groupe de $(E, +)$.
+      Comme $L$ est non-vide, il ne reste qu'à démontrer que $x - y \in L$ quels que soient $x, y \in L$.
+      Soient $x = (x_i)_{i \in I}$ et $y = (y_i)_{i \in I}$ deux éléments de $L$.
+      Alors, par définition des opérations, \[
+        z := x - y = (x_i -_i y_i) _{i \in I} =: (z_i)_{i \in I}
+      \]
+      Pour tout $i \le j$, on a \[
+        f_{i,j}(z_i) = f_{i,j}(x_i -_i y_i) = f_{i,j}(x_i) -_j f_{i,j}(y_i) = x_j -_j y_j = z_j
+      .\]
+      Ainsi, on a bien $x - y \in L$.
+      D'où, $L$ est un sous-groupe de $(E, +)$.
+
+    \item Montrons que $1_E \in L$.
+      En fait, on l'a déjà démontré précédemment (\textit{c.f.} la partie de la preuve pour $L \neq \emptyset$, au début de l'exercice).
+      En effet, $1_E = (1_{E_i})_{i \in I}$ est un élément de $L$.
+
+
+    \item Montrons que $\cdot$ est une loi de composition interne sur $L$.
+      Montrons que, pour $x,y$ deux éléments de $L$, l'élément $z := x \cdot y$ est bien un élément de $L$.
+      Pour tout $i \le j$, on a :
+      \[
+      f_{i,j}(z_i) = f_{i,j}(x_i \cdot_i y_i) = f_{i,j}(x_i) \cdot_j f_{i,j}(y_i) = x_j \cdot_j y_j = z_j
+      ,\] d'où $z = x\cdot y \in L$.
+  \end{enumerate}
+
+  D'où, $L$ est un sous-anneau de $E$, donc en particulier, c'est un anneau.
+
+  Montrons que les projections $\pi_i : L \to E_i$ sont des morphismes d'anneaux.
+  Pour cela, on a trois propriétés à démontrer.
+  \begin{enumerate}
+    \item On a $\pi_i(x + y) = \pi_i(x) +_i \pi_i(y)$, par définition de l'opération $+$ comme addition composante par composante.
+    \item On a $\pi_i(x \cdot  y) = \pi_i(x) \cdot_i \pi_i(y)$, par définition de l'opération $\cdot$ comme multiplication composante par composante.
+    \item On a $\pi_i(1_E) = 1_{E_i}$ par définition de $1_E = (1_{E_i})_{i \in I}$.
+  \end{enumerate}
+  Ainsi les projections sont bien des morphismes d'anneaux.
+
+  \chapter{Exercice 11.}
+
+  \begin{slshape}
+    \color{deepblue}
+
+    \begin{enumerate}
+      \item Soit $\mathbf{C}$ la sous-catégorie de $\mathbf{Ens}$ dont les objets sont des singletons indexés par des entiers naturels, et où il y a une (et une seule flèche) $\{n\} \to  \{m\}$ si, et seulement si, $n$ divise $m$.
+        Soit $\mathbf{J}$ le diagramme :\footnote{On identifie ici le foncteur d'inclusion $\mathbf{J} \to \mathbf{C}$ avec $\mathbf{J}$.}
+        \showfootnote
+        \[
+        \begin{tikzcd}
+          \{6\}\arrow[loop above] & & 
+          \{9\}\arrow[loop above]
+        \end{tikzcd}
+        .\] 
+        Calculer la limite de $J$ dans $\mathbf{C}$. En voyant maintenant $J$ comme un diagramme de $\mathbf{Ens}$, calculer à nouveau cette limite. Que remarquez-vous ?
+      \item Soit $\mathbf{Ann}$ la catégorie des anneaux (commutatifs unitaires) et~$\mathbf{Ann_f}$ la sous-catégorie pleine des anneaux finis.
+        Soit $p$ un nombre premier et $J$ le système projectif dans $\mathbf{Ann_f}$ où les objets sont les $\mathds{Z} / p^n \mathds{Z}$ avec $n \in \mathds{N}$ et les flèches sont données par :
+        \begin{align*}
+          \mathds{Z} / p^n \mathds{Z} &\longrightarrow \mathds{Z} / p^m \mathds{Z} \\
+          x \pmod{p^n} &\longmapsto x \pmod{p^m}
+        \end{align*}
+        dès que $n \ge m$.
+        Ce diagramme admet-il une limite dans $\mathbf{Ann_f}$ ? Et dans $\mathbf{Ann}$ ?
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Posons $L_\mathbf{C} := \{3\}$ et montrons que $L_\mathbf{C}$ est bien la limite de $J$ dans $\mathbf{C}$.
+      \begin{itemize}
+        \item D'une part, le diagramme \[
+            \begin{tikzcd}
+              & \{3\} \arrow{dr}{} \arrow[swap]{dl}{}\\
+              \{6\} && \{9\}
+            \end{tikzcd}
+          \]
+          commute toujours : en effet, il n'y a pas de flèches entre les objets~$\{6\}$ et $\{9\}$ car $6$ et $9$ ne sont pas comparables pour la relation de divisibilité "$\mid$".
+        \item D'autre part, si $\psi_6 : \{a\}  \to \{6\}$ et $\psi_9 : \{a\}  \to \{9\}$ sont deux morphismes et $\{a\}$ est un objet de $\mathbf{C}$, alors $a \mid 6$ et aussi $a \mid 9$.
+          C'est donc un diviseur commun de $6$ et $9$ et par définition du PGCD, $a  \mid \mathrm{pgcd}(6,9) = 3$.
+          Il existe donc une flèche $\{a\} \to \{3\}$ qui fait commuter le diagramme (ceci est assuré car "$ \mid $" est une relation d'ordre sur $\mathds{N}$).
+          \[
+            \begin{tikzcd}
+              & \{a\} \arrow[bend left]{ddr}{} \arrow[swap,bend right]{ddl}{} \arrow[dashed]{d}{}\\
+              & \{3\} \arrow{dr}{} \arrow[swap]{dl}{}\\
+              \{6\} && \{9\}
+            \end{tikzcd}
+          .\]
+      \end{itemize}
+      Ensuite, on pose $L_\mathbf{Ens} := \{0\}$.
+      Montrons que $L_\mathbf{Ens}$ est la limite de $J$ dans $\mathbf{Ens}$.
+      \begin{itemize}
+        \item D'une part, le diagramme \[
+            \begin{tikzcd}
+              & \{0\} \arrow{dr}{v} \arrow[swap]{dl}{u}\\
+              \{6\} \arrow{rr}{f} && \{9\}
+            \end{tikzcd}
+          \]
+          commute toujours : on a $0 \mapsto^u 6 \mapsto^f 9 = 0\mapsto^v 9$.
+        \item D'autre part, si $\psi_6 : A  \to \{6\}$ et $\psi_9 : A  \to \{9\}$ sont deux morphismes et $A$ est un ensemble, alors $\psi_6 : a \mapsto 6$ et $\psi_9 : a \mapsto 9$.
+          Ainsi, en posant $f : A \to \{0\}, a \mapsto 0$ et c'est l'unique morphisme de $A \to \{0\}$,
+          et le diagramme suivant commute :
+          \[
+            \begin{tikzcd}
+              & A \arrow[bend left]{ddr}{\psi_9} \arrow[swap,bend right]{ddl}{\psi_6} \arrow[dashed]{d}{f}\\
+              & \{0\}  \arrow{dr}{f} \arrow[swap]{dl}{u}\\
+              \{6\} \arrow{rr}{f} && \{9\}
+            \end{tikzcd}
+          .\]
+      \end{itemize}
+
+      En en conclut que, dans $\mathbf{C}$ la limite de $J$ est $\{3\} $ alors que dans~$\mathbf{Ens}$, la limite est $\{0\}$ (dans la première, c'est le singleton PGCD, dans la seconde, c'est un singleton sans contrainte sur l'élément).
+      Ainsi, une limite dans $\mathbf{C}$ est une limite dans $\mathbf{Ens}$ mais la réciproque est fausse.
+    \item Pour la suite, on note $\mathds{Z}_p$ l'ensemble des \textit{nombres $p$-adiques}.
+      Montrons que le diagramme n'admet pas de limite dans $\mathbf{Ann_f}$ mais que sa limite vaut $\mathds{Z}_p$ dans $\mathbf{Ann}$.
+      \begin{itemize}
+        \item Pour montrer que $\mathds{Z}_p$ est limite du diagramme dans $\mathbf{Ann}$, nous devons montrer deux propriétés.
+          \begin{itemize}
+            \item Le diagramme \[
+                \begin{tikzcd}
+                  & \mathds{Z}_p \arrow{dr}{\pi_m} \arrow[swap]{dl}{\pi_n}\\
+                  \mathds{Z}/p^n\mathds{Z} \arrow{rr}{f_{n,m}} && \mathds{Z}/p^m\mathds{Z}
+                \end{tikzcd}
+              ,\]
+              commute où l'on note $f_{n,m}$ la flèche de $\mathds{Z} / p^n \mathds{Z}$ vers l'anneau $\mathds{Z} / p^m \mathds{Z}$ dès lors que $n \ge m$, et où l'on pose les morphismes
+              \begin{align*}
+                \pi_n: \quad\quad\mathds{Z}_p &\longrightarrow \mathds{Z}/p^n\mathds{Z} \\
+                \sum_{i \in \mathds{N}} a_i p^i &\longmapsto \sum_{i < n} a_i p^i
+              .\end{align*}
+              En effet, on a l'égalité \[
+                \sum_{i < n} a_i p^i \pmod{p^m} = \sum_{i < m} a_i p^i \pmod{p^m}
+              ,\] et donc $\pi_m = f_{n,m}\circ\pi_n$.
+            \item De plus, il existe un unique morphisme $u : A \to \mathds{Z}_p$ tel que le diagramme \[
+              \begin{tikzcd}
+                & A \arrow[bend left]{ddr}{\psi_m} \arrow[swap,bend right]{ddl}{\psi_n} \arrow[dashed]{d}{u}\\
+                & \mathds{Z}_p  \arrow{dr}{\pi_m} \arrow[swap]{dl}{\pi_n}\\
+                \mathds{Z}/p^n \mathds{Z} \arrow{rr}{f} && \mathds{Z}/p^m \mathds{Z}
+              \end{tikzcd}
+              \] commute où $(\psi_n : A \to \mathds{Z} / p^n \mathds{Z})_{n \in \mathds{N}}$ est un cône.
+              Remarquons que : si $x \in A$ est, alors
+              \begin{itemize}
+                \item $\psi_1(x) =: a_0 \in \mathds{Z}/p\mathds{Z}$ ;
+                \item $(\psi_2(x) - a_0) / p =: a_1 \in \mathds{Z} / p \mathds{Z}$ ;
+                \item $(\psi_3(x) - a_1 p - a_0) / p^2 =: a_2 \in \mathds{Z}/p \mathds{Z}$ ;
+                \item \textit{etc}.
+              \end{itemize}
+              Ainsi, les valeurs de $\psi_i(x)$ définissent un unique nombre $p$-adique $u(x) := \sum_{n \in \mathds{N}}a_n p^n$.
+              On en déduit donc qu'il existe un unique morphisme $u$ faisant commuter le diagramme précédent, et que \begin{align*}
+                u: A &\longrightarrow \mathds{Z}_d \\
+                x &\longmapsto \sum_{n \in \mathds{N}} a_n p^n \quad\quad \text{où} \quad a_n := \frac{\psi_n - \sum_{i < n} a_i p^i}{p^n}
+              .\end{align*}
+          \end{itemize}
+        \item Par l'absurde, supposons que le diagramme admet une limite $A$ dans $\mathbf{Ann_f}$, et qu'elle est munie de la famille de morphismes~$(\psi_n : A \to \mathds{Z}/p^n \mathds{Z})_{n \in \mathds{N}}$ tel que le cône en $A$ commute.
+          Soit $N \in \mathds{N}$ tel que $p^N > \# A$, qui existe car $A$ est fini.
+      \end{itemize}
+  \end{enumerate}
+
+  \chapter{Exercice 12.}
+  \begin{slshape}
+    \color{deepblue}
+
+    Soit $(I, \le)$ un ensemble ordonné filtrant, et pour tout $i \in I$, fixons~$E_i$ un ensemble, avec $f_{i,j} : E_i \to E_j$ l'unique morphisme de $I$ de la forme~$E_i \to E_j$ si~$i \le j$, et $f_{i,i} = \id_{E_i}$ (on vient juste de se donner un système inductif). Soit~$C' = \{(x,i)  \mid i \in I, x \in E_i\}$.
+    Autrement dit, les éléments de $C'$ sont les couples $(x,i)$ où  $i \in I$ est un indice qui contrôle l'ensemble dans lequel $x$ appartient.
+    Considérons sur $C'$ la relation \[
+      (x, i) \sim (y, j) \quad \iff \quad\exists k \ge i,j,\; f_{i,k}(x) = f_{j,k}(y)
+    .\]
+    \begin{enumerate}
+      \item Montrer que c'est une relation d'équivalence.
+      \item Montrer que  $C := C' / \sim$ est la colimite du diagramme $I \to \mathbf{Ens}$, \textit{i.e.} que $C = \varinjlim_{i \in I} E_i$.
+      \item On suppose ici que pour tout $i \le j$, $E_i \subseteq E_j$ et $f_{i,j}$ est l'inclusion de $E_i$ dans $E_j$. Montrer que $C \cong \bigcup_{i \in  I} E_i$.
+      \item Soit $X$ un espace topologique, et $x \in X$ un point fixe.
+        On considère la catégorie posétale $\mathbf{I}$ des voisinages ouverts de $x$, et le diagramme $C : \mathbf{I} \to \mathbf{Ann}$ qui, à un ouvert $U$, associe l'anneau des fonctions continues sur $U$. Calculer la limite de ce diagramme.
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Montrons les trois propretés d'une relation d'équivalence.
+      \begin{enumerate}
+        \item \textbf{\textsl{\color{deepblue}Réflexivité.}}
+          Soit $(x, i) \in C'$.
+          On a bien $(x,i) \sim (x,i)$.
+          En effet, il suffit de choisir $k = i$ et on a bien l'égalité demandée.
+        \item \textbf{\textsl{\color{deepblue}Symétrie.}}
+          Soient $(x, i), (y, j) \in C'$.
+          Si $(x, i) \sim (y,j)$ alors il existe $k \ge i,j$ tel que $f_{i,k}(x) = f_{j,k}(y)$.
+          Mais donc $k \ge j,i$ et vérifie $f_{j,k}(y) = f_{i,k}(x)$.
+          On a donc $(y,j) \sim (x_i)$.
+        \item \textbf{\textsl{\color{deepblue}Transitivité.}}
+          Soient $(x, i), (y, j),(z,k) \in C'$.
+          Supposons que $(x, i) \overset p\sim (y,j) \overset q\sim (z,k)$.
+          On note les indices (le $k$ de la définition) au dessus de la relation.
+          Comme $p,q$ sont comparables ($I$ supposé filtrant), leur maximum $r$ existe.
+          Alors, on a \[
+            f_{i,r}(x) = f_{p,r}(f_{i,p}(x)) = f_{p,r}(f_{j,p}(y)) = f_{j,r}(y)
+          ,\] et \[
+            f_{k,r}(z) = f_{q,r}(f_{k,q}(x)) = f_{q,r}(f_{j,q}(y)) = f_{j,r}(y)
+          .\]
+          En effet, ces égalités de composition proviennent de l'unicité d'un morphisme $E_i \to E_r$ et $E_k \to E_r$, comme représenté sur le diagramme ci-après.
+          \[
+          \begin{tikzcd}
+            E_i \arrow{r}{f_{i,p}} \arrow[swap]{dr}{f_{i,r}} & E_p \arrow{d}{f_{p,r}}\\
+          & E_r & E_j \arrow[swap,bend right]{ul}{f_{j,p}} \arrow[bend left]{dl}{f_{j,q}} \arrow[dashed]{l}{f_{j,r}}\\
+            E_k \arrow[swap]{r}{f_{k,q}} \arrow{ur}{f_{k,r}} & E_q \arrow[swap]{u}{f_{q,r}}\\
+          \end{tikzcd}
+          .\]
+          On en déduit donc que $(x,i) \overset r \sim (z,k)$.
+      \end{enumerate}
+      Ainsi la relation $\sim$ est une relation d'équivalence.
+    \item
+      Considérons $C := C' / \sim$ l'ensemble quotient muni des projections  
+      \begin{align*}
+        \pi_i: E_i &\longrightarrow C \\
+        x &\longmapsto [(x,i)]
+      ,\end{align*}
+      où $[\:\cdot\:] : C' \to C$ associe à un élément de $C'$ sa classe d'équivalence pour la relation $\sim$.
+
+
+      On doit montrer deux propriétés : on a construit un co-cône, et il vérifie la propriété universelle.
+      \begin{enumerate}
+        \item Montrons que le diagramme suivant commute :
+          \[
+          \forall i \le j, \quad \begin{tikzcd}
+            E_i \arrow{rr}{f_{i,j}}\arrow{dr}{\pi_i} && E_j \arrow{dl}{\pi_j}\\
+            & C
+          \end{tikzcd}
+          ,\] 
+          \textit{i.e.} montrons que $\pi_j \circ f_{i,j} = \pi_i$ pour tout $i \le j$.
+          Supposons avoir $i \le j$, et soit $x \in E_i$.
+          Alors,
+          \begin{itemize}
+            \item d'une part, $\pi_i(x) = [(x,i)]$ ;
+            \item d'autre part, $\pi_j(f_{i,j}(x)) = [(f_{i,j}(x), j)]$.
+          \end{itemize}
+          Cependant, on a $(x, i) \overset j \sim (f_{i,j}(x), j)$ avec les notations précédentes.
+          D'où l'égalité des classes d'équivalences et donc l'égalité de la composition.
+          On en déduit que le diagramme précédent commute.
+        \item Soit $A$ un objet et soient $\gamma_i : E_i \to A$ des morphismes.
+          Supposons que le diagramme 
+          \[
+          \forall i \le j, \quad \begin{tikzcd}
+            E_i \arrow{rr}{f_{i,j}}\arrow[swap]{dr}{\gamma_i} && E_j \arrow{dl}{\gamma_j}\\
+            & A
+          \end{tikzcd}
+          \]
+          commute.
+          Montrons qu'alors, il existe un unique morphisme $u : C \to A$ tel que le diagramme suivant commute :
+          \[
+          \forall i \le j, \quad \begin{tikzcd}
+            E_i \arrow[bend right,swap]{rdd}{\gamma_i} \arrow{rr}{f_{i,j}}\arrow[swap]{dr}{\pi_i} && E_j \arrow{dl}{\pi_j} \arrow[bend left]{ldd}{\gamma_j}\\
+            & C \arrow[dashed]{d}{u}\\
+            & A
+          \end{tikzcd}
+          .\]
+
+          On procède par analyse-synthèse.
+          \begin{itemize}
+            \item \textbf{\textsl{\color{deepblue}Analyse.}}
+              Supposons avoir un morphisme $u : C \to A$ tel que le diagramme précédent commute.
+              Ainsi, si $x \in E_i$, alors $(u \circ \pi_i)(x) = \gamma_i(x)$ et donc $u([x,i]) = \gamma_i(x)$.
+            \item \textbf{\textsl{\color{deepblue}Synthèse.}}
+              On pose \begin{align*}
+                u: C &\longrightarrow A \\
+                [x,i] &\longmapsto \gamma_i(x)
+              .\end{align*}
+              Ce morphisme est bien défini car, si $(x,i) \overset k \sim (y,j)$, alors \[
+              \gamma_i(x) = \gamma_k(f_{i,k}(x)) = \gamma_k(f_{j,k}(y)) = \gamma_j(y)
+              .\]
+          \end{itemize}
+          On conclut de l'existence et de l'unicité de $u : C \to A$ faisant commuter le diagramme précédent.
+      \end{enumerate}
+    \item Avec cette définition des morphismes $f_{i,j}$, on a donc \[
+      \forall x,y, \quad\quad (x,i) \sim (y,j) \iff x = y
+      .\]
+      Ceci implique nécessairement que $C = C' / {\sim} \cong \bigcup_{i \in I} E_i$. En effet, les classes d'équivalences sont \[
+        \forall x \in E_i, \quad\quad [(x,i)] = \{(x,j)  \mid j \ge i\} 
+      ,\]et on obtient donc l'isomorphisme \begin{align*}
+        f: C &\longrightarrow \bigcup_{i \in  I} E_i \\
+        [(x,i)] &\longmapsto x
+      .\end{align*}
+    \item On applique la question précédente ?
+  \end{enumerate}
+
+  \chapter{Exercice 13.}
+
+  \begin{slshape}
+    \color{deepblue}
+    Soit $\mathbf{C}$ une catégorie complète. Soit $\mathbf{J}$ une petite catégorie fixée une fois pour toute. On rappelle que $[\mathbf{J},\mathbf{C}]$ est la catégorie des foncteurs de~$\mathbf{J}$ vers~$\mathbf{C}$, ou autrement dit, des $\mathbf{J}$-diagrammes sur $\mathbf{C}$. Montrer qu'on définit un foncteur $\lim_\mathbf{J} : [\mathbf{J},\mathbf{C}] \to \mathbf{C}$.
+  \end{slshape}
+
+  Rappelons que pour la catégorie $[\mathbf{J},\mathbf{C}]$,
+  \begin{itemize}
+    \item les objets sont les foncteurs $F : \mathbf{J} \to \mathbf{C}$ ;
+    \item les morphismes sont les transformations naturelles $\eta : F \Rightarrow G$. 
+  \end{itemize}
+
+  Définissons le foncteur $\lim_\mathbf{J}$ sur les objets.
+  À un foncteur $F : \mathbf{J} \to \mathbf{C}$, on associe $\lim_\mathbf{J} F$ qui existe (par hypothèse, comme $\mathbf{C}$ complète, toutes les limites de $\mathbf{J}$-diagrammes sur $\mathbf{C}$ existent) et qui est un objet de $\mathbf{C}$.
+
+  Puis, définissons le foncteur $\lim_\mathbf{J}$ sur les objets.
+  À une transformation naturelle $\eta : F \Rightarrow G$ (où $F, G : \mathbf{J} \to \mathbf{C}$ sont des foncteurs), on associe le morphisme $\lim_\mathbf{J} \eta : \lim_\mathbf{J} F \to \lim_\mathbf{J} G$.
+  Le morphisme $\lim_\mathbf{J} \eta$ est l'unique morphisme faisant commuter le diagramme 
+  \[
+  \begin{tikzcd}
+      & \lim_\mathbf{J} F \arrow[dashed]{d}{\lim_\mathbf{J} \eta} \arrow[bend right,swap]{ddl}{\varphi_A} \arrow[bend left]{ddr}{\varphi_B}\\
+      & \lim_\mathbf{J} G \arrow[swap]{dl}{\psi_A} \arrow{dr}{\psi_B}\\
+      F(A) \arrow{rr}{F(f)} & & F(B)
+  \end{tikzcd}
+  ,\] 
+  où les $\phi_A$ (\textit{resp}. les $\psi_A$) sont les morphismes associés à la limite $\lim_\mathbf{J} F$ (\textit{resp}. $\lim_\mathbf{J} G$).
+
+  Il ne reste que deux propriétés à vérifier afin de démontrer que $\lim_\mathbf{J}$ est bien un foncteur $[\mathbf{J}, \mathbf{C}] \to \mathbf{C}$.
+
+  \begin{itemize}
+    \item On a que $\lim_\mathbf{J} \id_F = \id_{\lim_\mathbf{J} F}$, où $\id_F : F \Rightarrow F$.
+      En effet, l'identité fait commuter le diagramme
+      \[
+      \begin{tikzcd}
+          & \lim_\mathbf{J} F \arrow[dashed]{d}{\id_{\lim_\mathbf{J} F}} \arrow[bend right,swap]{ddl}{\psi_A} \arrow[bend left]{ddr}{\psi_B}\\
+          & \lim_\mathbf{J} F \arrow[swap]{dl}{\psi_A} \arrow{dr}{\psi_B}\\
+          F(A) \arrow{rr}{F(f)} & & F(B)
+      \end{tikzcd}
+      ,\] 
+      et par unicité de ce morphisme (mais aussi par la construction décrite précédemment), on a $\lim_\mathbf{J} \id_F = \id_{\lim_\mathbf{J} F}$.
+    \item Pour $\eta : F \Rightarrow G$ et $\varepsilon : G \Rightarrow H$ deux transformations naturelles, on a l'égalité $\lim_\mathbf{J} (\varepsilon \circ \eta) = (\lim_\mathbf{J} \varepsilon)\circ(\lim_\mathbf{J} \eta)$.
+      En effet, cela découle de l'unicité du morphisme $\lim_\mathbf{J} F \to \lim_\mathbf{J} H$, comme montré dans le diagramme ci-dessous.
+      \[
+      \begin{tikzcd}
+          & \lim_\mathbf{J} F \arrow[dashed]{d}{\lim_\mathbf{J} \eta} \arrow[bend right=60,swap]{dddl}{\varphi_A} \arrow[bend left=60]{dddr}{\varphi_B} \\
+          & \lim_\mathbf{J} G \arrow[dashed]{d}{\lim_\mathbf{J} \varepsilon} \arrow[bend right,swap]{ddl}{\gamma_A} \arrow[bend left]{ddr}{\gamma_B}\\
+          & \lim_\mathbf{J} H \arrow[swap]{dl}{\psi_A} \arrow{dr}{\psi_B}\\
+          F(A) \arrow{rr}{F(f)} & & F(B)
+          \arrow[from=1-2,to=3-2,dashed,bend right=55,crossing over, swap]{dd}{\lim_\mathbf{J}(\varepsilon\circ\eta)}\\
+      \end{tikzcd}
+      \] 
+  \end{itemize}
+
+  On en conclut que l'on a bien définit $\lim_\mathbf{J} : [\mathbf{J}, \mathbf{C}] \to \mathbf{C}$ un foncteur covariant.
+
+\end{document}

@@ -1,0 +1,426 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Théorèmes de point fixe.}
+
+  \minitoc
+
+
+  Dans cette section, on va formaliser les raisonnements que l'on a réalisé en section~\ref{sec:induction} à l'aide du théorème de Knaster-Tarksi.
+
+  \begin{defn}
+    Soit $E$ un ensemble, une relation $\mathcal{R} \subseteq E^2$ est un \textit{ordre partiel} si $\mathcal{R}$ est :
+    \newcommand{\relR}{\ensuremath{\mathrel{\mathcal{R}}}}
+    \begin{itemize}
+      \item réflexive : $\forall x \in E, \ x \relR x $ ;
+      \item transitive : $\forall x,y,z \in E, \ (x \relR y \ \ \text{et}\ \ y \relR z) \implies x \relR z  $ ;
+      \item antisymétrique : $\forall x,y \in E, \ (x \relR y \ \ \text{et}\ \ y \relR x) \implies x = y $.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Dans l'ensemble $E = \mathds{N}$, les relations $\le$ et $\mid$ (division) sont des ordres partiels.
+  \end{exm}
+
+  \begin{defn}
+    Soit $(E, \sqsubseteq)$ un ordre partiel.
+    \begin{itemize}
+      \item Un \textit{minorant} d'une partie $A \subseteq E$ est un $m \in E$ tel que  \[
+      \forall x \in A,\  m \sqsubseteq x
+      .\]
+      \item Un \textit{majorant} d'une partie $A \subseteq E$ est un $m' \in E$ tel que  \[
+      \forall x \in A, \ x \sqsubseteq m'
+      .\]
+      \item Un \textit{treillis complet} est un ordre partiel $(E, \sqsubseteq)$ tel que toute partie $A \subseteq E$ admet un \textit{plus petit majorant}, noté $\bigsqcup A$, et un \textit{plus grand minorant}, noté $\bigsqcap A$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Pour tout minorant $m$ de $A$, on a $m \sqsubseteq \bigsqcap A$.
+      \item Pour tout majorant $m'$ de $A$, on a $\bigsqcup A \sqsubseteq m'$.
+      \item Un minorant/majorant de $A$ n'est pas nécessairement dans l'ensemble $A$. Ceci est notamment vrai pour $\bigsqcap A$ et $\bigsqcup A$.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{nota}
+    On note généralement $\bot = \bigsqcap E$, et $\top = \bigsqcup E$.
+  \end{nota}
+
+  \begin{exm}
+    \begin{itemize}
+      \item L'ensemble $(\mathds{N}, \le)$ n'est pas un treillis complet : si $A$ est infini, il n'admet pas de plus petit majorant.
+      \item L'ensemble $(\mathds{N} \cup \{\infty\}, \le)$ est un treillis complet avec la convention $\forall n \in \mathds{N}, n \le \infty$.
+      \item L'ensemble  $(\mathds{N},  \mid )$ est un treillis complet :
+        \begin{itemize}
+          \item pour $A \subseteq \mathds{N}$ fini, on a
+            \[
+             \bigsqcup A = \operatorname{ppcm} A \quad \text{ et  } \quad \bigsqcap A = \operatorname{pgcd} A
+            ;\]
+          \item pour $A\subseteq \mathds{N}$ infini, les relations ci-dessus restent valables avec la convention :
+            \[
+            \forall n \in  \mathds{N}, \quad n \mid 0
+            .\] 
+        \end{itemize}
+    \end{itemize}
+  \end{exm}
+
+  \begin{exm}[\textbf{Exemple \textit{très} important de treillis complet}]
+    Soit $E_0$ un ensemble.
+    Alors l'ensemble $(\wp(E_0), \subseteq)$ des parties de $E_0$ est un treillis complet.
+    En particulier, on a :
+    \[
+    \bigsqcap = \bigcap, \quad \bigsqcup = \bigcup, \quad \bot = \emptyset \quad \text{et} \quad \top = E_0
+    .\] 
+  \end{exm}
+
+  \begin{thm}[Knaster-Tarski] \label{thm:kt}
+    Soit $(E, \sqsubseteq)$ un treillis complet.
+    Soit~$f$ une fonction croissante de $E$ dans $E$.\footnote{Ceci signifie que $\forall a,b \in E, \quad a \sqsubseteq b \implies f(a) \sqsubseteq f(b)$.}
+    On considère l'ensemble \[
+    F_f = \{ x \in E  \mid  f(x) \sqsubseteq x \}
+    ,\] 
+    l'ensemble des \textit{prépoints fixes} de $f$.
+    Posons $m = \bigsqcap F_f$. Alors, $m$ est un point fixe de $f$, \textit{i.e.} $f(m) = m$.
+  \end{thm}
+  \begin{prv}
+    Soit $y \in F_f$, alors $m \sqsubseteq y$, et par croissance de $f$, on a ainsi $f(m) \sqsubseteq f(y)$, ce qui implique $f(m) \sqsubseteq y$ par transitivité (et car $y \in F_f$).
+    D'où, $f(m)$ est un minorant de $F_f$.
+
+    Or, par définition, $f(m) \sqsubseteq m$, et par croissance $f(f(m)) \sqsubseteq f(m)$, ce qui signifie que $f(m) \in F_f$.
+    On en déduit $m \sqsubseteq f(m)$.
+
+    Par antisymétrie, on en conclut que $f(m) = m$.
+  \end{prv}
+
+  À la suite de ce théorème, on peut formaliser les raisonnements que l'on a réalisé en section~\ref{sec:induction}.
+  Pour cela, il nous suffit d'appliquer le théorème~\ref{thm:kt} de Knaster-Tarksi (abrégé en "théorème K-T").
+
+  \section{Définitions inductives de relations.}
+
+  \begin{rmk}
+    Pour justifier la définition des relations, on applique le théorème K-T.
+    En effet, on part de $E = E_1 * \cdots * E_n$.
+    Les relations sont des sous-ensembles de $E$, on travaille donc dans le treillis complet $(\wp(E), \subseteq)$.
+    On se donné une définition inductive d'une relation $\mathsf{Rel} \subseteq E$.
+    Pour cela, on s'appuie sur les règles d'inférences et on associe à chaque $\mathcal{R}_i$ une fonction 
+    \[
+      f_i : \wp(E) \to \wp(E)
+    .\]
+
+    On montre (constate) que les $f_i$ définies sont croissantes.
+    Enfin, on pose pour $A \subseteq E$, \[
+      f(A) = f_1(A) \cup \cdots \cup f_k(A)
+    .\]
+    La fonction $f \mapsto f(A)$ est croissante.
+
+    Par définition, $\mathsf{Rel}$ est défini comme le plus petit (pré)-point fixe de la fonction $f$, qui existe par le théorème K-T (théorème~\ref{thm:kt}).
+  \end{rmk}
+
+  \begin{exm}
+    Définissons $\mathsf{le} \subseteq \mathsf{nat} * \mathsf{nat}$.
+    On rappelle les règles d'inférences pour cette relation :
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{L}_1]{\mathsf{le}(n,n)}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\mathsf{le}(n,k)}
+      \infer 1[\mathcal{L}_2]{ \mathsf{le}(n, \mathtt{S}\ k)}
+    \end{prooftree}
+    .\]
+    Avec un ensemble $A \subseteq \mathsf{nat} * \mathsf{nat}$, on définit \[
+      f_1(A) = \{ (n,n)  \mid  n \in \mathsf{nat} \},
+    \]\[
+      f_2(A) = \{(n, \mathtt{S}\ k)  \mid  (n,k) \in A \}
+    ;\]
+    et on pose enfin \[
+      f(A) = f_1(A) \cup f_2(A)
+    .\]
+    La définition formelle de la relation $\mathsf{le}$ est le plus petit point fixe de $f$.
+  \end{exm}
+
+  \begin{exm}[Suite de l'exemple~\ref{exm:relation-triee-ind}]
+    Définissons $\mathsf{tri\acute{e}e} \subseteq \mathsf{nlist}$.
+    On rappelle les règles d'inférences pour cette relation :
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{T}_1]{\mathsf{tri\acute{e}e}\ \mathtt{Nil}}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \infer 0[\mathcal{T}_2]{\mathsf{tri\acute{e}e}\ \mathtt{Cons}(x, \mathtt{Nil})}
+    \end{prooftree}\ ,
+    \]
+    \[
+    \begin{prooftree}
+      \hypo{\mathsf{le}(x,y)}
+      \hypo{\mathsf{tri\acute{e}e}\ \mathtt{Cons}(x, \mathtt{Nil})}
+      \infer 2[\mathcal{T}_3]{\mathsf{tri\acute{e}e}\ \mathtt{Cons}(x, \mathtt{Cons}(y, \ell))}
+    \end{prooftree}
+    .\]
+    Avec un ensemble $A \subseteq \mathsf{nlist}$, on définit
+    \begin{align*}
+      f_1(A) &= \{\mathtt{Nil}\},\\
+      f_2(A) &= \{\mathtt{Cons}(k, \mathtt{Nil})  \mid  k \in \mathsf{nat} \},\\
+      f_3(A) &= \mleft\{\,\mathtt{Cons}(x, \mathtt{Cons}(y, \ell)) \;\middle|\;
+        \begin{array}{l}
+          \mathtt{Cons}(y,\ell) \in A\\
+          \mathsf{le}(x,y)
+        \end{array}
+      \,\mright\}
+    ,\end{align*}
+    et on pose enfin \[
+      f(A) = f_1(A) \cup f_2(A)
+    .\]
+    La définition formelle de la relation $\mathsf{le}$ est le plus petit point fixe de $f$.
+  \end{exm}
+
+  \begin{rmk}
+    Dans les exemples ci-avant, même si l'on ne l'a pas précisé, les fonctions $f_i$ sont bien croissantes pour l'inclusion $\subseteq$.
+    C'est ceci qui assure l'application du théorème K-T (théorème~\ref{thm:kt}).
+
+    Comme dit dans la remarque~\ref{rmk:pas-de-negation-dans-une-regle}, on ne définit pas de règles d'induction de la forme 
+    \[
+        \cancel{
+          \begin{prooftree}
+            \hypo{\lnot \mathsf{Rel}(x_1',\ldots,x_{n'}')}
+            \infer 1{\mathsf{Rel}(x_1,\ldots,x_n)}
+          \end{prooftree}
+        }\color{nicered} \quad\longrightarrow\quad
+        \text{C'est interdit !}
+    \]
+    En effet, la fonction $f$ définie n'est donc plus croissante.
+  \end{rmk}
+
+  \begin{rmk}
+    Une relation $\mathsf{R}$ définie comme le plus petit point fixe d'une fonction $f$ vérifie, mais on ne demande en rien que l'on ait $A \subseteq f(A)$ quel que soit $A\subseteq E$. En effet, pour \[
+    f(\{(3,2)\}) = \{(n,n)  \mid  n \in \mathsf{nat}\} \cup \{(3,1)\} 
+    \] ne vérifie pas cette propriété.
+  \end{rmk}
+
+  \section{Définitions inductives d'ensembles.}
+
+  \begin{exm}
+    On reprend le type $\mathsf{t}_2$ défini à l'exemple~\ref{exm:ind-t2-def} :
+    \begin{lstlisting}[language=caml,caption=Un exemple de type]
+      type $\mathsf{t}_2$ =
+      | F
+      | N2 of ($\mathsf{t} * \mathsf{nlist} * \mathsf{t}$)
+      | N3 of ($\mathsf{t} * \mathsf{nat} * \mathsf{t} * \mathsf{nat} * \mathsf{t}$)
+    \end{lstlisting}
+    On le définit en utilisant le théorème K-T (théorème~\ref{thm:kt}) en posant :
+    \begin{align*}
+      f_1(A) &= \{\mathtt{F}\} \\
+      f_2(A) &= \{(x,\ell,y)  \mid  \ell \in \mathsf{nlist}\ \text{et}\ (x,y) \in A^2\} \\
+      f_3(A) &= \mleft\{\,(x,k_1,y,k_2,z) \;\middle|\;
+      \begin{array}{l}
+        (x,y,z) \in A^3\\
+        (k_1,k_2) \in \mathsf{nat}^2
+      \end{array}\,\mright\}
+    ,\end{align*}
+    puis, quel que soit $A$, \[
+      f(A) = f_1(A) \cup f_2(A) \cup f_3(A)
+    .\]
+    On pose ensuite $\mathsf{t}_2$ comme le plus petit point fixe de $f$.
+  \end{exm}
+
+
+  \begin{exm}
+    Avec $\mathsf{nat} = \{ \mathtt{Z}, \mathtt{S}\ \mathtt{Z}, \mathtt{S}\ \mathtt{S}\ \mathtt{Z}, \ldots\}$, on utilise \[
+      f(A) = \{\mathtt{Z}\} \cup \{ \mathtt{S}\ n  \mid n \in A \}
+    ,\]
+    et on pose $\mathsf{nat}$ le plus petit point fixe de $f$.
+
+    Et si on retire le cas de base ? Que se passe-t-il ? On pose la fonction \[
+    f'(A) = \{\mathtt{S}\ n  \mid n \in A\} 
+    .\] Le plus petit point fixe de $f$ est l'ensemble vide $\emptyset$.
+    On ne définit donc pas les entiers naturels.
+  \end{exm}
+
+  \begin{rmk}
+    Après quelques exemples, il est important de se demander comment $f$ est définie.
+    C'est une fonction de la forme \[
+      f : \wp( \redQuestionBox) \to \wp( \redQuestionBox)
+    .\]
+    Quel est l'ensemble noté "\redQuestionBox" ? Quel est l'\textit{ensemble ambiant} ?
+
+    La réponse est : c'est l'ensemble des arbres étiquetés par des chaînes de caractères.
+  \end{rmk}
+
+  \begin{rmk}
+    Pour définir inductivement un relation, on peut considérer qu'on construit un ensemble de dérivation.
+
+    Par exemple, pour $\mathsf{le}$, on aurait \[
+    f_2(A) = \mleft\{\,
+    \begin{prooftree}
+      \hypo{\delta}
+      \infer 1{\mathsf{le}(n, \mathtt{S}\ k)}
+    \end{prooftree}\;\middle|\; \text{
+    \parbox{6.5cm}{
+      $\delta$ est une dérivation de $\mathsf{le}(n,k)$ \textit{i.e.}, $\delta$ est une dérivation dont $\mathsf{le}(n,k)$ est à la racine
+    }}\,\mright\}
+    .\] 
+  \end{rmk}
+
+  \section{Preuves par induction sur un ensemble inductif.}
+
+  \begin{rmk}\label{rmk:rel-indu-naif}
+    Soit $\mathsf{t}$ un ensemble défini par induction par les constructeurs $\mathtt{C}_1, \ldots, \mathtt{C}_n$.
+    On pose $f$ tel que $\mathsf{t}$ est le plus petit pré-point fixe de $f$.
+
+    On veut montrer $\forall x \in \mathsf{t}, \mathcal{P}(x)$.
+    Pour cela, on pose \[
+    A = \{x \in \mathsf{t}  \mid \mathcal{P}(x)\} 
+    ,\] et on montre que $f(A) \subseteq A$, \textit{i.e.} $A$ est un pré-point fixe de $f$.
+    Ceci implique, par définition de  $\mathsf{t}$, que $\mathsf{t} \subseteq A$, d'où \[
+    \forall x, x \in \mathsf{t} \implies \mathcal{P}(x)
+    .\] 
+  \end{rmk}
+
+  \begin{exm}
+    Expliquons ce que veut dire "montrer $f(A) \subseteq A$" sur un exemple.
+
+    Pour $\mathsf{nlist}$, on pose deux fonctions
+    \begin{align*}
+      f_1(A) &= \{\mathtt{Nil}\}\\
+      f_2(A) &= \{\mathtt{Cons}(k,\ell) \mid \ell \in A\}  \\
+    .\end{align*}
+    Pour montrer $f(A) \subseteq A$, il y a \textit{deux} cas :
+    \begin{itemize}
+      \item (pour $f_1$) montrer $\mathcal{P}(\mathtt{Nil})$ ;
+      \item (pour $f_2$) avec l'hypothèse d'induction $\mathcal{P}(\ell)$, et $k \in \mathsf{nat}$, montrer $\mathcal{P}(\mathtt{Cons}(n,\ell))$.
+    \end{itemize}
+  \end{exm}
+
+  \section{Preuves par induction sur une relation inductive.}
+
+  \subsection{Une première approche...}
+
+  \begin{rmk}
+    Soit $\mathsf{Rel}$ une relation définie comme le plus petit (pré)point fixe d'une fonction $f$, associée aux~$k$ règles d'inférences~$\mathcal{R}_1,\ldots,\mathcal{R}_k$.
+    On veut montrer que \[
+      \forall (x_1,\ldots,x_m) \in E, \quad \mathsf{Rel}(x_1,\ldots,x_m) \implies \mathcal{P}(x_1, \ldots, x_m)
+    .\]
+
+    Pour cela, on pose $A = \{(x_1,\ldots,x_m) \in E\mid  \mathcal{P}(x_1,\ldots,x_m)\}$, et on montre que $f(A) \subseteq A$, \textit{i.e.} que $A$ est un prépoint fixe de $f$.
+    Ainsi, on aura $\mathsf{Rel} \subseteq A$ et on aura donc montré \[
+      \forall (x_1,\ldots,x_m) \in E, \quad \mathsf{Rel}(x_1,\ldots,x_m) \implies \mathcal{P}(x_1, \ldots, x_m)
+    .\] 
+  \end{rmk}
+
+  \begin{exm}\label{exm:rel-le-indu-naif}
+    Pour $\mathsf{le}$, prouver $f(A) \subseteq A$ signifie prouver deux propriétés :
+    \begin{enumerate}
+      \item $\forall n \in \mathsf{nat}, \mathcal{P}(n)$ ;
+      \item $\forall (n,k) \in \mathsf{nat}^2, \underbrace{\mathcal{P}(n,k)}_\text{hyp. ind.} \implies \mathcal{P}(n, \mathtt{S}\ k)$
+    \end{enumerate}
+  \end{exm}
+
+  \begin{exm}\label{exm:rel-triee-indu-naif}
+    Pour $\mathsf{tri\acute{e}e}$, on a \textit{trois} propriétés à prouver :
+    \begin{enumerate}
+      \item $\mathcal{P}(\mathtt{Nil})$ ;
+      \item $\forall k \in \mathsf{nat}, \mathcal{P}(\mathtt{Cons}(k, \mathtt{Nil}))$ ;
+      \item $\forall (x,y) \in \mathsf{nat}^2, \forall \ell \in \mathsf{nlist}$,
+        \[
+          \underbrace{\mathcal{P}(\mathtt{Cons}(y,\ell))}_\text{hyp.ind}\: \land\: \mathsf{le}(x,y) \implies \mathcal{P}(\mathtt{Cons}(x,\mathtt{Cons}(y,\ell)))
+        .\] 
+    \end{enumerate}
+  \end{exm}
+
+  \begin{rmk}
+    Remarquons que dans l'exemple~\ref{exm:rel-triee-indu-naif} ci-dessus, dans le 3ème cas, on n'a pas d'hypothèse $\mathsf{tri\acute{e}e}(\mathtt{Cons}(y,\ell))$.
+    Ceci vient du fait que, dans la remarque~\ref{rmk:rel-indu-naif}, l'ensemble $A$ ne contient pas que des listes triées.
+    La contrainte de la relation n'a pas été appliquée, on n'a donc pas accès à cette hypothèse.
+  \end{rmk}
+
+  \subsection{Une approche plus astucieuse...}
+
+  \begin{rmk}
+    On modifie légèrement le raisonnement présenté en remarque~\ref{rmk:rel-indu-naif}.
+    On pose \[
+      A' = \{(x_1,\ldots,x_m) \in E  \mid  \mathsf{Rel}(x_1,\ldots,x_m) \land \mathcal{P}(x_1,\ldots,x_m)\} 
+    .\]
+    On montre $f(A') \subseteq A'$ et donc, par définition de $\mathsf{Rel}$, on aura l'inclusion $\mathsf{Rel} \subseteq A'$.
+    Avec ce raisonnement, on peut utiliser des hypothèses, comme montré dans les exemples~\ref{exm:rel-le-indu-astuce} et~\ref{exm:rel-triee-indu-astuce}.
+    Le but de la preuve n'est donc plus $\mathcal{P}(\ldots)$ mais $\mathsf{Rel}(\ldots) \land \mathcal{P}(\ldots)$.
+
+    En rouge sont écrits les différences avec le raisonnement précédent.
+  \end{rmk}
+
+  \begin{exm}[Version améliorée de l'exemple~\ref{exm:rel-le-indu-naif}]\label{exm:rel-le-indu-astuce}
+    Pour $\mathsf{le}$, prouver $f(A) \subseteq A$ signifie prouver deux propriétés :
+    \begin{enumerate}
+      \item $\forall n \in \mathsf{nat}, {\color{nicered}\mathsf{le}(n,n)} \land \mathcal{P}(n)$ ;
+      \item $\forall (n,k) \in \mathsf{nat}^2, \underbrace{{\color{nicered}\mathsf{le}(n,k)}\land\mathcal{P}(n,k)}_\text{hyp. ind.} \implies {\color{nicered}\mathsf{le}(n,\mathtt{S}\ k)}\land\mathcal{P}(n, \mathtt{S}\ k)$
+    \end{enumerate}
+  \end{exm}
+
+  \begin{exm}[Version améliorée de l'exemple~\ref{exm:rel-triee-indu-naif}]\label{exm:rel-triee-indu-astuce}
+    Pour $\mathsf{tri\acute{e}e}$, on a \textit{trois} propriétés à prouver :
+    \begin{enumerate}
+      \item ${\color{nicered} \mathsf{tri\acute{e}e}(\mathtt{Nil})} \land \mathcal{P}(\mathtt{Nil})$ ;
+      \item $\forall k \in \mathsf{nat}, {\color{nicered} \mathsf{tri\acute{e}e}(\mathtt{Cons}(k,\mathtt{Nil}))} \land \mathcal{P}(\mathtt{Cons}(k, \mathtt{Nil}))$ ;
+      \item $\forall (x,y) \in \mathsf{nat}^2, \forall \ell \in \mathsf{nlist}$,
+        \begin{gather*}
+          \overbrace{{\color{nicered} \mathsf{tri\acute{e}e}(\mathtt{Cons}(y,\ell))}\land\mathcal{P}(\mathtt{Cons}(y,\ell))}^\text{hyp.ind}\: \land\: \mathsf{le}(x,y)\\
+          \vertical\implies\\
+          {\color{nicered}\mathsf{tri\acute{e}e}(\mathtt{Cons}(x,\mathtt{Cons}(y,\ell)))} \land \mathcal{P}(\mathtt{Cons}(x,\mathtt{Cons}(y,\ell)))
+        \end{gather*}
+    \end{enumerate}
+  \end{exm}
+
+
+  \section{Domaines et points fixes.}
+
+  \begin{defn}
+    Soit $(E, \sqsubseteq)$ un ordre partiel.
+    Une \textit{chaîne infinie} dans l'ensemble ordonné $(E, \sqsubseteq)$ est une suite $(e_n)_{n \ge 0}$ telle que 
+    \[
+    e_0 \sqsubseteq e_1 \sqsubseteq e_2 \sqsubseteq \cdots 
+    .\]
+
+    On dit que $(E, \sqsubseteq)$  est \textit{complet} si pour toute chaîne infinie, il existe~$\bigsqcup_{n \ge 0} e_n \in E$, un plus petit majorant dans $E$.
+
+    Si, de plus, $E$ a un plus petit élément $\bot$, alors $(E, \sqsubseteq)$ est un~\textit{domaine}.
+  \end{defn}
+
+  \begin{rmk}
+    Un treillis complet est un domaine.
+  \end{rmk}
+
+  \begin{thm}\label{thm:lub-fix}
+    Soit $(E, \sqsubseteq)$ un domaine. Soit $f : E \to E$ \textit{continue} : 
+    \begin{itemize}
+      \item $f$ est croissante ;
+      \item pour toute chaîne infinie  $(e_n)_{n \ge 0}$,
+        \[
+          f\Big( \bigsqcup_{n \ge 0} e_n \Big) = \bigsqcup_{n \ge 0} f(e_n)
+        .\] 
+      Les $(f(e_n))_{n \ge 0}$ forment une chaîne infinie par croissance de la fonction $f$.
+    \end{itemize}
+
+    On pose, quel que soit $x \in E$, $f^0(x) = x$, et pour tout entier~$i \ge  0$, on définit $f^{i+1}(x) = f(f^i(x))$.
+
+    On pose enfin 
+    \begin{align*}
+      \mathrm{fix}(f) &= \bigsqcup_{n \ge 0} f^n(\bot)\\
+      &= \bot \sqcup f(\bot) \sqcup f^2(\bot) \sqcup \cdots
+    .\end{align*}
+    Alors, $\mathrm{fix}(f)$ est le plus petit point fixe de $f$.
+  \end{thm}
+  \begin{prv}
+    La preuve viendra plus tard.
+  \end{prv}
+
+  Les définitions inductives par constructeurs ou règles d'inférences peuvent être définis par des fonctions continues.
+  Et, on peut se placer dans le domaine $(\wp(E), \subseteq)$ pour définir les ensembles définis par inductions.
+
+  \begin{exm}
+    Avec les listes d'entiers, on définit \[
+      \mathsf{nat} = \underbrace{\emptyset}_\bot \cup \underbrace{\{\mathtt{Nil}\}}_{f(\bot)} \cup \underbrace{\{\mathtt{Cons}(k, \mathtt{Nil})  \mid k \in \mathsf{nat}\}}_{f^2(\bot)} \cup \cdots 
+    .\]
+  \end{exm}
+\end{document}

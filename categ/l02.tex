@@ -1,0 +1,369 @@
+\begin{exm}
+  Soit $\mathbf{C}$ une catégorie localement petite. Pour tout objet $Y$ de $\mathbf{C}$, on pose
+  \[ \mathrm{Hom}_\mathbf{C} (-, Y) : \mathbf{C}^\mathrm{op} \to \mathbf{Ens} \]
+  le foncteur défini par :
+  \begin{itemize}
+    \item $\mathrm{Hom}(-, X)(Y) = \mathrm{Hom}_\mathbf{C}(X,Y)$ ;
+    \item $\mathrm{Hom}(-, Y)(f) = \overbrace{\mathrm{Hom}(f,Y) = - \circ f}^\text{notations !}$ pour $f : A \to B$.
+  \end{itemize}
+\end{exm}
+
+\begin{defn}[Rappel : isomorphismes de catégories]
+  Pour un foncteur $f : \mathbf{C} \to \mathbf{D}$, on dit que $F$ est un \textit{isomorphisme de catégories} s'il existe $G : \mathbf{D} \to \mathbf{C}$ un foncteur tel que $F \circ G = \mathrm{id}_\mathbf{D}$ et $G \circ F = \mathrm{id}_\mathbf{C}$.
+\end{defn}
+
+La notion d'égalité de foncteurs est trop \textit{stricte}. On définit donc la notion de \textit{transformation naturelle}.
+
+\begin{defn}
+  Soient $\mathbf{C}$ et $\mathbf{D}$ deux catégories.
+  Soient $F$ et $G$ deux foncteurs de $\mathbf{C}$ vers $\mathbf{D}$.
+
+  On appelle \textit{transformation naturelle} $\eta$ de $F$ vers $G$, que l'on note $\eta : F \Rightarrow G$, une famille de morphismes $(\eta_A : F(A)\to  G(A))_{A \in \mathbf{C}}$ tel que, quel que soit $f : A \to B$ dans $\mathbf{C}$, le diagramme suivant commute :
+  \[
+  \begin{tikzcd}
+    F(A) \arrow{r}{F(f)} \arrow{d}{\eta_A} & F(B) \arrow{d}{\eta_B} \\
+    G(A) \arrow{r}{G(f)} & G(B)
+  \end{tikzcd}
+  .\]
+
+  On dit alors que $\eta$ est un \textit{isomorphisme naturel} si, quel que soit $A \in \mathbf{C}$, $\eta_A$ soit un isomorphisme.
+
+  Si $F$ et $G$ sont contravariants, on a les mêmes définitions en retournant les flèches horizontales.
+\end{defn}
+
+\begin{exm}
+  On construit des foncteurs $\mathbf{Ann} \to \mathbf{Grp}$.
+  \begin{enumerate}
+    \item On définit le foncteur 
+      \begin{align*}
+        (-)^\times: \quad\quad\mathbf{Ann} &\longrightarrow \mathbf{Grp} \\
+        A &\longmapsto A^\times = \{ a \in A  \mid a \text{inversible} \} \\
+        (f : A \to B) &\longmapsto f^\star = f_{|A} : A^\times \to B^\times
+      .\end{align*}
+    \item On définit ensuite le second foncteur, pour $n \in \mathds{N}^\star$ fixé
+      \begin{align*}
+        \mathrm{GL}_n: \quad\quad \mathbf{Ann} &\longrightarrow \mathbf{Grp} \\
+        A &\longmapsto \mathrm{GL}_n A\\
+        (f: A \to B) &\longmapsto \left(
+        \begin{array}{rl}
+          \mathrm{GL}_n(A) &\to \mathrm{GL}_n(B)\\
+          (m_{i,j})_{i,j} &\mapsto (f(m_{i,j}))_{i,j}
+        \end{array}\right)
+      .\end{align*}
+  \end{enumerate}
+
+  On pourra démontrer que les deux applications ci-dessus sont des foncteurs.
+
+  De plus, in définit, pour tout anneau $A$, \begin{align*}
+    \det_A: \mathrm{GL}_n(A) &\longrightarrow A^\star \\
+    M &\longmapsto \det_A M
+  .\end{align*}
+  Si $f : A \to B$, alors le diagramme 
+  \[
+  \begin{tikzcd}
+    \mathrm{GL}_n(A) \arrow{r}{\mathrm{GL}_n(f)} \arrow{d}{\det_A} & \mathrm{GL}_n (B) \arrow{d}{\det_B}\\
+    A^\star \arrow{r}{f^\star} & B^\times
+  \end{tikzcd}
+  \] commute.
+  En effet, soit $M = (m_{i,j})_{i,j} \in \mathrm{GL}_n(A)$, alors \[
+  \det\big((f(m_{i,j}))_{i,j}\big) = f^\star (\det M)
+  .\] 
+  Ainsi, $\det : \mathrm{GL}_n \to (-)^\star$ est une transformation naturelle.
+\end{exm}
+
+\begin{rmk}
+  \begin{enumerate}
+    \item Les transformations naturelles se composent.
+      Si $\mathbf{C}$ et $\mathbf{D}$ sont deux catégories, $F,G,H : \mathbf{C} \to \mathbf{D}$  trois foncteurs, et deux transformations naturelles $\eta : F \Rightarrow G$ et $\varepsilon : G \Rightarrow H$, alors on pose $(\varepsilon \circ \eta)_A = \varepsilon_A \circ \eta_A$.
+      Alors, $\varepsilon \circ \eta : G \Rightarrow H$ est une transformation naturelle.
+      En effet, si $f : A \to B$ est dans $\mathbf{C}$, alors le diagramme \ldots
+      commute.
+    \item Si $F : \mathbf{C} \to \mathbf{D}$ est un foncteur, alors on définit $1_F : F \Rightarrow F$, avec $(1_F)_A = \mathrm{id}_{F(A)}$.
+  \end{enumerate}
+\end{rmk}
+
+\begin{defn}
+  Soit $F : \mathbf{C} \to \mathbf{D}$ un foncteur entre deux catégories~$\mathbf{C}$ et $\mathbf{D}$.
+  On dit que $F$ est une \textit{équivalence de catégories} s'il existe $G : \mathbf{D} \to \mathbf{C}$ et deux isomorphismes naturels 
+  \begin{itemize}
+    \item $\eta : F \circ G \Rightarrow \mathrm{id}_\mathbf{D}$ ;
+    \item $\varepsilon : G \circ F \Rightarrow \mathrm{id}_\mathbf{C}$.
+  \end{itemize}
+
+  On appelle dans cas $G$ un \textit{quasi inverse} de $F$.
+
+  Si $F$ est un isomorphisme de catégories, alors $F$ est une équivalence ($1_{\mathrm{id}_F} : F \circ F^{-1} \Rightarrow \mathrm{id}_\mathbf{C}$).
+\end{defn}
+
+\begin{exm}[bidualité]
+  Soit $\mathbf{fdVect}_\mathds{K}$ la catégorie des $\mathds{K}$-espaces vectoriels de dimension finie.
+
+  On définit le foncteur bidual $(-)^{\mathrm{vv}} = \mathrm{Hom}(-, \mathds{K}) \circ \mathrm{Hom}(-, \mathds{K})$.
+  \begin{itemize}
+    \item Pour $A \in (\mathrm{fdVect})_0$, on a :
+      \[
+      A^\mathrm{vv} = \mathrm{Hom}(\mathrm{Hom}(A, \mathds{K}), \mathds{K})
+      .\]
+    \item Pour $(f : A \to B)$ une application linéaire, alors
+      \begin{align*}
+        f^\mathrm{vv}: \mathrm{Hom}(\mathrm{Hom}(A, \mathds{K}), \mathds{K}) &\longrightarrow  \mathrm{Hom}(\mathrm{Hom}(B, \mathds{K}), \mathds{K}) \\
+        \varphi &\longmapsto \varphi(- \circ f)
+      .\end{align*}
+  \end{itemize}
+
+  Si $E \in \mathbf{fdVect}_\mathds{K}$, alors on définit 
+  \begin{align*}
+    \mathrm{eval}_E: E &\longrightarrow E^{\star\star} \\
+    x &\longmapsto (f \mapsto f(x))
+  .\end{align*}
+  Soit $E$ un espace vectoriel de dimension finie.
+  Montrons que $\mathrm{eval}_E$ est un isomorphisme.
+  \begin{itemize}
+    \item \textit{injectivité}.
+      Si $\mathrm{eval}_E(x) = 0$ alors $\forall f \in E^\mathrm{v}$, $f(x) = 0$.
+      Si $x \neq 0$, alors il existe $H$ tel que $E = H \oplus \langle x \rangle$
+      et il existe $\varphi \in E^\mathrm{v}$ tel que $\varphi(x) = 1$.
+      D'où, $x = 0$ et $\mathrm{eval}_E$ est injective.
+    \item \textit{dimension}. De plus, $\dim E = \dim E^\mathrm{v}$ donc $\mathrm{eval}_E$ est un isomorphisme.
+  \end{itemize}
+
+  Soit $f : E \to F$ une forme linéaire.
+  Le diagramme 
+  \[
+  \begin{tikzcd}
+    E \arrow{r}{f}\arrow{d}{\mathrm{eval}_E} & F \arrow{d}{\mathrm{eval}_F}\\
+    E^\mathrm{vv} \arrow{r}{f^\mathrm{vv}} & F^\mathrm{vv}
+  \end{tikzcd}
+  \] commute.
+  Ainsi $(-)^\mathrm{vv}$ est équivalent à $1_{\mathrm{fdVect}_{\mathds{K}}}$.
+\end{exm}
+
+\section{Caractérisation de l'équivalence.}
+
+\begin{defn}
+  Soit $F : \mathbf{C} \to \mathbf{D}$ un foncteur, où $\mathbf{C}$ et $\mathbf{D}$ sont deux catégories.
+  On dit que
+  \begin{itemize}
+    \item $F$ est \textit{fidèle} si l'application 
+      \begin{align*}
+        \mathrm{Hom}(A,B) &\longrightarrow \mathrm{Hom}(F(A),F(B)) \\
+        f &\longmapsto F(f )
+      \end{align*}
+      est injective, quels que soient $A$ et $B$ ;
+    \item $F$ est \textit{plein} si l'application 
+      \begin{align*}
+        \mathrm{Hom}(A,B) &\longrightarrow \mathrm{Hom}(F(A),F(B)) \\
+        f &\longmapsto F(f )
+      \end{align*}
+      est surjective, quels que soient $A$ et $B$ ;
+    \item $F$ est \textit{pleinement fidèle} si $F$ est plein et fidèle ;
+    \item $F$ est \textit{essentiellement surjectif} si, pour tout $Y \in \mathbf{D}$, il existe $X \in \mathbf{C}$ tel que $F(X)$ et $Y$ sont isomorphes dans $\mathbf{D}$.
+  \end{itemize}
+\end{defn}
+
+\begin{prop}
+  Soient $F : \mathbf{C} \to \mathbf{D}$ et $G : \mathbf{D} \to \mathbf{E}$ des foncteurs.
+  \begin{enumerate}
+    \item Si $G \circ F$ est fidèle, alors $F$ est fidèle.
+    \item Si $G \circ F$ est plein et $F$ est fidèle, alors $G$ est plein.
+  \end{enumerate}
+\end{prop}
+\begin{prv}
+  Complétée plus tard\ldots
+\end{prv}
+
+\begin{thm}
+  Soient $\mathbf{C}$ et $\mathbf{D}$ deux catégories.
+  Un foncteur $F : \mathbf{C} \to \mathbf{D}$ est une équivalence \textit{ssi} $F$ est pleinement fidèle et essentiellement surjective.
+\end{thm}
+
+\begin{prv}
+  \begin{itemize}
+    \item "$\implies$". Soit $F : \mathbf{C} \to \mathbf{D}$ une équivalence.
+      On dispose d'un quasi-inverse $G : \mathbf{D} \to \mathbf{C}$ et de deux isomorphismes naturels $\eta : G \circ F \Rightarrow 1_\mathbf{C}$ et $\varepsilon : F \circ G \Rightarrow 1_\mathbf{D}$.
+      \begin{itemize}
+        \item $F$ est essentiellement surjectif.
+          En effet, soit $Y \in \mathrm{obj}(\mathbf{D})$, on a 
+          \[\varepsilon_Y : F \circ G(Y) \xrightarrow{\sim} Y\]
+        \item $F$ est pleinement fidèle. En effet, si $f : A \to B$ est un morphisme de $\mathbf{C}$, alors le diagramme suivant commute :
+          \[
+          \begin{tikzcd}
+            A \arrow{r}{f} & B \arrow[bend left]{d}{\eta_B^{-1}}\\
+            G \circ F(A) \arrow{u}{\eta_A} \arrow{r}{G \circ F \circ f} & G \circ F(B) \arrow[bend left]{u}{\eta_B}
+          \end{tikzcd}
+          .\]
+          Ainsi, l'application 
+          \begin{align*}
+            \mathrm{Hom}_\mathbf{C}(A,B) &\longrightarrow \mathrm{Hom}_\mathbf{C}(GFA, GFB) \\
+            f &\longmapsto GFf
+          \end{align*}
+          est bijective d'inverse \[
+          g \mapsto \eta_B \circ g \circ \eta_A^{-1}
+          .\]
+          Ainsi, $G F$ est pleinement fidèle, donc $F$ est fidèle et $G$ est plein.
+          De même, $F G$ est pleinement fidèle, donc $G$ est fidèle et $F$ est plein.
+      \end{itemize}
+    \item "$\impliedby$".
+      Soit $F : \mathbf{C} \to \mathbf{D}$ pleinement fidèle et essentiellement surjectif.
+      On va construire $G : \mathbf{D} \to \mathbf{C}$ tel que 
+      \begin{itemize}
+        \item $\eta : F \circ G \Rightarrow \mathrm{id}_\mathbf{D}$ ;
+        \item $\varepsilon : G \circ F \Rightarrow \mathrm{id}_\mathbf{C}$.
+      \end{itemize}
+      \begin{itemize}
+        \item Construction de $G : \mathbf{D} \to \mathbf{C}$.
+          Soit $Y \in \mathrm{obj}(\mathbf{D})$ alors il existe $X \in \mathrm{obj}(\mathbf{C})$ tel que $F X \cong Y$.
+          On note cet isomorphisme $\varepsilon_Y : F G Y \to Y$.
+          Pour que la famille des $(\varepsilon_Y)_Y$ définisse une transformation naturelle, il faut que, pour toute flèche $f : A  \to B$ dans $\mathbf{D}$, le diagramme
+          \[
+          \begin{tikzcd}
+            A \arrow{r}{f} & B\\
+            FGA \arrow{u}{\varepsilon_A} \arrow{r}{FGf} & FGB \arrow{u}{\varepsilon_B}
+          \end{tikzcd}
+          \]
+          commute \textit{ssi} $\varepsilon_B F G f = f \varepsilon_A$, \textit{ssi} $FGf = \varepsilon^{-1}_B f \varepsilon_A$.
+          On a $ \varepsilon^{-1}_B f \varepsilon_A \in \mathrm{Hom}(FGA,FGB)$.
+
+          Or, $F$ est pleinement fidèle, il existe donc une unique flèche $u : GA \to GB$ telle que $F u =  \varepsilon^{-1}_B f \varepsilon_A$.
+          On pose $G f = u$.
+          Montrons que ceci définit bien un foncteur.
+          \begin{itemize}
+            \item Soit $A \in \mathrm{obj}(\mathbf{D})$.
+              Le diagramme
+              \[
+              \begin{tikzcd}
+                A \arrow{r}{1_A} & A \arrow{d}{\varepsilon^{-1}_A} \\
+                FGA\arrow{u}{\varepsilon_A} \arrow{r}{F(1_{GA})} & FGA \arrow{u}{\varepsilon_A}
+              \end{tikzcd}
+              \]
+              commute. Par unicité, $G 1_A = 1_{GA}$.
+            \item Soient $A,B,C \in \mathrm{obj}(\mathbf{D})$ et $f : A \to B$ et $g : B \to C$ deux foncteurs.
+              Le diagramme 
+              \[
+              \begin{tikzcd}
+                A \arrow[bend left]{rr}{g \circ f} \arrow{r}{f} & B \arrow{r}{g} & C\\
+                FGA \arrow{u}{\varepsilon_A} \arrow{r}{FGf} \arrow[bend right]{rr}{F G g \circ F G f = F(G g \circ G f)} & FGB \arrow{u}{\varepsilon_B} \arrow{r}{FGg} & FGC \arrow{u}{\varepsilon_C}
+              \end{tikzcd}
+              \]
+              commute.
+              Par unicité, $G g \circ G f = G (g \circ f)$ donc $G$ est un foncteur, et $\varepsilon : FG \Rightarrow 1_\mathbf{D}$ est un isomorphisme naturel par construction.
+          \end{itemize}
+        \item Il nous reste à construire $\eta : GF \Rightarrow 1_\mathbf{C}$.
+          Soit $X \in \mathrm{obj}(\mathbf{C})$.
+          On dispose d'un isomorphisme $(\varepsilon_{FX}: FGFX \to FX) \in \mathrm{Hom}_\mathbf{D} (F(GFX),F(X))$.
+          Or, $F$ est pleinement fidèle, il existe alors une unique flèche $\eta_X  : GF X \to X$ telle que $F \eta_X = \varepsilon_{F X}$.
+          On a que $\varepsilon_{FX}$ est un isomorphisme et $F$ pleinement fidèle, d'où $\eta_X$ est un isomorphisme.
+
+          De plus,
+          \begin{align*}
+            \varepsilon_{FX} \circ \varepsilon_{FX}^{-1} &= \mathrm{id}_{FX} = F(\mathrm{id}_X)\\
+            &= F \eta_X \circ F y \\
+            &= F(\eta_X \circ g) \\
+            &= \eta_X \circ g = \mathrm{id}_X
+          .\end{align*}
+
+          Soit $f : A \to B$ dans $\mathbf{C}$.
+          On veut que que le diagramme suivant commute.
+          Le diagramme 
+          \[
+          \begin{tikzcd}
+            A \arrow{r}{f} & B\\
+            GFA \arrow{u}{\eta_A} \arrow{r}{GFf} & GFB \arrow{u}{\eta_B}
+          \end{tikzcd}
+          \] commute \textit{ssi} $\eta_B \circ GFf = f \circ \eta_A$ \textit{ssi} $F (\eta_B \circ GFf) = F (f \circ \eta_A)$, qui, après calcul donne $\eta_{FB} \circ FGFf = F f \circ \varepsilon_{FA}$.
+          Or, le diagramme suivant commute :
+          \[
+          \begin{tikzcd}
+            FA \arrow{r}{Ff}& FB \\
+            FGFA \arrow{u}{\varepsilon_{FA}} \arrow{r}{FGFf} & FGFB \arrow{u}{\varepsilon_{FB}}
+          \end{tikzcd}
+          .\]
+          Ainsi, $\eta : GF \Rightarrow 1_\mathbf{C}$ est un isomorphisme naturel.
+      \end{itemize}
+  \end{itemize}
+\end{prv}
+
+\begin{rmk}
+  Un foncteur préserve les diagrammes commutatifs.
+\end{rmk}
+
+\section{Sous-catégories.}
+
+\begin{defn}
+  Soit $\mathbf{C}$ une catégorie.
+  Une \textit{sous-catégorie} $\mathbf{C}'$ de $\mathbf{C}$ est une catégorie telle que 
+  \begin{enumerate}
+    \item $\mathrm{obj}(\mathbf{C}') \subseteq \mathrm{obj}(\mathbf{C})$ ;
+    \item $\forall A, B \in \mathrm{obj}(\mathbf{C}'), \mathrm{Hom}_{\mathbf{C}'}(A,B) \subseteq \mathrm{Hom}_\mathbf{C}(A,B)$ ;
+    \item $\forall A \in \mathrm{obj}(\mathbf{C}'), 1_A \in \mathrm{Hom}_{\mathbf{C}'}(A,A)$ ;
+    \item $\forall (f : A \to B), (g: B \to C) \in C'_1, g \circ_{\mathbf{C}'} f = g \circ_{\mathbf{C}} f$.
+  \end{enumerate}
+\end{defn}
+
+\begin{note}
+  On dit que $\mathbf{C}'$ est une sous-catégorie pleine si on a l'égalité dans 2.
+  Il suffit donc de préciser les objets de $\mathbf{C}'$ pour définir les flèches.
+  On note alors $\mathbf{C}' \subseteq \mathbf{C}$.
+\end{note}
+
+\begin{defn}[Squelette]
+  Soit $\mathbf{C}$ une catégorie.
+  Un \textit{squelette} $\mathbf{S}$ de $\mathbf{C}$ est une sous-catégorie pleine telle que $\mathrm{obj}(\mathbf{S})$ contient un et un seul objet de chaque classe d'isomorphisme de $\mathbf{C}$.
+\end{defn}
+
+\begin{exm}
+  Avec $\mathbf{fdVect}_\mathds{K}$, un squelette peut être définir par les objets $\mathds{K}^n$ pour $n \in \mathds{N}$.
+\end{exm}
+
+\begin{exm}
+  Si on admet l'axiome du choix pour les catégories, toute catégorie admet un squelette.
+\end{exm}
+
+\begin{prop}
+  Soient $\mathbf{C}$ une catégorie et $\mathbf{S} \subseteq \mathbf{C}$ un squelette.
+  Alors $\mathbf{S}$ et $\mathbf{C}$ sont équivalentes.
+\end{prop}
+
+\begin{prv}
+  On considère le foncteur d'inclusion 
+  \begin{align*}
+    F : \mathbf{S} &\longrightarrow \mathbf{C} \\
+    A &\longmapsto A\\
+    f &\longmapsto f\\
+  .\end{align*}
+  On sait que $F$ est pleinement fidèle (car il induit l'identité sur les flèches et $\mathbf{S}$ pour sous-catégorie pleine, \textit{i.e.} $\mathrm{Hom}_{\mathbf{C}'}(A,B) = \mathrm{Hom}_{\mathbf{C}}(A,B)$).
+  Soit $Y \in \mathrm{obj}(\mathbf{C})$, alors, par définition d'un squelette, il existe $X \in \mathrm{obj}(\mathbf{S})$ tel que $X \cong Y$ avec $F : X \to Y$ l'isomorphisme, d'où $F$ est essentiellement surjective et $F$ équivalence (par le théorème).
+\end{prv}
+
+\begin{defn}
+  Une catégorie $\mathbf{C}$ est dite \textit{essentiellement petite} si elle est équivalente à une petite catégorie.
+\end{defn}
+
+\begin{rmk}
+  Ça équivaut à dire que $\mathbf{C}$ admet un squelette qui est une petite catégorie.
+\end{rmk}
+
+\begin{exm}
+  La catégorie $\mathbf{fdVect}_\mathds{K}$ est essentiellement petite.
+  En effet, le squelette $\{\mathds{K}^n  \mid n \in \mathds{N}\}$ est une petite catégorie.
+
+  La catégorie $\mathbf{fGroup}$ des groupes finis est essentiellement petite. En effet, tout groupe fini est isomorphe à un sous-groupe de $\mathfrak{S}_n$ où $n  \in \mathds{N}$.
+  Ainsi, $\mathrm{obj}(\mathbf{S}) = \bigcup_{n \in \mathds{N}} \{G  \mid G \text{sous-groupe de} \mathfrak{S}_n\}$.
+\end{exm}
+
+\begin{defn}
+  Deux catégories $\mathbf{C}$ et $\mathbf{D}$ sont dites \textit{duales} si $\mathbf{C}^\mathrm{op}$ et $\mathbf{D}$ sont équivalentes : il existe $F : \mathbf{C} \to \mathbf{D}$ et $G : \mathbf{D} \to \mathbf{C}$ deux foncteurs contravariants, et deux isomorphismes naturels $\eta : FG \Rightarrow 1_\mathbf{D}$ et $\varepsilon : GF \Rightarrow 1_\mathbf{C}$.
+
+  On dit alors que $F$ est une dualité et que $G$ est une dualité \textit{quasi inverse}.
+\end{defn}
+
+\begin{exm}
+  \begin{itemize}
+    \item $\mathbf{C}$ est toujours duale à $\mathbf{C}^\mathrm{op}$ ;
+    \item la composé de deux équivalences est une équivalence ;
+    \item la composée de deux dualités est une équivalence ;
+    \item la composée d'une dualité et d'une équivalence est une dualité ;
+    \item la composée d'une équivalence et d'une dualité est une dualité ;
+  \end{itemize}
+\end{exm}
+

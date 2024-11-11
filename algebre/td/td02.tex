@@ -1,0 +1,232 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Théorèmes d'isomorphismes et actions de groupes.}
+  \minitoc
+
+  \section{Exercice 1. \textit{Groupes monogènes}}\label{td2-ex1}
+  \begin{enonce}
+    Soit $G$ un groupe monogène.
+    Montrer que soit $G \cong \mathds{Z}$, soit $G \cong \mathds{Z} / n \mathds{Z}$ pour un entier strictement positif $n$.
+  \end{enonce}
+
+  Soit $g \in G$ tel que $\langle g \rangle = G$.
+  Considérons le morphisme \begin{align*}
+    \phi: \mathds{Z} &\longrightarrow G \\
+    k &\longmapsto g^k
+  .\end{align*}
+  On a $\im \phi = \langle g\rangle = G$.
+  De plus, par le premier théorème d'isomorphisme \[
+  \mathds{Z} / \ker \phi \cong \im \phi = G
+  .\] 
+  \begin{itemize}
+    \item Si $\ker \phi$ est le sous-groupe trivial  $\{0\}$, on a donc $G \cong \mathds{Z}$.
+    \item Si $\ker \phi$ est un sous-groupe non trivial de $\mathds{Z}$, alors  $\ker \phi = n\mathds{Z}$, et on a donc $G \cong \mathds{Z} / n \mathds{Z}$.
+  \end{itemize}
+
+  \section{Exercice 2.}
+  \begin{enonce}
+    Soit $n > 0$ un entier.
+    \begin{enumerate}
+      \item Montrer que $\mathds{Z}/n\mathds{Z}$ contient $\varphi(n)$ éléments d'ordre $n$, où $\varphi(n)$ désigne le nombre d'entiers  $k \in \llbracket 0, n-1 \rrbracket$ premiers à $n$.\label{td2-ex2-q1}
+      \item Montrer que pour tout $d > 0$ divisant $n$, $\mathds{Z}/n\mathds{Z}$ admet un unique sous-groupe d'ordre $d$ formé des multiples de $\overline{n / d}$. \label{td2-ex2-q2}
+      \item En déduire que pour tout diviseur $d > 0$ de $n$, $\mathds{Z}/n\mathds{Z}$ contient~$\varphi(d)$ éléments d'ordre $d$ et que $\sum_{0 < d  \mid n} \varphi(d) = n$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Soit $k \in \llbracket 0, n - 1 \rrbracket$.
+      Montrons que $\langle \bar{k} \rangle = \mathds{Z} / n \mathds{Z}$ si et seulement si $\operatorname{pgcd}(k,n) = 1$.
+       \begin{itemize}
+         \item Si $\langle \bar{k} \rangle = \mathds{Z} / n\mathds{Z}$ alors il existe $a \in \mathds{Z}$ tel que \[
+             a \bar{k} = \underbrace{\bar{k} + \cdots + \bar{k}}_{a \text{ fois}} = \bar{1}
+            .\]
+            Ainsi, il existe $b \in \mathds{Z}$ tel que $a k - 1 = b n$, soit $a k + b n = 1$.
+            On en conclut, par le théorème de Bézout, que  $k$ et $n$ sont premiers entre-eux.
+          \item Si $\operatorname{pgcd}(k,n) = 1$ alors il existe  $a,b \in \mathds{Z}$ tels que $a k + b n = 1$ et donc  $a k \equiv 1 \pmod n$.
+            Ainsi,  $k + \cdots + k \equiv 1 \pmod n$.
+            Or, $\langle \bar{1} \rangle = \mathds{Z} / n \mathds{Z}$ et donc, comme $\langle \bar{1} \rangle \subseteq \langle \bar{k} \rangle$ on a que \[
+              \langle \bar{k} \rangle = \mathds{Z} / n \mathds{Z}
+            .\] 
+      \end{itemize}
+      Par bijection, on a donc \[
+        \varphi(n) = \#\{k \in \llbracket 0, n - 1 \rrbracket  \mid \operatorname{pgcd}(k,n) = 1\}
+      \] éléments d'ordre $n$.
+    \item On sait que $\langle \overline{n / d} \rangle$ est un groupe, et $d\;\overline{n / d} = \bar{n} = \bar{0}$.
+      Ainsi, on a que $\# \langle \overline{n / d} \rangle = d$.
+      Il ne reste qu'à montrer l'unicité.
+      Soit un sous-groupe $H \le  \mathds{Z}/n\mathds{Z}$ d'ordre $d$.
+      Soit $\bar{a} \in H$ tel que $d \bar{a} = 0$.
+      Ainsi, il existe $b \in \mathds{Z}$ tel que $d a = nb$, d'où $a = n b / d$ et donc~$\bar{a} = b \; \overline{n / d}$.
+      On en déduit que $\bar{a} \in \langle \overline{n / d} \rangle$.
+      On conclut que $H = \langle \overline{ n /d }\rangle$ par inclusion et égalité des cardinaux.
+    \item Soit $\bar{a}$ un élément d'ordre $d$, et donc $\# \langle \bar{a} \rangle = d$.
+      Par la question~\ref{td2-ex2-q2} et l'exercice~\ref{td2-ex1}, on a $\langle \bar{a} \rangle = \langle \overline{n / d}\rangle \cong \mathds{Z} / d \mathds{Z}$.
+      Or, par la question~\ref{td2-ex2-q1}, il y a $\varphi(d)$ éléments d'ordre $d$ dans $\mathds{Z} / d \mathds{Z}$.
+      Ainsi, il y a $\varphi(d)$ éléments d'ordre $d$ dans $\mathds{Z} / n \mathds{Z}$.
+
+      Posons $A_d := \{\bar{a} \in \mathds{Z}/ n \mathds{Z}  \mid \#\langle \bar{a} \rangle = d \}$.
+      Si $d  \nmid n$ alors $A_d = \emptyset$ car l'ordre d'un élément divise $n$ (théorème de \textsc{Lagrange}).
+      Si~$d  \mid n$ alors $\# A_d = \varphi(d)$ (question~\ref{td2-ex2-q2}). De plus, \[
+      \mathds{Z} / n \mathds{Z} = \bigsqcup_{d  \mid  n} A_d
+      ,\] d'où \[
+      n = \sum_{d  \mid n} \# A_d = \sum_{d  \mid n} \varphi(d)
+      .\] 
+  \end{enumerate}
+
+  \section{Exercice 3.}
+  \begin{enonce}
+    \begin{enumerate}
+      \item Montrer que le groupe $\mathds{Z} / n\mathds{Z}$ est simple si, et seulement si, $n$ est premier.
+      \item Soit $G$ un groupe fini abélien. Montrer que $G$ est simple si et seulement si $G \cong \mathds{Z}/p\mathds{Z}$ avec $p$ un nombre premier.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Le groupe $\mathds{Z} / n \mathds{Z}$ est commutatif. Ainsi, tout sous-groupe de~$\mathds{Z} / n \mathds{Z}$ est distingué.
+      On a donc que $\mathds{Z}/ n\mathds{Z}$ est simple si, et seulement si,  $\mathds{Z} / n \mathds{Z}$ ne possède pas de sous-groupes non triviaux.
+      De plus, un entier $n$ n'a que des diviseurs triviaux ($1$ ou  $n$) si et seulement si $n$ est premier.
+      Et, avec le théorème de \textsc{Lagrange}, on sait que l'ordre de tout sous-groupe de $\mathds{Z} / n \mathds{Z}$ divise $n$.
+      D'où l'équivalence.
+    \item Le groupe $G$ est commutatif. Ainsi, tout sous-groupe de~$G$ est distingué.
+      On a donc que $G$ est simple si, et seulement si,  $G$ ne possède pas de sous-groupes non triviaux.
+      Ainsi, par le théorème de \textsc{Lagrange}, l'ordre du groupe $G$ est premier.
+  \end{enumerate}
+
+  \section{Exercice 4.}
+  \begin{enonce}
+    Soit $G$ un groupe et $H$ un sous-groupe de $G$ d'indice $2$.
+    Montrer que $H$ est distingué dans $G$. Montrer que le résultat n'est pas vrai si on remplace $2$ par $3$.
+  \end{enonce}
+
+  Soit $g \in G \setminus H$. On a la partition $G = H \sqcup gH$.
+  Ainsi $gH$ est le complément de $H$ dans $G$.
+  Similairement, $Hg$ est le complément de~$H$ dans $G$.
+  Ainsi, on a $gH = Hg$.
+
+  Si $h \in H$, alors $h H = H = H h$ car $H$ est un sous-groupe contenant les éléments $h$ et $h^{-1}$.
+
+  On en conclut, dans les deux cas, que $H \triangleleft G$.
+
+  Pour montrer que le résultat est faux en remplaçant $2$ par $3$, on considère $G := \mathfrak{S}_3$ et $H := \{\id, (1\;2)\}$ un sous-groupe de $G$.
+  Le sous-groupe~$H$ a pour indice $[G : H] = |\mathfrak{S}_3| / |H| = 3$.
+  Cependant, $H$ n'est pas un sous-groupe distingué de $G$ : \[
+    (1\;2\;3)(1\;2)(1\;2\;3)^{-1} = (2\;3) \not\in H
+  .\]
+
+  \section{Exercice 5.}
+  \begin{enonce}
+    Soit $p$ un nombre premier.
+    \begin{enumerate}
+      \item Rappeler pourquoi le centre d'un $p$-groupe est non trivial.
+      \item Montrer que tout groupe d'ordre $p^2$ est abélien, classifier ces groupes.
+      \item Soit $G$ un groupe d'ordre $p^n$. Montrer que $G$ admet un sous-groupe distingué d'ordre $p^k$ pour tout $k \in \llbracket 0, n \rrbracket$.
+    \end{enumerate}
+  \end{enonce}
+
+  \section{Exercice 6. \textit{Troisième théorème d'isomorphisme}}
+  \begin{enonce}
+    Soit $H$ un groupe et soient $H$ et $K$ des sous-groupes tels que $H \triangleleft G$ et $H \le K$.
+    On notera $\pi_H : G \to G/H$.
+
+    \begin{enumerate}
+      \item Montrer que le groupe $\pi_H(K)$ est distingué dans $G / H$ si et seulement si $K$ est distingué dans $G$.
+      \item Justifier que $H$ est distingué dans $K$ et que l'on a un isomorphisme $\pi_H(K) \cong K / H$.
+      \item On suppose $K$ distingué dans $G$. On note $\pi_K : G \to G / K$ la projection canonique.
+        \begin{enumerate}
+          \item Montrer que $\pi_K$ induit un unique morphisme de groupes~$\bar{\pi}_K : G/H \to G/K$ tel que $\pi_K = \bar{\pi_K} \circ \pi_H$.
+          \item Montrer que le noyau de $\bar{\pi}_K$ est $\pi_H(K)\cong K / H$.
+          \item En déduire le troisième théorème d'isomorphisme.
+        \end{enumerate}
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Supposons $K$ distingué dans $G$. Alors, $\pi_H(K)$ est distingué dans $G / H$ car $\pi_H$ est surjective (exercice~\refexo{td1}{6} du TD~\reftd{1}).
+      Réciproquement, si $\pi_H(K)$ est distingué dans $G / H$, alors 
+  \end{enumerate}
+
+  \section{Exercice 7. \textit{Sous-groupe d'un quotient}}
+  \begin{enonce}
+    Soit $G$ un groupe, et $H$ un sous-groupe distingué de $G$. On note la projection canonique $\pi_H : G \to G/H$.
+    \begin{enumerate}
+      \item
+        \begin{enumerate}
+          \item Soit $K$ un sous-groupe de $G$. Montrer $\pi_H^{-1}(\pi_H(K)) = K H$.
+          \item En déduire que $\pi_H$ induit une bijection croissante entre les sous-groupes de $G / H$ et les sous-groupes de $G$ contenant~$H$.
+        \end{enumerate}
+      \item Montrer que les sous-groupes distingués de $G / H$ sont en correspondance avec les sous-groupes distingués de $G$ contenant~$H$.
+      \item Montrer que la correspondance précédente préserve l'indice : si~$K$ est un sous-groupe de $G$ d'indice fini contenant $H$, alors on a $[G : K] = [G/H, \pi_H(K)]$.
+    \end{enumerate}
+  \end{enonce}
+
+  \section{Exercice 8. \textit{Combinatoire algébrique}}
+
+  \begin{enonce}
+    Soit $\mathds{k}$ un corps fini à $q$ éléments et $n \in \mathds{N}^*$.
+    On définit $\mathrm{PGL}_n(\mathds{k})$ comme le quotient $\mathrm{GL}_n(\mathds{k}) / \mathds{k}^\times$, où $\mathds{k}^\times$  correspond au sous-groupe distingué formé de la forme $\lambda \mathrm{I}_n$ avec $\lambda \in \mathds{k} \setminus \{0\}$.
+    On considère l'action de $\mathrm{GL}_n(\mathds{k})$ sur l'ensemble des droites vectorielles de $\mathds{k}^n$.
+    \begin{enumerate}
+      \item Déterminer le cardinal des groupes finis $\mathrm{GL}_n(\mathds{k})$, $\mathrm{SL}_n(\mathds{k})$ et~$\mathrm{PGL}_n(\mathds{k})$.
+        \textit{Indication : compter les bases de $\mathds{k}^n$.}
+      \item On prend désormais $n = 2$.
+        \begin{enumerate}
+          \item Montrer que le nombre de droites vectorielles de $\mathds{k}^2$ est égal à $q + 1$.
+        \item En déduire qu'il existe un morphisme de groupes injectif \[\mathrm{PGL}_2(\mathds{k}) \hookrightarrow \mathfrak{S}_{q+1}. \]
+        \end{enumerate}
+      \item Montrer que $\mathrm{GL}_2(\mathds{F}_2) = \mathrm{SL}_2(\mathds{F}_2) = \mathrm{PGL}_2(\mathds{F}_2) \cong \mathfrak{S}_3$.
+      \item Montrer que $\mathrm{PGL}_2(\mathds{F}_3) \cong \mathfrak{S}_4$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item L'application \begin{align*}
+        \mathrm{GL}_n(\mathds{k}) &\longrightarrow \{\text{bases de } \mathds{k}^n\}  \\
+        \begin{pmatrix}
+          C_1 & C_2 & \cdots & C_n\\
+        \end{pmatrix}  &\longmapsto (C_1, \ldots, C_n)
+      \end{align*}
+      est une bijection.
+      Construisions une base de $\mathds{k}^n$ :
+      \begin{enumerate}
+        \item[(1)] On choisit le premier vecteur $C_1$ dans $\mathds{k}^n \setminus \{0\}$, on a donc~$q^n - 1$ choix.
+        \item[(2)] On choisit le second vecteur $C_2$ dans $\mathds{k}^n \setminus \vect(C_1)$, on a donc~$q^n - q$ choix.
+        \item[(3)] On choisit le troisième vecteur $C_3$ dans $\mathds{k}^n \setminus \vect(C_1, C_2)$, on a donc~$q^n - q^2$ choix.
+        \item[(4)] \textit{Et cetera}.
+      \end{enumerate}
+      D'où, \[
+      \# \mathrm{GL}_n(\mathds{k}) = \prod_{i=0}^{n-1} (q^n - q^i)
+      .\]
+
+      L'application $\det : \mathrm{GL}_n(\mathds{k}) \to \mathds{k}^\times$ est un morphisme de groupes surjectif.
+      De plus, $\ker \det = \mathrm{SL}_n(\mathds{k})$. On a ainsi, par le premier théorème d'isomorphisme, \[
+        \mathrm{GL}_n(\mathds{k}) / \mathrm{SL}_n(\mathds{k}) \cong \mathds{k}^\times 
+      .\]
+      Ainsi, \[
+      \# \mathrm{SL}_n(\mathds{k}) = \frac{\# \mathrm{GL}_n(\mathds{k})}{\#\mathds{k}^\times} = \frac{\prod_{i=0}^{n-1} (q^n - q^i) }{q-1}
+      .\]
+
+      Finalement, on a $\mathrm{PGL}_n(\mathds{k}) := \mathrm{GL}_n(\mathds{k}) / \mathds{k}^\times$ d'où \[
+      \# \mathrm{PGL}_n(\mathds{k}) = \frac{\prod_{i=0}^{n-1} (q^n - q^i) }{q-1}
+      .\] 
+    \item 
+      \begin{enumerate}
+        \item 
+      \end{enumerate}
+  \end{enumerate}
+
+  \section{Exercice 9. \textit{Formule de \textsc{\textit{Burnside}}}}
+  \begin{enonce}
+    Soit $G$ un groupe fini agissant sur un ensemble fini $X$. On note $N$ le nombre d'orbites de l'action.
+    \begin{enumerate}
+      \item Soit $Y := \{(g,x)\in G \times X \mid g \cdot x = x\}$.
+        Interpréter le cardinal de $Y$ comme somme sur les éléments de $X$ d'une part, et de $G$ d'autre part.
+      \item En décomposant $X $ en union d'orbites, montrer la formule de \textsc{Burnside} : \[
+          N = \frac{1}{\#G}\sum_{g \in G} \# \mathrm{Fix}(G)
+        .\]
+      \item Soit $n$ un entier. Quel est le nombre moyen de points fixes des éléments de $\mathfrak{S}_n$ pour l'action naturelle sur $\llbracket 1, n \rrbracket$.
+      \item On suppose que $G$ agit transitivement sur $X$ et que $X$ contient au moins deux éléments. Montrer qu'il existe un $g \in G$ agissant sans point fixe.
+      \item En déduire qu'un groupe fini n'est jamais l'union des conjugués d'un sous-groupe strict.
+    \end{enumerate}
+  \end{enonce}
+\end{document}

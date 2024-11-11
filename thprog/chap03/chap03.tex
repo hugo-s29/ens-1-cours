@@ -1,0 +1,94 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Les bases de Rocq.} {
+  \lstset{language=Coq}
+  \section{Les définitions par induction : \lstinline|Inductive|.}
+
+  En Rocq (anciennement Coq), on peut définir des ensembles par induction.
+  Pour cela, on utilise le mot \lstinline|Inductive|.
+
+  Par exemple, pour définir un type de liste d'entiers, on utilise le code ci-dessous.
+
+  \begin{lstlisting}[caption=Définition du type $\mathsf{nlist}$ en Rocq]
+    Inductive $\mathsf{nlist}$ : Set:=
+    | Nil : $\mathsf{nlist}$
+    | Cons : $\mathsf{nat} \to \mathsf{nlist} \to \mathsf{nlist}$.
+  \end{lstlisting}
+
+  En Rocq, au lieu de définir la fonction \texttt{Cons} comme une "fonction" de la forme $\mathtt{Cons} : \mathsf{nat} * \mathsf{nlist} \to \mathsf{nlist}$, on la \textit{curryfie} en une "fonction" de la forme $\mathtt{Cons} : \mathsf{nat} \to \mathsf{nlist} \to \mathsf{nlist}$. Les types définis par les deux versions sont isomorphes.
+
+
+  Pour définir une relation, on utilise aussi le mot clé \lstinline|Inductive| :
+
+  \begin{lstlisting}[caption=Définition de la relation $\mathsf{le}$]
+    Inductive $\mathsf{le}$ : $\mathsf{nat}$ -> $\mathsf{nat}$ -> Prop :=
+    | $\mathsf{le}$_refl : forall n, $\mathsf{le}$ n n
+    | $\mathsf{le}$_S : forall n k, $\mathsf{le}$ n k -> $\mathsf{le}$ (S n) (S k).
+  \end{lstlisting}
+
+  Aux types définis par induction, on associe un principe d'induction (qu'on voir avec \lstinline|Print $\mathsf{le}$_ind.| ou   \lstinline|Print $\mathsf{nlist}$_ind.|).
+  Ce principe d'induction permet de démontrer une propriété $\mathcal{P}$ sur un ensemble/une relation définie par induction.
+
+  \section{Quelques preuves avec Rocq.}
+
+  On décide de prouver le lemme suivant avec Rocq.
+
+  \begin{not-lem}
+    Soit $\ell$ une liste triée, et soient $a$ et $b$ deux entiers tels que~$a \le b$.
+    Alors la liste $a :: b :: \ell$ est triée.
+  \end{not-lem}
+
+  Pour cela, on écrit en Rocq :
+  \begin{lstlisting}
+    Lemma exemple_triee :
+      forall l, $\mathsf{tri\acute{e}e}$ l ->
+        forall a b, $\mathsf{le}$ a b ->
+          $\mathsf{tri\acute{e}e}$ (Cons a (Cons b l)).
+  \end{lstlisting}
+
+  Il ne reste plus qu'à prouver ce lemme.
+  On commence la démonstration par introduire les variables et hypothèses : les variables \texttt{l}, \texttt{a}, \texttt{b}, et les hypothèses $(\mathtt{H1}) : \mathsf{tri\acute{e}e}\ \mathtt{l}$, et $(\mathtt{H2}) : \mathsf{le}\ \mathtt{a}\ \mathtt{b}$.
+  On commence par introduire la liste \texttt{l} et l'hypothèse \texttt{H1} et on s'occupera des autres un peu après.
+  \begin{lstlisting}
+    Proof.
+      intros l H1.
+  \end{lstlisting}
+  On décide de réaliser une preuve par induction sur la relation $\mathsf{tri\acute{e}e}$, qui est en hypothèse $(\mathtt{H1})$.
+  \begin{lstlisting}
+      induction H1.
+  \end{lstlisting}
+  Dans le cas d'une preuve par induction sur $\mathsf{tri\acute{e}e}$, on a \textit{trois} cas.
+  \begin{itemize}
+    \item \textsl{Cas 1}. On se trouve dans le cas $\mathtt{l} = \mathtt{Nil}$.
+      Pas trop de problèmes pour prouver que  \texttt{[a;b]} est triée avec l'hypothèse $\mathtt{a} \le  \mathtt{b}$.
+      On introduit les variables et hypothèses \texttt{a}, \texttt{b} et \texttt{H2}.
+      \begin{lstlisting}
+  - intros a b H2.
+      \end{lstlisting}
+      À ce moment de la preuve, l'objectif est de montrer :
+      \[
+      \mathsf{tri\acute{e}e}\ \mathtt{Cons}(\mathtt{a}, \mathtt{Cons}(\mathtt{b}, \mathtt{Nil}))
+      .\]
+      Pour cela, on utilise deux fois les propriétés de la relation $\mathsf{tri\acute{e}e}$ :
+      \begin{lstlisting}
+    apply t_cons.
+    apply t_singl.
+      \end{lstlisting}
+      Notre objectif a changé, on doit maintenant démontrer $\mathsf{le}\ \mathtt{a}\ \mathtt{b}$.
+      C'est une de nos hypothèses, on peut donc utiliser :
+      \begin{lstlisting}
+    assumption.
+      \end{lstlisting}
+      Ceci termine le cas 1.
+    \item \textsl{Cas 2}. On se trouve dans le cas $\mathtt{l} = \texttt{[k]}$.
+      On doit de démontrer que la liste \texttt{[a;b;k]} est triée.
+      On a l'hypothèse $\mathtt{a} \le \mathtt{b}$, mais aucune hypothèse de la forme $\mathtt{b} \le \mathtt{k}$.
+      On est un peu coincé pour ce cas\ldots
+  \end{itemize}
+  }
+
+
+  (Un jour je finirai d'écrire cette partie\ldots\
+  Malheureusement, ce n'est pas aujourd'hui\ldots)
+\end{document}

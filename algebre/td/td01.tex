@@ -1,0 +1,461 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Relations d'équivalence, quotients, premières propriétés des groupes.}\label{td1}
+  \minitoc
+
+  \section{Exercice 1.}
+
+  \begin{enonce}
+    \begin{enumerate}
+      \item Donner un isomorphisme $f : \mathds{R}/\mathds{Z} \to \mathds{S}^1$, où $\mathds{S}^1$ est le cercle unité de $\mathds{R}^2$ et $\mathds{R}/\mathds{Z}$ est le groupe quotient de $\mathds{R}$ par son sous-groupe distingué $\mathds{Z}$.
+    \end{enumerate}
+
+    Soient $E$ et $F$ deux ensembles et soit $f : E \to F$ une application.
+
+    \begin{enumerate}[resume*]
+      \item 
+        \begin{enumerate}
+          \item Montrer que la relation binaire sur $E$ définie par \[x \sim y \iff f(x) = f(y)\] est une relation d'équivalence.
+          \item On pose $X := E/{\sim}$. Soit $\pi : E \to X$ l'application canonique. Montrer qu'il existe une unique application $\bar{f} : X \to F$ telle que $f = \bar{f} \circ \pi$.
+          \item Montrer que $\bar{f}$ est une bijection sur son image.
+        \end{enumerate}
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item On commence par considérer l'application 
+      \begin{align*}
+        g: \mathds{R}/\mathds{Z} &\longrightarrow u^{-1}(\mathds{S}^1) \\
+        x\mathds{Z} &\longmapsto \mathrm{e}^{2\pi\mathrm{i} x}
+      ,\end{align*}
+      où $u : \mathds{C} \to \mathds{R}^2$ est l'isomorphisme canonique de $\mathds{R}^2$ et $\mathds{C}$.
+      Montrons trois propriétés.
+      \begin{itemize}
+        \item C'est bien défini. En effet, si $k \in \mathds{Z}$, alors $\mathrm{e}^{2\mathrm{i}\pi (x + k)} = \mathrm{e}^{2 \mathrm{i} \pi x}$ par a $2\pi$-périodicité de $\cos$ et $\sin$.
+        \item C'est bien un morphisme. En effet, si $x\mathds{Z}, y\mathds{Z} \in \mathds{R} / \mathds{Z}$, alors on a
+          \begin{align*}
+            g(x\mathds{Z} + y\mathds{Z}) = g((x+y)\mathds{Z}) &= \exp(2 \mathrm{i} \pi(x+y))\\
+            &= \exp(2 \mathrm{i}\pi x) \cdot \exp(2 \mathrm{i} \pi y)\\
+            &= g(x\mathds{Z}) \cdot g(y\mathds{Z})
+          .\end{align*}
+        \item C'est une bijection. En effet, l'application réciproque est l'application $u^{-1}(\mathds{S}^1) \ni z \mapsto (\arg z) \mathds{Z}$.
+      \end{itemize}
+      On en conclut en posant l'isomorphisme $f := u \circ g : \mathds{R} / \mathds{Z} \to \mathds{S}^1$.
+    \item
+      \begin{enumerate}
+        \item On a trois propriétés à vérifier.
+          \begin{itemize}
+            \item Comme $f(x) = f(x)$, on a $x \sim x$ quel que soit $x \in E$.
+            \item Si $x \sim y$, alors  $f(x) = f(y)$ et donc  $f(y) = f(x)$ et on en déduit $y \sim x$.
+            \item  Si $x \sim y$ et $y \sim z$, alors $f(x) = f(y) = f(z)$, et on a donc  $x \sim z$.
+          \end{itemize}
+        \item La fonction $f$ est constante sur chaque classe d'équivalence de $E$ par $\sim$.
+          On procède par analyse synthèse.
+          \begin{itemize}
+            \item {\color{deepblue}\textit{Analyse}.}
+              Si $\bar{f} : X \to F$ existe, alors $\bar{f}(\bar{x}) = f(x)$ quel que soit $x \in E$, où $\bar{x}$ est la classe d'équivalence de~$x$.
+              L'application $\bar{f}$ est donc unique, car déterminée uniquement par les valeurs de $f$ sur les classes d'équivalences de $x$.
+            \item {\color{deepblue}\textit{Synthèse}.}
+              On pose $\bar{f}(\bar{x}) := f(x)$, qui est bien définie car $f$ est constante sur les classes d'équivalences de $\sim$.
+          \end{itemize}
+        \item Montrons que $\bar{f} : X \to \im \bar{f}$ est injective et surjective.
+          \begin{itemize}
+            \item Soient $\bar{x}$ et $\bar{y}$ dans $X$ tels que $\bar{f}(\bar{x}) = \bar{f}(\bar{y})$.
+              Alors, on a $f(x) = f(y)$ et donc  $x \sim y$ d'où  $\bar{x} = \bar{y}$.
+            \item On a, par définition, $\im \bar{f} = \bar{f}(X)$.
+          \end{itemize}
+          D'où, $\bar{f}$ est une bijection sur son image.
+      \end{enumerate}
+  \end{enumerate}
+
+  \section{Exercice 2. \textit{Parties génératrices}}
+
+  \begin{enonce}
+    \begin{enumerate}
+      \item Soit $X$ une partie non vide d'un groupe $G$. Montrer que $\langle X\rangle$, le sous-groupe de $G$ engendré par $X$, est exactement l'ensemble des produits finis d'éléments de $X \cup X^{-1}$, où $X^{-1}$ est l'ensemble défini par $X^{-1} := \{x^{-1}  \mid x \in X\}$.\label{td1-ex2-Q1}
+      \item Montrer que le groupe $(\mathds{Q}, +)$ n'admet pas de partie génératrice finie.
+      \item Montrer que $(\mathds{Q}^\times, \times) = \langle -1, p \in \mathds{P} \rangle$, où $\mathds{P}$ est l'ensemble des nombres premiers.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Soit $H$ l'ensemble des produits finis d'éléments de $X \cup X^{-1}$.
+      \begin{itemize}
+        \item L'ensemble $H$ contient $X$. De plus, $H$ est un groupe.
+          En effet, on a $H \neq \emptyset$ car $e = x x^{-1} \in H$ où $x \in X$.
+          Puis, pour deux produits $x = x_1 \cdots x_n \in H$ et $y = y_1 \cdots y_m \in H$ (où les $x_i$ et les $y_j$ sont des éléments de $X \cup X^{-1}$) on a \[
+            x y^{-1} = x_1 \cdots x_n y_m^{-1} \cdots y_1^{-1}
+          ,\] qui est un produit fini d'éléments de $X \cup X^{-1}$, c'est donc un élément de $H$.
+          On en conclut que $H$ est un sous-groupe de $G$ contenant $H$.
+          D'où $H \ge \langle X\rangle$.
+        \item Soit $K$ un sous-groupe de $G$ contenant $X$.
+          D'une part, on sait que $X \cup X^{-1} \subseteq K$.
+          D'autre part, si $x = x_1\cdots x_n$ où l'on a $x_i \in X \cup X^{-1} \subseteq K$, alors $x \in K$ car $K$ est un groupe.
+          On en déduit que $H \le K$.
+      \end{itemize}
+      Ainsi, $H$ est le plus petit sous-groupe de $G$ contenant $X$, il est donc égal à $\langle X \rangle$.
+    \item Supposons, par l'absurde, que $(\mathds{Q}, +) = \big\langle \frac{p_1}{q_1}, \frac{p_2}{q_2} \ldots, \frac{p_n}{q_n}\big\rangle$.
+      On pose~$Q := \prod_{i=1}^n q_i$, puis on considère $\frac{1}{Q + 1} \in \mathds{Q}$.
+
+      Montrons que l'on peut écrire tout élément de  $\big\langle \frac{p_1}{q_1}, \ldots, \frac{p_n}{q_n} \big\rangle$ sous la forme $\frac{p}{Q}$.
+      En effet, par la question~\ref{td1-ex2-Q1}, on considère \[
+        x := \sum_{i \in I} \varepsilon_i \frac{p_i}{q_i} \quad \text{ avec }\quad \varepsilon_i \in \{-1,1\} \quad \text{et} \quad I \text{ fini}
+      ,\] un élément quelconque du sous-groupe engendré.
+      Et, en mettant au même dénominateur, on obtient $p' / \prod_{i \in I} q_i = x$.
+      On obtient donc bien \[
+        x = \frac{p' \times \prod_{i \not\in I} p_i}{Q}
+      ,\] 
+      où le produit au numérateur contient un nombre fini de termes.
+
+      Or, $\frac{1}{Q+1}\in \mathds{Q}$ ne peut pas être écrit sous la forme $p / Q$ car $Q +1$ et $Q$ sont premiers entre eux.
+      C'est donc absurde !
+      On en conclut que $(\mathds{Q},+)$ n'admet pas de partie génératrice finie.
+    \item Notons $E := \langle -1, p \in \mathds{P}\rangle$.
+      Soit $\frac{a}{b}$ un rationnel strictement positif.
+      On suppose $a$ et $b$ positifs.
+      On décompose $a$ et $b$ en produit de nombre premiers : \[
+        a = \prod_{i \in I} p_i \quad\quad \text{et}\quad\quad b = \prod_{j \in J} p_j
+      .\]
+      On a donc $a \in E$ et $b \in E$.
+      On en conclut que $\frac{a}{b} \in E$.
+
+      Si $\frac{a}{b} \in \mathds{Q}^\times$ est un rationnel tel que $a,b < 0$, on a $\frac{a}{b} = \frac{|a|}{|b|} \in E$ d'après ce qui précède.
+
+      Si $\frac{a}{b} \in \mathds{Q}^\times$ est un rationnel négatif, alors on a $\left|\frac{a}{b}\right| \in E$, mais on a donc également $\frac{a}{b} = (-1) \times \left|\frac{a}{b}\right| \in E$.
+
+      On en conclut que $\mathds{Q}^\times  \subseteq E$ et on a égalité car $E \subseteq \mathds{Q}^\times $ par définition de $E$ comme sous-groupe de $\mathds{Q}^{\times }$.
+  \end{enumerate}
+
+  \section{Exercice 3. \textit{Ordre des éléments d'un groupe}}\label{td1-ex3}
+
+  \begin{enonce}
+    Soient $g$ et $h$ deux éléments d'un groupe $G$.
+    \begin{enumerate}
+      \item 
+        \begin{enumerate}
+          \item Montrer que $g$ est d'ordre fini si et seulement s'il existe $n \in \mathds{N}^*$ tel que $g^n = e$.
+          \item Montrer que si $g$ est d'ordre fini, alors son ordre est le plus petit entier $n \in \mathds{N}^*$ tel que $g^n = e$.
+            Montrer, de plus, que pour $m \in \mathds{Z}$, $g^m = e$ si et seulement si l'ordre de  $g$ divise~$m$.
+        \end{enumerate}
+      \item Montrer que les éléments $g$, $g^{-1}$ et $h g h^{-1}$ ont même ordre.
+      \item Montrer que $gh$ et $hg$ ont même ordre.
+      \item Soit $n \in \mathds{N}$. Exprimer l'ordre de $g^n$ en fonction de celui de $g$.
+      \item On suppose que $g $ et $h$ commutent et sont d'ordre fini $m$ et $n$ respectivement.
+        \begin{enumerate}
+          \item Exprimer l'ordre de $gh$ lorsque $\langle g\rangle \cap \langle h \rangle = \{e\}$.
+          \item Même question lorsque $m$ et $n$ sont premiers entre eux.
+          \item (\textit{Plus difficile}) On prend $m$ et $n$ quelconques. Soient $a := \min \{\ell \in \mathds{N}^*  \mid g^\ell \in \langle h\rangle\}$ et $b \in \mathds{N}$ tel que $g^a = h^b$.
+            Démontrer que l'ordre de  $gh$ est ${an} / {\operatorname{pgcd}(n,(a+b))}$.
+        \end{enumerate}
+      \item En considérant \[
+          A := \begin{pmatrix} 0 & -1\\ 1 & 0 \end{pmatrix} \quad\quad \text{et}\quad\quad B := \begin{pmatrix} 0 & 1\\ -1 & 1 \end{pmatrix},
+        \] montrer que le produit de deux éléments d'ordre fini ne l'est pas forcément.
+    \end{enumerate}
+  \end{enonce}
+
+  \section{Exercice 4.}
+  
+  \begin{enonce}
+    Soit $G$ un groupe.
+    \begin{enumerate}
+      \item On suppose que tout élément $g$ de $G$ est d'ordre au plus 2. Montrer que $G$ est commutatif.
+      \item Montrer que $G$ est commutatif si et seulement si l'application~$g \mapsto g^{-1}$ est un morphisme de groupes.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Pour tout $g \in G$, on a $g^2 = e$. 
+      Ainsi, pour tout $g \in G$, on a $g$ est son propre inverse.
+      Ceci permet de calculer \[
+        gh = g^{-1} h = g^{-1}h^{-1} = (h g)^{-1} = h g
+      ,\] 
+      d'où $G$ est commutatif.
+    \item On note $\phi : g \mapsto g^{-1}$, et on procède par équivalence.
+      \begin{align*}
+        G \text{ est commutatif} \iff& \forall g, h \in G, \quad gh = hg\\
+        \iff& \forall g,h \in G, \quad(gh)^{-1} = (hg)^{-1}\\
+        \iff& \forall g,h \in G, \quad(gh)^{-1} = g^{-1}h^{-1}\\
+        \iff& \forall g,h \in G,\quad\phi(gh) = \phi(g)\:\phi(h)\\
+        \iff& \phi \text{ est un morphisme}
+      .\end{align*}
+  \end{enumerate}
+
+  \section{Exercice 5.}
+  \begin{enonce}
+    Soit $\phi : G_1 \to G_2$ un morphisme de groupes, et soit $g \in G_1$ d'ordre fini. Montrer que $\phi(g)$ est d'ordre fini et que son ordre divise l'ordre de  $g$.
+  \end{enonce}
+
+  On utilise habilement l'exercice~\ref{td1-ex3} : pour tout $h \in G$, $h^m = e$ si et seulement si l'ordre de $h$ divise $m$.
+  Soit $n$ l'ordre de $g$ (qui est fini car~$G_1$ d'ordre fini).
+  Ainsi, \[
+    (\phi(g))^n = \phi(g^n) = \phi(e_1) = e_2
+  .\]
+  On en déduit donc que $\phi(g)$ est d'ordre fini et qu'il divise $n = \ord g$.
+
+  \section{Exercice 6.} \label{td1-ex6}
+  \begin{enonce}
+    Soient $G_1$ et $G_2$ des groupes, et $\phi : G_1 \to G_2$ un morphisme de groupes.
+    \begin{enumerate}
+      \item Soient $H_1$ (\textit{resp}. $H_2$) un sous-groupe de $G_1$ (\textit{resp}. $G_2$). Montrer que $\phi(H_1)$ (\textit{resp}. $\phi^{-1}(H_2)$) est un sous-groupe de $G_2$ (\textit{resp}. $G_1$).
+      \item Montrer que $H_2$ est un sous-groupe distingué de $G_2$, alors~$\phi^{-1}(H_2)$ est un sous-groupe distingué de $G_1$.
+      \item Montrer que si $\phi$ est surjective, l'image d'un sous-groupe distingué de $G_1$ par $\phi$ est un sous-groupe distingué de $G_2$.
+      \item Donner un exemple d'un morphisme de groupes $\phi : G_1 \to G_2$ et de sous-groupe distingué $H_1 \triangleleft G_1$ tel que $\phi(H_1)$ n'est pas distingué dans $G_2$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Remarquons que $e_2 \in \phi(H_1) \neq \emptyset$ et que $e_1 \in \phi^{-1}(H_2) \neq \emptyset$ car on a $\phi(e_1) = e_2$.
+      Pour $a,b \in \phi(H_1)$, on sait qu'il existe $x,y \in H_1$ tels que $\phi(x) = a$ et $\phi(y) = b$.
+      Alors, \[
+        ab^{-1} = \phi(x)\:\phi(y)^{-1} = \phi(\underbrace{xy^{-1}}_{\in H_1}) \in \phi(H_1)
+      ,\]
+      d'où $\phi(H_1)$ est un sous-groupe de $G_2$.
+      Pour $a,b \in \phi^{-1}(H_2)$, on sait que $\phi(a),\phi(b)\in H_2$
+      Alors, on a \[
+        \phi(ab^{-1}) = \underbrace{\phi(a)}_{\in H_2}\:\underbrace{\phi(b)^{-1}}_{\in H_2} \in H_2
+      ,\]
+      d'où $ab^{-1} \in \phi^{-1}(H_2)$ et donc $\phi(H_1)$ est un sous-groupe de $G_2$.
+    \item Supposons $H_2 \triangleleft G_2$ et montrons que $\phi^{-1}(H_2) \triangleleft G_2$.
+      Soit un élément $g \in G_1$ quelconque, et soit $h \in \phi ^{-1}(H_2)$.
+      Alors, \[
+      \phi(ghg^{-1}) = \phi(g)\: \phi(h)\: \phi(g)^{-1} \in H_2
+      ,\] car $\phi(h) \in H_2$ et que $H_2 \triangleleft G_2$.
+      Ainsi, $g h g^{-1} \in \phi ^{-1}(H_2)$.
+      On a donc $g \:\phi ^{-1}(H_2)\: g^{-1} \subseteq \phi^{-1}(H_2)$, quel que soit $g \in G_1$.
+      On en déduit que $\phi ^{-1}(H_2)$ est distingué dans $G_1$.
+    \item Suppsons $\phi$ surjective, on a donc l'égalité $\phi(G_1) = G_2$.
+      Supposons de plus que $H_1 \triangleleft G_1$.
+      Montrons que $\phi(H_1)$ est un sous-groupe distingué de $G_2$.
+      Soit $g \in G_2 = \phi(G_1)$ quelconque, et soit un élément $h \in \phi(H_1)$.
+      Il existe donc $x \in G_1$ et $y \in H_1$ deux éléments tels que $\phi(y) = h$ et $\phi(x) = g$.
+      Ainsi \[
+        g h g^{-1} = \phi(x)\: \phi(y)\:\phi(x)^{-1} = \phi(x y x^{-1}) \in \phi(H_1)
+      \] car $H_1$ distingué dans $G_1$ et donc $x y x^{-1} \in H_1$.
+      Ainsi $\phi(H_1) \triangleleft G_2$.
+    \item On considère le morphisme \begin{align*}
+        f: (\mathds{R},+) &\longrightarrow (\mathrm{GL}_2(\mathds{R}), \cdot ) \\
+        x &\longmapsto \begin{pmatrix} 1 & x\\ 0 & 1 \end{pmatrix}
+      ,\end{align*}
+      et le sous-groupe distingué $\mathds{R} \triangleleft \mathds{R}$.
+      On a \[
+      \forall x \in \mathds{R} \setminus \{0\},
+      \underbrace{\begin{pmatrix} 0 & 1\\ 1 & 0 \end{pmatrix}}_{M \in \mathrm{GL}_2(\mathds{R})}
+      \underbrace{\begin{pmatrix} 1 & x\\ 0 & 1 \end{pmatrix}}_{f(x)}
+      \underbrace{\begin{pmatrix} 0 & 1\\ 1 & 0 \end{pmatrix}}_{M^{-1} \in \mathrm{GL}_2(\mathds{R})}
+      = \begin{pmatrix} 1 & 0\\ x & 1 \end{pmatrix} \not\in f(\mathds{R})
+      .\]
+      Ainsi, $f(\mathds{R}) \ntriangleleft \mathrm{GL}_2(\mathds{R})$.
+  \end{enumerate}
+
+  \section{Exercice 7.}
+  \begin{enonce}
+    Soit $G$ un groupe et soient $H, K$ deux sous-groupes de $G$.
+    Montrer que~$H \cup K$ est un sous-groupe de $G$ si et seulement si on a $H \subseteq K$ ou~$K \subseteq H$.
+  \end{enonce}
+
+  On procède par double implications.
+  \begin{itemize}
+    \item "$\implies$".
+      Supposons que $H \cup K$ soit un sous-groupe de $G$.
+      Par l'absurde, supposons que $H \not\subseteq K$ et $K \not\subseteq H$.
+      Il existe donc deux éléments $h \in H \setminus K$ et~$k \in K \setminus H$.
+      Considérons $hk \in H \cup K$.
+      \begin{itemize}
+        \item Si $hk \in H$, alors $h^{-1}(hk) \in H$ et donc $k \in H$, \textit{absurde} !
+        \item Si $hk \in K$, alors $(hk)k^{-1} \in K$ et donc $h \in K$, \textit{absurde} !
+      \end{itemize}
+      On en déduit que $H \subseteq K$ ou $K \subseteq H$.
+    \item "$\impliedby$".
+      Sans perte de généralité, supposons $H \subseteq K$.
+      Ainsi, on a $H \cup K = K$ qui est un sous-groupe de $G$.
+  \end{itemize}
+
+  \section{Exercice 8. \textit{Classes à gauche et classes à droite}}
+  \begin{enonce}
+    Soit $H$ un sous-groupe d'un groupe $G$. Montrer que l'on a une bijection canonique $G / H \to H \backslash G$.
+  \end{enonce}
+
+  On note $S^{-1} = \{s^{-1} \mid s \in S \}$ pour un sous-ensemble $S$ de $G$.
+  Alors nous avons l'égalité $(aH)^{-1} = Ha^{-1}$ et $(Ha)^{-1} = a^{-1}H$.
+  En effet, 
+  \begin{align*}
+    (aH)^{-1} &= \{a h  \mid h \in H\}^{-1} & (Ha)^{-1} &= \{ha  \mid h \in H\}^{-1}\\
+    &= \{(ah)^{-1}  \mid h \in H\} &&= \{(ha)^{-1}  \mid h \in H\} \\
+    &= \{h^{-1}a^{-1} \mid h \in H\} &&= \{a^{-1} h^{-1}  \mid h \in H\} \\
+    &= \{h a^{-1}  \mid h \in H\} &&= \{a^{-1}h  \mid h \in H\} \\
+    &= Ha^{-1} &&= a^{-1}H
+  .\end{align*}
+  Il existe donc une bijection canonique \begin{align*}
+    f: G / H &\longrightarrow H \backslash G \\
+    aH &\longmapsto (aH)^{-1} = Ha^{-1}
+  .\end{align*}
+
+  \section{Exercice 9. \textit{Normalisateur}}
+  \begin{enonce}
+    Soit $H \le G$ un sous-groupe d'un groupe $G$. On dit que $x$ normalise si $x H x^{-1} = H$. On note $\mathrm{N}_G(H)$ l'ensemble des éléments de $G$ qui normalisent $H$.
+    C'est le \textit{normalisateur} de $H$ dans $G$.
+    \begin{enumerate}
+      \item Montrer que $\mathrm{N}_G(H)$ est le plus grand sous-groupe de $G$ contenant $H$ et dans lequel $H$ est distingué.
+      \item En déduire que $H$ est distingué dans $G$ si et seulement si on a l'égalité $G = \mathrm{N}_G(H)$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Commençons par montrer que $\mathrm{N}_G(H)$ est un sous-groupe de $G$ contenant $H$.
+      \begin{itemize}
+        \item L'élément neutre normalise $H$, car $e H e^{-1} = H$.
+          D'où, le normalisateur de $H$ est non vide.
+        \item Soient $x$ et $y$ deux éléments qui normalisent $H$.
+          Alors, $xy$ normalise $H$ : \[
+            (xy)H(xy)^{-1} = x y H y^{-1}x^{-1} = x H x^{-1} = H
+          .\]
+        \item Soit $x \in G$ qui normalise $H$.
+          Alors $x^{-1}$ normalise $H$ : \[
+          x^{-1} H x = H \iff H x = x H \iff H = x H x^{-1}
+          ,\] et cette dernière condition est vérifiée car $x$ normalise $H$.
+        \item Soit $h \in H$. Alors $h$ normalise $H$.
+          En effet, \[
+            h H h^{-1} = H h^{-1} = H
+          ,\] car $h^{-1} \in H$ et puis car $h \in H$.
+      \end{itemize}
+      On en conclut que $\mathrm{N}_G(H)$ est un sous-groupe de $G$ contenant~$H$.
+
+      Par définition de $\mathrm{N}_G(H)$, on a que $H \triangleleft \mathrm{N}_G(H)$ : quel que soit $x$ qui normalise $H$, on a (par définition) $x H x^{-1} = H$.
+
+      Il ne reste plus qu'à montrer que tout sous-groupe $N \supseteq H$ tel que $H \triangleleft N$ vérifie $N \subseteq \mathrm{N}_G(H)$.
+      Soit $N$ un tel sous-groupe, et un élément $x \in N$. Ainsi $x H x^{-1} = H$, d'où $x$ normalise $H$.
+      On a donc bien l'inclusion $N \subseteq \mathrm{N}_G(H)$.
+
+      Ceci démontre bien que $\mathrm{N}_G(H)$ est le plus grand sous-groupe de $G$ contenant~$H$ et dans lequel $H$ y est distingué.
+    \item D'une part, si $H$ est distingué dans $G$, alors le plus grand sous-groupe de $G$ contenant $H$ et dans lequel $H$ est distingué est~$G$.
+
+      D'autre part, si $G = \mathrm{N}_G(H)$, alors tout élément $x \in G$ vérifie l'égalité $x H x^{-1} = H$ et donc $H \triangleleft G$.
+  \end{enumerate}
+
+  \section{Exercice 10. \textit{Construction de $\mathds{Q}$}}
+  \begin{enonce}
+    Soit $E := \mathds{Z}\times (\mathds{Z} \setminus \{0\})$.
+    On définit $\sim$ sur $E$ par $(a,b) \sim (a', b')$ dès lors que $a b' = a' b$.
+    \begin{enumerate}
+       \item Montrer que $\sim$ est un relation d'équivalence sur $E$. Si $(a,b) \in E$, on note $\frac{a}{b}$ son image dans $E/{\sim}$.
+       \item Munir $E / {\sim}$ d'une structure de corps telle que  $\mathds{Z}$ s'injecte dans le corps $E / {\sim}$.
+       \item Similairement, pour un corps $\mathds{k}$, construire $\mathds{k}(X)$ à partir de l'ensemble $\mathds{k}[X]$.
+       \item Construire $\mathds{Z}$ à partir de $\mathds{N}$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item On a trois propriétés à vérifier.
+      \begin{itemize}
+        \item Si $(a,b)\in E$, alors $a b = a b$ donc  $(a,b) \sim (a,b)$.
+        \item Si  $(a,b)\sim(a',b')$, alors  $a b' = a' b$ et donc  $(a',b')\sim(a,b)$.
+        \item Si  $(a,b)\sim(a',b')$ et  $(a',b')\sim(a'',b'')$, alors  \[
+            a' a b' b'' = a' a' b b'' = a' b a' b'' = a' b a'' b'
+          ,\] et donc $a' b' (a b'' - a'' b) = 0$.
+          Par anneau intègre, on a une disjonction de cas :
+          \begin{itemize}
+            \item si $a' = 0$, alors $a = a'' = 0$ ;
+            \item si $b' = 0$, alors \textit{\textbf{absurde}} car $b' \in \mathds{Z} \setminus \{0\}$ ;
+            \item si $a b'' - a'' b = 0$, alors on a  $a b'' = a'' b$.
+          \end{itemize}
+          Dans les deux cas, on obtient bien $(a,b) \sim (a'', b'')$.
+      \end{itemize}
+    \item On munit $E / {\sim}$ de deux opérations "$\oplus$" et "$\otimes$".
+      \begin{itemize}
+        \item On pose l'opération $\tfrac{a}{b} \oplus \tfrac{c}{d} := \tfrac{a d + b c}{bd}$ qui est bien définie car, si l'on a~$(a,b)\sim(a',b') $, alors
+          \begin{align*}
+            (a d + bc, bd) \sim (a' d + b' c, b' d)
+            \iff& (a d + bc) b' d = (a ' d + b' c) b d\\
+            \iff& a b' d^2 = a' b d^2
+          ,\end{align*}
+          ce qui est vrai car $(a,b) \sim (a',b')$.
+          On peut procéder symétriquement pour $(c',d') \sim (c,d)$. 
+        \item On pose l'opération $\tfrac{a}{b} \otimes \tfrac{c}{d} := \tfrac{ac}{bd}$ qui est bien définie car, si l'on a $(a,b) \sim (a', b')$, alors \[
+            (ac,bd) \sim (a'c,b'd) \iff a c b' d = a' c b d
+          ,\] ce qui est vrai car $(a,b) \sim (a',b')$.
+          On peut procéder symétriquement pour $(c',d') \sim (c,d)$. 
+      \end{itemize}
+      Montrons que $(E/{\sim}, \oplus, \otimes)$ est un corps.
+      \begin{itemize}
+        \item La loi $\oplus$ est associative : on a \[
+            \tfrac{a}{b} \oplus \big( \tfrac{c}{d} \oplus \tfrac{e}{f} \big)  =
+            \big(\tfrac{a}{b} \oplus  \tfrac{c}{d}\big) \oplus \tfrac{e}{f} = \tfrac{adf + cbf + ebd}{bdf}
+          ,\] par associativité de $+$.
+        \item La loi $\oplus$ est commutative par commutativité de $+$.
+        \item La loi $\oplus$ possède un élément neutre $\tfrac{0}{1} \in E/{\sim}$.
+        \item Tout élément $\tfrac{a}{b}$ possède un symétrique ($\tfrac{-a}{b}$) pour $\oplus$ par rapport à $\tfrac{0}{1}$.
+        \item La loi $\otimes$ est associative : on a \[
+            \tfrac{a}{b} \otimes \big( \tfrac{c}{d} \otimes \tfrac{e}{f} \big)  =
+            \big( \tfrac{a}{b} \otimes \tfrac{c}{d} \big)  \otimes \tfrac{e}{f} =
+            \tfrac{a c e}{b d f}
+          ,\] par associativité de $\times$.
+        \item La loi $\otimes$ est distributive par rapport à $\oplus$, par distributivité de $\times$ par rapport à $+$.
+        \item La loi $\otimes$ possède un élément neutre $\tfrac{1}{1} \in E/{\sim}$ pour $\otimes$.
+        \item Tout élément non nul $\tfrac{a}{b}$ possède un inverse $\tfrac{b}{a}$ par rapport à $\tfrac{1}{1}$. 
+      \end{itemize}
+      On en conclut que $(E/{\sim}, \oplus, \otimes)$ est un corps.
+
+      Finalement, on considère l'injection
+      \begin{align*}
+        f: \mathds{Z} &\lhook\joinrel\longrightarrow E/{\sim} \\
+        k &\longmapsto \tfrac{k}{1}
+      .\end{align*}
+      C'est bien une injection car, si $\tfrac{k}{1} = \tfrac{k'}{1}$, alors $k \times 1 = k' \times 1$ et donc $k = k'$.
+      On a, de plus, que  $f$ est un morphisme de groupes~$(\mathds{Z}, +) \to (E/{\sim}, \oplus)$ : \[
+        f(k) \oplus f(k') = \tfrac{k}{1} \oplus \tfrac{k'}{1} = \tfrac{k + k'}{1} = f(k + k')
+      .\]
+    \item On pose $F := \mathds{k}[X] \times (\mathds{k}[X] \setminus \{0_{\mathds{k}[X]}\})$, et la relation \[
+        (P, Q) \sim (P', Q') \iff P Q' = P' Q
+      .\]
+      Cette relation est une relation d'équivalences (comme pour la question précédente, et car $\mathds{k}$ est un anneau intègre).
+      On pose ensuite $\mathds{k}(X) := F / {\sim}$.
+      Comme dans la question précédente, on peut donner une structure de corps avec les mêmes définitions (en replaçant les entiers par des polynômes de $\mathds{k}$).
+      Les propriétés découlent toutes du fait que~$(\mathds{k}, +, \times)$ est un corps.
+    \item On pose $Z := \mathds{N}^2 / {\sim}$, où la relation d'équivalence $\sim$ est définie par \[
+        (a,b) \sim (a', b') \iff a + b' = b + a'
+      .\]
+  \end{enumerate}
+
+  \section{Exercice 11.}
+
+  \begin{enonce}
+    Soit $E := \mathds{C}[X]$ le $\mathds{C}$-espace vectoriel des polynômes à coefficients dans~$\mathds{C}$ et $P \in \mathds{C}[X]$ un polynôme de degré $d \in \mathds{N}^*$.
+    \begin{enumerate}
+      \item Montrer que l'ensemble $(P) := \{Q P  \mid Q \in \mathds{C}[X]\}$ est un sous-$\mathds{C}$-espace vectoriel de $\mathds{C}[X]$.
+      \item Déterminer un isomorphisme entre $\mathds{C}[X] / (P)$ et le $\mathds{C}$-espace vectoriel $\mathds{C}_{d-1}[X]$ des polynômes de degrés inférieurs à $d-1$ de~$\mathds{C}[X]$.
+      \item Montrer que la multiplication dans $\mathds{C}[X]$ induit une structure de $\mathds{C}$-algèbre sur $\mathds{C}[X] / (P)$.
+    \end{enumerate}
+  \end{enonce}
+
+  \section{Exercice 12.}
+  \begin{enonce}
+    Soit $G$ un groupe et $H$ un sous-groupe strict de $G$. Montrer que l'on a l'égalité $\langle G \setminus H \rangle = G$.
+  \end{enonce}
+
+  \section{Exercice 13.}
+
+  \begin{enonce}
+    Soit $G$ un groupe fini.
+    Montrer que $G$ contient un élément d'ordre $2$ si et seulement si son cardinal est pair. Montrer de plus que, dans ce cas là, il en contient un nombre impair.
+  \end{enonce}
+
+  \section{Exercice 14.}
+  
+  \begin{enonce}
+    Soit $G$ un groupe et $\sim$ une relation d'équivalence sur $G$. On suppose que $G / {\sim}$ est un groupe, et que la projection canonique  $\pi : G \to G/{\sim}$ est un morphisme de groupes.
+    
+    Montrer qu'il existe un sous-groupe distingué $H \triangleleft G$ tel que pour tous éléments $x, y\in G$, $x\sim y$ si et seulement si $x y^{-1} \in H$.
+  \end{enonce}
+
+  \section{Exercice 15.}
+
+  \begin{enonce}
+    Soit $G$ un groupe et $S_G$ l'ensemble des sous-groupes de $G$.
+    \begin{enumerate}
+      \item Démontrer que si $G$ est fini, alors $S_G$ est fini.
+      \item Supposons $S_G$ fini. Démontrer que tous les éléments de $G$ sont d'ordre fini, en déduire que $G$ est fini.
+      \item On ne suppose plus que $S_G$ est fini. Si tous les éléments de $G$ sont d'ordre fini, est-ce que $G$ est fini ?
+    \end{enumerate}
+  \end{enonce}
+\end{document}
