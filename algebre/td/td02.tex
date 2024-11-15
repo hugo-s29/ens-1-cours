@@ -118,11 +118,35 @@
   \begin{enonce}
     Soit $p$ un nombre premier.
     \begin{enumerate}
-      \item Rappeler pourquoi le centre d'un $p$-groupe est non trivial.
+      \item Rappeler pourquoi le centre d'un $p$-groupe est non trivial.\label{td2-ex5-q1}
       \item Montrer que tout groupe d'ordre $p^2$ est abélien, classifier ces groupes.
       \item Soit $G$ un groupe d'ordre $p^n$. Montrer que $G$ admet un sous-groupe distingué d'ordre $p^k$ pour tout $k \in \llbracket 0, n \rrbracket$.
     \end{enumerate}
   \end{enonce}
+  
+  \begin{enumerate}
+    \item Soit $G$ un $p$-groupe non trivial. On fait agir $G$ sur $G$ par conjugaison.
+      Ainsi, par la formule des classes, on a \[
+        p^n = \# G = \#\mathrm{Z}(G) + \sum_{g \in \mathcal{R}} \underbrace{[G : \mathrm{C}_G(g)]}_{p^{x_i} > 1}
+      ,\] où $\mathcal{R}$ est un système de représentants des classes de conjugaisons de $G$ contenant plus d'un élément.
+
+      On sait donc que $p  \mid \sum_{g \in \mathcal{R}} [G : \mathrm{C}_G(g)]$ et $p  \mid \#G$, ce qui permet d'en déduire que $p  \mid \# \mathrm{Z}(G)$.
+      D'où, $\mathrm{Z}(G)$ n'est pas trivial.
+    \item Le centre de $G$ est un sous-groupe, d'où par le théorème de \textsc{Lagrange} et par la question~\ref{td2-ex5-q1}, on sait que l'ordre de $\mathrm{Z}(G)$ est $p$ ou $p^2$.
+      \begin{itemize}
+        \item Dans le cas où $\mathrm{Z}(G)$ est d'ordre $p^2$, on a $\mathrm{Z}(G) = G$, d'où~$G$ abélien.
+        \item Supposons $\# \mathrm{Z}(G) = p$. Soit $x \in G \setminus \mathrm{Z}(G)$, et considérons le sous-groupe \[
+            \mathrm{Z}(x) := \{g \in G  \mid g x = x g\} \le G
+          .\]
+          En deux temps, montrons que $\mathrm{Z}(G) \lneq \mathrm{Z}(x) \lneq G$.
+          \begin{itemize}
+            \item On a l'inclusion $\mathrm{Z}(G) \subseteq \mathrm{Z}(x)$ mais cette inclusion est stricte car $x \in \mathrm{Z}(x) \setminus \mathrm{Z}(G)$.
+            \item Montrons que $\mathrm{Z}(x) \neq G$. Par l'absurde, si $\mathrm{Z}(x) = G$, alors $x$ commute avec tout élément de $G$, et donc $x \in \mathrm{Z}(G)$, \textit{\textbf{absurde}}.
+          \end{itemize}
+          Quel est l'ordre de $\mathrm{Z}(x)$ ? C'est nécessairement $p$ ou $p^2$, mais dans chacun des cas, on arrive à une contradiction avec les inclusions strictes plus-haut.
+          C'est \textit{\textbf{absurde}}.
+      \end{itemize}
+  \end{enumerate}
 
   \section{Exercice 6. \textit{Troisième théorème d'isomorphisme}}
   \begin{enonce}
@@ -131,10 +155,10 @@
 
     \begin{enumerate}
       \item Montrer que le groupe $\pi_H(K)$ est distingué dans $G / H$ si et seulement si $K$ est distingué dans $G$.
-      \item Justifier que $H$ est distingué dans $K$ et que l'on a un isomorphisme $\pi_H(K) \cong K / H$.
+      \item Justifier que $H$ est distingué dans $K$ et que l'on a un isomorphisme $\pi_H(K) \cong K / H$. \label{td2-ex6-q2}
       \item On suppose $K$ distingué dans $G$. On note $\pi_K : G \to G / K$ la projection canonique.
         \begin{enumerate}
-          \item Montrer que $\pi_K$ induit un unique morphisme de groupes~$\bar{\pi}_K : G/H \to G/K$ tel que $\pi_K = \bar{\pi_K} \circ \pi_H$.
+          \item Montrer que $\pi_K$ induit un unique morphisme de groupes~$\bar{\pi}_K : G/H \to G/K$ tel que $\pi_K = \bar{\pi}_K \circ \pi_H$.
           \item Montrer que le noyau de $\bar{\pi}_K$ est $\pi_H(K)\cong K / H$.
           \item En déduire le troisième théorème d'isomorphisme.
         \end{enumerate}
@@ -142,8 +166,58 @@
   \end{enonce}
 
   \begin{enumerate}
-    \item Supposons $K$ distingué dans $G$. Alors, $\pi_H(K)$ est distingué dans $G / H$ car $\pi_H$ est surjective (exercice~\refexo{td1}{6} du TD~\reftd{1}).
-      Réciproquement, si $\pi_H(K)$ est distingué dans $G / H$, alors 
+    \item On procède en deux temps.
+
+      Dans un premier temps, supposons que $K \triangleleft G$ et montrons que l'on a $\pi_H(K) \triangleleft G / H$.
+      Soit $\bar{g} \in G/H$ et soit $g \in G$ un élément tel que $\pi_H(g) = \bar{g}$ qui existe par surjectivité de $\pi_H$.
+      Alors, \[
+        \pi_H(K) = \pi_H(g H g^{-1}) = \bar{g}\; \pi_H(K)\; \bar{g}^{-1}
+      ,\]
+      d'où $\pi_H(K) \triangleleft G / H$.
+
+      Dans un second temps, supposons \[
+      \forall \bar{g} \in G/H,\quad \bar{g}\;\pi_H(K)\;\bar{g}^{-1} = \pi_H(K)
+      .\]
+      Soit $g \in G$ et $k \in K$, et montrons que $gkg^{-1} \in K$.
+      On sait que l'on a $\bar{g} = gH$ et $\pi_H(k) = kH$.
+      Alors, \[
+        gkg^{-1}H \subseteq (gH)(kH)(g^{-1}H) = k'H \subseteq K
+      ,\] pour un certain $k' \in K$ (on applique ici l'hypothèse).
+      Ainsi, comme $e \in H$, on a en particulier $g k g^{-1} \in K$.
+      On en déduit ainsi que $K \triangleleft G$.
+    \item Pour tout $k \in K$, on a que $k H k^{-1} = H$ car $k \in G$, on en déduit~$H \triangleleft K$.
+      Montrons que $\pi_H(K) \cong K / H$.
+      On a même égalité de ces deux ensembles si l'on voit $K / H$ comme l'ensemble des classes à gauches de $H$.
+      En effet, \[
+        \pi_H(k) = kH \quad\quad \text{d'où}\quad\quad \pi_H(K) = \{k H  \mid k \in K\}
+      ,\]
+      et \[
+        K/H = \{k H  \mid k \in K\}
+      .\]
+      On a donc l'égalité.
+    \item
+      \begin{enumerate}
+        \item On factorise par le quotient :
+          \[
+          \begin{tikzcd}
+            G \arrow{rr}{\pi_K} \arrow{dr}{\pi_H} && G / K\\
+            &G/H\arrow[dashed]{ur}{\bar{\pi}_K}
+          \end{tikzcd}
+          ,\]
+          qui est possible car $K = \ker \pi_K \supseteq H$.
+          Le morphisme $\bar{\pi}_K : G / H \to G / K$ est l'unique morphisme faisant commuter le diagramme ci-dessus.
+        \item Par construction, 
+          \begin{align*}
+            \ker \bar{\pi}_K &= \{\bar{g} \in G / H  \mid \pi_K(g) = K\}\\
+            &= \{\pi_H(g) \mid  g \in \ker \pi_K\}\\
+            &= \pi_H(\ker \pi_K) = \pi_H(K) \underset{\text{Q\ref{td2-ex6-q2}}} \cong K / H
+          .\end{align*}
+        \item Appliquons le premier théorème d'isomorphisme à $\bar{\pi}_K$, qui est surjectif :
+          \[
+            (G / H) / (K / H) = (G / H) / {\ker \bar{\pi}_K} \cong \im \bar{\pi}_K = G / K
+          ,\]
+          c'est le troisième théorème d'isomorphisme.
+      \end{enumerate}
   \end{enumerate}
 
   \section{Exercice 7. \textit{Sous-groupe d'un quotient}}

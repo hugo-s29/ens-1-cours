@@ -17,6 +17,7 @@ cp categ/dm2/main.pdf ../web/public/data/ens1/categ-dm2.pdf
 
 cp fdi/dm1/main.pdf ../web/public/data/ens1/fdi-dm1.pdf
 cp fdi/dm2/main.pdf ../web/public/data/ens1/fdi-dm2.pdf
+cp fdi/dm3/main.pdf ../web/public/data/ens1/fdi-dm3.pdf
 
 cp algebre/dm1/main.pdf ../web/public/data/ens1/algebre-dm1.pdf
 cp algebre/td/main.pdf ../web/public/data/ens1/algebre-td.pdf

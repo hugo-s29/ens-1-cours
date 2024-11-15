@@ -1,0 +1,118 @@
+\documentclass{../../notes}
+
+\title{DM n°3 -- FDI}
+\author{Hugo \scshape Salou}
+
+\usepackage{multicol}
+
+\def\algorithmicrequire{\textbf{Entrée}}
+\def\algorithmicensure{\textbf{Sortie}}
+\def\algorithmicend{\textbf{fin}}
+\def\algorithmicif{\textbf{si}}
+\def\algorithmicthen{\textbf{alors}}
+\def\algorithmicelse{\textbf{sinon}}
+\def\algorithmicelsif{\algorithmicelse\ \algorithmicif}
+\def\algorithmicendif{\algorithmicend\ \algorithmicif}
+\def\algorithmicfor{\textbf{pour}}
+\def\algorithmicprocedure{\textbf{Procédure}}
+\def\algorithmicfunction{\textbf{Fonction}}
+\def\algorithmicforall{\textbf{pour tout}}
+\def\algorithmicdo{\textbf{faire}}
+\def\algorithmicendfor{\algorithmicend\ \algorithmicfor}
+\def\algorithmicwhile{\textbf{tant que}}
+\def\algorithmicendwhile{\algorithmicend\ \algorithmicwhile}
+\def\algorithmicloop{\textbf{répéter indéfiniment}}
+\def\algorithmicendloop{\algorithmicend\ \algorithmicloop}
+\def\algorithmicrepeat{\textbf{répéter}}
+\def\algorithmicuntil{\textbf{jusqu'à que}}
+\def\algorithmicprint{\textbf{afficher}}
+\def\algorithmicreturn{\textbf{retourner}}
+\def\algorithmictrue{\textsc{vrai}}
+\def\algorithmicfalse{\textsc{faux}}
+
+\let\Sortie\Ensure
+\let\Entree\Require
+\floatname{algorithm}{\color{deepblue}Algorithme}
+
+\begin{document}
+  \maketitle
+
+  On nomme $L$ le langage \[
+    L := \{\langle M \rangle \in \Sigma^\star  \mid M \text{ s'arrête sur l'entrée } \langle M \rangle \} 
+  .\]
+
+  Nous allons démontrer que ce langage est
+  \begin{itemize}
+    \item indécidable (par réduction au langage de l'arrêt $A_\mathsf{TM}$ pour les machines de Turing) ;
+    \item récursivement énumérable ;
+    \item mais le complémentaire n'est pas récursivement énumérable.
+  \end{itemize}
+
+  On rappelle que le langage $A_\mathsf{TM} := \{\langle M, w \rangle  \mid M \text{ accepte } w\}$ est indécidable.
+
+  \begin{multicols}{2}
+    On pose la fonction
+    \begin{align*}
+      f: \quad\quad \Sigma^\star &\longrightarrow \Sigma^\star \\
+      \langle N, w \rangle &\longmapsto \langle M_{N,w} \rangle
+    \end{align*}
+    qui est calculable.
+    \columnbreak
+    \begin{mdframed}[linecolor=deepblue,innertopmargin=1em,frametitle={\color{white}Machine $M_{N,w}$},frametitlerule=true,frametitlealignment=\centering,frametitlebackgroundcolor=deepblue]
+      \begin{algorithmic}
+        \Entree Un mot $u \in \Sigma^\star$
+        \State On simule $N$ sur l'entrée $w$.
+        \If{$N$ accepte $w$}
+        \State On accepte.
+        \Else
+        \State On boucle à l'infini.
+        \EndIf
+      \end{algorithmic}
+    \end{mdframed}
+  \end{multicols}
+
+  L'"implémentation haut niveau" de la machine $M_{N,w}$, donnée ci-dessus à droite, permet de construire une telle machine.
+  En effet, l'étape "on simule $N$ sur l'entrée $w$" se réalise à l'aide de la machine universelle, et le reste se fait simplement.
+
+  On remarque que $M_{N,w}$ s'arrête sur une entrée quelconque si, et seulement si, $N$ accepte $w$.
+
+  Et, on a l'équivalence 
+  \begin{align*}
+    \langle M_{N,w} \rangle \in L &\iff M_{N,w} \text{ s'arrête sur } \langle M_{N,w} \rangle\\
+    &\iff N \text{ accepte } w\\
+    &\iff \langle N, w \rangle \in A_\mathsf{TM}.
+  .\end{align*}
+
+  Ainsi, par réduction, on en déduit que $L$ n'est pas décidable.
+
+  Pour démontrer que $L$ est récursivement énumérable, on montre (de manière équivalente) qu'il est Turing-reconnaissable.
+  Considérons la machine de Turing $R$ dont l'implémentation est donnée ci-dessous.
+
+  \begin{multicols}{2}
+    Sur toutes les entrées $\langle M\rangle \in L$, la machine $R$ accepte cette entrée en un temps fini.
+    On en déduit que $R$ reconnait bien $L$, et donc $L$ est Turing-reconnaissable donc récursivement énumérable.
+
+    \begin{mdframed}[linecolor=deepblue,innertopmargin=1em,frametitle={\color{white}Machine $R$},frametitlerule=true,frametitlealignment=\centering,frametitlebackgroundcolor=deepblue]
+      \begin{algorithmic}
+        \Entree $\langle M \rangle$
+        \State Simuler $M$ sur $\langle M \rangle$.
+        \If{$M$ accepte $\langle M \rangle$}
+        \State On accepte.
+        \EndIf
+      \end{algorithmic}
+    \end{mdframed}
+  \end{multicols}
+  
+  On peut démontrer que $L$ n'est pas de complémentaire récursivement énumérable.
+  En effet, par l'absurde, si $L$ l'était, alors $\bar{L}$ serait Turing-reconnaissable.
+  Mais, ceci impliquerai (comme $L$ et $\bar{L}$ seraient Turing-reconnaissable) que $L$ serait décidable (il suffit de lancer les deux machines reconnaissant $L$ et $\bar{L}$ en parallèle pour décider $L$).
+  Ce qui est \textit{\textbf{absurde}} car on a montré l'indécidabilité de $L$.
+
+  Des résultats précédents, on en conclut que 
+  \begin{itemize}
+    \item $L$ est indécidable ;
+    \item $L$ est récursivement énumérable ;
+    \item $L$ n'est pas à complémentaire récursivement énumérable.
+  \end{itemize}
+\end{document}
+

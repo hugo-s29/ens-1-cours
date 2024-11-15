@@ -23,6 +23,7 @@
 \newcommand\pushout{\arrow[very near start,description,phantom]{ul}{\ulcorner}}
 
 \newcommand\id{\ensuremath{\operatorname{id}}}
+\newcommand\ord{\ensuremath{\operatorname{ord}}}
 
 \begin{document}
   \maketitle
@@ -201,52 +202,23 @@
   Comme on ne suppose pas que $\bm{\mathit{1}} \times A$ existe, on le construit.
   On construit $\bm{\mathit{1}} \times A$ le produit, que l'on défini comme le triplet $(A, \pi_A, \pi_{\bm{\mathit{1}}})$ où $\pi_A = \mathrm{id}_A : A \to A$ et $\pi_{\bm{\mathit{1}}} : A \to \bm{\mathit{1}}$ est l'unique élément de $\mathrm{Hom}(A, \bm{\mathit{1}})$.
 
-  Il reste deux propriétés à démontrer : que $\bm{\mathit{1}} \times A$ défini ainsi vérifie la propriété universelle ; puis que le produit est unique à isomorphisme près.
-  \begin{itemize}
-    \item Soit $B$ un objet de $\mathbf{C}$ et soient deux morphismes $u : B \to A$ et~$v : B \to \bm{\mathit{1}}$.
-      Posons $f : B \to \bm{\mathit{1}} \times A$ comme étant égal à $u$.
-      On vérifie que le diagramme suivant commute.
-      \[
-      \begin{tikzcd}
-        B \arrow[bend left]{drr}{u} \arrow[bend right]{ddr}{v} \arrow[dashed]{dr}{f}\\
-        & \bm{\mathit{1}} \times A \arrow{r}{\pi_A} \arrow{d}{\pi_{\bm{\mathit{1}}}} & A\\
-        & \bm{\mathit{1}}
-      \end{tikzcd}
-      .\] 
-      En effet, on a $\mathrm{id}_A \circ f = f = u$ ($\star$) par la définition de $\circ$ dans $\mathbf{C}$ ; puis, $\pi_{\bm{\mathit{1}}} \circ f = v$ par l'unicité de l'élément dans $\mathrm{Hom}(B, \bm{\mathit{1}})$.
-      L'unicité de $f$ découle de ($\star$).
+  Il reste à démontrer que $\bm{\mathit{1}} \times A$ défini ainsi vérifie la propriété universelle.
+  En effet, le produit est une limite et il est donc unique à isomorphisme près.
 
-      D'où, $\bm{\mathit{1}} \times A$ vérifie la propriété universelle.
-    \item En toute généralité, l'unicité du produit de deux objets (sous réserve d'existence et à isomorphisme près) découle de l'argument ci-après.
-      Soient $A$ et $B$ deux objets de $\mathbf{C}$.
-      Supposons que $\Pi$ et~$\Gamma$ sont deux objets de $\mathbf{C}$ vérifiant les propriétés d'un produit de $A$ et $B$.
-      On suppose $\Pi$ et $\Gamma$ munis des morphismes $(\pi_A, \pi_B)$ et $(\gamma_A, \gamma_B)$ respectivement.
-      Ainsi, les deux diagrammes ci-après commutent :
-      \[
-      \begin{tikzcd}
-        \Pi \arrow[dashed]{dr}{f}\arrow[bend left]{drr}{\pi_A}\arrow[bend right]{ddr}{\pi_B} \\
-        & \Gamma \arrow{r}{\gamma_A} \arrow{d}{\gamma_B} & A\\
-        & B
-      \end{tikzcd}
-      \quad\quad
-      \begin{tikzcd}
-        \Gamma \arrow[dashed]{dr}{g}\arrow[bend left]{drr}{\gamma_A}\arrow[bend right]{ddr}{\gamma_B} \\
-        & \Pi \arrow{r}{\pi_A} \arrow{d}{\pi_B} & A\\
-        & B
-      \end{tikzcd}
-      ,\]
-      où les morphismes $f$ et $g$ existent et sont uniques d'après la propriété universelle pour chacun des produits.
+  Soit $B$ un objet de $\mathbf{C}$ et soient deux morphismes $u : B \to A$ et~$v : B \to \bm{\mathit{1}}$.
+  Posons $f : B \to \bm{\mathit{1}} \times A$ comme étant égal à $u$.
+  On vérifie que le diagramme suivant commute.
+  \[
+  \begin{tikzcd}
+    B \arrow[bend left]{drr}{u} \arrow[bend right]{ddr}{v} \arrow[dashed]{dr}{f}\\
+    & \bm{\mathit{1}} \times A \arrow{r}{\pi_A} \arrow{d}{\pi_{\bm{\mathit{1}}}} & A\\
+    & \bm{\mathit{1}}
+  \end{tikzcd}
+  .\] 
+  En effet, on a $\mathrm{id}_A \circ f = f = u$ ($\star$) par la définition de $\circ$ dans $\mathbf{C}$ ; puis, $\pi_{\bm{\mathit{1}}} \circ f = v$ par l'unicité de l'élément dans $\mathrm{Hom}(B, \bm{\mathit{1}})$.
+  L'unicité de $f$ découle de ($\star$).
 
-      Ainsi, $f \circ g : \Pi \to \Pi$ est l'identité $\mathrm{id}_\Pi$.
-      En effet, par l'absurde, supposons que $f \circ g$ est différent de l'identité.
-      Alors, $f \circ g \circ f : \Gamma \to \Gamma$ est différent de $f$.
-      Mais, la propriété universelle implique l'unicité de $f$.
-      Absurde !
-
-      De même, $g \circ f : \Gamma \to \Gamma$ est l'identité $\mathrm{id}_\Gamma$.
-
-      On en déduit l'unicité, à isomorphisme près, du produit (et par dualité, du coproduit).
-  \end{itemize}
+  D'où, $\bm{\mathit{1}} \times A$ vérifie la propriété universelle.
 
   \chapter{Exercice 4.}
 
@@ -487,7 +459,7 @@
           ,\] quel que soit le morphisme $u$, car le diagramme~\ref{eq:ex7-diag1} commute.
           D'où, le diagramme précédent commute, et ceci démontrer que~$L$ est (la pointe d') un cône.
         \item Montrons que le cône $L$ est un cône limite en montrant qu'il vérifie la propriété universelle.
-          Considérons un autre cône $W \in \mathbf{Ens}$ muni, pour $X$ un objet de $\mathbf{J}$, d'un morphisme $\mu_X : W \to \mathrm{Hom}(A, D(X))$.
+          Considérons un autre cône $W \in \mathrm{ob}(\mathbf{Ens})$ muni, pour $X$ un objet de $\mathbf{J}$, d'un morphisme $\mu_X : W \to \mathrm{Hom}(A, D(X))$.
 
           Considérons $w \in W$ quelconque.
           Alors, pour $X \in \mathrm{ob}(\mathbf{J})$, on a un morphisme $\mu_X(w) : A \to F(X)$.
@@ -547,7 +519,7 @@
   \end{slshape}
 
   Commençons par montrer que la limite $\lim F$ existe et de la calculer.
-  Pour cela, on définit cette objet, et on montre que c'est bien une limite.
+  Pour cela, on définit cet objet, et on montre que c'est bien une limite.
 
   Pour chaque objet $A \in \mathrm{ob}(\mathbf{J})$, il existe un unique morphisme de la forme $h_A : \bm{\mathit{1}} \to A$ dans $\mathbf{J}$, car $\bm{\mathit{1}}$ est un objet initial dans $\mathbf{J}$.
 
@@ -809,8 +781,18 @@
                 x &\longmapsto \sum_{n \in \mathds{N}} a_n p^n \quad\quad \text{où} \quad a_n := \frac{\psi_n - \sum_{i < n} a_i p^i}{p^n}
               .\end{align*}
           \end{itemize}
-        \item Par l'absurde, supposons que le diagramme admet une limite $A$ dans $\mathbf{Ann_f}$, et qu'elle est munie de la famille de morphismes~$(\psi_n : A \to \mathds{Z}/p^n \mathds{Z})_{n \in \mathds{N}}$ tel que le cône en $A$ commute.
-          Soit $N \in \mathds{N}$ tel que $p^N > \# A$, qui existe car $A$ est fini.
+        \item Montrons que le diagramme n'admet pas de limite dans la catégorie des annaux finis $\mathbf{Ann_f}$.
+          En fait, on peut même montrer que le diagramme n'admet pas de cône dans $\mathbf{Ann_f}$.
+          Supposons, par l'absurde, avoir un cône composé des morphismes $(\phi_n : C \to \mathds{Z} / p^n \mathds{Z})_{n \in \mathds{N}}$.
+          Par la suite, lorsque cela n'est pas précisé, on considère l'ordre additif d'un élément.
+          L'anneau $C$ étant fini par hypothèse, il existe un entier~$N \in \mathds{N}$ tel que $\# C < p^N$.
+          Par le théorème de Lagrange, l'ordre de $1_C$ divise $\# C < p^N$, puis l'ordre de~$\phi_N(1_C)$ divise $p^N$.
+          Or, l'ordre de~$\phi_N(1_C)$ est inférieur ou égal à l'ordre de $1_C$ (par propriétés des morphismes).
+          On en déduit que l'ordre de $\phi_N(1_C)$ divise $p^{N-1}$, et on a donc \[
+            \ord \phi_N(1_C) \equiv p \pmod {p^N}
+          .\]
+          Ceci est absurde !
+          En effet, $\phi_N(1_C) = 1_{\mathds{Z} / p^N \mathds{Z}}$ par définition d'un morphisme d'anneau, et son ordre additif est $p^N$, qui est congrus à $0 \pmod{p^N}$.
       \end{itemize}
   \end{enumerate}
 
@@ -825,7 +807,7 @@
     .\]
     \begin{enumerate}
       \item Montrer que c'est une relation d'équivalence.
-      \item Montrer que  $C := C' / \sim$ est la colimite du diagramme $I \to \mathbf{Ens}$, \textit{i.e.} que $C = \varinjlim_{i \in I} E_i$.
+      \item Montrer que  $C := C' / \sim$ est la colimite du diagramme $I \to \mathbf{Ens}$, \textit{i.e.} que $C = \varinjlim_{i \in I} E_i$. \label{ex12-q2}
       \item On suppose ici que pour tout $i \le j$, $E_i \subseteq E_j$ et $f_{i,j}$ est l'inclusion de $E_i$ dans $E_j$. Montrer que $C \cong \bigcup_{i \in  I} E_i$.
       \item Soit $X$ un espace topologique, et $x \in X$ un point fixe.
         On considère la catégorie posétale $\mathbf{I}$ des voisinages ouverts de $x$, et le diagramme $C : \mathbf{I} \to \mathbf{Ann}$ qui, à un ouvert $U$, associe l'anneau des fonctions continues sur $U$. Calculer la limite de ce diagramme.
@@ -936,7 +918,26 @@
         f: C &\longrightarrow \bigcup_{i \in  I} E_i \\
         [(x,i)] &\longmapsto x
       .\end{align*}
-    \item On applique la question précédente ?
+    \item Posons l'ensemble $I$ des voisinages ouverts de $x$ ($I := \mathrm{ob}(\mathbf{J})$).
+      C'est un ensemble car $I\subseteq \wp(X)$.
+      Puis, on pose $E_i := \mathcal{C}(i, F)$, où $i \in I$ est un voisinage ouvert de $x$.
+      On définit l'unique morphisme \begin{align*}
+        \forall i \supseteq j \in I, \quad\quad
+       f_{i,j} : E_i &\longrightarrow E_j \\
+        x &\longmapsto x_{|j}
+      .\end{align*}
+      Remarquons que l'on peut définir l'ordre $\preceq$ comme l'ordre renversé de $\subseteq$ : \[
+      i \preceq j \iff i \supseteq j
+      .\]
+      Cet ordre est total, la catégorie est donc filtrante.
+      On peut donc appliquer la question~\ref{ex12-q2}.
+      La relation $\sim$ est donc, dans ce contexte : \[
+        (x,i) \sim (y,j) \iff \exists k \succeq i,j, \quad x_{|k} = y_{|k}
+      .\]
+      Deux fonctions continues sur un voisinage de $x$ sont en relation si elles sont égales sur un voisinage (plus "fin" que les deux précédents) de $x$.
+      La limite de notre système projectif est donc l'ensemble \[
+        \{(x,i)  \mid i \in I, x \in \mathcal{C}(i, F)\} / {\sim}
+      .\] 
   \end{enumerate}
 
   \chapter{Exercice 13.}
@@ -960,9 +961,9 @@
   Le morphisme $\lim_\mathbf{J} \eta$ est l'unique morphisme faisant commuter le diagramme 
   \[
   \begin{tikzcd}
-      & \lim_\mathbf{J} F \arrow[dashed]{d}{\lim_\mathbf{J} \eta} \arrow[bend right,swap]{ddl}{\varphi_A} \arrow[bend left]{ddr}{\varphi_B}\\
-      & \lim_\mathbf{J} G \arrow[swap]{dl}{\psi_A} \arrow{dr}{\psi_B}\\
-      F(A) \arrow{rr}{F(f)} & & F(B)
+      && \lim_\mathbf{J} F \arrow[dashed]{d}{\lim_\mathbf{J} \eta} \arrow[bend right,swap]{ddl}{\eta_A \circ \varphi_A} \arrow[bend right,swap]{dll}{\varphi_A} \arrow[bend left]{drr}{\varphi_B} \arrow[bend left]{ddr}{\eta_B \circ \varphi_B}\\
+      F(A) \arrow{dr}{\eta_A}&& \lim_\mathbf{J} G \arrow[swap]{dl}{\psi_A} \arrow{dr}{\psi_B} && F(B) \arrow{dl}{\eta_B}\\
+      &G(A) \arrow{rr}{G(f)} & & G(B)&
   \end{tikzcd}
   ,\] 
   où les $\phi_A$ (\textit{resp}. les $\psi_A$) sont les morphismes associés à la limite $\lim_\mathbf{J} F$ (\textit{resp}. $\lim_\mathbf{J} G$).
@@ -983,11 +984,11 @@
     \item Pour $\eta : F \Rightarrow G$ et $\varepsilon : G \Rightarrow H$ deux transformations naturelles, on a l'égalité $\lim_\mathbf{J} (\varepsilon \circ \eta) = (\lim_\mathbf{J} \varepsilon)\circ(\lim_\mathbf{J} \eta)$.
       En effet, cela découle de l'unicité du morphisme $\lim_\mathbf{J} F \to \lim_\mathbf{J} H$, comme montré dans le diagramme ci-dessous.
       \[
-      \begin{tikzcd}
-          & \lim_\mathbf{J} F \arrow[dashed]{d}{\lim_\mathbf{J} \eta} \arrow[bend right=60,swap]{dddl}{\varphi_A} \arrow[bend left=60]{dddr}{\varphi_B} \\
-          & \lim_\mathbf{J} G \arrow[dashed]{d}{\lim_\mathbf{J} \varepsilon} \arrow[bend right,swap]{ddl}{\gamma_A} \arrow[bend left]{ddr}{\gamma_B}\\
-          & \lim_\mathbf{J} H \arrow[swap]{dl}{\psi_A} \arrow{dr}{\psi_B}\\
-          F(A) \arrow{rr}{F(f)} & & F(B)
+      \begin{tikzcd}[column sep={100,between origins}]
+          & \lim_\mathbf{J} F \arrow[dashed]{d}{\lim_\mathbf{J} \eta} \arrow[swap]{dl}{\varphi_A} \arrow{dr}{\varphi_B} \\
+          F(A)\arrow{d}{\eta_A}\arrow[bend right=50, swap]{dd}{(\varepsilon\circ\eta)_A}& \lim_\mathbf{J} G \arrow[dashed]{d}{\lim_\mathbf{J} \varepsilon} \arrow[swap]{dl}{\gamma_A} \arrow{dr}{\gamma_B} & F(B)\arrow{d}{\eta_B} \arrow[bend left=50]{dd}{(\varepsilon\circ\eta)_B}\\
+          G(A)\arrow{d}{\varepsilon_A}& \lim_\mathbf{J} H \arrow[swap]{dl}{\psi_A} \arrow{dr}{\psi_B} & G(B)\arrow{d}{\varepsilon_B}\\
+          H(A) \arrow{rr}{H(f)} & & H(B)
           \arrow[from=1-2,to=3-2,dashed,bend right=55,crossing over, swap]{dd}{\lim_\mathbf{J}(\varepsilon\circ\eta)}\\
       \end{tikzcd}
       \] 

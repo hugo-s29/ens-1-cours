@@ -1400,13 +1400,13 @@ Inductive $\mathsf{LEA}$ : Set :=
     \begin{figure}[H]
       \centering
       \begin{tikzpicture}[sibling distance=30mm]
-        \node[fill=deepblue,text=white,ellipse] (L0){\texttt{fun}}
+        \node[fill=deepblue,text=white,rounded rectangle] (L0){\texttt{fun}}
         child { node[draw,rectangle] (L11) {$g$} }
-          child { node[fill=deepblue,text=white,ellipse] (L12){\texttt{app}}
-            child { node[fill=deepblue,text=white,ellipse] (L21){\texttt{var}} child { node[draw,rectangle] {$g$} }}
-            child { node[fill=deepblue,text=white,ellipse] (L22){\texttt{app}}
-              child { node[fill=deepblue,text=white,ellipse] (L31){\texttt{var}} child { node[draw,rectangle] {$g$} }}
-              child { node[fill=deepblue,text=white,ellipse] (L32){\texttt{cst}} child { node[draw,rectangle] {$7$} }}
+          child { node[fill=deepblue,text=white,rounded rectangle] (L12){\texttt{app}}
+            child { node[fill=deepblue,text=white,rounded rectangle] (L21){\texttt{var}} child { node[draw,rectangle] {$g$} }}
+            child { node[fill=deepblue,text=white,rounded rectangle] (L22){\texttt{app}}
+              child { node[fill=deepblue,text=white,rounded rectangle] (L31){\texttt{var}} child { node[draw,rectangle] {$g$} }}
+              child { node[fill=deepblue,text=white,rounded rectangle] (L32){\texttt{cst}} child { node[draw,rectangle] {$7$} }}
             }
           };
         \tikzset{node distance = 1cm and 1cm}
@@ -1453,13 +1453,13 @@ Inductive $\mathsf{LEA}$ : Set :=
     \begin{figure}[H]
       \centering
       \begin{tikzpicture}[sibling distance=30mm]
-        \node[fill=deepblue,text=white,ellipse] (L0){\texttt{fun}}
+        \node[fill=deepblue,text=white,rounded rectangle] (L0){\texttt{fun}}
         child { node[draw,rectangle] (L11) {$x$} }
-          child { node[fill=deepblue,text=white,ellipse] (L12){\texttt{add}}
-            child { node[fill=deepblue,text=white,ellipse] (L21){\texttt{var}} child { node[draw,rectangle] {$x$} }}
-            child { node[fill=deepblue,text=white,ellipse] (L22){\texttt{app}}
-              child { node[fill=deepblue,text=white,ellipse] (L31){\texttt{var}} child { node[draw,rectangle] {$x$} }}
-              child { node[fill=deepblue,text=white,ellipse] (L32){\texttt{cst}} child { node[draw,rectangle] {$7$} }}
+          child { node[fill=deepblue,text=white,rounded rectangle] (L12){\texttt{add}}
+            child { node[fill=deepblue,text=white,rounded rectangle] (L21){\texttt{var}} child { node[draw,rectangle] {$x$} }}
+            child { node[fill=deepblue,text=white,rounded rectangle] (L22){\texttt{app}}
+              child { node[fill=deepblue,text=white,rounded rectangle] (L31){\texttt{var}} child { node[draw,rectangle] {$x$} }}
+              child { node[fill=deepblue,text=white,rounded rectangle] (L32){\texttt{cst}} child { node[draw,rectangle] {$7$} }}
             }
           };
         \tikzset{node distance = 1cm and 1cm}
@@ -1500,7 +1500,7 @@ Inductive $\mathsf{LEA}$ : Set :=
   \end{defn}
 
   \begin{defn}
-    Une \textit{contrainte de typage} est une paire de types étendus, notée $\hat{\tau}_1 \qeq \hat{\tau}_2$, ou parfois $\hat{\tau}_1 = \hat{\tau}_2$.
+    Une \textit{contrainte de typage} est une paire de types étendus\footnote{\textit{\textbf{Attention}} c'est une paire, pas un couple.}, notée $\hat{\tau}_1 \qeq \hat{\tau}_2$, ou parfois $\hat{\tau}_1 = \hat{\tau}_2$.
 
     On se donne $e \in \mathsf{FUN}$. On suppose que toutes les variables liées de $e$ sont :
     \begin{itemize}
@@ -1533,7 +1533,7 @@ Inductive $\mathsf{LEA}$ : Set :=
     \begin{figure}[H]
       \centering
       \begin{tikzpicture}
-        \node[fill=deepblue,text=white,ellipse] (T0) {\texttt{add}}
+        \node[fill=deepblue,text=white,rounded rectangle] (T0) {\texttt{add}}
           child { node {$T_1$} }
           child { node {$T_2$} };
           \node[right of=T0] {$T_0$};
@@ -1541,7 +1541,7 @@ Inductive $\mathsf{LEA}$ : Set :=
       \end{tikzpicture}
       $\quad$
       \begin{tikzpicture}
-        \node[fill=deepblue,text=white,ellipse] (T0) {\texttt{app}}
+        \node[fill=deepblue,text=white,rounded rectangle] (T0) {\texttt{app}}
           child { node {$T_1$} }
           child { node {$T_2$} };
           \node[right of=T0] {$T_0$};
@@ -1549,7 +1549,7 @@ Inductive $\mathsf{LEA}$ : Set :=
       \end{tikzpicture}
       $\quad$
       \begin{tikzpicture}
-        \node[fill=deepblue,text=white,ellipse] (T0) {\texttt{fun}}
+        \node[fill=deepblue,text=white,rounded rectangle] (T0) {\texttt{fun}}
           child { node {$T_1$} }
           child { node {$T_2$} };
           \node[right of=T0] {$T_0$};
@@ -1656,14 +1656,17 @@ Inductive $\mathsf{LEA}$ : Set :=
 
   \subsubsection{Termes et unification.}
 
+  On va momentanément oublier $\mathsf{FUN}$, pour généraliser à tout ensemble d'expressions.
+  Ceci permet d'appliquer cet algorithme à une grande variété de "langages".
+
   \begin{defn}
     On se donne
     \begin{itemize}
       \item un ensemble fini $\Sigma$ de  \textit{constantes}, notées $f, g, a, b$ où chaque constante  $f \in \Sigma$ a un entier naturel nommé \textit{arité} ;
-      \item un ensemble infini $V$ d'\textit{inconnues}/de \textit{variables}/de \textit{variables d'unification}; notées $X, Y, Z$ (mais parfois $x, y,z$).
+      \item un ensemble infini $\mathrm{V}$ d'\textit{inconnues}/de \textit{variables}/de \textit{variables d'unification}; notées $X, Y, Z$ (mais parfois $x, y,z$).
     \end{itemize}
 
-    L'ensemble $\mathsf{T}(\Sigma, V)$ des \textit{termes} sur $(\Sigma, V)$, notés  $t$, $u$, \textit{etc}, est défini de manière inductive, ce qui est décrit par la grammaire : \[
+    L'ensemble $\mathsf{T}(\Sigma, \mathrm{V})$ des \textit{termes} sur $(\Sigma, \mathrm{V})$, notés  $t$, $u$, \textit{etc}, est défini de manière inductive, ce qui est décrit par la grammaire : \[
     t ::= f^k (t_1, \ldots, t_k) \mid X
     ,\] 
     où $f$ est une constante d'arité $k$.
@@ -1673,12 +1676,12 @@ Inductive $\mathsf{LEA}$ : Set :=
     L'intuition est que l'on étend, comme lors du passage de $\mathsf{Typ}$ à $\widehat{\mathsf{Typ}}$, un langage de départ pour ajouter des inconnues.
     La définition inductive a $|\Sigma| + 1$ constructeurs.
 
-    Intuitivement, les  $X \in V$ ne fait pas partie du langage de départ.
+    Intuitivement, les  $X \in \mathrm{V}$ ne fait pas partie du langage de départ.
     Il n'y a pas de liens pour $X$.
   \end{rmk}
 
   \begin{exm}
-    Avec $\Sigma = \{f^2, g^1, a^0, b^°\}$, \[
+    Avec $\Sigma = \{f^2, g^1, a^0, b^0\}$, \[
       t_0 := f(g(a), f(X, f(Y, g(X)))) \in \mathsf{T}(\Sigma, V)
     \]
     est un terme.
@@ -1693,12 +1696,18 @@ Inductive $\mathsf{LEA}$ : Set :=
     \end{itemize}
   \end{defn}
 
+  \begin{exm}
+    Avec l'expression $t_0$ précédente, on a \[
+      \mathsf{Vars}(t_0) = \{X,Y\}
+    .\]
+  \end{exm}
+
   \begin{defn}
-    Une \textit{substitution}, notée $\sigma, \sigma_1, \sigma',$ \textit{etc}, est un dictionnaire sur $(V, \mathsf{T}(\Sigma, V))$.
+    Une \textit{substitution}, notée $\sigma, \sigma_1, \sigma',$ \textit{etc}, est un dictionnaire sur $(\mathrm{V}, \mathsf{T}(\Sigma, \mathrm{V}))$.
 
     Si $X \in \mathrm{dom}(\sigma)$, on dit que $\sigma$ est \textit{définie} en $X$.
 
-    Soit $\sigma$ une substitution et $t \in \mathsf{T}(\Sigma, V)$.
+    Soit $\sigma$ une substitution et $t \in \mathsf{T}(\Sigma, \mathrm{V})$.
     Le résultat de l'application de $\sigma$ à $t$, noté $\sigma(t)$, est défini par induction sur $t$, il y a deux familles de cas :
     \begin{itemize}
       \item $\sigma(f(t_1, \ldots, t_k)) = f(\sigma(t_1), \ldots, \sigma(t_k))$ ;
@@ -1708,86 +1717,198 @@ Inductive $\mathsf{LEA}$ : Set :=
   \end{defn}
 
   \begin{exm}
-    Avec $\sigma = \{X \mapsto g(Y), Y \mapsto b\}$, on a \[
+    Avec $\sigma = [X \mapsto g(Y), Y \mapsto b]$, on a \[
       \sigma(t_0) = f(g(a), f(\underbrace{g(Y)},f(b,g(\underbrace{g(Y)}))))
     .\] 
     \textit{\textbf{Attention !}} On n'a pas de terme en $g(b)$ : c'est une substitution \textit{simultanée}.
   \end{exm}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  \begin{note}
+    On rappelle qu'un dictionnaire peut être vu comme un ensemble fini de couples $(X, t)$ avec  $X \in \mathrm{V}$ et $t \in \mathsf{T}(\Sigma, \mathrm{V})$ tel que, pour toute variable $X \in \mathrm{V}$, il y a au plus un couple de la forme~$(X,t)$ dans la liste.
+
+    On utilise la notation $[\sfrac{t}{X}]$ pour représenter la notation $[X \mapsto t]$.
+    Ceci est utiliser que lorsqu'on ne change qu'\textit{une} variable.
+  \end{note}
+
+  \begin{defn}
+    Un \textit{problème d'unification} est la donnée d'un ensemble fini de paires de termes (les contraintes) dans $\mathsf{T}(\Sigma, \mathrm{V})$.
+    On note un tel problème $\mathcal{P} = \{t_1 \qeq u_1, \ldots, t_k \qeq u_k \}$.
+
+    Une \textit{solution}, un \textit{unificateur}, d'un tel $\mathcal{P}$ est une substitution $\sigma$ telle que, pour toute contrainte $t \qeq u$ dans $\mathcal{P}$, $\sigma(t)$ et $\sigma(u)$  sont le même terme, ce que l'on note $\sigma(t) = \sigma(u)$.
+
+    On note  $\mathrm{U}(\mathcal{P})$ l'ensemble des unificateurs de $P$.
+  \end{defn}
+
+  \begin{exm}
+    Avec le problème d'unification \[
+    \mathcal{P}_1 = \{f(a,g(X)) \qeq f(Z, Y), g(T) \qeq g(Z) \} 
+    ,\]
+    les substitutions 
+    \begin{itemize}
+      \item $\sigma_1 = [Z \mapsto a, Y \mapsto g(X), T \mapsto a]$ ;
+      \item $\sigma_2 = [Z \mapsto a, Y \mapsto g(b), T\mapsto a, X \mapsto b]$ ;
+    \end{itemize}
+    sont des solutions de $\mathcal{P}_1$. Mais, \[
+      \sigma_3 = [Z \mapsto f(b,b), T \mapsto f(b,b), Y \mapsto g(b), X \mapsto b]
+    \] n'est pas une solution.
+
+    \textsl{Laquelle des solutions $\sigma_1$ et $\sigma_2$ est meilleure ?}
+    On remarque que $\sigma_2 = [\sfrac{b}{X}] \circ \sigma_1$ (où la composition est définie "comme on le pense"\footnote{Elle sera définie formellement ci-après.}).
+    Ainsi, $\sigma_1$ est "plus général" que $\sigma_2$ ; $\sigma_2$ est un "cas particulier" de $\sigma_1$.
+  \end{exm}
+
+  \begin{exm}[Aucune solution]
+    Les problèmes 
+    \begin{itemize}
+      \item $\mathcal{P}_2 = \{f(X,Y) \qeq g(Z)\}$ ;
+      \item $\mathcal{P}_3 = \{f(X,Y) \qeq X\}$
+    \end{itemize}
+    n'ont aucune solution : $\mathrm{U}(\mathcal{P}_2) = \mathrm{U}(\mathcal{P}_3) = \emptyset$.
+  \end{exm}
+
+  \subsubsection{Algorithme d'unification (du premier ordre).}
+
+  \begin{defn}
+    Un \textit{état} est soit un couple $(\mathcal{P}, \sigma)$, soit $\bot$ (\textit{l'état d'échec}).
+
+    Un état de la forme $(\emptyset, \sigma)$ est appelé \textit{état de succès}.
+
+    Un état qui n'est, ni échec, ni succès, peut s'écrire sous la forme~$(\{t \qeq t'\} \sqcup \mathcal{P}, \sigma)$, la contrainte $t \qeq t'$ étant choisie de manière non-déterministe.
+    
+    On définit une relation binaire $\to$ entre états par :
+    \begin{itemize}
+      \item  $\bot \not\to$ ;
+      \item  $(\emptyset,\sigma) \not\to$ ;
+      \item Il ne reste que les cas ni succès, ni échec, que l'on traite par la disjonction de cas :
+        \begin{enumerate}
+          \item $ \begin{array}{c}
+              \\
+              (\{f(t_1,\ldots,t_k) \qeq f(u_1,\ldots, u_n) \sqcup \mathcal{P}, \sigma\}) \to\\
+              \quad\quad\quad\quad(\{t_1 \qeq u_1, \ldots, t_k \qeq u_k\} \cup \mathcal{P}, \sigma) \quad ;
+            \end{array} $ \label{chap4-unification-match1}
+          \item $(\{f(t_1,\ldots,t_k) \qeq g(u_1,\ldots, u_n) \sqcup \mathcal{P}, \sigma\}) \to \bot$ si $f \neq g$ ; \label{chap4-unification-match2}
+          \item $(\{X\qeq t\} \sqcup \mathcal{P}, \sigma) \to (\mathcal{P}[\sfrac{t}{X}], [\sfrac{t}{X}] \circ \sigma)$ où \label{chap4-unification-match3}
+            \begin{itemize}
+              \item $X \not\in \mathsf{Vars}(t)$,
+              \item $\mathcal{P}[\sfrac{t}{X}] = \{u[\sfrac{t}{X}] \qeq u'[\sfrac{t}{X}]  \mid (u\qeq u') \in \mathcal{P}\}$,
+              \item et $[\sfrac{t}{X}] \circ \sigma$ est la substitution telle que, quel que soit $Y \in \mathrm{V}$, $([\sfrac{t}{X}] \circ \sigma)(Y) = (\sigma(Y))[\sfrac{t}{X}]$ ;
+            \end{itemize}
+          \item $(\{X \qeq t\}\sqcup \mathcal{P}, \sigma) \to \bot$ si $X \in \mathsf{Vars}(t)$ et $t \neq X$ ; \label{chap4-unification-match4}
+          \item $(\{X \qeq X\}\sqcup \mathcal{P}, \sigma) \to (\mathcal{P}, \sigma)$. \label{chap4-unification-match5}
+        \end{enumerate}
+    \end{itemize}
+
+    L'\textit{état initial} de l'algorithme correspond à $(\mathcal{P}, \emptyset)$ : le problème $\mathcal{P}$ muni de la substitution vide $\emptyset$.
+  \end{defn}
+
+  \begin{exm}
+    On applique l'algorithme d'unification comme montré ci-dessous :
+    \begin{align*}
+      &\quad\{\underbrace{f(a,X) \qeq f(Y,a)}_{\text{choix}}, g(X) \qeq g(Y)\}, \emptyset\\
+      \to&\quad\{\underbrace{a \qeq Y}_{\text{choix}}, X \qeq a, g(X) \qeq g(Y)\}, \emptyset\\
+      \to&\quad\{\underbrace{X \qeq a}_{\text{choix}}, g(X) \qeq g(a)\}, [Y \mapsto a]\\
+      \to&\quad\{\underbrace{g(a) \qeq g(a)}_\text{choix}\}, [Y \mapsto a,X \mapsto a]\\
+      \to&\quad\{\underbrace{a\qeq a}_\text{choix}\}, [Y \mapsto a,X \mapsto a]\\
+      \to&\quad\emptyset, [Y \mapsto a,X \mapsto a]\\
+    .\end{align*}
+    On peut remarquer que l'ensemble des clés de $\sigma$ n'apparaît pas dans le problème ni dans les autres termes de la substitution : lorsqu'on ajoute une clé, elle disparaît du problème.
+  \end{exm}
+
+  \begin{defn}
+    Un état $(\mathcal{P}, \sigma)$ est en \textit{forme résolue} si, pour toute clé $X \in \mathrm{dom}(\sigma)$, alors $X$ n'apparaît pas dans $\mathcal{P}$ et, quel que soit la clé $Y \in \mathrm{dom}(\sigma)$ alors $X \not\in  \mathsf{Vars}(\sigma(Y))$.
+  \end{defn}
+
+  \begin{rmk}[Notation]
+    Une substitution $\sigma$ peut être vue comme un problème d'unification, que l'on note $\overset ? \sigma$.
+    (On passe d'un ensemble de couples à un ensemble de paires.)
+  \end{rmk}
+
+  \begin{prop}
+    Si $(\mathcal{P}_0, \sigma_0)$ est en forme résolue et $(\mathcal{P}_0, \sigma_0) \to (\mathcal{P}_1, \sigma_1)$ alors $(\mathcal{P}_1, \sigma_1)$ est en forme résolue et \[
+    \mathrm{U}(\mathcal{P}_0 \cup \overset ? \sigma_0) =
+    \mathrm{U}(\mathcal{P}_1 \cup \overset ? \sigma_1)
+    .\] 
+  \end{prop}
+
+  \begin{prv}[Éléments de preuve]
+    La vraie difficulté se trouve dans le \ref{chap4-unification-match3}ème cas (les cas \ref{chap4-unification-match1} et \ref{chap4-unification-match5} sont immédiats).
+    Pour cela, on utilise le lemme "technique" ci-dessous.
+
+    \begin{lem}
+      Si $X \not\in \mathrm{dom}(\sigma)$ alors \[
+        [\sfrac{t}{X}] \circ \sigma = \big[X \mapsto t, Y_1 \mapsto (\sigma(Y_1))[\sfrac{t}{X}], \ldots, Y_l \mapsto (\sigma(Y_k))[\sfrac{t}{X}]\big]
+      ,\] 
+      où $\mathrm{dom}(\sigma) = \{Y_1, \ldots, Y_k\}$.
+      \qed
+    \end{lem}
+  \end{prv}
+
+  \begin{prop}
+    On note $\to^\star$ la clôture réflexive et transitive de la relation $\to$.
+    \begin{enumerate}
+      \item Un \textit{unificateur le plus général} (\textit{mgu}\footnote{Pour \textit{Most Général Unifier}} dans la littérature anglaise) est une solution $\sigma \in \mathrm{U}(\mathcal{P})$ telle que, quelle que soit $\sigma' \in \mathrm{U}(\mathcal{P})$, il existe $\sigma''$ telle que $\sigma' = \sigma'' \circ \sigma$.
+
+        Si $(\mathcal{P}, \emptyset) \to^\star (\emptyset, \sigma)$ alors $\sigma$ est un unificateur le plus général de $\mathcal{P}$.
+      \item Si $(\mathcal{P}, \emptyset) \to^\star \bot$ alors $\mathrm{U}(\mathcal{P}) = \emptyset$.
+    \end{enumerate}
+  \end{prop}
+  \begin{prv}
+    \begin{enumerate}
+      \item On montre par induction sur $(\mathcal{P}, \emptyset) \to^\star (\emptyset, \sigma)$ l'égalité $\mathrm{U}(\mathcal{P}) = \mathrm{U}(\overset ? \sigma)$ à l'aide de la proposition précédente.
+        Puis, on conclut avec le lemme suivant.
+    \begin{lem}
+      Pour toute substitution $\sigma$, alors $\sigma$ est un unificateur le plus général de $\overset ? \sigma$.
+    \end{lem}
+    \begin{prv}
+      Soit $\sigma' \in \mathrm{U}(\overset ? \sigma)$ et soit $X \in \mathrm{V}$. On montre que $\sigma' \circ \sigma = \sigma'$.
+       \begin{itemize}
+        \item Si $X \in \mathrm{dom}(\sigma)$, alors $\sigma'(\sigma(X)) = \sigma'(X)$ car  $\sigma'$ satisfait la contrainte  $X \qeq \sigma(X)$.
+        \item Si  $X \not\in  \mathrm{dom}(\sigma)$ alors $\sigma'(\sigma(X)) = \sigma'(X)$.
+      \end{itemize}
+      Ainsi $\sigma' \circ \sigma = \sigma'$.
+    \end{prv}
+      \item On montre que si $(\mathcal{P}, \emptyset) \to \bot$ alors $\mathrm{U}(\mathcal{P} \cup \overset ? \sigma)$.
+        Pour le \ref{chap4-unification-match2}nd cas, c'est immédiat.
+        Pour le \ref{chap4-unification-match4}ème cas, on procède par l'absurde.
+        Soit $\sigma_0$ qui satisfait $X \qeq t$ avec $X \in \mathsf{Vars}(t)$ et~$X \neq t$.
+        Alors $\sigma_0(X) = \sigma_0(t)$, qui contient $\sigma_0(X)$ et c'est un sous-ensemble strict. Absurde.
+
+        On raisonne ensuite par induction sur $\to^\star$ pour conclure que $(\mathcal{P}, \emptyset) \to^\star (\mathcal{P}_0, \sigma_0) \to \bot$.
+    \end{enumerate}
+  \end{prv}
+
+  \begin{lem}
+    La relation $\to$ est terminante (il n'y a pas de chaîne infinie avec cette relation).
+  \end{lem}
+  \begin{prv}
+    Vue plus tard.
+  \end{prv}
+
+  \begin{thm}
+    L'algorithme d'unification calcule un unificateur le plus général si, et seulement si le problème initial a une solution.
+    \qed
+  \end{thm}
+
+  \subsubsection{Retour sur l'inférence de types pour $\mathsf{FUN}$.}
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[every text node part/.style={align=center}]
+      \node[rectangle,fill=deepblue,text=white] (1) {Inférence de types\\$e$ et $\Gamma$};
+      \node[below=3cm of 1,rectangle,fill=deepblue,text=white] (2) {Ensemble de contraintes de typage\\$\mathsf{CT}(e, \Gamma, T_0)$};
+      \node[below=3cm of 2,text=deepblue] (3) {$\bullet$};
+      \node[below left=2cm and 2cm of 3] (4a) {\textbf{\color{deepblue} Retourne $\bot$}\\ $e$ n'est pas typable};
+      \node[below right=2cm and 2cm of 3] (4b) {\textbf{\color{deepblue} Retourne $\sigma$}\\ $\Gamma \vdash e : \sigma'(T_0)$\\ où $\sigma' := \sigma_\text{const} \circ \sigma$\footnotemark};
+
+      \draw[->] (1)--(2) node[midway,draw=deepblue,color=deepblue,rounded rectangle,fill=white] {\sffamily CONTRAINTES};
+      \draw[->] (2)--(3) node[midway,draw=deepblue,color=deepblue,rounded rectangle,fill=white](U) {\sffamily UNIFICATION};
+      \draw[->] (3)--(4a);
+      \draw[->] (3)--(4b);
+
+      \tikzset{every text node part/.style={align=left}}
+      \node[right=0.3cm of U,align=left] {~\\\rlap{Constantes $\Sigma = \{\mathtt{int}^0, {\to}^2\}$}\\\rlap{Variables $\mathrm{V} = \mathrm{ITyp}$}\\~\\\rlap{Les types étendus de $\widehat{\mathsf{Typ}}$}\\ \rlap{correspondent exactement}\\\rlap{aux termes de $\mathsf{T}(\Sigma, \mathrm{V})$}};
+    \end{tikzpicture}
+  \end{figure}
+
+  \footnotetext{L'unificateur le plus général peut contenir des variables dans ses valeurs qui ne sont pas des clés (par exemple lors du typage de $\fun x x$). Il faut donc composer $\sigma$ avec une substitution "constante" pour effacer ces variables inutilisée.}\showfootnote
 \end{document}
-
-
-
 

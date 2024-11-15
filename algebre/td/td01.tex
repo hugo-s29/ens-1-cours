@@ -154,6 +154,50 @@
     \end{enumerate}
   \end{enonce}
 
+  \begin{enumerate}
+    \item On rappelle que l'ordre de $g$ est défini comme $\# \langle g\rangle$.
+      On le note naturellement $\ord g$.
+      \begin{enumerate}
+        \item On procède par double implication.
+          \begin{itemize}
+            \item Si $g$ est d'ordre fini, alors $\langle g\rangle$ est fini et donc l'application
+               \begin{align*}
+                \varphi: \mathds{Z} &\longrightarrow \langle g\rangle \\
+                n &\longmapsto g^n
+              \end{align*}
+              est un morphisme non injectif. Il existe donc un entier non nul $n \in \mathds{Z} \setminus \{0\}$ tel que $n \in \ker \varphi$, \textit{i.e.} $g^n = e$.
+            \item Si $g^n = e$ alors $\langle g \rangle = \{g^i  \mid i \in  \llbracket 0, n - 1 \rrbracket \}$, qui est fini. Ainsi $g$ est d'ordre fini.
+          \end{itemize}
+        \item Si $g$ est d'ordre fini, alors  le morphisme $\varphi$ (défini ci-avant) est surjectif et non injectif.
+          Soit $p = \min (\ker \varphi \cap \mathds{N}^\star)$.
+          Alors les $g^i$ pour $i \in \llbracket 0, p-1\rrbracket$ sont distincts et constituent $\langle g\rangle$.
+
+          Si  $n \in \mathds{Z}$ est tel que $g^n = e$. On écrit $n = q \times (\ord g) + r$ la division euclidienne de $n$ par $\ord g$, avec $0 \le r < \ord g$.
+          Et, \[
+          e = g^n = (g^{\ord g})^q g^r = g^r
+          ,\]
+          d'où $g^r = e$.
+          On en déduit que  $r = 0$ et donc $\ord g$ divise~$n$.
+      \end{enumerate}
+    \item D'une part, $\langle g \rangle = \langle g^{-1} \rangle$, d'où $\ord g = \ord g^{-1}$.
+      D'autre part, pour $n \in \mathds{N}$, on a $(hgh^{-1})^n = h g^n h^{-1}$, et donc l'équivalence \[
+      g^n = e \iff (h g h^{-1})^n = e 
+      ,\] d'où $\ord g = \ord(h g h^{-1})$.
+    \item On a $hg = h (gh) h^{-1}$ et par la question précédente, on a que $\ord(hg) = \ord(gh)$.
+    \item On a 
+      \begin{align*}
+        \ord g^n &= \min\{k \in \mathds{N}^*  \mid g^{nk} = e\}\\
+                 &= \frac{1}{n} \min \big((\ord g) \mathds{Z} \cap n \mathds{Z} \cap \mathds{N}^*\big)\\
+                 &= \frac{\operatorname{ppcm}(\ord g, n)}{n} \\
+                 &= \frac{\ord g}{\operatorname{pgcd}(\ord g, n)} 
+      .\end{align*}
+    \item 
+      \begin{enumerate}
+        \item Si $\langle g \rangle \cap \langle h\rangle = \{e\}$ et $(gh)^k = e$ alors $g^k = h^{-k} \in \langle g \rangle \cap \langle h \rangle$.
+          D'où, $g^k = h^{-k} = e$.
+      \end{enumerate}
+  \end{enumerate}
+
   \section{Exercice 4.}
   
   \begin{enonce}
