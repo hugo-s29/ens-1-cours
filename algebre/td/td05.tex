@@ -1,0 +1,48 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Quotient et dualité}
+  \minitoc
+
+  \section{Exercice 1.}
+  \begin{enonce}
+    Donner un exemple de $\mathds{k}$-espace vectoriel $E$ et de sous-espace vectoriel~$F$ de $E$ où
+    \begin{enumerate}
+      \item $\dim F$ est finie et  $\dim(E / F)$ est infinie ;
+      \item $\dim F$ est infinie et  $\dim(E / F)$ est finie ;
+      \item $\dim F$ est infinie et  $\dim(E / F)$ est infinie.
+    \end{enumerate}
+  \end{enonce}
+  \begin{enumerate}
+    \item Considérons $E = \mathds{R}^2$ et $F = \{(0,0)\}$.
+    \item Considérons $E = \mathds{R}^2$ et $F = \mathds{R}^2$.
+    \item Considérons $\mathds{R}^2$ et $F = \mathds{R} \times \{0\}$.
+  \end{enumerate}
+
+  \section{Exercice 2. \textit{Théorèmes d'isomorphismes}}
+  \begin{enonce}
+    Soient $E$ un $\mathds{k}$-espace vectoriel, et $F$ et $G$ deux sous-espaces vectoriels de $E$.
+    On note $\pi : E \to E / F$ la projection canonique.
+    \begin{enumerate}
+      \item Montrer que l'application $G \mapsto \pi(G)$ induit une bijection croissante entre l'ensemble des sous-espaces vectoriels de $E$ contenant $F$ et l'ensemble des sous-espaces vectoriels de $E / F$. Quelle est sa bijection réciproque ?
+      \item Construire un isomorphisme entre $F / (F \cap G) = (F + G) / G$.
+      \item On suppose $F \subseteq G$. Montrer que $G / F$ s'identifie à un sous-espace vectoriel de $E / F$ et construire un isomorphisme entre $(E / F) / (G / F)$ et $E / G$.
+    \end{enumerate}
+  \end{enonce}
+
+  \section{Exercice 3. \textit{Changement de base duale}}
+  \begin{enonce}
+    Soit $E$ un $\mathds{k}$-espace vectoriel de dimension finie.
+    Soient $\mathbf{e} = (e_i)_{i \in \llbracket 1,n\rrbracket}$ et $\mathbf{f} = (f_i)_{i\in \llbracket 1,n\rrbracket}$ deux bases de $E$, et $\mathbf{e}^* = (e_i^*)_{i \in \llbracket 1,n\rrbracket}$ et $\mathbf{f}^* = (f^*_i)_{i \in \llbracket 1,n\rrbracket}$ leurs bases duales respectives.
+    Soit $A = (a_{i,j})_{i,j}$ la matrice de passage de $\mathbf{e}$ à $\mathbf{f}$.
+    \begin{enumerate}
+      \item Pour $j \in \llbracket 1,n\rrbracket$, on écrit $e^*_j = \sum_{i = 1}^n \alpha_{i,j}f^*_i$ avec $\alpha_{i,j} \in \mathds{k}$, pour tout $1 \le i,j \le n$.
+        Déterminer $A' = (\alpha_{i,j})_{i,j}$ en fonction de $A$. 
+      \item En déduire la matrice de passage de $\mathbf{e}^*$ à $\mathbf{f}^*$ en fonction de $A$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item 
+  \end{enumerate}
+\end{document}

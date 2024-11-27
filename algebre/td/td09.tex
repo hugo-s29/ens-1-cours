@@ -1,0 +1,157 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Produits tensoriels}
+  \minitoc
+
+  \section{Exercice 1.}
+  \begin{enonce}
+    Soient $E, F$ et $G$ des espaces vectoriels de dimension finie supérieure à $2$.
+    \begin{enumerate}
+      \item Donner un élément de $E \otimes F$ qui n'est pas un tenseur simple.
+      \item Donner un exemple d'espaces vectoriels $E$, $F$ et $G$ et d'application linéaire $h : E \otimes F \to G$ telle que $h(x \otimes y) \neq 0$ pour tout $x \in E \setminus \{0\}$ et $y \in F \setminus \{0\}$ mais qui n'est pas injective.
+      \item Que se passe-t-il si $E$ ou $F$ est de dimension $1$ ?
+      \item Soient $f : E \to G$ et $g : F \to G$ des applications linéaires. Existe-t-il une application linéaire $\varphi : E \otimes F \to G$ telle que pour tout $x \in E$ et $y \in F$ on ait \[
+      \varphi(x \otimes y) = f(x) + f(y)
+      .\] 
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Considérons $(e_1, e_2)$ une famille libre de $E$ et $(f_1, f_2)$ une famille libre de $F$.
+      On considère \[
+      z = e_1 \otimes f_1 + e_2 \otimes f_2 \in E \otimes F
+      .\]
+      L'élément $z$ n'est pas simple.
+      Par l'absurde, supposons le simple, et on écrit que $z = x \otimes y$ avec $x \in E$ et $y \in F$.
+      On complète les familles $(e_1, e_2)$ et $(f_1, f_2)$ en deux bases $(e_i)_{i \in \llbracket 1,n\rrbracket  }$ et $(f_j)_{j \in \llbracket 1,m\rrbracket}$ de $E$ et $F$ respectivement.
+      On écrit, avec les bases, $x = \sum_{i=1}^n \lambda_i x_i$ puis $y = \sum_{j=1}^m \mu_j f_j$.
+      Alors $x \otimes y = \sum_{i,j} \lambda_i \mu_j(e_i \otimes f_j) = z$.
+      Ceci permet d'en déduire que \[
+      \lambda_i \mu_j = \begin{cases}
+        1 &\text{ si } i = j = 1 \text{ ou } i = j = 2\\
+        0 & \text{ sinon}.
+      \end{cases}
+      \] 
+      D'où, $\lambda_1 \mu_2 = 0$ et donc  $\lambda_1 = 0$ ou  $\mu_2 = 0$.
+      Cependant,  $\lambda_1 \mu_1 = \lambda_2 \mu_2 = 1$, ce qui est  \textit{\textbf{absurde}}.
+      Ainsi $z$ n'est pas un tenseur simple.
+    \item Considérons $\mathds{k} = \mathds{R}$ et $E = F = \mathds{C}$ vu comme un $\mathds{k}$-espace vectoriel de dimension $2$.
+      On pose l'application \begin{align*}
+        \varphi: \mathds{C}\times \mathds{C} &\longrightarrow \mathds{C} \\
+        (x,y) &\longmapsto xy
+      ,\end{align*}
+      qui est bilinéaire.
+      Ainsi, par propriété universelle, $\varphi$ induit une unique application linéaire \begin{align*}
+        h: \mathds{C}\otimes \mathds{C} &\longrightarrow \mathds{C} \\
+        x \otimes y &\longmapsto xy
+      .\end{align*}
+      Alors, pour tout $x, y \in \mathds{C} \setminus \{0\}$, alors $h(x \otimes y) = x y \neq 0$.
+      Or, on a  $h(1 \otimes i) = h(i \otimes i)$ et  $1 \otimes i \neq i \otimes 1$ donne la non injectivité (car $(1 \otimes 1, i \otimes 1, 1 \otimes i, i \otimes i)$ forme une base de  $\mathds{C} \otimes \mathds{C}$).
+    \item Si $\dim E = 1$ on écrit  $E = \vect e$.
+      Soit $(f_i)_{i \in \llbracket 1,n\rrbracket}$ une base de $F$.
+      Une base de $E \otimes F$ est $(e \otimes f_1, \ldots, e \otimes f_n)$, et \[
+      \sum_{j=1}^n \lambda_j (e \otimes f_j) = e \otimes \Big(\sum_{j=1}^n \lambda_j f_j\Big)
+      .\]
+      Tout élément de $E \otimes F$ est donc un tenseur simple !
+      Ainsi, l'application  \begin{align*}
+        F &\longrightarrow E\otimes F \\
+        y &\longmapsto e \otimes y
+      \end{align*} est un isomorphisme.
+    \item Montrons que l'application $\varphi$ existe et est nécessairement nulle.
+      On a, pour tout $x \in E$ et $y \in F$ \[
+      f(x) = f(x) + 0 = \varphi(x \otimes 0) = 0 = \varphi(0 \otimes y) = g(y) = 0
+      .\]
+      D'où, $f = 0$ et $g = 0$.
+  \end{enumerate}
+
+  \section{Exercice 2. \textit{Isomorphismes canoniques}}
+  \begin{enonce}
+    Soient $E$ et $F$ deux espaces vectoriels de dimension finie.
+    \begin{enumerate}
+      \item 
+        \begin{enumerate}
+          \item Montrer que l'application $E \times F \to F \otimes E$ donnée par $(x,y) \mapsto y \otimes x$ est bilinéaire.
+            En déduire qu'il existe une unique application linéaire \[
+            f : E \otimes F \to F \otimes E
+            \] qui vérifie $f(x \otimes y) = y \otimes x$, pour tout $x \in E$ et tout $y \in F$.
+        \end{enumerate}
+        On construit de même une application linéaire \[
+        g : F \otimes E \to E \otimes F
+        \]telle que $g(y \otimes x) = x \otimes y$.
+        \begin{enumerate}[resume*]
+          \item Montrer que $f \circ g = \id_{F \otimes E}$ et $g \circ f = \id_{E \otimes F}$.
+            En particulier, $f$ et $g$ réalisent des isomorphismes entre $E \otimes F$ et  $F \otimes E$.
+        \end{enumerate}
+      \item 
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item \begin{enumerate}
+        \item L'application \begin{align*}
+          \varphi: E \times F &\longrightarrow F \otimes E \\
+          (x,y) &\longmapsto y \otimes x
+        \end{align*}
+        est linéaire à gauche car $\cdot \otimes \cdot$ est linéaire à droite, et $\varphi$ est linéaire à droite car  $\cdot \otimes \cdot $ est linéaire à gauche.
+        Par propriété universelle, on sait que $\varphi$ induit une unique application linéaire  $f : E \otimes F \to F \otimes E$.
+      \item Soit $z \in E \otimes F$.
+        On pose $z = \sum_{i = 1}^n (x_i \otimes y_i)$ avec $x_i \in E$ et~$y_j \in F$.
+        Alors,
+        \begin{align*}
+          g(f(z)) &= g\Big(f\Big(\sum_{i=1}^n x_i \otimes y_i\Big)\Big)\\
+          &= \sum_{i=1}^n g(f(x_i\otimes y_i)) \\
+          &= \sum_{i=1}^n g(y_i \otimes x_i) \\
+          &= \sum_{i=1}^n x_i \otimes y_i \\
+          &= z
+        .\end{align*}
+        D'où, $g \circ f = \id_{E \otimes F}$.
+        De même, $f \circ g = \id_{F \otimes E}$.
+      \end{enumerate}
+    \item Pour $f \in E^*$ et $g \in F^*$, l'application \begin{align*}
+        E \times F &\longrightarrow \mathds{k} \\
+        (x,y) &\longmapsto f(x) \; g(y)
+      \end{align*} est bilinéaire.
+      Ainsi, par propriété universelle, elle induit une application linéaire \begin{align*}
+        P(f,g): E \otimes F &\longrightarrow \mathds{k} \\
+        x\otimes y &\longmapsto f(x) \; g(y)
+      .\end{align*}
+
+      L'application \begin{align*}
+        P: E^* \times F^* &\longrightarrow (E \otimes F)^* \\
+        (f,g) &\longmapsto P(f,g)
+      \end{align*} est bilinéaire donc, par propriété universelle, elle induit une unique application linéaire 
+      \begin{align*}
+        \gamma:E^* \otimes F^*  &\longrightarrow (E \otimes F)^* \\
+        f \otimes g &\longmapsto P(f,g)
+      .\end{align*}
+
+      De plus, soit $(e_i)_i$ une base de $E$ et $(f_j)_j$ une base de $F$.
+      Une base de $(E \otimes F)^*$ est donnée par  $((e_i \otimes f_j)^*)_{i,j}$.
+      On vérifie que \[
+      \gamma(e_i^* \otimes f_j^*)  = (e_i \otimes f_j)^*
+      \] par \[
+      \gamma(e_i^* \otimes f_j^*) (e_k \otimes f_\ell) = P(e_i^*, f_j^*)(e_i \otimes f_\ell) = e_i^*(e_k) \times f_j^*(f_\ell) = \delta_{i,k} \times \delta_{j,\ell}
+      .\]
+      Ainsi $\gamma$ est surjective.
+      On conclut par égalité des dimensions :
+      {\tiny
+       \[
+      \dim(E^* \otimes F^*) = \dim(E^*)\dim(F^*) = \dim(E) \dim(F) = \dim(E \otimes F) = \dim((E \otimes F)^*)
+      .\]}
+      D'où, $\gamma$ est un isomorphisme.
+    \item L'application 
+      \begin{align*}
+        E^* \times F &\longrightarrow \mathrm{Hom}(E, F) \\
+        (\lambda, y) &\longmapsto (x \mapsto \lambda(x) y )
+      \end{align*} est bilinéaire, donc par propriété universelle, elle induit $\Phi$.
+
+      Une base de  $\mathrm{Hom}(E,F)$ est donnée par les $h_{i,j} : x \mapsto e_i^*(x) f_j$.
+      Or, $h_{i,j} = \Phi(e_i^*, f_j)$, donc $\Phi$ est surjective.
+
+      Enfin, on a {\small\[
+      \dim(E^* \otimes F) = (\dim E^*)(\dim F) = (\dim E)(\dim F) = \dim(\mathrm{Hom}(E,F))
+      .\]}
+      D'où, $\Phi$ est un isomorphisme.
+  \end{enumerate}
+\end{document}

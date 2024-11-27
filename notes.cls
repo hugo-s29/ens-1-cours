@@ -208,13 +208,14 @@
 
 \declaretheorem[style=thmgreenbox, name=Définition]{defn} \defineMarkerColor{defn}{deepgreen} \removefootnoteinside{defn}
 \declaretheorem[style=thmbluebox, name=Exemple]{exm}      \defineMarkerColor{exm}{deepblue}   \removefootnoteinside{exm}
-\declaretheorem[style=thmbluebox, name=Exercice]{exo}    \defineMarkerColor{exo}{deepblue}   \removefootnoteinside{exo}
+\declaretheorem[style=thmbluebox, name=Exercice]{exo}     \defineMarkerColor{exo}{deepblue}   \removefootnoteinside{exo}
 \declaretheorem[style=thmredbox, name=Proposition]{prop}  \defineMarkerColor{prop}{deepred}   \removefootnoteinside{prop}
 \declaretheorem[style=thmredbox, name=Théorème]{thm}      \defineMarkerColor{thm}{deepred}    \removefootnoteinside{thm}
 \declaretheorem[style=thmredbox, name=Lemme]{lem}         \defineMarkerColor{lem}{deepred}    \removefootnoteinside{lem}
 \declaretheorem[style=thmredbox, name=Corollaire]{crlr}   \defineMarkerColor{crlr}{deepred}   \removefootnoteinside{crlr}
 \declaretheorem[style=thmblueline, name=Remarque]{rmk}    \defineMarkerColor{rmk}{deepblue}   \removefootnoteinside{rmk}
 \declaretheorem[style=thmblueline, name=Note]{note}       \defineMarkerColor{note}{deepblue}  \removefootnoteinside{note}
+\declaretheorem[style=thmblueline, name=Observation, numbered=no]{obs} \defineMarkerColor{obs}{deepblue}   \removefootnoteinside{obs}
 \newmdenv[
   linewidth=2pt,
   rightline=false, topline=false, bottomline=false,
@@ -228,6 +229,9 @@
 
 \declaretheorem[style=thmexplanationbox, name=Solution]{replacementsolution}
 \newenvironment{sol}[1][\proofname]{\vspace{-12pt}\begin{replacementsolution}}{\end{replacementsolution}} \removefootnoteinside{sol} \defineMarkerColor{sol}{deepblue}
+
+\declaretheorem[style=thmexplanationbox, name={}]{replacementexplaination}
+\newenvironment{expl}[1][\proofname]{\vspace{-12pt}\begin{replacementexplaination}}{\end{replacementexplaination}} \removefootnoteinside{expl} \defineMarkerColor{expl}{deepblue}
 
 \newtheorem*{nota}{Notation}
 

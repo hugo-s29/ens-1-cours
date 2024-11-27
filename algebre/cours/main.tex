@@ -1,0 +1,471 @@
+\documentclass{../../notes}
+
+\title{Algèbre 1}
+\author{Hugo SALOU}
+
+\DeclareMathOperator{\im}{im}
+
+\begin{document}
+  \maketitle
+
+  \begin{prv}
+    \begin{itemize}
+      \item L'unicité à unique isomorphisme près est formelle (\textit{c.f.} preuve des sommes/produits directs).
+      \item On va démontrer l'existence, pour $n = 2$, et on procède par récurrence immédiate pour montrer pour tout $n$.
+        On donne deux méthodes.
+
+        \begin{center}
+          \textbf{\textit{Méthode rapide}}
+        \end{center}
+
+        Soit $(e_1, \ldots, e_n)$ une base de $E_1$.
+        Soit $(f_1, \ldots, f_m)$ une base de $E_2$.
+        On considère $E_1 \otimes E_2$ le $\mathds{k}$-espace vectoriel de base indexée par $\{1,\ldots,n\} \times \{1,\ldots,m\}$ (c'est à dire $\mathds{k}^n \times \mathds{k}^m$).
+        On notera $e_i \otimes f_j$ l'élément de la base correspondante à l'indice $(i,j)$.
+
+        Remarquons que, plus abstraitement, on a considéré \[
+          \bigoplus_{(i,j) \in \llbracket 1,n\rrbracket \times \llbracket 1,m\rrbracket   } \mathds{k} (e_i \otimes e_j)
+        .\]
+
+        On définit alors l'application \begin{align*}
+          \pi: E_1 \times E_2 &\longrightarrow E_1 \otimes E_2 \\
+          (e_i, f_j) &\longmapsto e_i \otimes f_j
+        ,\end{align*}
+        étant étendue par linéarité.
+
+        Justifions que la propriété universelle voulue est satisfaite.
+
+        Soit $\phi : E_1 \times E_2 \to F$.
+        On définit l'application linéaire 
+        \begin{align*}
+          \bar{\phi}: E_1 \otimes E_2 &\longrightarrow F \\
+          e_i \otimes e_j &\longmapsto \bar{\phi}(e_i, e_j)
+        ,\end{align*}
+        étendue par linéarité.
+
+        \begin{obs}
+          $\phi  = \bar{\phi} \circ \pi$.
+        \end{obs}
+        \begin{expl}
+          Clair.
+        \end{expl}
+        L'unicité de $ \bar{\phi}$ est claire, car elle doit prendre les valeurs $\big(\phi(e_i, f_j)\big)_{i,j}$ sur $(e_i \otimes e_j)_{i,j}$, qui est une base de $E_1 \otimes E_2$.
+
+
+        \begin{center}
+          \textbf{\textit{Méthode "M1 Maths"}}
+        \end{center}
+
+        On définit le produit tensoriel par un quotient de relation.
+        C'est une construction qui sera utilisée notamment en M1 avec les modules.
+
+        On définit\footnote{Cette définition n'a qu'un intérêt théorique : on pose l'espace comme ceci mais, pour pouvoir le calculer, cette définition n'est pas très utile.} : {\footnotesize\[
+            \hspace{-4em}
+        E_1 \otimes E_2 := \frac{\bigoplus_{e \in E_1, f \in E_2} \mathds{k} (e \otimes f)}{\langle (\lambda e + \lambda' e') \otimes (\mu f + \mu' f') = \lambda \mu e \otimes f + \lambda \mu' e \otimes f' + \lambda' \mu e' \otimes f + \lambda' \mu' e' \otimes f' \rangle}
+      .\]}
+
+        On définit alors
+        \begin{align*}
+          \pi: E_1 \times E_2 &\longrightarrow E_1 \otimes E_2 \\
+          (e, f) &\longmapsto \overline{e \otimes f}
+        ,\end{align*}
+        qui est étendue par bilinéarité puis construction.
+
+        (Exercice) Le couple $(E_1 \otimes E_2, \pi)$ satisfait la propriété universelle recherchée.
+    \end{itemize}
+  \end{prv}
+
+
+  \begin{defn}
+    Soient $E_1, \ldots, E_n$ des $\mathds{k}$-espaces vectoriels.
+    Pour $(e_1, \ldots, e_n) \in E_1 \times \cdots \times E_n$, on note \[
+      e_1 \otimes \cdots \otimes e_n := \pi(e_1, \ldots, e_n)
+    .\]
+  \end{defn}
+
+  \textbf{Terminologie}.
+  Les éléments de cette forme sont appelés \textit{tenseurs simples} (ou \textit{pures}).
+  Un élément de $E_1 \otimes \cdots \otimes E_n$ est appelé \textit{tenseur}.
+
+  \begin{obs}
+    Les tenseurs simples engendrent $E_1 \otimes \cdots \otimes E_n$.
+  \end{obs}
+  \begin{expl}
+    Clair avec les deux constructions données.
+  \end{expl}
+
+  \textbf{\textit{Attention !}}
+  Un tenseur quelconque n'est en général pas simple.
+
+  Pour bien insister sur le corollaire de la construction :
+  \begin{crlr}
+    Soient $E_1, \ldots, E_n$ des $\mathds{k}$-espaces vectoriels.
+    Soit également $(e_{i_k})_{i_k \in I_k}$ une base de $E_k$ pour $k \in \llbracket 1,n\rrbracket$.
+
+    Alors, $(e_{i_1} \otimes \cdots \otimes e_{i_n})_{(i_1, \ldots, i_n) \in I_1 \times \cdots \times I_n}$ 
+    est une base de $E_1 \otimes \cdots \otimes E_n$.
+
+    En particulier, \[
+      \mathrm{dim}(E_1 \otimes E_n) = \prod_{i = 1}^n \mathrm{dim}(E_i)
+    .\]
+  \end{crlr}
+  \begin{prv}
+    Cela par la construction donnée.
+  \end{prv}
+
+  On a les règles de calculs suivantes :
+  \begin{enumerate}
+    \item {\small $\lambda \cdot (e_1 \otimes \cdots \otimes e_n) = (\lambda \cdot e_1) \otimes e_2 \otimes \cdots \otimes e_n = \cdots = e_1 \otimes \cdots \otimes e_{n-1}  \otimes (\lambda \cdot e_n)$.}
+    \item $(e_1 + e_1') \otimes e_2 \otimes \cdots \otimes e_n = e_1 \otimes \cdots \otimes e_n + e_1' \otimes \cdots \otimes e_n$, \[
+    \vdots
+    \]
+      $e_1 \otimes \cdots \otimes e_{n-1} \otimes (e_n + e_n') = e_1 \otimes \cdots \otimes e_n + e_1 \otimes \cdots \otimes e_n'$.
+  \end{enumerate}
+
+  Ceci est vrai par bilinéarité de $\pi$.
+
+  \section{Morphismes et produits tensoriels.}
+
+  Dans cette section, on traitera le cas $n = 2$.
+
+  On a le théorème suivant.
+  \begin{thm}
+    Soient $E, E', F, F'$ quatre  $\mathds{k}$-espaces vectoriels de dimension finie.
+    Il y a un isomorphisme canonique
+    \begin{align*}
+      \mathrm{Hom}(E, E') \otimes \mathrm{Hom}(F, F') &\overset \sim \longrightarrow  \mathrm{Hom}(E \otimes F, E' \otimes F')\\
+      u \otimes v &\longmapsto 
+      \begin{array}{|rcl}
+        E \otimes F &\to& E' \otimes F'\\
+        x \otimes y &\mapsto & u(x) \otimes u(y)
+      \end{array}
+    .\end{align*}
+
+    \textbf{Convention.}
+    Lorsqu'on écrit "$u \otimes v$", on l'interprète comme étant un élément de $\mathrm{Hom}(E \otimes F, E' \otimes F')$.
+  \end{thm}
+  \begin{prv}
+    On considère le morphisme $\Phi$ défini par :
+    \begin{align*}
+      \Phi : \mathrm{Hom}(E, E') \times \mathrm{Hom}(F, F') &\overset \sim \longrightarrow  \mathrm{Hom}(E \otimes F, E' \otimes F')\\
+      (u,v) &\longmapsto 
+      \begin{array}{|rcl}
+        E \otimes F &\to& E' \otimes F'\\
+        x \otimes y &\mapsto & u(x) \otimes u(y)
+      \end{array}
+    .\end{align*}
+    \begin{obs}
+      $\Phi$ est bien définie.
+    \end{obs}
+    \begin{expl}
+      Ceci découle du fait que \begin{align*}
+        E \times F &\longrightarrow E' \otimes F' \\
+        (x,y) &\longmapsto E \times u(x)\otimes v(y)
+      \end{align*} est bilinéaire, donc unicité de l'application linéaire $E \otimes F \to E' \otimes F'$ (propriété universelle).
+    \end{expl}
+
+    \begin{obs}
+      L'application $\Phi$ est bilinéaire.
+    \end{obs}
+    \begin{expl}
+      Clair.
+    \end{expl}
+
+    Ainsi $\Phi$ induit, par propriété universelle, l'application linéaire  \[
+    \bar{\Phi} : \mathrm{Hom}(E, E') \otimes \mathrm{Hom}(F, F') \to \mathrm{Hom}(E \otimes F, E' \otimes F')
+    .\]
+
+    \begin{obs}
+      $\bar{\Phi}$ est surjective
+    \end{obs}
+    \begin{expl}
+      Il suffit de montrer que l'on peut atteindre les morphismes de la forme
+      \begin{align*}
+        e_i \otimes f_j &\longmapsto e_k' \otimes f_\ell'\\
+        e_r \otimes f_s &\longmapsto 0 \text{ si } (r,s) \neq (i,j)
+      \end{align*}où $(e_i)_i$ est une base de  $E$, $(f_j)_j$ est une base de  $F$, $(e'_k)_k$ est une base de  $E'$ et $(f'_\ell)_\ell$ est une base de $F'$.
+
+      Et, pour ce faire, on définit \begin{align*}
+        u: e_i &\longmapsto e_k' \\
+        e_r &\longmapsto 0 \text{ si } r \neq i
+      \end{align*}
+      puis \begin{align*}
+       v :f_j  &\longmapsto f_j'  \\
+        f_s &\longmapsto 0 \text{ si } s \neq j
+      .\end{align*}
+    \end{expl}
+
+    On conclut puisque \[
+    \mathrm{dim}(\mathrm{Hom}(E, E') \otimes \mathrm{Hom}(F, F')) = \mathrm{dim}(\mathrm{Hom}(E \otimes F, E' \otimes F'))
+    .\]
+  \end{prv}
+
+  On a alors la règle de calculs étendue.
+  \begin{prop}
+    Si $u : E \to E'$, $u' : E' \to E''$, $v : F \to F'$ et $v' : F' \to F''$ quatre applications linéaires, alors \[
+      (u' \otimes v') \circ (u \otimes v) = (u' \circ u) \otimes (v' \circ v)
+    .\]
+  \end{prop}
+  \begin{prv}
+    Il suffit d'observer que ces deux applications prennent même valeurs sur les tenseurs simples.
+    On conclut car ceux-ci engendrent $E \otimes F$.
+  \end{prv}
+
+  \textbf{Interprétation matricielle} (du théorème précédent)
+
+  Soit $\mathcal{B}_E = (e_i)$ une base de $E$, $\mathcal{B}_F = (f_j)$ une base de $F$, $\mathcal{B}_{E'} = (e'_k)$ une base de $E'$ et $\mathcal{B}_{F'} = (f'_\ell)$ une base de $F'$.
+  Notons $A := \mathrm{Mat}_{\mathcal{B}_E, \mathcal{B}_F}(u)$ et $B := \mathrm{Mat}_{\mathcal{B}_{E'}, \mathcal{B}_{F'}}(v)$.
+  Notons aussi $\mathcal{B}_{E \otimes F} = (e_i \otimes f_j)$ base de $E \otimes F$ et  $\mathcal{B}_{E' \otimes F'} = (e'_k \otimes f_\ell')$ base de $E' \otimes F'$.
+  Alors, \[
+    \mathrm{Mat}_{\mathcal{B}_{E \otimes F}, \mathcal{B}_{E' \otimes F'}} = \begin{pmatrix} a_{11} B& \ldots& a_{1,m} B \\ 
+      \vdots &\ddots &\vdots\\
+      a_{n,1} B & \ldots & a_{n,m} B
+  \end{pmatrix} \quad\quad (*)
+  .\]
+
+  On peut en déduire que (exercice) le corolaire suivant.
+  \begin{crlr}
+    Si $u \in \mathcal{L}(E)$ et $v \in \mathcal{L}(F)$ alors 
+    \begin{enumerate}
+      \item $\mathrm{Tr}(u\otimes v) = \mathrm{Tr}(u) \cdot \mathrm{Tr}(v)$ ;
+      \item $\det (u \otimes v) = (\det u)^{\operatorname{dim} F} \cdot (\det v)^{\operatorname{dim} E}$ ;
+    \end{enumerate}
+    et si $u \in \mathcal{L}(E, E')$ et $v \in \mathcal{L}(F, F')$ alors
+    \begin{enumerate}[resume*]
+      \item $\mathrm{rg}(u\otimes v) = (\operatorname{rg} u) \cdot (\operatorname{rg} v)$.
+    \end{enumerate}
+  \end{crlr}
+  \begin{prv}[Idée]
+    On applique l'interprétation matricielle, et on applique les résultats usuels sur les matrices.
+  \end{prv}
+
+  \begin{rmk}
+    La formule $(*)$ permet de définir le produit tensoriel de matrices.
+    On montrerait alors
+    \begin{enumerate}
+      \item $(A + A') \otimes B = A \otimes B + A' \otimes B$
+      \item  $(A A') \otimes (B B') = (A \otimes B)(A' \otimes B')$ (par les règles de calculs)
+      \item  $(A \otimes B) \otimes C = A \otimes (B \otimes C)$ (par l'interprétation terme à terme des morphismes).
+    \end{enumerate}
+  \end{rmk}
+
+  \section{Quelques isomorphismes canoniques et règles de calculs}
+
+  \subsection{Isomorphisme canonique.}
+
+  \begin{prop}
+    Soient $E$ et $F$ deux $\mathds{k}$-espaces vectoriels de dimension finie.
+    Alors, \textit{canoniquement} on a $\mathrm{Hom}(E, F) \cong E^* \otimes F$.
+  \end{prop}
+  \begin{prv}
+    On considère 
+    \begin{align*}
+      \phi: E^* \times F &\longrightarrow \mathrm{Hom}(E, F) \\
+      (\ell,y) &\longmapsto (x \mapsto \ell(x)\:y)
+    .\end{align*}
+    \begin{obs}
+      $\phi$ est bilinéaire.
+    \end{obs}
+    Elle induit donc $\bar{\phi} : E^* \otimes F \to \mathrm{Hom}(E, F)$.
+
+    La surjectivité se montre comme à la sections 3, et on conclut par égalité des dimensions.
+  \end{prv}
+
+  \subsection{Isomorphismes canoniques et règles de calculs.}
+  \begin{prop}
+    Si $E,F$ sont deux $\mathds{k}$-espaces vectoriels, alors 
+    \begin{align*}
+      E \otimes F &\longrightarrow F \otimes E \\
+      e \otimes f &\longmapsto f\otimes e
+    .\end{align*}
+  \end{prop}
+  \begin{prv}
+    On pose 
+    \begin{align*}
+      u : E \times F &\longrightarrow F \otimes E \\
+      (e,f) &\longmapsto f\otimes e
+    ,\end{align*}
+    bilinéaire et il induit donc un morphisme \[
+    \bar{u} : E \otimes F \to F \otimes E
+    .\]
+    On construit de même l'inverse.
+  \end{prv}
+
+  \begin{prop}
+    Si $E_1, E_2, F$ sont trois $\mathds{k}$-espaces vectoriels, alors il y a un isomorphisme canonique
+    \begin{align*}
+      u: (E_1 \oplus E_2) \otimes F &\longrightarrow (E_1 \otimes F) \oplus (E_2 \otimes F) \\
+      (x \oplus y) \otimes z &\longmapsto (x \otimes z) \oplus (y \otimes z)
+    .\end{align*}
+  \end{prop}
+  \begin{prv}
+    On considère, pour $i \in \{1,2\}$, l'application $p_i : E_1 \otimes E_2 \to E_i$ la projection canonique.
+
+    \begin{obs}
+      $u = (p_1 \otimes \mathrm{id}_F, p_2 \otimes \mathrm{id}_F)$
+    \end{obs}
+    \begin{expl}
+      Clair
+    \end{expl}
+
+    On peut construire l'inverse. Soit, pour $i \in \{1,2\}$, l'injection canonique \[
+    j_i : E_i \hookrightarrow E_1 \oplus E_2
+    .\]
+    On considère alors, pour $i \in \{1,2\}$, \[
+    j_i \otimes \mathrm{id}_F : E_i \otimes F \to (E_1 \oplus E_2) \otimes F
+    .\]
+    Ainsi, $v = j_1 \oplus j_2$ est un inverse pour $u$.
+  \end{prv}
+
+  \begin{prop}
+    Si $E$ et $F$ sont deux $\mathds{k}$-espaces vectoriels de dimension fini, alors il existe un isomorphisme canonique
+    \begin{align*}
+      \bar{\phi}: E^* \otimes F^* &\longrightarrow (E\otimes F)^* \\
+    \mu \otimes \nu &\longmapsto (x \otimes y \mapsto \mu(x) \cdot \nu(y))
+    .\end{align*}
+  \end{prop}
+  \begin{prv}
+    \begin{enumerate}
+      \item L'application $\bar{\phi}$ est bien définie.
+      \item C'est bien un isomorphisme (on montre que c'est surjectif et égalité des dimensions).
+    \end{enumerate}
+  \end{prv}
+
+  \begin{prop}
+    Si $E$, $F$ et $G$ sont trois $\mathds{k}$-espaces vectoriels alors il y a un isomorphisme canonique
+    \begin{align*}
+      (E \otimes F) \otimes G  &\longrightarrow E \otimes (F \otimes G) \\
+      (x \otimes y) \otimes z &\longmapsto x \otimes (y \otimes z)
+    .\end{align*}
+  \end{prop}
+  \begin{prv}
+    Exercice.
+  \end{prv}
+
+  \chapter{Représentation linéaires des groupes (finis, complexes).}
+
+  \section{Notions de base.}
+  Dans cette section, on considère un corps $\mathds{k}$ est un groupe $G$.
+
+  \subsection{Définitions.}
+
+  \begin{defn}
+    Une \textit{représentation linéaire de $G$ sur $\mathds{k}$} est la donnée de
+    \begin{itemize}
+      \item $V$ un $\mathds{k}$-espace vectoriel de dimension finie ;
+      \item $\rho : G \to \mathrm{GL}(V)$ morphisme de groupes.
+    \end{itemize}
+    Autrement dit, c'est une action de $G$ sur $V$ par \textit{automorphismes linéaires}.
+  \end{defn}
+
+  \begin{nota}
+    On note $(\rho, V)$, souvent abrégé en simplement $V$ ($\rho$ étant sous-entendu).
+  \end{nota}
+
+  \textbf{Terminologie.}
+  \begin{itemize}
+    \item Le \textit{degré} de $(\rho, V)$ est la dimension de $V$.
+    \item La représentation est \textit{fidèle} si $\rho$ est injectif.
+  \end{itemize}
+
+  \subsection{Sous-représentation (et irréductibilité)}
+  \begin{defn}
+    Si $(\rho, V)$ une représentation linéaire de $G$ alors un sous-espace vecotirel $W \subseteq V$ est une sous-représentation linéaire de $V$ si $W$ est stable par $G$, \textit{i.e.} \[
+    \forall g \in G, g \cdot W \subseteq W
+    .\]
+  \end{defn}
+
+  \begin{obs}
+    La donnée de \[
+      \left(
+        W,
+        \begin{array}{rcl}
+          G & \to& \mathrm{GL}(W)\\
+          g &\mapsto & \rho(g)_{|W}
+        \end{array}
+      \right)
+    \] est alors évidemment une représentation linéaire de $G$.
+  \end{obs}
+
+  \begin{exm}
+    \[
+    V^G := \{v \in V  \mid \forall g \in G, g \cdot v = v \} 
+    \] est une sous-représentation (qui est triviale).
+  \end{exm}
+
+  \begin{defn}
+    On dit qu'une représentation linéaire $(\rho, V)$ est  \textit{irréductible} si 
+    \begin{itemize}
+      \item son degré est $\ge 1$ ;
+      \item et ses seuls sons-représentations sont $\{0\}$ et $V$, \textit{i.e.} $(\rho,V)$ n'admet pas de sous-représentations non triviales.
+    \end{itemize}
+  \end{defn}
+
+  \subsection{Morphismes de représentations.}
+
+  \subsubsection{Définition.}
+
+  \begin{defn}
+    Soient $(\rho, V)$ et  $(\sigma, W)$ deux représentations linéaires de $G$.
+    Un \textit{morphisme de  représentation de $V$ à $W$} est la donnée de \[
+    f : F \to W
+    ,\] 
+    linéaire telle que \[
+    \forall g \in G, \forall v \in V, \quad\quad f(g \cdot v) = g \cdot f(v)
+    ,\] 
+    \textit{i.e.},
+    \[
+    f(\rho(g)\: v) = \sigma(g)\:  f(v)
+    .\]
+  \end{defn}
+
+  \begin{nota}
+    On note $\mathrm{Hom}_G(V,W)$ l'ensemble des morphismes de représentation linéaire.
+    C'est un $\mathds{k}$-espace vectoriel.
+  \end{nota}
+
+  \textbf{Terminologie.}
+  Les éléments de $\mathrm{Hom}_G(V,W)$ sont appelés les \textit{morphismes $G$-équivariants}.
+
+  \begin{exo}
+    L'inclusion d'une sous-représentation est un morphisme de représentations.
+  \end{exo}
+
+  \begin{obs}
+    Si $f \in \mathrm{Hom}_G(V,W)$ alors
+    \begin{itemize}
+      \item $\ker f$ est une sous-représentation de $V$ ;
+      \item $\im f$ est une sous-représentation de $W$.
+    \end{itemize}
+  \end{obs}
+  \begin{expl}
+    Si $v \in \ker f$, alors $f(g \cdot v) = g \cdot f(v) = 0$.
+    Si $w \in f(v) \in \im f$ alors $g \cdot w = g \cdot f(v) = f(g \cdot v) \in \im f$.
+  \end{expl}
+
+  \subsubsection{Structure de représentation linéaire sur $\mathrm{Hom}(V, W)$}
+
+  On fait agir $G$ par conjugaison : \begin{align*}
+    G &\longrightarrow \mathrm{Aut}(\mathrm{Hom}(V, W)) \\
+    g &\longmapsto (f \mapsto g \cdot f \cdot g^{-1})
+  .\end{align*}
+
+  \begin{obs}
+    Cela fait de $\mathrm{Hom}(V,W)$ une représentation linéaire de $G$.
+  \end{obs}
+
+  On a alors la proposition suivante.
+  \begin{prop}
+    $\mathrm{Hom}_G(V,W) = \mathrm{Hom}(V,W)^G$.
+  \end{prop}
+  \begin{prv}
+    C'est un jeu d'écriture :
+    \begin{align*}
+      f \in \mathrm{Hom}(V,W)^G \iff& g \cdot f \cdot g^{-1} = f\\
+      \iff& g \cdot f = f \cdot g\\
+      \iff& f \in \mathrm{Hom}_G(V,W)
+    .\end{align*}
+  \end{prv}
+
+
+\end{document}

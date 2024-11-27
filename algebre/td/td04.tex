@@ -1,0 +1,53 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Groupe symétrique}
+  \minitoc
+
+  \section{Exercice 1.}
+  \begin{enonce}
+    Soit $\sigma = \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\ 4 & 6 & 9 & 7 & 2 & 5 & 8 & 1 & 3 \end{pmatrix} \in \mathfrak{S}_9$.
+    Déterminer sa décomposition canonique en produit de cycles disjoints, son ordre, sa signature, une décomposition en produit de transposition ainsi que $\sigma^{100}$.
+  \end{enonce}
+  On a $\sigma = \begin{pmatrix} 1 & 4 & 7 & 8 \end{pmatrix} \begin{pmatrix} 2 & 6 & 5 \end{pmatrix}\begin{pmatrix} 3 & 9 \end{pmatrix}$.
+  Son ordre est le PPCM des ordres précédent, c'est donc $12$.
+  Sa signature est $(-1) \times 1 \times (-1) = 1$.
+  On décompose en produit de transposition chaque cycle et on conclut.
+  On calcule \[
+  \sigma^{100} = \begin{pmatrix} 1 & 4 & 7 & 8 \end{pmatrix}^{100} \begin{pmatrix} 2 & 6 & 5 \end{pmatrix}^{100}\begin{pmatrix} 3 & 9 \end{pmatrix}^{100}
+  ,\] car les cycles à supports disjoints commutent, et donc \[
+  \sigma^{100} = \begin{pmatrix} 2 & 6 & 5 \end{pmatrix} 
+  .\] 
+
+  \section{Exercice 2. \textit{Générateurs de $\mathfrak{A}_n$}}
+  \begin{enonce}
+    Soit $n \ge 3$.
+    \begin{enumerate}
+      \item Rappeler pourquoi $\mathfrak{A}_n$ est engendré par les $3$-cycles.
+      \item Démontrer que $\mathfrak{A}_n$ est engendré par les carrés d'éléments de $\mathfrak{S}_n$.
+        Est-ce que tout élément de $\mathfrak{A}_n$ est un carré dans $\mathfrak{S}_n$ ?
+      \item Démontrer que pour $n \ge 5$, $\mathfrak{A}_n$ est engendré par les bitranspositions.
+      \item Démontrer que $\mathfrak{A}_n$ est engendré par les $3$-cycles de la forme~$(1\;2\;i)$ pour $i \in \llbracket 3,n\rrbracket$.
+      \item En déduire que si $n \ge 5$ est impair, alors $\mathfrak{A}_n$ est engendré par les permutations $(1\;2\;3)$ et $(3\;4\;\cdots\; n)$ et que si $n \ge 4$ est pair, alors $\mathfrak{A}_n$ est engendré par $(1\;2\;3)$ et $(1\;2)(3\;4\;\cdots\; n)$.
+    \end{enumerate}
+  \end{enonce}
+  \begin{enumerate}
+    \item On utilise le fait que tout $\sigma \in \mathfrak{A}_n$ se décompose comme produit d'un nombre pair de transpositions.
+      Puis, on utilise les égalités 
+      \begin{itemize}
+        \item $(i\;j)(i\;k) = (i\;j\;k)$,
+        \item $(i\;j)(i\;j) = \id$,
+        \item $(i\;j)(k\;\ell) = (i\;\ell\;k)(i\;j\;k)$,
+      \end{itemize}
+      pour déterminer un produit de $3$-cycles égal à $\sigma$.
+    \item On utilise la question précédente.
+      Soit $(a\;b\;c)$ un $3$-cycle.
+      On a alors $(a\;b\;c)^4 = (a\;b\;c)$, et donc $\sigma = (a\;b\;c)^2$.
+      Ceci permet d'en déduire que les carrés de permutations engendrent $\mathfrak{A}_n$.
+  \end{enumerate}
+
+  \section{Exercice 3.}
+  \begin{enonce}
+    Soit $n \le 5$.
+  \end{enonce}
+\end{document}

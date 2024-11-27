@@ -23,3 +23,10 @@ cp algebre/dm1/main.pdf ../web/public/data/ens1/algebre-dm1.pdf
 cp algebre/td/main.pdf ../web/public/data/ens1/algebre-td.pdf
 cp algebre/td/td01.pdf ../web/public/data/ens1/algebre-td1.pdf
 cp algebre/td/td02.pdf ../web/public/data/ens1/algebre-td2.pdf
+cp algebre/td/td03.pdf ../web/public/data/ens1/algebre-td3.pdf
+cp algebre/td/td04.pdf ../web/public/data/ens1/algebre-td4.pdf
+cp algebre/td/td05.pdf ../web/public/data/ens1/algebre-td5.pdf
+cp algebre/td/td06.pdf ../web/public/data/ens1/algebre-td6.pdf
+cp algebre/td/td07.pdf ../web/public/data/ens1/algebre-td7.pdf
+cp algebre/td/td08.pdf ../web/public/data/ens1/algebre-td8.pdf
+cp algebre/td/td09.pdf ../web/public/data/ens1/algebre-td9.pdf

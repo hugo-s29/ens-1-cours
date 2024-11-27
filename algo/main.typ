@@ -3090,8 +3090,133 @@ Ceci est revenu dans la littérature.
   #h(1fr) #sym.triangle.r Thong Le et Dan Gusfeld
 
 On va étudier la solution du second papier.
+Les parenthésages sont en bijection avec les triangulations de $n$-gones.
+
+Avec l'exemple précédent, 
+#figure(
+  stack(
+    dir: ltr,
+    cetz.canvas({
+        import cetz.draw: *
+
+        set-style(stroke: (cap: "round", join: "round"))
+
+        circle((0,0), radius: 0.3, fill: blue, stroke: none, name : "a")
+        circle((0,2), radius: 0.3, fill: blue, stroke: none, name : "b")
+        circle((2,0), radius: 0.3, fill: blue, stroke: none, name : "c")
+        circle((2,2), radius: 0.3, fill: blue, stroke: none, name : "d")
+
+        content("a", text(white)[8])
+        content("d", text(white)[4])
+        content("c", text(white)[6])
+        content("b", text(white)[2])
+
+        line("a", "b")
+        line("b", "d")
+        line("d", "c")
+        line("a", "c")
+        
+        content((1, -1), [4-gone])
+    }), h(2em),
+    cetz.canvas({
+        import cetz.draw: *
+
+        set-style(stroke: (cap: "round", join: "round"))
+
+        circle((0,0), radius: 0.3, fill: blue, stroke: none, name : "a")
+        circle((0,2), radius: 0.3, fill: blue, stroke: none, name : "b")
+        circle((2,0), radius: 0.3, fill: blue, stroke: none, name : "c")
+        circle((2,2), radius: 0.3, fill: blue, stroke: none, name : "d")
+
+        content("a", text(white)[8])
+        content("d", text(white)[4])
+        content("c", text(white)[6])
+        content("b", text(white)[2])
+
+        line("a", "b")
+        line("b", "d")
+        line("d", "c")
+        line("a", "c")
+        line("c", "b")
+
+        content((1,-1), $omega(T) = 144$)
+    }), h(2em),
+    cetz.canvas({
+        import cetz.draw: *
+
+        set-style(stroke: (cap: "round", join: "round"))
+
+        circle((0,0), radius: 0.3, fill: blue, stroke: none, name : "a")
+        circle((0,2), radius: 0.3, fill: blue, stroke: none, name : "b")
+        circle((2,0), radius: 0.3, fill: blue, stroke: none, name : "c")
+        circle((2,2), radius: 0.3, fill: blue, stroke: none, name : "d")
+
+        content("a", text(white)[8])
+        content("d", text(white)[4])
+        content("c", text(white)[6])
+        content("b", text(white)[2])
+
+        line("a", "b")
+        line("b", "d")
+        line("d", "c")
+        line("a", "c")
+        line("a", "d")
+
+        content((1,-1), $omega(T) = 256$)
+    })
+  )
+)
+
+On procède par réduction : comment trianguler un $n$-gone pondéré en minimisant la somme des triangles (chacun étant le produit de ses éléments).
+
+Une idée qui peut venir est de procéder une induction.
+On sait déjà qu'il existe toujours au moins 2 éléments isolés dans la triangulation (de degré 2).
+Ceci est vrai car le _dual_ d'une triangulation est un arbre ; s'il a au moins deux éléments, il a au moins deux feuilles.
 
 
+L'algorithme de calcul d'une triangulation est le suivant :
+- si $v_1 v_2$ ou $v_1 v_3$ n'est pas une arête du $n$-gone\
+  #stack(dir: ltr)[
+      appels sur les deux sous $n$-gones 
+    ][
+    #cetz.canvas({
+      import cetz.draw: *
+      circle((0,1/2), radius: 0.5)
+      circle((0,0), radius: 0.1, fill: blue, stroke: none, name : "a")
+      circle((0,1), radius: 0.1, fill: blue, stroke: none, name : "b")
+      line("a","b")
+    })
+    ]
+- #stack(dir: ltr)[
+    retourner le minimum de 
+  ][
+  #cetz.canvas({
+    import cetz.draw: *
+    let r(angle) = {
+      return (calc.cos(angle+90deg)/2, 1/2 + calc.sin(angle+90deg)/2)
+    }
+    circle((0,1/2), radius: 0.5)
+    circle((0,0), radius: 0.1, fill: blue, stroke: none, name : "a")
+    circle((0,1), radius: 0.1, fill: blue, stroke: none, name : "b")
+    circle(r(-40deg), radius: 0.1, fill: blue, stroke: none, name : "c")
+    circle(r(+40deg), radius: 0.1, fill: blue, stroke: none, name : "d")
+    bezier-through("c", (0, 1/2), "d")
+  })
+  ][et][
+  #cetz.canvas({
+    import cetz.draw: *
+
+    let r(angle) = {
+      return (calc.cos(angle+90deg)/2, 1/2 + calc.sin(angle+90deg)/2)
+    }
+    circle((0,1/2), radius: 0.5)
+    circle((0,0), radius: 0.1, fill: blue, stroke: none, name : "a")
+    circle((0,1), radius: 0.1, fill: blue, stroke: none, name : "b")
+    circle(r(-40deg), radius: 0.1, fill: blue, stroke: none, name : "c")
+    circle(r(+40deg), radius: 0.1, fill: blue, stroke: none, name : "d")
+    line("a","b")
+  })
+  ]
 
 
 

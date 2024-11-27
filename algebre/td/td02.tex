@@ -234,6 +234,45 @@
     \end{enumerate}
   \end{enonce}
 
+  \begin{enumerate}
+    \item
+      \begin{enumerate}
+        \item On a
+          \begin{align*}
+            \pi_H^{-1}(\pi_H(K)) &= \{g \in G  \mid \pi_H(g) \in \pi_H(K)\}\\
+            &= \{g \in H  \mid gH = k H \text{ avec } k \in K\}\\
+            &= \bigcup_{k \in K} kH \\
+            &= \{kh  \mid k \in K, h \in H\}\\
+            &= KH
+          .\end{align*}
+        \item L'image directe par $\pi_H$ envoie un sous-groupe de $G$ contenant $H$ sur sous-groupe de $G / H$.
+          De plus, l'image réciproque par $\pi_H$ envoie un sous-groupe de $G / H$ sur un sous-groupe de $G$ contenant $H$.
+          Montrons la bijection puis la croissance.
+          \begin{itemize}
+            \item Si $\pi_H(K_1) = \pi_H(K_2)$ où $K_1,K_2$ sont deux sous-groupes de $G$ contenant $H$ alors \[
+                K_1 = K_1 H = \pi_H^{-1}(\pi_H(K_1)) = \pi_H^{-1}(\pi_H(K_2)) = K_2 H = K_2.
+              \]
+              D'où l'injectivité.
+            \item On sait déjà que $\pi_H : G \to G / H$ est surjective, alors l'image directe $\tilde{\pi}_H : S_G \to S_{G / H}$ où $S_G$ est l'ensemble des sous-groupes de $G$.
+            \item L'image directe et l'image réciproque par $\pi_H$ est une application croissante.
+          \end{itemize}
+      \end{enumerate}
+      \item On procède en deux temps.
+        \begin{itemize}
+          \item Soit $L \triangleleft G / H$. Pour tout $g \in G$ et tout $x \in \pi_H^{-1}(L)$, on a \[
+              \pi_H(g x g^{-1}) = (g x g^{-1})H = (gH) (xH)(gH)^{-1} \in L
+            ,\] car $L$ est distingué dans $G / H$.
+            Ainsi $x g x^{-1} \in \pi_H^{-1}(L)$ et donc $\pi_H^{-1}(L)$ est distingué dans $G$.
+          \item Soit $K \triangleleft G$ un sous-groupe distingué contenant $H$.
+            Pour tout $xH \in G / H$ et tout $k H \in \pi_H(K)$ avec $k \in K$, on a \[
+              (xH)(kH)(xH)^{-1} = (x k x^{-1})H
+            .\]
+            Comme $K \triangleleft G$, on a $x k x^{-1} \in K$ d'où $(x kx^{-1})H \in \pi_H(K)$.
+            On en déduit que $\pi_H(K)$ est distingué dans le groupe quotient $G / H$.
+        \end{itemize}
+      \item 
+  \end{enumerate}
+
   \section{Exercice 8. \textit{Combinatoire algébrique}}
 
   \begin{enonce}
@@ -303,4 +342,37 @@
       \item En déduire qu'un groupe fini n'est jamais l'union des conjugués d'un sous-groupe strict.
     \end{enumerate}
   \end{enonce}
+
+  \section{Exercice 10. \textit{Automorphismes intérieurs.}}
+  \begin{enonce}
+    Soit $G$ un groupe. Pour $g \in G$, on note $\phi_g : G \to G$ la fonction définie par $h \mapsto ghg^{-1}$.
+    On note $\mathrm{Int}(G)$ l'ensemble des $\phi_g$ pour $g \in G$.
+    \begin{enumerate}
+      \item Soit $g \in G$, montrer que $\phi_g$ est un automorphisme de groupes.
+      \item Montrer que la fonction $\phi : G \to \mathrm{Int}(G)$ qui à $g$ associe $\phi_g$ est un morphisme de groupes.
+      \item Montrer l'isomorphisme $G / \mathrm{Z}(G) \cong \mathrm{Int}(G)$ où $\mathrm{Z}(G)$ est le centre du groupe $G$.
+      \item (\textit{Plus difficile}) Montrer que si le groupe des automorphismes $\mathrm{Aut}(G)$ de $G$ est cyclique alors $G$ est abélien.
+      \item (\textit{Aussi difficile}) Supposons que $\mathrm{Aut}(G)$ est trivial. Démontrer que tous les éléments de $G$ sont d'ordre au plus $2$, puis que $G$ est soit trivial, soit isomorphe à $\mathds{Z} / 2 \mathds{Z}$.
+    \end{enumerate}
+  \end{enonce}
+
+  \section{Exercice 11.}
+  \begin{enonce}
+    Soit $n \in \mathds{N}$ et $k \in \llbracket 0, n\rrbracket$. On note $\wp_k(\llbracket 1, n \rrbracket)$ l'ensemble des parties à~$k$ éléments de $\llbracket 1, n \rrbracket$.
+    \begin{enumerate}
+      \item Montrer que $\mathfrak{S}_n$ agit naturellement sur $\wp_k(\llbracket 1, n \rrbracket)$.
+      \item Justifier que cette action est transitive.
+      \item Calculer le stabilisateur de $\llbracket 1, k \rrbracket \in \wp_k(\llbracket 1, n \rrbracket)$.
+      \item En appliquant la formule orbite-stabilisateur, retrouver la valeur de ${n\choose k}$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Posons l'action de groupes : \[
+        \forall \sigma \in \mathfrak{S}_n, \forall i \in \wp_k(\llbracket 1, n \rrbracket),\quad\quad
+        \sigma \cdot I = \sigma(I) = \{\sigma(i) \mid i \in I\} 
+      .\]
+      La partie $\sigma(I)$ contient  $k$ éléments de $\llbracket 1, n\rrbracket$.
+      Et, de plus, l'application $\sigma \mapsto (I \mapsto \sigma(I))$ est 
+  \end{enumerate}
 \end{document}
