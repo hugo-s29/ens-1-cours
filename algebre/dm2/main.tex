@@ -1,0 +1,505 @@
+\documentclass{../../td}
+
+\title{DM n°2 -- Algèbre 1}
+\author{Hugo {\scshape Salou}\\ Dept. Informatique}
+
+\newcommand\todo{
+  \color{red}
+  \begin{center}
+    \huge
+    \textbf{TODO}
+  \end{center}
+}
+
+\begin{document}
+  \maketitle
+
+  \chapter*{Exercice 1.}
+
+  \begin{enumerate}
+    \item L'idée est de montrer que les polynômes racines non réelles d'un polynôme réel sont deux à deux conjuguées, et qu'elles (une racine et sa racine conjuguée) ont même multiplicité.
+      Fixons une racine $\alpha_i$ non réelle, et posons $P = \sum_{j = 0}^n p_j X^j$ la décomposition de $P$ en monômes.
+      Alors, on a $\sum_{j = 0}^n p_j \alpha_i^j = 0$ et donc, en passant au conjugué, $\sum_{j = 0}^n \bar{p}_j \bar{\alpha}_i^j = \bar{0}$.
+      Et, comme les coefficients sont réels, on en déduit que $\sum_{j=0}^n p_j \bar{\alpha_i}^j = 0$ et donc $\bar{\alpha_i}$ est aussi une racine de $P$.
+      Ceci fonctionne quel que soit le polynôme $P$.
+      Ensuite, en posant $P = (X - \alpha_i) (X - \bar{\alpha}_i) Q$, on peut appliquer un même raisonnement sur $Q$.
+      D'où, par récurrence décroissante sur la multiplicité $m_i$, on a que $\alpha_i$ et $\bar{\alpha}_i$ ont même multiplicité.
+
+      Ceci justifie que 
+      \[
+        J^* = \{i \in \llbracket 1, d \rrbracket  \mid  \bar{\alpha}_i = \alpha_j \text{ avec } j \in J \}
+      \]et\[
+        J = \{i \in \llbracket 1, d \rrbracket  \mid  \bar{\alpha}_i = \alpha_j \text{ avec } j \in J^* \}
+      .\]
+
+      Ainsi, pour $R$ et $S$ deux polynômes de $\mathds{R}_{n-1}[X]$,
+      \begin{align*}
+        \phi(R, S) &= \overbrace{\sum_{i \in I} m_i R(\alpha_i) S(\alpha_i)}^{\in \mathds{R}} + \sum_{i \in J \cup J^*} m_i R(\alpha_i) S(\alpha_i) \\
+        &= \sum_{i \in I} m_i R(\alpha_i) S(\alpha_i) + \sum_{i \in J} m_i\big(R(\alpha_i) S(\alpha_i) + R(\bar{\alpha}_i) S(\bar{\alpha}_i)\big) \\
+        &= \sum_{i \in I} m_i R(\alpha_i) S(\alpha_i) + \sum_{i \in J} m_i\underbrace{\big(R(\alpha_i) S(\alpha_i) + \overline{R(\alpha_i)S(\alpha_i)}\big)}_{2 \mathrm{Re}\big(R(\alpha_i)S(\alpha_i)\big) \in \mathds{R}}
+      .\end{align*}
+      D'où on a bien $\phi : E \times E \to \mathds{R}$.
+    \item
+      \begin{enumerate}
+        \item Tout polynôme $P$ de $\mathds{C}[X]$ se décompose, de manière unique, en deux polynômes à coefficients réels $P_1, P_2$ tels que $P = P_1 + \mathrm{i} P_2$.
+          (On décompose chaque coefficient en partie réelle/imaginaire et on crée ainsi $P_1$ et $P_2$.)
+          On note ainsi $\mathrm{Re}(P) = P_1$ et $\mathrm{Im}(P) = P_2$.
+          Ainsi, on définit les applications
+          \[
+          \Phi :\begin{array}{|rcl}
+            H_1 & \longrightarrow& H_2\\
+            f & \longmapsto &
+            \begin{array}{|rcl}
+              \mathds{C}_{n-1}[X] & \to & \mathds{C}\\
+              P = P_1 + \mathrm{i} P_2 & \mapsto & f(P_1) + \mathrm{i} f(P_2),
+            \end{array}
+          \end{array}
+          \] 
+          et \[
+          \Psi : \begin{array}{|rcl}
+            H_2 & \longrightarrow& H_1\\
+            f & \longmapsto &
+            \begin{array}{|rcl}
+              \mathds{R}_{n-1}[X] & \to & \mathds{C}\\
+              P & \mapsto & f(P).
+            \end{array}
+          \end{array}
+          \] 
+          Vérifions la $\mathds{C}$-linéarité de ces deux applications, puis qu'elles sont l'inverse l'une de l'autre.
+          \begin{itemize}
+            \item Si $f, g \in H_1$ et $\lambda, \mu \in \mathds{C}$, alors, pour tout $P \in \mathds{C}_{n-1}[X]$, où $P = P_1 + \mathrm{i} P_2$ avec $P_1, P_2 \in \mathds{R}_{n-1}[X]$, on a 
+              \begin{align*}
+                \Phi(\lambda f + \mu g)(P) =& (\lambda f + \mu g)(P_1) + \mathrm{i} (\lambda f + \mu g)(P_2)\\
+                =& \lambda \big(f(P_1) + \mathrm{i} f(P_2)\big) + \mu \big(g(P_1) + \mathrm{i} g(P_2)\big)\\
+                =& \lambda \Phi(f)(P) + \mu \Phi(g)(P)
+              .\end{align*}
+              Ceci étant vrai quel que soit $P$, on en déduit que  $\Phi$ est  $\mathds{C}$-linéaire.
+            \item Si $f, g \in H_2$ et $\lambda, \mu \in C$, alors, quel que soit le polynôme $P \in \mathds{R}_{n-1}[X]$, on a que 
+              \begin{align*}
+                \Psi(\lambda f + \mu g)(P) &= (\lambda f + \mu g)(P) \\
+                &= \lambda f(P) + \mu g(P) \\
+                &= \lambda \Psi(f)(P) + \mu \Psi(g)(P)
+              ,\end{align*}
+              d'où la $\mathds{C}$-linéarité de $\Psi$.
+            \item Si $f \in H_1$, alors pour tout $P \in \mathds{R}_{n-1}[X]$, \[
+              \Psi(\Phi(f))(P) = \Phi(f)(P) = f(P) + \mathrm{i} f(0) = f(P)
+              ,\] par $\mathds{R}$-linéarité de $f$.
+              D'où $\Psi \circ \Phi = \mathrm{id}_{H_1}$
+            \item Si $f \in H_2$, alors pour tout $P = P_1 + \mathrm{i} P_2 \in \mathds{C}_{n-1}[X]$,
+              \begin{align*}
+                \Phi(\Psi(f))(P) &= \Psi(f)(P_1) + \mathrm{i}\Psi(f)(P_2)\\
+                &= f(P_1) + \mathrm{i} f(P_2) \\
+                &= f(P)
+              ,\end{align*}
+              par $\mathds{C}$-linéarité de $f$.
+              D'où $\Phi \circ \Psi = \mathrm{id}_{H_2}$.
+          \end{itemize}
+          On en conclut que $\Phi$ est un isomorphisme de $H_1$ à $H_2$.
+
+          Pour montrer que les formes $(\mathrm{ev}_{\alpha_i})_{i \in \llbracket 1, d\rrbracket}$ sont linéairement indépendantes dans $H_1$, on vérifie (de manière équivalente, par isomorphisme) que $(\Phi(\mathrm{ev}_{\alpha_i}))_{i \in \llbracket 1,d\rrbracket}$ sont linéairement indépendantes dans $H_2$.
+          Or, pour tout $i \in \llbracket 1,d\rrbracket$, et tout polynôme $P = P_1 + \mathrm{i} P_2 \in \mathds{C}_{n-1}[X]$, on a \[
+            \Phi(\mathrm{ev}_{\alpha_i})(P) = P_1(\alpha_i) + \mathrm{i} P_2(\alpha_i) = \widetilde{\mathrm{ev}}_{\alpha_i}(P)
+          ,\] où $\widetilde{\mathrm{ev}}_x : \mathds{C}_{n-1}[X] \to \mathds{C}$ est la fonction d'évaluation d'un polynôme complexe en $x$.
+          Et, on sait que les $(\widetilde{\mathrm{ev}}_{\alpha_i})_{i \in \llbracket 1,d\rrbracket}$ sont linéairement indépendantes dans $H_2$ car les $(\alpha_i)_{i \in \llbracket 1,d\rrbracket}$ sont distinctes.
+          On en déduit que les $( \mathrm{ev}_{\alpha_i})_{i \in \llbracket 1,d\rrbracket}$ sont linéairement indépendantes dans $H_1$.
+        \item On a trois cas à traiter.
+          Soit $Q \in \mathds{R}_{n-1}[X]$, avec la décomposition en monômes $Q = \sum_{k=0}^n q_k X^k$, où les $q_k$ sont nuls pour $k > \operatorname{deg} Q$.
+          \begin{itemize}
+            \item Soit $i \in I$. Alors, $\mathrm{ev}_{\alpha_i}(Q) = Q(\alpha_i) \in \mathds{R}$ car $\alpha_i \in \mathds{R}$.
+            \item Soit $i \in J$.
+              Alors, \[
+                \mathrm{ev}_{\alpha_i}(Q) + \mathrm{ev}_{\bar{\alpha}_i}(Q) = \sum_{k=0}^n q_k \underbrace{(\alpha_i^k + \bar{\alpha}_i^k)}_{2 \mathrm{Re}(\alpha_i^k)} \in \mathds{R}
+              .\]
+            \item Soit $i \in J^*$.
+              Alors, \[
+                \mathrm{i} (\mathrm{ev}_{\alpha_i} - \mathrm{ev}_{\bar{\alpha}_i})(Q) = \sum_{k=0}^n q_k \mathrm{i} \underbrace{(\alpha_i^k - \bar{\alpha}_i^k)}_{2 \mathrm{i}\,\mathrm{Im}(\alpha_i^k) \in \mathrm{i}\mathds{R}} \in \mathds{R}
+              .\] 
+          \end{itemize}
+          Dans chacun des cas, on a montré que $\phi_i$ est à valeurs réelles.
+
+          Pour montrer que $(\phi_i)_{i \in \llbracket 1,d\rrbracket  }$ est $\mathds{R}$-libre, soient $\lambda_1, \ldots, \lambda_d$ des \underline{réels} tels que \[
+            \lambda_1 \phi_1 + \cdots + \lambda_d \phi_d = 0
+          ,\]
+          d'où{
+            \footnotesize
+            \[
+            (\star) : \quad 0 = \sum_{i \in I} \lambda_i \mathrm{ev}_{\alpha_i} + \sum_{j \in J} (\lambda_j - \mathrm{i} \lambda_{j^*}) \mathrm{ev}_{\alpha_j}
+            + \sum_{j^* \in J^*} (\lambda_j + \mathrm{i} \lambda_{j^*}) \mathrm{ev}_{\alpha_{j^*}}
+            ,\] 
+          }
+          où l'on note $j^*$ l'unique élément de $J^*$ tel que $\alpha_{j^*} = \bar{\alpha}_j$ (et inversement pour $j$ à partir de $j^* \in J^*$).
+          On évalue $(\star)$
+           \begin{itemize}
+             \item en $\alpha_i$ pour $i \in I$, ce qui donne $\lambda_i = 0$ pour tout $i \in I$ ;
+             \item en $\alpha_j$ pour $j \in J$, ce qui donne $\lambda_j = \mathrm{i} \lambda_{j^*}$ quel que soit l'entier $j \in J$, ceci implique donc que $\lambda_j = \lambda_{j^*} = 0$ pour tout $j \in J$ car $\lambda_j \in \mathds{R}$ ;
+          \end{itemize}
+          On en conclut que 
+          \begin{itemize}
+            \item pour  $i \in I$, $\lambda_i = 0$ ;
+            \item pour  $j \in J$, $\lambda_j = 0$ ;
+            \item pour $j^* \in  J^* = \{j^*  \mid j \in J\}$, $\lambda_{j^*} = 0$.
+          \end{itemize}
+          On en conclut que la famille $(\phi_i)_{i \in \llbracket 1,d\rrbracket}$ est $\mathds{R}$-libre.
+      \end{enumerate}
+    \item
+      Pour $R \in E$, on a
+      \begin{equation}
+      q(R) = \phi(R,R) = \sum_{i \in I} m_i \phi_i(R)^2
+      + \sum_{j \in J} m_j (\phi_j(R)^2 - \phi_{j^*}(R)^2)
+      \label{ex1-q3-eq1},
+      \end{equation}
+      car \[
+      \phi_i(R)^2 = \begin{cases}
+        \mathrm{ev}_{\alpha_i}(R)^2 &\text{ si } i \in I\\
+        \mathrm{ev}_{\alpha_i}(R)^2 + \mathrm{ev}_{\alpha_{i^*}}(R)^2 + 2\mathrm{ev}_{\alpha_i}(R) \mathrm{ev}_{\alpha_{i^*}}(R) &\text{ si } i \in J\\
+        -\mathrm{ev}_{\alpha_i}(R)^2 - \mathrm{ev}_{\alpha_{i^*}}(R)^2 + 2\mathrm{ev}_{\alpha_i}(R) \mathrm{ev}_{\alpha_{i^*}}(R) &\text{ si } i \in J^*.
+      \end{cases}
+      \]
+
+      On applique ensuite le théorème d'inertie de Sylvester (car on est dans un $\mathds{R}$-espace vectoriel $E$ isomorphe à $\mathds{R}^n$) :
+      la décomposition \ref{ex1-q3-eq1} à l'aide de la famille libre $(m_i\phi_i)_{i \in \llbracket 1,d\rrbracket}$ (car pas de racine à multiplicité nulle) nous donne que la signature $(r,s)$ de~$\phi$ est $(\#I + \#J, \#J)$.
+      Finalement, on sait par dénombrement que $r + s = \#(I \sqcup J \sqcup J^*) = d$ est le nombre de racines distinctes de $P$ et $r - s = \#((I \sqcup J) \setminus J) = \#I$ est le nombre de racines réelles de $P$.
+  \end{enumerate}
+
+  \chapter*{Exercice 2.}
+
+  On notera $\mathds{k}$ le corps de caractéristique supérieure à $2$, et $E$ le $\mathds{k}$-espace vectoriel de dimension finie.
+
+  \begin{enumerate}
+    \item Comme $q$ et $q'$ sont proportionnelles et toutes deux non dégénérées, il existe $\lambda \in \mathds{k}^\times$ tel que $q = \lambda q'$.
+      Soit $x \in E$. On a l'équivalence suivante :
+      \begin{align*}
+        x \in \mathcal{C}_q &\iff q(x) = 0\\
+        &\iff \lambda q'(x) = 0\\
+        &\iff q'(x) = 0 \text{ car } \lambda \neq 0\\
+        &\iff x \in \mathcal{C}_{q'}
+      .\end{align*}
+      On a donc $\mathcal{C}_q = \mathcal{C}_{q'}$.
+    \item On commence par calculer, pour $\alpha \in \mathds{k}$, \[
+        q(\alpha u + v) = \cancel{\alpha^2\, q(u)} + q(v) + 2 \alpha\:\varphi(u,v)
+      .\] \label{ex2-q2}
+      \begin{enumerate}
+        \item On procède en deux temps. 
+          \begin{itemize}
+            \item Premièrement, on suppose $v \in \mathcal{C}_q$ et on montre ainsi l'inclusion $D_{u,v} \subseteq \mathcal{C}_q$.
+              En effet, pour tout $\alpha \in \mathds{k}$, on a \[
+                q(\alpha u+ v) = \underset{v \in \mathcal{C}_q}{\cancel{q(v)}} + 2 \alpha\:\underset{v \in H_u}{\cancel{\varphi(u,v)}} = 0
+              ,\] d'où $\alpha u + v \in \mathcal{C}_q$.
+            \item Deuxièmement, on suppose $v \not\in \mathcal{C}_q$ et, par l'absurde, soit $\alpha u + v \in \mathcal{C}_q \cap D_{u,v}$.
+              Alors, \[
+                q(v) = q(\alpha u + v) + 2 \alpha\: \cancel{\varphi(u,v)} = 0 + 0
+              \] et donc $v \in \mathcal{C}_q$ ; \textit{\textbf{absurde}}.
+              D'où, $\mathcal{C}_q \cap D_{u,v} = \emptyset$ si $v \not\in \mathcal{C}_q$.
+          \end{itemize}
+        \item \label{ex2-q2b} On procède par équivalence. Soit $\alpha \in \mathds{k}$.
+          \[
+          \alpha u + v \in \mathcal{C}_q \iff q(\alpha u + v) = 0 \iff q(v) = -2 \alpha \varphi(u,v)
+          .\] 
+          Or, $2\varphi(u,v)$ est non nul car : $\mathrm{car}(\mathds{k}) > 2$ et $v \not\in H_u$.
+          D'où,  \[
+          \alpha u + v \in \mathcal{C}_q \iff \alpha = - \frac{q(v)}{2 \varphi(u,v)} =: \alpha^\star
+          .\]
+          Ceci implique que $D_{u,v} \cap \mathcal{C}_q$ est réduit au point $\alpha^\star u + v$.
+      \end{enumerate}
+    \item 
+      \begin{enumerate}
+        \item Le raisonnement de la question~\ref{ex2-q2} peut également s'appliquer à $q'$ en remplaçant $\mathcal{C}_q$ par $\mathcal{C}_{q'}$ et $H_u$ par $H_{u'}$.
+          On a l'équivalence suivante :
+          \begin{align*}
+            v \in H_u \iff& \mathcal{C}_q \cap D_{u,v} \text{ n'est pas réduit à un seul point}\\
+            \iff& \mathcal{C}_{q'} \cap D_{u,v} \text{ n'est pas réduit à un seul point}\\
+            \iff& v \in H_u'
+          .\end{align*}
+          Dans cette équivalence, on utilise le fait que $D_{u,v}$ n'est pas réduit à un seul point.
+          On en conclut $H_u = H_u'$.
+          Mais, par définition d'hyperplan orthogonal à $u$, on a \[
+          \ker \varphi(u, \cdot) = H_u = H'_u = \ker \varphi'(u, \cdot)
+          .\]
+          Ceci implique que $\varphi(u, \cdot)$ et $\varphi'(u, \cdot)$ sont proportionnelles et ainsi il existe $\lambda_u \in \mathds{k}^\times$ (non nul pour garantir l'égalité des noyaux) tel que \[
+          \varphi'(u, \cdot) = \lambda_u \: \varphi(u, \cdot)
+          .\]
+        \item \label{ex2-q3b} Supposons $v\not\in H_u$. D'une part, par l'égalité des cônes, on sait que $\mathcal{C}_q \cap D_{u,v} = \mathcal{C}_{q'} \cap D_{u,v}$.
+          D'autre part, par la question~\ref{ex2-q2b}, ces deux intersections sont réduites à un seul point.
+          Il y a donc égalité de ces deux points : \[
+          v - \frac{q(v)}{2 \varphi(u,v)} u = v - \frac{q'(v)}{2 \varphi'(u,v)} u 
+          .\]
+          D'où, car $u \neq \{0\}$, \[
+            \varphi(u,v)\:q(v) = \lambda_u \varphi(u,v) q'(v)
+          ,\] et parce que $u \not\in H_u$, on peut simplifier par $\varphi(u,v)$.
+          On en déduit $q'(v) = \lambda_u\: q(v)$
+      \end{enumerate}
+    \item
+      \begin{enumerate}
+        \item \label{ex2-q4a} Supposons $v + w \in H_u$ et montrons que l'on a nécessairement $v + 2 w \not\in H_u$.
+          Ainsi, $\varphi(u, v + w) = 0$ et alors, \[
+          \varphi(u, v + 2 w) = \varphi(u, v + w) + \varphi(u,w) = \varphi(u,w) \underset {(*)} \neq 0
+          ,\]
+          où $(*)$ est vérifié car  $w \not\in H_u$.
+          D'où, $v + 2 w \neq 0$.
+        \item On applique l'identité de polarisation en utilisant la question~\ref{ex2-q3b}.
+
+          D'une part, on suppose $v + w \not\in H_u$, pour pouvoir appliquer~\ref{ex2-q3b}.
+          On peut utiliser l'identité de polarisation parce que $(\operatorname{car} \mathds{k}) > 2$.
+          On a
+          \begin{align*}
+            \varphi'(v,w) &= \frac{1}{2} \big( q'(v+w) - q'(v) - q'(w)\big) \\
+            &= \frac{1}{2} \big( \lambda_u q(v + w) -\lambda_u q(v) - \lambda_u q(w)\big) \\
+            &= \lambda_u \cdot \frac{1}{2} \big(q(v+w) - q(v) - q(w)\big) \\
+            &= \lambda_u \; \varphi(v,w)
+          .\end{align*}
+
+          Supposons alors $v + 2w \not\in H_u$ (disjonction de cas~\ref{ex2-q4a}).
+          Ainsi, \[
+            q'(v + 2w) = q'(v) + 4 \varphi'(v,w) + 4 q'(w)
+            ,\] d'où, où l'on remplace $q'(\cdot)$ par $\lambda_u q(\cdot)$ car $v, w, v + 2 w \not\in H_u$, et donc {\small\[
+            4 \varphi'(v,w) = \lambda_u q(v + 2w) - \lambda_u q(v) - 4\lambda_u q(w) = 4 \lambda_u\: \varphi(v,w)
+          .\]}
+
+          \vspace{-0.8em}
+          Et, $4$ est inversible car (par l'absurde) $2 \times 2 = 4$ et $\mathds{k}$ est un anneau intègre et $(\operatorname{car} k) > 2$ donc $2$ non nul.
+          D'où, l'égalité $\varphi'(v,w) = \lambda_u\: \varphi(v,w)$.
+      \end{enumerate}
+    \item Soit $n + 1$ la dimension de $E$. On considère une base $(v_i)_{i \in \llbracket 1,n\rrbracket}$ de $H$.
+      Complétons cette base en une base de $E$ avec $\mathcal{B} = (v_i)_{i \in \llbracket 0,n\rrbracket}$, où $v_0 \not\in H$.
+      De plus, considérons $\ell : E \to \mathds{k}$ une forme linéaire telle que~$\ker \ell = H$.
+      
+      Ainsi, on pose $e_i = v_i + v_0$ pour $i > 0$ et $e_0 = v_0$. La famille, notée $\mathcal{B}' = (e_i)_{i \in \llbracket 0,n\rrbracket}$, forme une base de $E$.
+      De plus, chacun des vecteurs n'est pas dans $H$. En effet, pour $e_0$, c'est par hypothèse.
+      Et, pour $e_i$ avec $i \ge 1$, on a \[
+        \ell(e_i) = \underset{v_i \in \ker \ell}{\cancel{\ell(v_i)}} + \ell(v_0) = \ell(v_0) \neq 0
+      \] car $v_0 \not\in H = \ker \ell$.
+      On en conclut que l'on a bien construit une base de $E$ dont aucun vecteur n'est dans $H$.
+
+      Considérons $H := H_u$, et la base obtenue par la construction précédente.
+      Pour tout $i,j \in \llbracket 0,n\rrbracket$, on a \[
+      \varphi'(e_i, e_j) = \lambda_u\; \varphi(e_i, e_j)
+      ,\] car $e_i, e_j \not\in H$.
+      D'où, par bilinéarité, tout $x, y \in E$, avec la décomposition $x = x_0 e_0 + \cdots + x_n e_n$ et $y = y_0 e_0 + \cdots + y_n e_n$, on a {
+        \small
+      \[
+      \varphi'(x, y) = \sum_{i,j \in \llbracket 1,n\rrbracket  } x_i\: y_j\:\varphi'(e_i, e_j) = \lambda_u \sum_{i,j \in \llbracket 0,n\rrbracket} x_i\:y_j\: \varphi(e_i, e_j) =\lambda_u\; \varphi(x, y)
+      .\]
+      }
+
+      On termine avec, quel que soit $x \in E$ \[
+      q'(x) = \varphi'(x,x) = \lambda_u\; \varphi(x,x) = \lambda_u \; q(x)
+      ,\] 
+      où $\lambda_u \in \mathds{k}^\times$ est constant,
+      d'où $q$ et $q'$ sont proportionnelles.
+  \end{enumerate}
+
+  \chapter*{Exercice 3.}
+
+  On notera $\mathds{k}$ le corps de caractéristique supérieure à $2$, et $E$ le $\mathds{k}$-espace vectoriel de dimension finie.
+
+  \begin{enumerate}
+    \item \label{ex3-q1}
+      On procède en 4 temps.
+      \begin{itemize}
+        \item "$(\text{i}) \implies (\text{ii})$". Dans une base $\mathcal{B} = (e_1, e_2)$ (en l'occurrence, c'est $(\Phi^{-1}((1, 0)), \Phi ^{-1}((0,1)))$ en notant $\Phi$ l'isomorphisme), la matrice de $q$ s'écrit \[
+              \frac{1}{2}\begin{pmatrix} 0 & 1\\ 1 & 0 \end{pmatrix} 
+          ,\]
+          car \[
+          \varphi(u e_1 + v e_2, w e_1 + x e_2) = \frac{1}{2} ((u + w)(v + x) - uv - wx) = \frac{1}{2}(ux + wv)
+          .\] 
+          On pose $a = 0$ puis $\mathcal{B}' = (2 e_1, e_2)$, et la matrice s'écrit bien \[
+            \begin{pmatrix} 0 & 1\\ 1 & a \end{pmatrix} 
+          .\]
+        \item "$(\text{ii}) \implies (\text{i})$".
+          Considérons une base $\mathcal{B} = (e_1, e_2)$ dans laquelle la matrice de $q$ s'écrit \[
+            \begin{pmatrix} 0 & 1\\ 1 & a \end{pmatrix} 
+          ,\] avec $a \in \mathds{k}$.
+          Considérons la base $\mathcal{B}' = (f_1, f_2)$ définie par \[
+          f_1 = e_1 \quad\quad \text{et} \quad\quad f_2 = e_2 - \frac{a}{2} e_1
+          .\] Dans cette base, on a 
+          \begin{itemize}
+            \item $\varphi(f_1,f_1) = \varphi(e_1, e_1) = 0$ ;
+            \item $\varphi(f_2, f_2) = \varphi(e_2, e_2) - a \varphi(e_1, e_2) + (a / 2)^2 \varphi(e_1, e_1)$ qui est nul car $\varphi(e_2, e_2) = a$ et $\varphi(e_1, e_2) = 1$ ;
+            \item $\varphi(f_1, f_2) = \varphi(e_1, e_2) - a \varphi(e_1, e_1) / 2 = 1 - 0 = 1$ et de même par symétrie de $\varphi$.
+          \end{itemize}
+          On en conclut que la matrice s'écrit \[
+            \begin{pmatrix} 0 & 1\\ 1 & 0 \end{pmatrix} 
+          ,\] c'est donc que l'on a bien l'isomorphisme avec $(\mathds{k}^2, q')$ (il suffit de diviser un des vecteurs de la base par $2$ pour obtenir le facteur $\frac{1}{2}$).
+        \item "$(\text{i}) \implies (\text{iii})$".
+          Comme pour l'implication $(\text{i}) \implies (\text{ii})$, supposons qu'il existe $\mathcal{B} = (e_1, e_2)$ dans laquelle la matrice de $q$ s'écrit \[
+              A = \frac{1}{2}\begin{pmatrix} 0 & 1\\ 1 & 0 \end{pmatrix} 
+          .\]
+          Considérons une nouvelle base $(f_1, f_2)$ définie par \[
+          f_1 = e_1 +e_2 \quad\quad \text{et}\quad\quad f_2 = e_1 - e_2
+          ,\]
+          où l'on a 
+          \begin{itemize}
+            \item $\varphi(f_1, f_1) = 2 \varphi(e_1, e_2) = 1$ ;
+            \item $\varphi(f_2, f_2) = - 2 \varphi(e_1, e_2) = -1$ ;
+            \item $\varphi(f_1, f_2) = \varphi(e_1, e_2) - \varphi(e_2, e_1) = 0$.
+          \end{itemize}
+          Dans cette base, la matrice de $q$ s'écrit donc \[
+            \begin{pmatrix} 1 & 0\\ 0 & -1 \end{pmatrix} 
+          .\]
+        \item "$(\text{iii}) \implies (\text{i})$".
+          Soit $(e_1,e_2)$ la base dans laquelle $q$ s'écrit comme la matrice diagonale $\mathrm{diag}(1, -1)$.
+          On pose la base $(f_1, f_2)$ définie par \[
+          f_1 = \frac{e_1 + e_2}{2} \quad\quad \text{et}\quad\quad f_2 = \frac{e_1 - e_2}{2}
+          .\]
+          On a donc 
+          \begin{itemize}
+            \item $\varphi(f_1, f_1) = 1^2 - 1^2 = 0$ ;
+            \item $\varphi(f_2, f_2) = 1^2 - 1^2 = 0$ ;
+            \item $\varphi(f_1, f_2) = \varphi(e_1,e_1) / 2 - \varphi(e_2, e_2) / 2 = 2 / 2 = 1$.
+          \end{itemize}
+          On obtient donc bien la matrice de la forme \[
+            \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} 
+          ,\] c'est donc que l'on a bien l'isomorphisme avec $(\mathds{k}^2, q')$ (il suffit de diviser un des vecteurs de la base par $2$ pour obtenir le facteur $\frac{1}{2}$).
+      \end{itemize}
+      Ceci démontre bien \[
+        (\text{ii}) \iff (\text{i}) \iff (\text{iii})
+      .\] 
+    \item On procède par double implications.
+      \label{ex3-q2}
+      \begin{itemize}
+        \item "$\implies$".
+          Supposons qu'il existe une base $\mathcal{B}$, que l'on indice $(e_1, \ldots, e_n, f_1, \ldots, f_n)$, dans laquelle la matrice de $q$ est égale à \[
+            \begin{pmatrix} 0_n & \mathrm{I}_n \\ \mathrm{I}_n & 0_n \end{pmatrix}
+          .\]
+          Définissions les plans par $P_i = \mathrm{Vect}(e_i, f_i)$ pour $i \in \llbracket 1,n\rrbracket$.
+          Par construction à partir de la base $\mathcal{B}$, on a bien \[
+            E = P_1 \oplus P_2 \oplus \cdots \oplus P_n
+          .\]
+          Montrons que les plans sont deux-à-deux orthogonaux.
+          Soient $i \neq j$ avec $i, j \in \llbracket 1,m\rrbracket$.
+          L'orthogonalité des deux plans $P_i$ et $P_j$ découle du fait que les vecteurs de bases de~$P_i$ et ceux de~$P_j$ sont deux à deux orthogonaux par l'interprétation matricielle.
+          Les plans sont donc bien deux à deux orthogonaux.
+          Il reste à démontrer que chaque plan vérifie les conditions de la question~\ref{ex3-q1}.
+          La matrice de $q_{|P_i}$ dans la base $\mathcal{B}_i = \{e_i,f_i\}$ de $P_i$ est égale à  
+          \[
+            \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} 
+          ,\] ce qui valide la condition (ii).
+          Ceci permet de conclure que $q$ est hyperbolique.
+        \item "$\impliedby$". Supposons $q$ hyperbolique.
+          Considérons la décomposition en plans de $E$ \[
+            E = P_1 \oplus P_2 \oplus \cdots \oplus P_n
+          \] telle que, les plans sont deux-à-deux orthogonaux et que chaque plan vérifie les conditions de la question \ref{ex3-q1}.
+          On construit une base $\mathcal{B}_i = \{e_i, f_i\}$ de chacun des plan $P_i$, puis on pose les deux familles $\mathcal{B} = \{e_1, \ldots, e_n, f_1, \ldots, f_n\}$ et~$\mathcal{C} = \{e_1, f_1, e_2, f_2, \ldots, e_n, f_n\}$, qui sont deux bases de l'espace $E$.
+          Par orthogonalité des plans et par la question~\ref{ex3-q1}, on sait que dans la base $\mathcal{C}$, la matrice de $q$ est diagonale par blocs
+          \[
+            \mathrm{Mat}_\mathcal{C}(q) = \begin{pmatrix} 
+              M & 0 & \ldots & 0\\
+              0 & M & \ddots & \vdots \\
+              \vdots & \ddots & \ddots & 0\\
+              0 & \ldots & 0 & M
+            \end{pmatrix}
+          \] 
+          où chaque bloc diagonal vaut \[
+            M = \begin{pmatrix} 0 & 1\\ 1 & 0 \end{pmatrix} 
+          .\]
+          Par changement de base (il suffit de réorganiser les lignes et les colonnes) de $\mathcal{C}$ à $\mathcal{B}$, on obtient :
+          \[
+            \mathrm{Mat}_\mathcal{B}(q) = \begin{pmatrix} 0_n & \mathrm{I}_n \\ \mathrm{I}_m & 0_n \end{pmatrix} 
+          .\]
+      \end{itemize}
+      D'où l'équivalence.
+    \item\label{ex3-q3}
+      \begin{enumerate}
+        \item Soit $x \in S$. Montrons que $x \in S^\perp$. \label{ex3-q3a}
+          Soit $y \in S$, et alors \[
+          \varphi(x,y) = \frac{1}{2}\big(q(\overbrace{x+y}^{\in S}) - q(x) - q(y)\big) = 0
+          ,\] car $S \subseteq \mathcal{C}_q$.
+          On en déduit que $x \in S^\perp$ et donc $S \subseteq S^\perp$.
+          Ainsi, comme $q$ est non dégénérée et $E$ de dimension finie, on a \[
+          \dim S^\perp = \dim E - \dim S \quad \text{et}\quad \dim S \le \dim S^\perp
+          ,\] d'où, \[
+          2(\dim S) \le \dim E
+          .\]
+        \item Soit $x \in S$ et $y \in F$. On a $\varphi(x, y) = 0$ car $x \in S$ et $y \in S^\perp$.
+          D'où l'inclusion $S \subseteq F^\perp$.
+        \item D'une part, on a l'inclusion $\ker \Phi \subseteq G^\perp$.
+          En effet, si $\Phi(x)(y) = \varphi(x,y) = 0$ pour tout $y \in G$, alors $x \in G^\perp$.
+          Et, on sait que $x \in S \subset S^\perp$.
+          Ainsi, pour $a \in G$ et $b \in S$, alors  \[
+          \varphi(x, a + b) = \varphi(x, a) + \varphi(x, b) = 0 + 0 = 0
+          ,\] car $x \in G^\perp$ et $x \in S^\perp$.
+          D'où, $x \in (G + S)^\perp = F^{\perp \perp} = F$ car $q$ non dégénérée en dimension finie.
+          Ainsi $x \in F \cap S = \{0\}$ car somme directe.
+          On en conclu que $\ker \Phi = \{0\}$ l'application est donc injective.
+
+          D'autre part, on a égalité des dimensions.
+          En effet, on a \[
+          \dim F + \dim S = \dim S^{\perp} = \dim E - \dim S
+          ,\] car $q$ non dégénérée en dimension finie et somme directe $F \oplus S = S^\perp$.
+          D'où,  \[
+          \dim F = \dim E - 2 \dim S
+          .\]
+          De même, on a \[
+          \dim G + \dim S = \dim E - \dim F
+          ,\] donc
+          \begin{align*}
+            \dim G^* &= \dim G\\
+                     &= \dim E - (\dim E - 2 \dim S) - \dim S\\
+                     &= \dim S
+          .\end{align*}
+
+          D'où $\Phi$ est un isomorphisme.
+
+        \item On considère  $(h_1, \ldots, h_m)$ une base orthogonale de $G$.
+          Et, parce que $\Phi$ est un isomorphisme et  $(h_1^*, \ldots, h_m^*)$ est une base de $G^*$, on a que  $(\Phi^{-1}(h_1^*), \ldots, \Phi^{-1}(h_m^*))$ est une base de $S$.
+          Pour construire une base $\mathcal{B}$ de $F^\perp = G \oplus S$, on considère  \[
+          \mathcal{B} = (\Phi ^{-1}(h_1^*), \ldots, \Phi ^{-1}(h_m^*), h_1, \ldots, h_m)
+          .\]
+          Ainsi, par construction, la matrice de $q_{|F^\perp}$ dans $\mathcal{B}$ est de la forme \[
+          \begin{pmatrix}
+            A & B\\
+            C & D
+          \end{pmatrix} 
+          ,\]
+          où 
+          \begin{itemize}
+            \item $d_{i,j} = \varphi(h_i,h_j)$, qui est nul si $i \neq j$ (base orthogonale) ;
+            \item $a_{i,j} = \varphi(\Phi ^{-1}(h_i^*), \Phi ^{-1}(h_j^*)) = 0$ car le premier vecteur est dans~$S$ et le second est dans $S\subseteq S^\perp$ ;
+            \item $b_{i,j} = \varphi(\Phi ^{-1}(h_i^*), h_j) = h_i^*(h_j) = \delta_{i,j}$ (où l'on note $\delta_{i,j}$ le symbole de Kronecker) ;
+            \item de même que $b_{i,j}$ pour $c_{j,i}$ par symétrie de $\varphi$.
+          \end{itemize}
+          On en déduit que la matrice de $q_{|F^\perp}$ dans la base $\mathcal{B}$ est \[
+            \begin{pmatrix} 0_m & \mathrm{I}_m\\ \mathrm{I}_m & D \end{pmatrix} 
+          ,\] où $D$ est une matrice diagonale de taille $m \times m$.
+
+          On réalise un raisonnement très similaire à la question~\ref{ex3-q2} mais en utilisant (ii) avec $a$ quelconque (au lieu de $a = 0$ comme dans la question~\ref{ex3-q2}).
+          En effet, on pose, pour tout entier $i \in \llbracket 1,m\rrbracket$, le plan $P_i = \mathrm{Vect}(h_i, \Phi ^{-1}(h_i^*))$.
+          On sait que la matrice dans chacun de ces plans est \[
+            \begin{pmatrix} 0 & 1\\ 1 & d_{i,i} \end{pmatrix}
+          ,\] qui vérifie donc les conditions de la question~\ref{ex3-q1}.
+          De plus, tous ces plans sont deux à deux orthogonaux par interprétation matricielle de l'orthogonalité des vecteurs de base des deux plans.
+
+          On en conclut que $q_{|F^\perp}$ est hyperbolique.
+      \end{enumerate}
+    \item On va montrer, par récurrence sur $m$, que si $V \le E$ de dimension $m$, alors il existe $G,H \le V$ tels que $V = G \oplus H$ avec $q_{|H}$ hyperbolique et $q_{|G}$ anisotrope et $G \perp H$ et $H \subseteq \mathcal{C}_q$.
+      \begin{itemize}
+        \item Pour $\dim V = 0$, il suffit de poser $V = \{0\} = G = H$, et on vérifie clairement les résultats demandés sur $G$ et $H$.
+        \item Pour $\dim V > 0$, soit $x \in \mathcal{C}_q \cap V \setminus \{0\}$ (si cet ensemble est vide, on démontre le résultat aisément en posant $G = V$ et $H = \{0\} = \mathcal{C}_q \cap V$).
+          Alors, parce que $\mathcal{C}_q$ est un cône, on a l'inclusion $\operatorname{Vect} x \subseteq \mathcal{C}_q$.
+
+          On décompose $V = (\operatorname{Vect} x)\overset \perp \oplus V'$ (cette décomposition est possible en complétant $(x)$ en une base de $V$ et par orthogonalisation de Gram-Schmidt $(\star)$).
+          Par hypothèse de récurrence, il existe $G',H' \le V'$ orthogonaux tels que la forme $q_{|G'}$ est anisotrope, et la forme $q_{|H'}$ est hyperbolique et $V' = G' \oplus H'$, où l'on a $H' \subseteq \mathcal{C}_q$.
+
+          Ainsi, $H' \oplus (\operatorname{Vect} x) \subseteq \mathcal{C}_q$ et c'est un sous-espace vectoriel, on peut donc lui appliquer la question~\ref{ex3-q3}.
+          On considère donc  un sous-espace vectoriel $H \le H' \oplus (\operatorname{Vect} x)$ de dimension maximale tel que $q_{|H}$ est hyperbolique (on a noté~$H = F^\perp$ dans la question \ref{ex3-q3}).
+          Et, on lui considère un supplémentaire orthogonal $G$ dans $V$ (qui existe par l'argument $(\star)$).
+          Il ne reste qu'à justifier que $q_{|G}$ est anisotrope.
+          Par l'absurde, si~$y \in \mathcal{C}_{q_{|G}} \setminus \{0\}$, alors $H \oplus (\operatorname{Vect} y) \le H' \oplus (\operatorname{Vect} y)$ vérifie que la restriction de $q$ est hyperbolique, mais de dimension plus grande, \textit{\textbf{absurde !}}
+          On en conclut que $q_{|G}$ est anisotrope.
+      \end{itemize}
+      On conclut en utilisant le raisonnement pour $V = E$.
+  \end{enumerate}
+
+  \vfill
+
+  \begin{center}
+    \color{deepblue}
+    \boxed{
+      \textbf{\textit{Fin du DM.}}
+    }
+  \end{center}
+
+
+  \vfill
+
+\end{document}
