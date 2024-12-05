@@ -1,0 +1,67 @@
+\documentclass{../../notes}
+
+\title{DM n°4 -- FDI}
+\author{Hugo \scshape Salou}
+
+\usepackage{multicol}
+
+\def\algorithmicrequire{\textbf{Entrée}}
+\def\algorithmicensure{\textbf{Sortie}}
+\def\algorithmicend{\textbf{fin}}
+\def\algorithmicif{\textbf{si}}
+\def\algorithmicthen{\textbf{alors}}
+\def\algorithmicelse{\textbf{sinon}}
+\def\algorithmicelsif{\algorithmicelse\ \algorithmicif}
+\def\algorithmicendif{\algorithmicend\ \algorithmicif}
+\def\algorithmicfor{\textbf{pour}}
+\def\algorithmicprocedure{\textbf{Procédure}}
+\def\algorithmicfunction{\textbf{Fonction}}
+\def\algorithmicforall{\textbf{pour tout}}
+\def\algorithmicdo{\textbf{faire}}
+\def\algorithmicendfor{\algorithmicend\ \algorithmicfor}
+\def\algorithmicwhile{\textbf{tant que}}
+\def\algorithmicendwhile{\algorithmicend\ \algorithmicwhile}
+\def\algorithmicloop{\textbf{répéter indéfiniment}}
+\def\algorithmicendloop{\algorithmicend\ \algorithmicloop}
+\def\algorithmicrepeat{\textbf{répéter}}
+\def\algorithmicuntil{\textbf{jusqu'à que}}
+\def\algorithmicprint{\textbf{afficher}}
+\def\algorithmicreturn{\textbf{retourner}}
+\def\algorithmictrue{\textsc{vrai}}
+\def\algorithmicfalse{\textsc{faux}}
+
+\let\Sortie\Ensure
+\let\Entree\Require
+\floatname{algorithm}{\color{deepblue}Algorithme}
+
+\begin{document}
+  \maketitle
+
+  Dans la première solution, on n'utilise pas de quine mais on instaure une propriété très utilise : "pour toute lettre du programme, elle apparait exactement 10 fois". Pour réaliser cela, on cache beaucoup de caractères dans un commentaire (comme par exemple \texttt{f} ou \texttt{[}).
+
+  \begin{lstlisting}[language=Python,caption=Solution sans quine au DM 4,breaklines=true,postbreak=\mbox{\textcolor{deepblue}{$\hookrightarrow$}\space}]
+import sys; print(10 if sys.argv[1] in "\"\\\n#ev.famit ;p(:n0[rl)1s]gyo" else 0) #eeeeeeevvvvvvvv........ffffffffaaaaaaaammmmmmmmiiiiitttttttppppppp\\\\\\((((((((:::::::::"""""""nnnnnn0000000[[[[[[[[rrrrrr;;;;;;;;llllllll))))))))1111111ssss]]]]]]]]ggggggggyyyyyyyoooooooo
+#
+#
+#
+#
+#
+#
+#
+#
+#
+  \end{lstlisting}
+  C'est moche, pas toujours généralisable, mais ça répond au DM.
+
+  J'ai quand même proposé une seconde solution à ce DM n'utilisant pas cette technique mais utilisant une quine, c'est à dire un programme qui s'écrit lui même.
+  La solution est encore plus concise mais utilise des "\textit{string format}" (à la \texttt{printf} en C).
+
+  \begin{lstlisting}[language=Python,caption=Solution avec quine au DM 4, breaklines=true, postbreak=\mbox{\textcolor{deepblue}{$\hookrightarrow$}\space}]
+x="x=%c%s%c;y=x%c(chr(34),x,chr(34),chr(37),chr(10));import sys;print(y.count(sys.argv[1]))%c";y=x%(chr(34),x,chr(34),chr(37),chr(10));import sys;print(y.count(sys.argv[1]))
+  \end{lstlisting}
+
+  L'idée est simple, dans \texttt{x}, on écrit le code source.
+  Il contient trois parties, le début de la définition de \texttt{x} (\textit{i.e.} "\texttt{x = }"), la chaîne \texttt{x} elle-même (où l'on utilise ici le "\texttt{\%s}" pour interpoler la valeur de \texttt{x} dedans), et enfin le reste du code (la partie qui compte le nombre de caractères, et qui l'affiche en console).
+  Les caractères problématiques, comme les guillemets, les retours à la ligne (parce que le \textit{backslash}), le symbole pour-cent, \textit{etc}, sont interpolés aussi dans la chaîne avec~"\texttt{\%c}" et la fonction \texttt{ord} qui prend un entier et renvoie le caractère ASCII à l'indice donné dans la table.
+\end{document}
+
