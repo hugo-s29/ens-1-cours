@@ -1,0 +1,144 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Logiques de programmes}
+  \minitoc
+
+  \section{Logique de Floyd--Hoare.}
+
+  On considère des formules logiques, des \textit{assertions} (définies formellement ci-après), que l'on notera $A$, $A'$, $B$, \textit{etc}.
+  Un triplet de Hoare est de la forme $\{A\} c \{A'\}$ (la notation est inhabituelle pour les triplets, mais c'est une notation commune dans le cas des triplets de Hoare), où l'on nomme $A$ la \textit{précondition} et $A'$ la \textit{postcondition}.
+
+  \begin{exm}
+    Les triplets suivants sont des triplets de Hoare :
+    \begin{enumerate}
+      \item $\{x \ge 1\} y \ceq x + 2 \{x\ge 1 \land y \ge 3\}$ qui est une conclusion naturelle ;
+      \item $\{n \ge 1\} c_\text{fact} \{r = n!\}$ où l'on note $c_\text{fact}$ la commande \[
+          x \ceq n\col z \ceq 1 \col \while {(x > 0)} {(z \ceq z \times x \col x \ceq x - 1)}\;
+        ,\]
+        qui calcule naturellement la factorielle de $n$ ;
+      \item $\{x < 0\} c \{\mathtt{true}\}$ même s'il ne nous dit rien d'intéressant (tout état mémoire vérifie $\mathtt{true}$) ;
+      \item $\{x < 0\}c \{\mathtt{false}\}$ qui diverge dès lors que $x < 0$.
+    \end{enumerate}
+  \end{exm}
+
+  On considère un ensemble $I \ni i$ infini d'\textit{index}, des "inconnues".
+  On commence par définir les expressions arithmétiques étendues \[
+    a ::= \ubar{k}  \mid a_1 \oplus a_2  \mid x  \mid i
+  ,\]
+  puis définit les \textit{assertions} par la grammaire ci-dessous :
+  \[
+    A ::= bv  \mid A_1 \lor A_2  \mid A_1 \land A_2 \mid a_1 \ge a_2  \mid \exists i, A
+  .\]
+
+  On s'autorisera à étendre, implicitement, les opérations réalisées dans les expressions arithmétiques, et les comparaisons effectuées dans les assertions.
+
+  On ajoute la liaison d'$\alpha$-conversion : les assertions $\exists i, x = 3 * i$ et~$\exists j, x = 3 * j$ sont $\alpha$-équivalentes.
+  On note $i\ell(A)$ l'ensemble des index libres de l'assertion~$A$, et on dira que $A$ est \textit{close} dès lors que~$i\ell(A) = \emptyset$.
+  On note aussi $A[\sfrac{k}{i}]$ l'assertion $A$ où $k \in \mathds{Z}$ remplace~$i \in I$.
+
+  \begin{defn}
+    Considérons $A$ close et $\sigma \in \mathcal{M}$.
+    On définit par induction sur $A$ (4 cas) une relation constituée de couples $(\sigma, A)$, notés  $\sigma \models A$ ("$\sigma$ satisfait $A$"), et en notant $\sigma \not\models A$ lorsque~$(\sigma, A)$ n'est pas dans la relation :
+    \begin{itemize}
+      \item $\sigma \models \mathtt{true}$ $\forall \sigma \in \mathcal{M}$ ;
+      \item $\sigma \models A_1 \lor A_2$ si et seulement si $\sigma \models A_1$ ou $\sigma \models A_2$ ;
+      \item $\sigma \models a_1 \ge a_2$ si et seulement si on a $a_1, \sigma \Downarrow k_1$ et $a_2, \sigma \Downarrow k_2$ et $k_1 \ge k_2$ ;
+      \item $\sigma \models \exists i, A$ si et seulement s'il existe $k \in \mathds{Z}$ tel que $\sigma \models A[\sfrac{k}{i}]$.
+    \end{itemize}
+
+    On écrit $\models A$ ("$A$ est valide") lorsque pour tout $\sigma$ tel que $\mathrm{dom}(\sigma) \supseteq \mathsf{vars}(A)$, on a $\sigma \models A$.
+  \end{defn}
+
+  \subsection{Règles de la logique de Hoare : dérivabilité des triplets de Hoare.}
+
+  Les triplets de Hoare, notés $\{A\} c \{A'\}$ avec $A$ et $A'$ closes, où $A$ est \textit{précondition}, $c$ est commande $\mathsf{IMP}$, et $A'$ est \textit{postcondition}.
+  On définit une relation $\vdash \{A\} c \{A'\}$ sur les triplets de Hoare :
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{\vdash \{A \land b\} c_1 \{A'\}}
+      \hypo{\vdash \{A \land \lnot b\} c_2 \{A'\}}
+      \infer 2{\vdash \{A\} \ifte b {c_1} {c_2} \{A'\}}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \infer 0{\vdash \{A\} \mathtt{skip} \{A\}}
+    \end{prooftree}\\[1em]
+    \begin{prooftree}
+      \hypo {\vdash \{A\} c_1 \{A'\} }
+      \hypo {\vdash \{A'\} c_2 \{A''\} }
+      \infer 2{\vdash \{A\} c_1 \col c_2 \{A''\}}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\vdash \{A \land b\} c \{A\}}
+      \infer 1{\{A\} \while b c \{A \land \lnot B\}}
+    \end{prooftree}\\[1em]
+    \begin{prooftree}
+      \hypo{\{A\}  c \{A'\}}
+      \infer[left label={\begin{array}{l}\models B \implies A\\ \models A' \implies B'\end{array}}] 1{\{B\}  c \{B'\}}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \infer 0{\{A[\sfrac{a}{x}]\} x \ceq a \{A\} }
+    \end{prooftree}
+  \end{gather*}
+  La dernière règle semble à l'envers, mais c'est parce que la logique de Hoare fonctionne fondamentalement à l'envers.
+
+  Dans la règle de dérivation pour la boucle \texttt{while}, l'assertion manipulée, $A$, est un \textit{invariant}.
+
+  L'avant dernière règle s'appelle la \textit{règle de conséquence} : on ne manipule pas le programme, la commande, mais plutôt les pré- et post-conditions.
+
+  La relation $\vdash \{A\} c \{A'\}$ s'appelle la \textit{sémantique opérationnelle} de $\mathsf{IMP}$.
+
+  \begin{defn}
+    On définit la relation de \textit{satisfaction}, sur les triplets de la forme $\{A\} c \{A'\}$ avec $A,A'$ closes, avec
+    $\sigma \models \{A\}c \{A'\}$ si et seulement si dès lors que $\sigma \models A$ et $c, \sigma \Downarrow \sigma'$ alors on a~$\sigma' \models A'$. 
+
+    On définit ensuite la relation de \textit{validité} par $\models \{A\} c \{A'\}$ si et seulement si pour tout $\sigma \in \mathcal{M}$, $\sigma \models \{A\}c \{A'\}$.
+  \end{defn}
+
+  \begin{thm}[Correction de la logique de Hoare.]
+    Si $\vdash \{A\} c \{A'\}$ alors $\models \{A\} c \{A'\}$.
+  \end{thm}
+  \begin{prv}
+    On procède par induction sur $\vdash \{A\} c \{A'\}$. Il y a 6 cas.
+    \begin{itemize}
+      \item \textsl{Règle de conséquence}.
+        On sait \[
+        \models B \implies A \text{ et }\models A' \implies B'
+        ,\]et l'hypothèse d'induction.
+        On doit montrer $\models \{B\}c \{B'\}$.
+        Soit $\sigma$ tel que $\models B$, et supposons $c, \sigma \Downarrow \sigma'$.
+        On a $\models A$ par hypothèse.
+        Puis, par hypothèse d'induction, $\sigma' \models A'$ et donc $\sigma' \models B'$.
+      \item \textsl{Règle \texttt{while}}.
+        Considérons $c = \while b {c_0}$.
+        On sait par induction que $\models \{A \land b\}c_0 \{A\}$ et l'hypothèse d'induction.
+        Il faut montrer $\models \{A\} \while b {c_0} \{A \land \lnot b\}$, c'est à dire, si $\sigma \models A$ et $(\star) : \while b {c_0}, \sigma \Downarrow \sigma'$ alors $\sigma' \models A \land \lnot b$.
+        Pour montrer cela, il est nécessaire de faire une induction sur la dérivation de $(\star)$, "sur le nombre d'itérations dans la boucle".
+      \item Autres cas en exercice.
+    \end{itemize}
+  \end{prv}
+
+
+  Le sens inverse, la réciproque, s'appelle la \textit{complétude}.
+
+  \begin{rmk}
+    Concrètement, on écrit des programmes annotés.
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[anchor=west,text width=4.5cm]
+        \node[color=deepred] (A) {$\{x \ge 1\}$};
+        \node[below of=A, color=deepblue] (B) {$\{x \ge 1 \land x + 2 + x + 2 \ge 6\}$};
+        \node[below of=B] (C) {$y \ceq x + 2 \col$};
+        \node[below of=C, color=deepblue] (D) {$\{x \ge 1 \land y + y \ge 6\}$};
+        \node[below of=D] (E) {$z \ceq y + y$};
+        \node[below of=E, color=deepblue] (F) {$\{x \ge 1 \land z \ge 6\}$};
+        \node[below of=F, color=deepred] (G) {$\{x \ge 1 \land z \ge 6\}$};
+        \draw[-implies,deepred,double equal sign distance] (A.west) to[bend right] (B.west);
+        \draw[-implies,deepred,double equal sign distance] (F.west) to[bend right] (G.west);
+      \end{tikzpicture}
+    \end{figure}
+  \end{rmk}
+\end{document}

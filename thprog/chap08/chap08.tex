@@ -1,0 +1,423 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Un petit langage impératif, $\mathsf{IMP}$.}
+  \minitoc
+
+  \section{Syntaxe et sémantique opérationnelle.}
+  On se donne $\mathds{Z}$ et $\mathrm{V}$ un ensemble infini de variables $\mathsf{IMP}$, notées~$x, y, z$.
+  On définit plusieurs grammaires :
+
+  \begin{description}
+    \item[Arith.] Les expressions arithmétiques $a ::= \ubar{k}  \mid a_1 \oplus a_2  \mid x$ ;\footnote{Et on arrêtera rapidement de mettre des barres sous les entiers et d'entourer les plus.}\showfootnote
+    \item[Valeurs booléennes.] $bv ::= \mathtt{true}  \mid \mathtt{false}$ ;
+    \item[Bool.] Les expressions booléennes $b ::= bv  \mid b_1 \land b_2  \mid a_1 \ge a_2$ ;
+    \item[Com.] Les commandes $c ::= x \ceq a  \mid c_1 \col c_2  \mid \ifte b {c_1} {c_2}  \mid \while b c  \mid \mathtt{skip}$.
+  \end{description}
+
+  Sans explicitement le dire, on s'autorise à étendre les expressions arithmétiques avec, par exemple, les produits, les soustractions.
+  De même pour les expressions booléennes.
+
+  On définit, par induction sur $c$, $\mathsf{Vars}(c)$ l'ensemble des variables dans la commande $c$. Il y a 5 cas.
+
+  \begin{exm}
+    La commande \[
+      z \ceq 1 \col \while {(x > 0)} {(z \ceq z \times x \col x \ceq x - 1)}
+    \]
+    représente un programme calculant la factorielle d'un nombre $x$.
+    On le notera $c_\text{fact}$.
+  \end{exm}
+
+  \subsection{Sémantique opérationnelle à grands pas.}
+
+  \begin{defn}[États mémoire]
+    On se donne $\mathcal{M}$ un ensemble de dictionnaires, notés $\sigma, \sigma'$, \textit{etc} sur $(\mathrm{V}, \mathds{Z})$.
+
+    Si $x \in \mathrm{dom}(\sigma)$ et $k \in \mathds{Z}$ on note $\sigma [x \mapsto k]$ l'état mémoire $\sigma'$ défini par 
+     \begin{itemize}
+      \item $\sigma'(x) := k$ ;
+      \item  $\sigma'(y) := \sigma(y)$ si  $y \in \mathrm{dom}(\sigma) \setminus \{x\}$.
+    \end{itemize}
+
+    Ici, on \textit{écrase} la valeur de $x$ dans l'état mémoire $\sigma$.
+  \end{defn}
+
+  On définit $c, \sigma \Downarrow \sigma'$ (l'évaluation de $c$ sur $\sigma$ produit $\sigma'$, $c$ fait passer de $\sigma$ à $\sigma'$) par les règles d'inférences ci-dessous
+  \begin{gather*}
+    \begin{prooftree}
+      \infer 0 [\mathcal{E}_{\mathrm{skip}}] { \mathtt{skip}, \sigma \Downarrow \sigma}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo {c_1, \sigma \Downarrow \sigma'}
+      \hypo {c_2, \sigma' \Downarrow \sigma''}
+      \infer 2[\mathcal{E}_\mathrm{seq}] {c_1 \col c_2, \sigma \Downarrow \sigma''}
+    \end{prooftree}
+  \end{gather*}
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{\color{deeppurple}b,\sigma \Downarrow \mathtt{true}}
+      \hypo{c_1, \sigma \Downarrow \sigma'}
+      \infer 2[\mathcal{E}_\mathrm{it}]{\ifte b {c_1} {c_2}, \sigma \Downarrow \sigma'}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\color{deeppurple}b,\sigma \Downarrow \mathtt{false}}
+      \hypo{c_2, \sigma \Downarrow \sigma'}
+      \infer 2[\mathcal{E}_\mathrm{if}]{\ifte b {c_1} {c_2}, \sigma \Downarrow \sigma'}
+    \end{prooftree}
+  \end{gather*}
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{{\color{deepblue} a, \sigma \Downarrow k}}
+      \infer[left label={\sigma' = \sigma[x \mapsto k]}] 1[\mathcal{E}_\mathrm{aff}] {x \ceq a, \sigma \Downarrow \sigma'}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\color{deeppurple}b, \sigma \Downarrow \mathtt{false}}
+      \infer 1[\mathcal{E}_\mathrm{wf}]{\while b c, \sigma \Downarrow \sigma}
+    \end{prooftree}
+  \end{gather*}
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{\color{deeppurple}b, \sigma \Downarrow \mathtt{true}}
+      \hypo{c, \sigma \Downarrow \sigma'}
+      \hypo{\while b c, \sigma' \Downarrow \sigma''}
+      \infer 3[\mathcal{E}_\mathrm{wf}]{\while b c, \sigma \Downarrow \sigma''}
+    \end{prooftree}
+  \end{gather*}
+  où l'on a deux autres relations (la couleur a de l'importance ici) :
+  \begin{itemize}
+    \item \textit{l'évaluation des expressions arithmétiques} {\color{deepblue} $a, \sigma \Downarrow k$} ($a$ s'\textit{évalue} en $k$ dans $\sigma$)
+      \begin{gather*}
+        \begin{prooftree}
+          \infer 0{\color{deepblue} \ubar{k}, \sigma \Downarrow k}
+        \end{prooftree}
+        \quad\quad
+        \begin{prooftree}
+          \infer[left label={\sigma(x) = k}] 0{\color{deepblue} x, \sigma \Downarrow k}
+        \end{prooftree}
+        \quad\quad
+        \begin{prooftree}
+          \hypo{\color{deepblue} a_1, \sigma \Downarrow k_1}
+          \hypo{\color{deepblue} a_2, \sigma \Downarrow k_2}
+          \infer[left label={k = k_1 + k_2}] 2{\color{deepblue}a_1 \oplus a_2, \sigma \Downarrow k}
+        \end{prooftree}
+      \end{gather*}
+    \item \textit{l'évaluation des expressions booléennes} {\color{deeppurple} $b, \sigma \Downarrow bv$} ($b$ s'\textit{évalue} en $bv$ dans $\sigma$)
+      \begin{gather*}
+        \begin{prooftree}
+          \infer 0{\color{deeppurple}bv, \sigma \Downarrow bv}
+        \end{prooftree}
+        \quad\quad
+        \begin{prooftree}
+          \hypo{\color{deeppurple}b_1, \sigma \Downarrow bv_1}
+          \hypo{\color{deeppurple}b_2, \sigma \Downarrow bv_2}
+          \infer[left label={bv = \mathtt{true} \text{ ssi } bv_1 \text{ et } bv_2}] 2{\color{deeppurple}b_1 \land b_2, \sigma \Downarrow bv}
+        \end{prooftree}
+      \end{gather*}
+      \begin{gather*}
+        \begin{prooftree}
+          \hypo{\color{deepblue} a_1, \sigma \Downarrow k_1}
+          \hypo{\color{deepblue} a_2, \sigma \Downarrow k_2}
+          \infer[left label={bv = \mathtt{true} \text{ ssi } k_1 \ge k_2}] 2{\color{deeppurple}a_1 \ge a_2, \sigma \Downarrow bv.}
+        \end{prooftree}
+      \end{gather*}
+  \end{itemize}
+
+  \begin{rmk}[des "variables" partout !]~
+    \begin{itemize}
+      \item Les variables dans $\mathsf{FUN}$ sont les paramètres des fonctions, elles peuvent être liées, libres, et on peut procéder à de l'$\alpha$-conversion.\footnote{C'est similaire au cas de la variable $x$ dans $\int_0^7 f(x)\;\mathrm{d}x$.}
+      \item Les variables d'unification sont des inconnues. Il y a une notion de substitution, mais pas de liaison.
+      \item Les variables dans $\mathsf{IMP}$ sont des cases mémoire, des registres, et il n'y a pas de liaison.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{rmk}
+    Soit $c$ une commande, et $\sigma \in \mathcal{M}$.
+    Il peut arriver que, quel que soit $\sigma' \in \mathcal{M}$, on n'ait pas $c, \sigma \Downarrow \sigma'$,
+    soit parce que $\mathrm{dom}(\sigma)$ est trop petit, et l'exécution se bloque ;
+    soit parce que le programme diverge, par exemple \[
+      \while {\mathtt{true}} {\mathtt{skip}}
+    \]
+    diverge car on n'a pas de dérivation finies :
+    \[
+    \begin{prooftree}
+      \hypo{\color{deeppurple} \mathtt{true}, \sigma \Downarrow \mathtt{true}}
+      \infer 0{\mathtt{skip}, \sigma \Downarrow \sigma}
+      \hypo{\while {\mathtt{true}} {\mathtt{skip}}, \sigma \Downarrow {?}}
+      \infer 3[\mathcal{E}_\mathrm{wt}]{\while {\mathtt{true}} {\mathtt{skip}}, \sigma \Downarrow {?}}
+    \end{prooftree}
+    .\] 
+  \end{rmk}
+
+  On peut définir des petits pas pour $\mathsf{IMP}$ (vu plus tard en cours, ou en TD), mais on s'intéresse plus à une autre sémantique, la \textit{sémantique dénotationnelle}.
+
+  \section{Sémantique dénotationnelle de $\mathsf{IMP}$.}
+
+  \begin{figure}[H]
+    \centering
+
+    \begin{tikzpicture}
+      \node (1) {$c$};
+      \node[right=2cm of 1] (2) {fonction partielle $\mathcal{M} \rightharpoonup \mathcal{M}$};
+      \node[below=1cm of 2] (3) {~\hspace{1cm}relation binaire sur $\mathcal{M}$ déterministe/fonctionnelle};
+      \draw[->] (1) -- (2) node[midway, above] {$\mathcal{D}$};
+      \draw[<->] (2) -- (3);
+    \end{tikzpicture}
+  \end{figure}
+
+  On définit les relations
+  \begin{itemize}
+    \item ${\color{deepblue}\mathcal{D}(a)} \subseteq \mathcal{M} \times \mathds{Z}$ fonctionnelle ;
+    \item ${\color{deeppurple}\mathcal{D}(b)} \subseteq \mathcal{M} \times \{\mathtt{true},\mathtt{false}\}$ fonctionnelle ;
+    \item $\mathcal{D}(c) \subseteq \mathcal{M} \times \mathcal{M}$ fonctionnelle.
+  \end{itemize}
+  On ne traitera que la définition de $\mathcal{D}(c)$, les autres sont laissées en exercice.
+
+  On définit $\mathcal{D}(c)$ par induction sur $c$, il y a 5 cas.
+  \begin{itemize}
+    \item $\mathcal{D}(\mathtt{skip}) = \{(\sigma, \sigma)\}$ ;
+    \item \small$\mathcal{D}(x \ceq a) = \{(\sigma, \sigma')  \mid x \in \mathrm{dom}(\sigma), \sigma' = \sigma[x \mapsto k] \text{ et  } (\sigma, k) \in {\color{deepblue}\mathcal{D}(a)}\}$ ;
+    \item \footnotesize $\mathcal{D}(\ifte b {c_1} {c_2}) = \{(\sigma, \sigma'  \mid (\sigma, \mathtt{true}) \in {\color{deeppurple}\mathcal{D}(b)}, (\sigma, \sigma') \in \mathcal{D}(c_1))\}  \cup {}$\\
+        $\phantom{\mathcal{D}(\ifte b {c_1} {c_2}) ={}}\{(\sigma, \sigma'  \mid (\sigma, \mathtt{false}) \in {\color{deeppurple}\mathcal{D}(b)}, (\sigma, \sigma') \in \mathcal{D}(c_2))\}$ ;
+        \item $\mathcal{D}(c_1 \ceq c_2) = \{(\sigma, \sigma'')  \mid \exists \sigma', (\sigma, \sigma') \in \mathcal{D}(c_1) \text{ et } (\sigma', \sigma'') \in \mathcal{D}(c_2)\}$ ;\footnote{C'est la composée de $\mathcal{D}(c_2)$ avec $\mathcal{D}(c_1)$.}\showfootnote
+        \item $\mathcal{D}(\while b c) = {???}$.
+  \end{itemize}
+
+  Pour la sémantique dénotationnelle de la boucle \texttt{while}, 
+  on s'appuie sur l'"équivalence" des commandes \[
+    \while b c \quad\quad\text{et}\quad\quad \ifte b {(c \ceq \while b c)} {\mathtt{skip}}.
+  \]
+  On introduit, pour $\mathsf{R} \subseteq \mathcal{M} \times \mathcal{M}$, la relation
+  \begin{align*}
+    F(\mathsf{R}) &{}=\quad \{(\sigma,\sigma)  \mid (\sigma, \mathtt{false}) \in {\color{deeppurple}\mathcal{D}(b)}\} \\
+    &\quad{}\cup \{(\sigma, \sigma')  \mid (\sigma, \mathtt{true}) \in {\color{deeppurple}\mathcal{D}(b)}, \exists \sigma', (\sigma, \sigma') \in \mathcal{D}(c) \text{ et } (\sigma', \sigma'') \in \mathsf{R} \} 
+  .\end{align*}
+  On a envie de définir $\mathcal{D}(\while b c)$ comme un point fixe de $F$.
+
+  L'ensemble des relations binaires fonctionnelles sur $\mathcal{M}$ \textbf{n'est pas} un treillis complet (à cause se $\mathsf{R}_1 \cup \mathsf{R}_2$ qui n'est pas nécessairement fonctionnelle).
+  On ne peut donc pas appliquer le théorème de Knaster-Tarski.
+
+  En revanche, c'est un domaine : si $e_0 \subseteq e_1 \subseteq \cdots \subseteq e_n \subseteq \cdots$ alors l'union $\bigcup_{i \ge 0} e_i$ existe.
+  L'inclusion $e \subseteq e'$ signifie que $e'$ est "plus définie" que $e$.
+  L'ensemble des relations fonctionnelles sur $\mathcal{M}$ est donc un domaine avec $\bot = \emptyset$.
+  On sait donc que, pour toute fonction $F$ continue, alors $F$ admet un point fixe, qui est égal à \[
+  \emptyset \cup F(\emptyset) \cup  F^2(\emptyset) \cup  \cdots = \bigcup_{i\ge 0} F^i(\emptyset)
+  .\]
+
+  La fonction $F$ définie plus haut est continue, ce qui nous permet de définir \[
+  \mathcal{D}(\while b c) = \bigcup_{i \ge 0} F^i(\emptyset)
+  .\]
+
+  \begin{exm}
+    On considère $c_0 = \while {x \neq 3} x \ceq x - 1$.
+    Ainsi, la fonction $F$ définie avant $c = c_0$ est
+    \begin{align*}
+      F_0(\mathsf{R}) &{}= \quad\{(\sigma, \sigma)  \mid \sigma(x) = 3\}\\
+      &\quad\cup \{(\sigma, \sigma'')  \mid \sigma(x) \neq 3, \exists \sigma', \sigma = [x \mapsto \sigma(x) - 1], (\sigma,\sigma') \in \mathsf{R}\} 
+    .\end{align*}
+    On a 
+    \begin{itemize}
+      \item \footnotesize $F_0^0(\emptyset) = \{(\sigma, \sigma)  \mid \sigma(x) = 3\}$  ;
+      \footnotesize\item $F_0^1(\emptyset) = \{(\sigma, \sigma)  \mid \sigma(x) = 3\} \cup \{(\sigma, \sigma')  \mid \sigma' = [x \mapsto 3], \sigma(x) = 4\} $ ;
+      \item \footnotesize$F_0^2(\emptyset) = \{(\sigma, \sigma)  \mid \sigma(x) = 3\} \cup \{(\sigma, \sigma')  \mid \sigma' = [x \mapsto 3], \sigma(x) \in \{4,5\} \} $  ;
+      \item \footnotesize$F_0^2(\emptyset) = \{(\sigma, \sigma)  \mid \sigma(x) = 3\} \cup \{(\sigma, \sigma')  \mid \sigma' = [x \mapsto 3], \sigma(x) \in \{4,5,6\} \} $ ;
+      \item \textit{etc}.
+    \end{itemize}
+    On a bien \[
+    \emptyset\subseteq F_0(\emptyset) \subseteq F^2_0(\emptyset) \subseteq \cdots 
+    .\]
+
+    Si $\sigma(x) = 0$, alors quel que soit $\sigma'$, on a $(\sigma, \sigma') \not\in \mathcal{D}(c_0)$.
+  \end{exm}
+
+  \begin{exm}
+    Ainsi défini, \[
+      \mathcal{D}(\while {\mathtt{true}} {\mathtt{skip}}) = \emptyset
+    .\]
+  \end{exm}
+
+  \begin{thm}
+    On a $c, \sigma \Downarrow \sigma'$ si et seulement si $(\sigma, \sigma') \in \mathcal{D}(c)$.
+  \end{thm}
+  \begin{prv}[Éléments de preuve]
+    \begin{itemize}
+      \item "$\implies$" Par induction sur la relation $c, \sigma \Downarrow \sigma'$.
+      \item "$\impliedby$" Par induction sur $c$,
+        où l'on utilise le résultat suivant :
+        \[
+        \forall n, \quad (\sigma, \sigma') \in F^n(\emptyset) \implies c, \sigma  \Downarrow \sigma'
+        .\]
+    \end{itemize}
+  \end{prv}
+
+  \begin{lem}
+    Quels que soient $c, \sigma, \sigma_1$, si $c, \sigma, \sigma_1$ alors, \[
+    \forall \sigma_2, \quad c, \sigma \Downarrow \sigma_2 \implies \sigma_1 = \sigma_2
+    .\]
+  \end{lem}
+  \begin{prv}
+    Une mauvaise idée est de procéder par induction sur $c$.
+    Il y a 5 cas, et dans le cas  \texttt{while}, ça bloque parce que la relation grands pas n'est pas définie par induction sur $c$ dans le cas \texttt{while}.
+
+    On procède par induction sur $c, \sigma \Downarrow \sigma_1$.
+  \end{prv}
+
+  De manière générale, avec $\mathsf{IMP}$, on ne montre pas des résultats de la forme $c, \sigma \Downarrow \sigma' \implies \mathcal{P}$ par induction sur $c$, car cela ne fonctionne pas, on n'a pas les bonnes hypothèses.
+  On procède par induction sur la relation $c, \sigma \Downarrow \sigma'$.
+
+  \section{Coinduction.}
+
+  On retourne sur le théorème de Knaster-Tarski pour la définition d'ensembles et de relations.
+  En notant $E$ l'ensemble ambiant, on travaille dans le treillis complet $(\wp(E), \subseteq)$, avec des fonctions $f$ croissantes dans $\wp(E)$.
+  Le théorème de Knaster-Tarski nous donne ainsi le plus petit pré-point fixe de $f$, que l'on notera $\mu f$.
+  Le principe de la preuve par induction est ainsi :
+  \begin{center}
+    si $A \subseteq E$ vérifie $f(A) \subseteq A$ alors on a $\mu f \subseteq A$.
+  \end{center}
+  De plus, si $f$ est continue (car $(\wp(E), \subseteq)$ est un domaine), alors on peut calculer explicitement ce plus petit (pré)-point fixe avec la formule $\bigcup_{n \in \mathds{N}} f^n(\emptyset)$.
+  On part du "bas" et on ajoute des éléments un par un.
+
+  \begin{exm}
+    Pour l'exemple de $\mathsf{nat}$, on a \[
+    \forall A \subseteq E, \quad\quad f(A) = \{\mathtt{O}\} \cup \{\mathtt{S}\ x  \mid x \in A\}
+    ,\]
+    c'est une fonction continue, et on a \[
+    \mu f = \{\mathtt{S}^n \mathtt{O}  \mid  n\in \mathds{N}\}
+    ,\] avec $\mathtt{S}^n\ x = \mathtt{S}\ \mathtt{S}\ \cdots \ \mathtt{S}\ x$ et la convention $\mathtt{S}^0\ x = x$.
+    En effet, on a  l'appartenance de $\mathtt{S}^n \mathtt{O} \in \bigcup_{m \in \mathds{N}} f^m(\emptyset)$ et $f(\{\mathtt{S}^n\ \mathtt{O}\}) = \{\mathtt{S}^{n+1}\ \mathtt{O}\}$.
+  \end{exm}
+
+  \begin{rmk}[Remarque fondamentale !]
+    Considérons un treillis complet $(E, \sqsubseteq)$.
+    Alors, le treillis $(E, \sqsupseteq)$ est complet, où l'on note~$y \sqsupseteq x$ dès lors que $x \sqsubseteq y$ (on renverse l'ordre).
+
+    Un majorant pour $\sqsubseteq$ est un minorant pour $\sqsupseteq$ et inversement.
+    Ainsi, le plus plus petit des majorants $\bigsqcup_\sqsubseteq A$ pour $\sqsubseteq$ est le plus petit des minorants $\bigsqcap_\sqsupseteq A$ pour $\sqsupseteq$.
+    Réciproquement, le plus petit des majorants pour $\sqsubseteq$, $\bigsqcap_{\sqsubseteq} A$ est égal au plus grand majorant pour la relation $\sqsupseteq$, $\bigsqcup_{\sqsupseteq} A$.
+  \end{rmk}
+
+  On se place ainsi sur le treillis complet $(\wp(E), \supseteq)$.
+  Une fonction est croissante pour $\subseteq$ si et seulement si elle est croissante pour $\supseteq$ (\textit{\textbf{attention}}, elle n'est pas décroissance pour cette deuxième relation).
+  Appliquons le théorème de Knaster-Tarski sur ce nouveau treillis complet à une fonction croissante.
+  Le théorème nous fournis un pré-point fixe pour l'ordre $\supseteq$ (\textit{i.e.} qui vérifie $f(A) \supseteq A$), c'est-à-dire un post-point fixe pour l'ordre $\subseteq$ (\textit{i.e.} qui vérifie $A \subseteq f(A)$).
+  Et, c'est le plus petit point fixe pour $\supseteq$, donc le plus grand point fixe pour $\subseteq$, que l'on notera $\nu f$.
+
+  Avec le théorème de point fixe sur les domaines, et en supposant $f$ continue, on calcule explicitement que le plus grand point fixe $\nu f$ vaut l'intersection $\bigcap_{n \in \mathds{N}} f^n(E)$.
+  On part du haut, et on nettoie progressivement, on raffine notre partie de $E$.
+
+  Ce que l'on a fait là, cela s'appelle de la \textit{\textbf{coinduction}}.
+
+  \begin{exm}
+    Par exemple, on définit $\mathsf{conat}$ par coinduction.
+    En Rocq, cela donne le code ci-dessous.
+    \begin{lstlisting}[language=coq,caption=Définition de $\mathsf{conat}$]
+  CoInductive $\mathsf{conat}$ : Set := cO | cS (n : $\mathsf{conat}$).
+    \end{lstlisting}
+
+    Pour illustrer le "nettoyage" effectué dans la définition coinductive, on considère une feuille étiquetée par le mot "\texttt{banane}".
+    A-t-on $\mathtt{cS}\ \mathtt{banane} \in \mathsf{conat}$ ?
+    Premièrement, on a $\mathtt{cS}\ \mathtt{banane} \in E$ car $E$ est l'ensemble (très grand) des arbres étiquetés par des chaînes de caractères.
+    Deuxièmeement, on a $\mathtt{cS}\ \mathtt{banane} \in f(E)$ car c'est le successeur de $\mathtt{banane} \in E$.
+    Troisièmement, et c'est là où ça casse, on a $\mathtt{cS\ banane} \not\in f^2(E)$ parce que $\mathtt{banane} \not\in f(E)$.
+    
+
+    Avec la fonction $f$ définie précédemment, on a \[
+    f^n (E) = \{\mathtt{cO}, \mathtt{cS}\ \mathtt{cO}, \ldots, \mathtt{cS}^{n-1}\ \mathtt{cO}\} \cup \{\mathtt{cS}^n \ x  \mid  x \in E\} 
+    .\]
+
+    Ainsi, on récupère tous les entiers de $\mathsf{nat}$, mais d'autres entiers (oui, il y en a plusieurs) infinis, ayant ainsi une dérivation infinie.
+    Par exemple, il existe $\omega \in \mathsf{conat}$ tel que $\omega = \mathtt{cS}\ \omega$.
+    En Rocq, pour le définir, on ferai :
+    \begin{lstlisting}[language=coq,caption={Définition de $\omega$, un entier infini}]
+  CoFixpoint $\omega$ := cS $\omega$
+    \end{lstlisting}
+    Pour montrer que $\omega \in \mathsf{conat}$, il faut et il suffit de montrer l'inclusion $\{\omega\}\subseteq f(\{\omega\} ) = \{\mathtt{cO}, \mathtt{cS}\ \omega\} = \{\mathtt{cO}, \omega\}$, qui est vraie, et on a ainsi $\{\omega\} \subseteq \mathsf{conat}$.
+  \end{exm}
+
+  Le principe de la preuve par coinduction permet d'établir qu'un ensemble est contenu dans le plus grand point fixe.
+  Avec le treillis des parties muni de $\subseteq$, cela permet de montrer que $A \subseteq E$ est inclus dans le plus grand post-point fixe de $f$ et, pour cela, il suffit de montrer que $A \subseteq f(A)$, c'est-à-dire que $A$ est un post-point fixe de $f$.
+  C'est ce que l'on a fait dans l'exemple avec $\omega$.
+
+  Par coinduction, on peut par exemple montrer que l'on a, pour tous états mémoire $\sigma, \sigma'$, \[
+    \while {\mathtt{true}} {\mathtt{skip}}, \sigma \Downarrow \sigma'
+  .\] 
+
+  \section{Divergences en $\mathsf{IMP}$.}
+
+  On donne une définition coinductive de la divergence en $\mathsf{IMP}$, que l'on notera $c, \sigma \Uparrow$ avec les règles 
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{c_1, \sigma \Uparrow}
+      \infer 1{c_1 \col c_2, \sigma \Uparrow}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{c_1, \sigma \Downarrow \sigma'}
+      \hypo{c_2, \sigma' \Uparrow}
+      \infer 2{c_1 \col c_2, \sigma \Uparrow}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{b, \sigma \Downarrow \mathtt{true}}
+      \hypo{c_1, \sigma \Uparrow}
+      \infer 2{\ifte b {c_1} {c_2}, \sigma \Downarrow}
+    \end{prooftree}\\[1em]
+    \begin{prooftree}
+      \hypo{b, \sigma \Downarrow \mathtt{false}}
+      \hypo{c_2, \sigma \Uparrow}
+      \infer 2{\ifte b {c_1} {c_2}, \sigma \Downarrow}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{b, \sigma \Downarrow \mathtt{true}}
+      \hypo{c, \sigma \Uparrow}
+      \infer 2{\while b c, \sigma \Uparrow}
+    \end{prooftree}\\[1em]
+    \begin{prooftree}
+      \hypo{b, \sigma \Downarrow \mathtt{true}}
+      \hypo{c, \sigma \Downarrow \sigma'}
+      \hypo{\while b c, \sigma' \Uparrow}
+      \infer 3{\while b c, \sigma \Uparrow}
+    \end{prooftree}
+  \end{gather*}
+
+  On n'a pas de règle pour la divergence si $b, \sigma \Downarrow \mathtt{false}$, car dans ce cas là, on ne peut pas diverger (c'est équivalent à un $\mathtt{skip}$).
+
+  Le plus grand point fixe ne contient que des dérivations infinies, qui correspondent à des exécutions divergentes d’un programme $\mathsf{IMP}$ à partir d’un état mémoire donné.
+  En effet, ceci vient du fait que, si on interprète ces règles comme des règles inductives, la relation obtenue est l'ensemble vide\ldots
+
+
+  \section{$\mathsf{IMP}$ avec tas/gros tableau.}
+
+  La syntaxe des commandes de $\mathsf{IMP}$ avec tas est définie par la grammaire 
+  \begin{align*}
+    c ::= \ &x \ceq a  \mid \mathtt{skip}  \mid c_1 \col c_2  \mid \ifte b {c_1} {c_2}  \mid \while b c\\
+          &x \ceq [a]  \mid [x_1] \ceq a  \mid x \ceq \mathtt{alloc}(k)  \mid \mathtt{free}(a).
+  \end{align*}
+  Les expressions arithmétiques et booléennes restent inchangées.
+
+  \begin{rmk}
+    C'est un langage impératif de bas niveau : on manipule de la mémoire directement.
+    On ne s'autorise pas tout, cependant. On ne s'autorise pas, par exemple, \[
+      [x + i + 1] \ceq [t + i] + [t + i - 1]
+    ,\] mais on demande d'écrire \[
+      x \ceq [t+i]\col y \ceq [t + i - 1] \col [x + i + 1] \ceq x + y
+    .\]
+  \end{rmk}
+
+  \subsection{Sémantique dénotationnelle.}
+
+  \begin{defn}[États mémoire]
+    Un état mémoire est la donnée de 
+    \begin{itemize}
+      \item $\sigma$ un \textit{registre}, c-à-d un dictionnaire sur $(\mathrm{V}, \mathds{Z})$ ;
+      \item $h$ un \textit{tas}, c-à-d un dictionnaire sur $(\mathds{N}, \mathds{Z})$, c'est un gros tableau.\footnote{On appelle parfois $\mathsf{IMP}$ avec tas, $\mathsf{IMP}$ avec tableau.}
+    \end{itemize}
+
+    On définit $h[k_1 \mapsto k_2]$ que si $k_1 \in \mathrm{dom}(h)$ et alors il vaut le dictionnaire où l'on assigne $k_2$ à $k_1$.
+    
+    On définit $h_1 \uplus h_2$ que si $\mathrm{dom}(h_1) \cap \mathrm{dom}(h_2) = \emptyset$ et vaut l'union de dictionnaires $h_1$ et $h_2$.
+  \end{defn}
+\end{document}

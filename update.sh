@@ -9,6 +9,11 @@ cp thprog/chap01/chap01.pdf ../web/public/data/ens1/thprog-chap01.pdf
 cp thprog/chap02/chap02.pdf ../web/public/data/ens1/thprog-chap02.pdf
 cp thprog/chap03/chap03.pdf ../web/public/data/ens1/thprog-chap03.pdf
 cp thprog/chap04/chap04.pdf ../web/public/data/ens1/thprog-chap04.pdf
+cp thprog/chap05/chap05.pdf ../web/public/data/ens1/thprog-chap05.pdf
+cp thprog/chap06/chap06.pdf ../web/public/data/ens1/thprog-chap06.pdf
+cp thprog/chap07/chap07.pdf ../web/public/data/ens1/thprog-chap07.pdf
+cp thprog/chap08/chap08.pdf ../web/public/data/ens1/thprog-chap08.pdf
+cp thprog/chap09/chap09.pdf ../web/public/data/ens1/thprog-chap09.pdf
 
 cp integ/main.pdf ../web/public/data/ens1/integ.pdf
 
@@ -18,8 +23,10 @@ cp categ/dm2/main.pdf ../web/public/data/ens1/categ-dm2.pdf
 cp fdi/dm1/main.pdf ../web/public/data/ens1/fdi-dm1.pdf
 cp fdi/dm2/main.pdf ../web/public/data/ens1/fdi-dm2.pdf
 cp fdi/dm3/main.pdf ../web/public/data/ens1/fdi-dm3.pdf
+cp fdi/dm4/main.pdf ../web/public/data/ens1/fdi-dm4.pdf
 
 cp algebre/dm1/main.pdf ../web/public/data/ens1/algebre-dm1.pdf
+cp algebre/dm2/main.pdf ../web/public/data/ens1/algebre-dm2.pdf
 cp algebre/td/main.pdf ../web/public/data/ens1/algebre-td.pdf
 cp algebre/td/td01.pdf ../web/public/data/ens1/algebre-td1.pdf
 cp algebre/td/td02.pdf ../web/public/data/ens1/algebre-td2.pdf

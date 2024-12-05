@@ -1,0 +1,237 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Sémantique opérationnelle des expressions arithmétiques avec déclarations locales ($\mathsf{LEA}$).}
+  \minitoc
+
+  On suppose donnés $\mathds{Z}$ les entiers relatifs et $\mathcal{V}$ un ensemble infini de variables (d'identifiants/d'identificateurs/de noms).
+
+  On définit $\mathsf{LEA}$ par la grammaire suivante :
+  \[
+  a ::= \ubar k  \mid a_1 \oplus a_2  \mid\letin x {a_1} {a_2} \mid  x
+  ,\]
+  où $x \in \mathcal{V}$ et $k \in \mathds{Z}$.
+
+  En Rocq, on peut définir :
+  \begin{lstlisting}[language=Coq,caption=Définition inductive de $\mathsf{LEA}$]
+Inductive $\mathsf{LEA}$ : Set :=
+| $\mathtt{Cst}$ : $\mathds{Z}$ -> $\mathsf{LEA}$
+| $\mathtt{Add}$ : $\mathsf{LEA}$ -> $\mathsf{LEA}$ -> $\mathsf{LEA}$
+| $\mathtt{Let}$ : $\mathcal{V}$ -> $\mathsf{LEA}$ -> $\mathsf{LEA}$ -> $\mathsf{LEA}$
+| $\mathtt{Var}$ : $\mathcal{V}$ -> $\mathsf{LEA}$.
+  \end{lstlisting}
+
+  \begin{exm}
+    Voici quelques exemples d'expressions avec déclarations locales :
+    \begin{enumerate}
+      \item $\letin x 3 x \oplus x$ ;
+      \item $\letin x {\ubar 2} \letin y {x \oplus \ubar 2} x \oplus y$ ;
+      \item $\letin x {(\letin y {\ubar 5} y \oplus y)} (\letin z {\ubar 6} z \oplus \ubar 2) \oplus x $ ;
+      \item $\letin {\tikzmarknode{xodef}x} {\ubar 7 \oplus \ubar 2} (\letin {\tikzmarknode{xidef}x} 5 {\tikzmarknode{xiused1}x \oplus \tikzmarknode{xiused2}x}) \oplus \tikzmarknode{xoused}x$.
+    \begin{tikzpicture}[overlay, remember picture,shorten >= 5pt,shorten <= 5pt,]
+      \draw[->] (xidef.south) to[bend right=15] (xiused1.south);
+      \draw[->] (xidef.south) to[bend right=15] (xiused2.south);
+      \draw[->] (xodef.south) to[bend right=15] (xoused.south);
+    \end{tikzpicture}
+    \end{enumerate}
+    \vspace{0.5cm}
+  \end{exm}
+
+  \section{Sémantique à grands pas sur $\mathsf{LEA}$.}
+  On définit une relation d'\textit{évaluation} ${\Downarrow} : \mathsf{LEA} * \mathds{Z}$\footnote{On surcharge encore les notations.}
+  définie par :
+  \[
+  \begin{prooftree}
+    \infer 0{\ubar k \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{a_1\Downarrow k_1}
+    \hypo{a_2\Downarrow k_2}
+    \infer[left label={k=k_1+k_2}] 2{a_1 \oplus a_2 \Downarrow k}
+  \end{prooftree}
+  ,\] et on ajoute une règle pour le $\letin x \ldots \ldots$ :
+  \[
+  \begin{prooftree}
+    \hypo{a_1 \Downarrow k_1}
+    \hypo{a_2\left[\sfrac{\ubar{k}_1}{x}\right] \Downarrow k_1}
+    \infer 2{(\letin x {a_1} {a_2}) \Downarrow k_2}
+  \end{prooftree}
+  .\]
+  On note ici $a[\sfrac{\ubar{k}}{x}]$ la substitution de $\ubar k$ à la place de $x$ dans l'expression $a$.
+  Ceci sera défini après.
+
+  Attention : on n'a pas de règles de la forme \[
+    \cancel{
+      \begin{prooftree}
+        \infer 0{x \Downarrow \redQuestionBox}
+      \end{prooftree}
+    }
+  ,\]
+  les variables sont censées disparaitre avant qu'on arrivent à elles.
+
+  \begin{defn}
+    Soit $a \in \mathsf{LEA}$.
+    L'ensemble des \textit{variables libres} d'une expression $a$ noté $\Vl(a)$, et est défini par induction sur $a$ de la manière suivante :
+    \begin{itemize}
+      \item $\Vl(\ubar k) = \emptyset$ ;
+      \item $\Vl(x) = \{x\}$ ;
+      \item $\Vl(a_1 \oplus a_2) = \Vl(a_1) \cup \Vl(a_2)$ ;
+      \item $\Vl(\letin x {a_1} {a_2}) = \Vl(a_1) \cup (\Vl(a_2) \setminus \{x\})$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    \[
+      \Vl(\letin {\tikzmarknode{xdef}x} {\ubar3} \letin {\tikzmarknode{ydef}y} {\tikzmarknode{xused}x \oplus \ubar2} \tikzmarknode{yused}y \oplus (z \oplus \underline{15})) = \{z\} 
+    .\] 
+    \begin{tikzpicture}[overlay, remember picture,shorten >= 5pt,shorten <= 5pt,]
+      \draw[<-] (xdef.south) to[bend right] (xused.south);
+      \draw[<-] (ydef.north) to[bend left] (yused.north);
+    \end{tikzpicture}
+  \end{exm}
+
+  \begin{defn}
+    Une expression $a \in \mathsf{LEA}$ est \textit{close} si $\Vl(a) = \emptyset$.
+    On note $\mathsf{LEA}_0 \subseteq \mathsf{LEA}$ l'ensemble des expressions arithmétiques de closes.
+  \end{defn}
+
+  \begin{defn}
+    Soient $a \in \mathsf{LEA}$, $x \in \mathcal{V}$ et $k \in \mathds{Z}$.
+    On définit par induction sur $a$ (\textit{quatre cas}) le résultat de la \textit{substitution} de $x$ par~$\ubar k$ dans $a$, noté $a[\sfrac{\ubar k}{x}]$ de la manière suivante :
+    \begin{itemize}
+      \item $\ubar{k'}[\sfrac{\ubar k}{x}] = \ubar{k'}$ ;
+      \item $(a_1 \oplus a_2)[\sfrac{\ubar k}{x}] = (a_1[\sfrac{\ubar k}{x}]) \oplus (a_2[\sfrac{\ubar k}{x}])$ ;
+      \item $y[\sfrac{\ubar k}{x}] = \begin{cases}
+          \ubar k \quad& \text{si}\ x = y\\
+          y \quad& \text{si}\ x \neq y\: ;
+      \end{cases}$
+    \item $(\letin y {a_1} {a_2})[\sfrac{\ubar k}{x}] = \begin{cases}
+        \letin y {a_1[\sfrac{\ubar k}{x}]} a_2 & \text{si}\ x = y\\
+        \letin y {a_1[\sfrac{\ubar k}{x}]} a_2[\sfrac{\ubar k}{x}] & \text{si}\ x \neq y.
+    \end{cases}$
+    \end{itemize}
+  \end{defn}
+
+  \section{Sémantique à petits pas sur $\mathsf{LEA}$.}
+
+  On définit la relation ${\to} \subseteq \mathsf{LEA} * \mathsf{LEA}$ inductivement par :
+  \[
+  \begin{prooftree}
+    \infer[left label={k = k_1 + k_2}] 0[\mathcal{A}]{\ubar{k}_1 \oplus \ubar{k}_2 \to \ubar{k}}
+  \end{prooftree},
+  \]\[
+  \begin{prooftree}
+    \hypo{a_2 \to a_2'}
+    \infer 1[\mathcal{C}_\mathrm{d}]{a_1 \oplus a_2 \to a_1 \oplus a_2'}
+  \end{prooftree}
+  \quad\text{et}\quad
+  \begin{prooftree}
+    \hypo{a_1 \to a_1'}
+    \infer 1[\mathcal{C}_\mathrm{g}]{a_1 \oplus \ubar k \to a_1' \oplus \ubar k}
+  \end{prooftree}
+  ,\] 
+  puis les nouvelles règles pour le $\letin x \ldots \ldots$ :
+  \[
+  \begin{prooftree}
+    \hypo{a_1 \to a_1'}
+    \infer 1[\mathcal{C}_\mathrm{l}]{\letin x {a_1} {a_2} \to \letin x {a_1'} {a_2}}
+  \end{prooftree}
+  \] 
+  \[
+  \begin{prooftree}
+    \infer 0{\letin x {\ubar k} a \to a[\sfrac{\ubar k}{x}]}
+  \end{prooftree}
+  .\]
+
+  On peut démontrer l'équivalence des sémantiques à grands pas et à petits pas.
+
+  \section{Sémantique contextuelle pour $\mathsf{LEA}$.}
+
+  On définit les contextes d'évaluations par la grammaire suivante :
+  \begin{align*}
+    E ::= \ &\ [\;]\\
+          \mid&\ a \oplus E\\
+          \mid&\ E \oplus \ubar k\\
+          \mid&\ \letin x E a
+  .\end{align*}
+  % À FAIRE : Refaire la présentation de cette grammaire
+
+  On définit \textit{deux} relations $\mapsto_\mathrm{a}$ et $\mathrel{\color{deepblue}\mapsto}$ par les règles :
+  \[
+  \begin{prooftree}
+    \infer[left label={k = k_1 + k_2}] 0{\ubar k_1 \oplus \ubar k_2 \mapsto_\mathrm{a} k_2}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \infer 0 {\letin x {\ubar k} a \mapsto_\mathrm{a} a[\sfrac{\ubar k}{x}]}
+  \end{prooftree}
+  ,\]
+  et \[
+  \begin{prooftree}
+    \hypo{a \mapsto_\mathrm{a} a'}
+    \infer 1{E[a] \mathrel{\color{deepblue}\mapsto} E[a']}
+  \end{prooftree}
+  .\] 
+
+
+  \section{Sémantique sur $\mathsf{LEA}$ avec environnement.}
+
+  \begin{defn}
+    Soient $A$ et $B$ deux ensembles.
+    Un \textit{dictionnaire} sur $(A,B)$ est une fonction partielle à domaine fini de $A$ dans $B$.
+
+    Si $D$ est un dictionnaire sur $(A,B)$, on note $D(x) = y$ lorsque $D$ associe $y \in B$ à $x \in A$.
+
+    Le domaine d'un dictionnaire $D$ est \[
+    \mathrm{dom}(D) = \{x \in A \mid \exists y \in B, D(x) = y \} 
+    .\]
+
+    On note $\emptyset$ le dictionnaire vide.
+
+    Pour un dictionnaire $D$ sur $(A,B)$, deux éléments $x \in A$ et $y \in B$, on note $D[x \mapsto y]$ est le dictionnaire $D'$ défini par 
+    \begin{itemize}
+      \item $D'(x) = y$ ;
+      \item $D'(z) = D(z)$ pour $z \in \mathrm{dom}(D)$ tel que $z \neq x$.
+    \end{itemize}
+  \end{defn}
+
+  On ne s'intéresse pas à la construction d'un tel type de donné, mais juste son utilisation.
+
+  On se donne un ensemble $\mathrm{Env}$ d'\textit{environnements} notés $\mathcal{E}, \mathcal{E}', \ldots$ qui sont des dictionnaires sur $(\mathcal{V}, \mathds{Z})$.
+
+  \subsection{Sémantique à grands pas sur $\mathsf{LEA}$ avec environnements.}
+
+  On définit la relation ${\Downarrow} \subseteq \mathsf{LEA} * \mathrm{Env} * \mathds{Z}$, noté $a, \mathcal{E} \Downarrow k$ ("$a$ s'évalue en $k$ dans $\mathcal{E}$") défini par \[
+  \begin{prooftree}
+    \infer 0{\ubar k, \mathcal{E} \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{a_1, \mathcal{E} \Downarrow k_1}
+    \hypo{a_2, \mathcal{E} \Downarrow k_2}
+    \infer[left label={k = k_1 + k_2}] 2{a_1 \oplus a_2, \mathcal{E} \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \infer[left label={\mathcal{E}(x) = k}] 0{x, \mathcal{E} \Downarrow k}
+  \end{prooftree}
+  ,\] 
+  \[
+  \begin{prooftree}
+    \hypo{a_1, \mathcal{E} \Downarrow k_1}
+    \hypo{a_2, \mathcal{E}[x \mapsto k_1] \Downarrow k_2}
+    \infer 2{\letin x {a_1} {a_2} \Downarrow k_2}
+  \end{prooftree}
+  .\]
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Dans cette définition, on n'a pas de substitutions (c'est donc plus facile à calculer).
+      \item Si $\Vl(a) \subseteq \mathrm{dom}(\mathcal{E})$, alors il existe $k \in \mathds{Z}$ tel que $a, \mathcal{E} \Downarrow k$.
+      \item On a $a\Downarrow k$ (sans environnement) si, et seulement si $a, \emptyset \Downarrow k$ (avec environnement).
+    \end{itemize}
+  \end{rmk}
+
+  Pour les petits pas avec environnements, c'est un peu plus compliqué\ldots On verra ça en TD. (Écraser les valeurs dans un dictionnaire, ça peut être problématique avec les petits pas.)
+\end{document}

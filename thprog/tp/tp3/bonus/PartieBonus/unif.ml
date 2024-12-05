@@ -20,7 +20,7 @@ let unify_step: (subst * problem) -> (subst * problem) = function
   | _, ((Op(a, _), Op(b, _)) :: _) when a <> b -> raise Not_unifyable
   | s, ((Op(_, l), Op(_, l')) :: p) ->
       begin
-        try (s, List.fold_left2 (fun acc u x -> (u,x)::acc) p l l')
+        try (s, List.fold_left2 (fun acc u x -> (u,x)::acc) p l l' |> List.rev)
         with Invalid_argument _ -> raise Not_unifyable
       end
   | s, ((Var x, Var x') :: p) when x = x' -> (s, p)

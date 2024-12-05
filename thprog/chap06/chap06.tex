@@ -1,0 +1,456 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Un petit langage fonctionnel : $\mathsf{FUN}$.}
+  \minitoc
+  
+  On se rapproche de notre but final en considérant un petit langage fonctionnel, nommé $\mathsf{FUN}$.
+
+  On se donne l'ensemble des entiers relatifs $\mathds{Z}$ et un ensemble infini de variables $\mathcal{V}$.
+  L'ensemble des expressions de $\mathsf{FUN}$, notées $e$, $e'$ ou $e_i$,  est défini 
+  par la grammaire suivante :
+  \[
+    e ::= k  \mid e_1 + e_2  \mid \underbrace{\fun x e}_{\mathclap{\text{Fonction / Abstraction}}} \mid \overbrace{e_1\ e_2}^{\mathclap{\text{Application}}}  \mid x
+  .\]
+
+  \begin{note}
+    On simplifie la notation par rapport à $\mathsf{EA}$ ou $\mathsf{LEA}$ : on ne souligne plus les entiers, on n'entoure plus les plus.
+
+    On notera de plus $e_1\ e_2\ e_3$ pour $(e_1\ e_2)\ e_3$.
+    Aussi, l'expression~$\fun {x\ y} e$ représentera l'expression $\fun x (\fun y e)$.
+    On n'a pas le droit à plusieurs arguments pour une fonction, mais on applique la curryfication.
+  \end{note}
+
+  \section{Sémantique opérationnelle "informellement".}
+
+  \begin{exm}
+    Comment s'évalue $(\fun x x + x)(7 + 7)$ ?
+    \begin{itemize}
+      \item D'une part, $7 + 7$ s'évalue en $14$.
+      \item D'autre part, $(\fun x x + x)$ s'évalue en elle même.
+      \item On procède à une substitution de $(x + x)[\sfrac{14}{x}]$ qui s'évalue en 28.
+    \end{itemize}
+  \end{exm}
+
+  \begin{exm}
+    Comment s'évalue l'expression \[
+      (\overbrace{(\fun f \underbrace{(\fun x x + (f\ x))}_B)}^A\ \underbrace{(\fun y y + y)}_C)\ 7\ 
+    ?\]
+    On commence par évaluer $A$ et $C$ qui s'évaluent en $A$ et $C$ respectivement.
+    On continue en calculant la substitution 
+    \[
+      (\fun x x + (f\ x))[\sfrac{\fun y y + y}{f}]
+    ,\] ce qui donne \[
+      (\fun x x + ((\fun y y + y)\ x))
+    .\]
+    Là, on \textbf{ne simplifie pas}, car c'est du code \textit{dans} une fonction.
+    On calcule ensuite la substitution \[
+      (x + ((\fun y y + y)\ x))[\sfrac{7}{x}]
+    ,\]
+    ce qui donne \[
+      7 + ((\fun y y + y)\ 7)
+    .\]
+    On termine par la substitution \[
+      (y + y)[\sfrac{7}{y}] = 7 + 7
+    .\]
+    On conclut que l'expression originelle s'évalue en $21$.
+      
+  \end{exm}
+
+  \begin{rmk}
+    Dans $\mathsf{FUN}$, le résultat d'un calcul (qu'on appellera \textit{valeur}) n'est plus forcément un entier, ça peut aussi être une fonction.
+
+    L'ensemble des valeurs, notées $v$, est défini par la grammaire \[
+      v ::= k  \mid \fun x e
+    .\]
+    \textsc{Les fonctions sont des valeurs !} Et, le "contenu" la fonction n'est pas forcément une valeur.
+
+    On peut remarquer que l'ensemble des valeurs est un sous-ensemble des expressions de $\mathsf{FUN}$.
+  \end{rmk}
+
+  \section{Sémantique opérationnelle de $\mathsf{FUN}$ (version 1).}
+
+  \begin{defn}
+    On définit l'ensemble des \textit{variables libres} $\Vl(e)$ d'une expression $e$ par (on a 5 cas) :
+    \begin{itemize}
+      \item $\Vl(x) = \{x\}$ ;
+      \item $\Vl(k) = \emptyset$ ;
+      \item $\Vl(e_1 + e_2) = \Vl(e_1) \cup \Vl(e_2)$ ;
+      \item $\Vl(e_1\ e_2) = \Vl(e_1) \cup \Vl(e_2)$ ;
+      \item $\Vl(\fun x e) = \Vl(e) \setminus \{x\}$.\footnote{L'expression $\fun x e$ est un \textit{lieur} : $x$ est liée dans $e$.}
+    \end{itemize}
+
+    On dit que $e$ est \textit{close} si $\Vl(e) = \emptyset$.
+  \end{defn}
+
+  \begin{defn}
+    Pour $e \in \mathsf{FUN}$, $x \in \mathcal{V}$ et $v$ une valeur \textbf{close}, on définit la \textit{substitution} $e[\sfrac{v}{x}]$ de $x$ par $v$ dans $e$ par :
+    \begin{itemize}
+      \item $k[\sfrac{v}{x}] = k$ ;
+      \item $y[\sfrac{v}{x}] = \begin{cases}
+          v & \text{si}\ x = y\\
+          y & \text{si}\ x \neq y\ ;
+      \end{cases}$
+      \item $(\fun y e)[\sfrac{v}{x}] = \begin{cases}
+          \fun y e & \text{si}\ x = y\\
+          \fun y e[\sfrac{e}{x}] & \text{si}\ x \neq y ;
+      \end{cases}$
+      \item $(e_1 + e_2)[\sfrac{v}{x}] = (e_1[\sfrac{v}{x}]) + (e_2[\sfrac{v}{x}])$ ;
+      \item $(e_1 \ e_2)[\sfrac{v}{x}] = (e_1[\sfrac{v}{x}]) \ (e_2[\sfrac{v}{x}])$.
+    \end{itemize}
+  \end{defn}
+
+  \subsection{Grands pas pour $\mathsf{FUN}$.}
+
+  On définit la relation $\Downarrow$ sur couples (expression, valeur) par :
+  \[
+  \begin{prooftree}
+    \hypo{e_1 \Downarrow k_1}
+    \hypo{e_2 \Downarrow k_2}
+    \infer[left label={k = k_1 + k_2}] 2{e_1 + e_2 \Downarrow k}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \infer 0{v \Downarrow v}
+  \end{prooftree}
+  \]
+  \[
+  \begin{prooftree}
+    \hypo{e_1 \Downarrow \fun x e}
+    \hypo{e_2 \Downarrow v_2}
+    \hypo{e[\sfrac{v_2}{x}] \Downarrow v}
+    \infer 3{e_1\ e_2 \Downarrow v.}
+  \end{prooftree}
+  \]
+
+  \begin{rmk}
+    Certaines expressions ne s'évaluent pas : \[
+    x \not\Downarrow \quad\quad \text{et}\quad\quad z + (\fun x x) \not\Downarrow
+    \] par exemple.
+  \end{rmk}
+
+  \subsection{Petits pas pour $\mathsf{FUN}$.}
+
+  On définit la relation ${\to} \subseteq \mathsf{FUN} * \mathsf{FUN}$ par :
+  \[
+    \begin{prooftree}
+      \infer[left label={k = k_1 + k_2}] 0[\mathcal{R}_\mathrm{pk}] {k_1 + k_2 \to k}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \infer 0[\mathcal{R}_\beta] {(\fun x e)\ v \to e[\sfrac{v}{x}]}
+    \end{prooftree}
+  \]\[
+    \begin{prooftree}
+      \hypo{e_2 \to e_2'}
+      \infer 1[\mathcal{R}_\mathrm{pd}]{e_1 + e_2 \to e_1 + e_2'}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{e_1 \to e_1'}
+      \infer 1[\mathcal{R}_\mathrm{pg}]{e_1 + k \to e_1' + k}
+    \end{prooftree}
+  \]\[
+    \begin{prooftree}
+      \hypo{e_2 \to e_2'}
+      \infer 1[\mathcal{R}_\mathrm{ad}]{e_1\ e_2 \to e_1\ e_2'}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{e_1 \to e_1'}
+      \infer 1[\mathcal{R}_\mathrm{ag}]{e_1\ v \to e_1'\ v}
+    \end{prooftree}
+  .\]
+
+  \begin{rmk}
+    Il existe des expressions que l'on ne peut pas réduire :
+    \begin{enumerate}
+      \item $k \not\to \quad$ ;
+      \item $(\fun x x) \not\to \quad$ ;
+      \item $e_1 + (\fun x x) \not\to \quad$ ;
+      \item $3\ (5 + 7) \to 3\ 12 \not\to \quad$.
+    \end{enumerate}
+
+    Dans les cas 1. et 2., c'est cohérent : on ne peut pas réduire des valeurs.
+  \end{rmk}
+
+
+  \begin{lem}
+    On a \[
+    e \Downarrow v \quad\quad \text{si, et seulement si,} \quad\quad e \to^\star v
+    .\] 
+  \end{lem}
+
+  \begin{rmk}
+    Soit $e_0 = (\fun x x\ x)\ (\fun x x\ x)$.
+    On remarque que $e_0 \to e_0$.
+
+    En $\mathsf{FUN}$, il y a des divergences : il existe $(e_n)_{n \in \mathds{N}}$ telle que l'on ait $e_n \to e_{n+1}$.
+  \end{rmk}
+
+  La fonction\footnote{Pour indiquer cela, il faudrait démontrer que la relation $\Downarrow$ est déterministe.} définie par $\Downarrow$ est donc partielle.
+
+
+  \begin{rmk}[Problème avec la substitution]
+    On a la chaîne de réductions :
+    \begin{align*}
+      &((\fun y (\fun x x + y))\ (x+7))\ 5\\
+      (\star)\quad\quad\to\;&(\fun x x + (x+7))\ 5\\
+      \to\;&5 + (5 + 7)\\
+      \to\mathllap{^\star}\;& 17
+    .\end{align*}
+    Attention ! Ici, on a triché : on a substitué avec l'expression $x + 7$ mais ce n'est pas une valeur (dans la réduction $(\star)$) !
+
+    Mais, on a la chaîne de réductions 
+    \begin{align*}
+      &(\fun f (\fun x (f\ 3) + x))\ (\fun t x + 7)\ 5\\
+      \to\;& (\fun x ((\fun t x + 7)\ 3) + x)\ 5\\
+      \to\;& (\fun x ((\fun t x + 7)\ 3) + x)\ 5
+    .\end{align*}
+    Et là, c'est le drame, on a \textbf{capturé la variable libre}.
+    D'où l'hypothèse de $v$ close dans la substitution.
+  \end{rmk}
+
+  \begin{rmk}
+    Les relations $\Downarrow$ et $\to$ sont définies sur des expressions \textbf{closes}.
+    Et on a même ${\to} \subseteq \mathsf{FUN}_0 * \mathsf{FUN}_0$.\footnote{Il faudrait ici justifier que la réduction d'une formule close est close. C'est ce que nous allons justifier.}
+  \end{rmk}
+
+  \begin{lem}
+    \begin{itemize}
+      \item Si $v$ est close et si $x \not\in \Vl(e)$ alors $e[\sfrac{v}{x}] = e$.
+      \item Si $v$ est close, $\Vl(e[\sfrac{v}{x}]) = \Vl(e) \setminus \{x\}$.
+      \qed
+    \end{itemize}
+  \end{lem}
+
+  \begin{lem}
+    Si $e \in \mathsf{FUN}_0$ et $e \to e'$ alors $e' \in \mathsf{FUN}_0$.
+  \end{lem}
+
+  \begin{prv}
+    Montrons que, quelles que soient $e$ et $e'$, on a : si $e \to e'$ alors $(e \in \mathsf{FUN}_0) \implies(e' \in \mathsf{FUN}_0)$
+    On procède par induction sur la relation $e \to e'$.
+    Il y a 6 cas :
+    \begin{enumerate}
+      \item Pour $\mathcal{R}_\beta$, on suppose $(\fun x e)\ v$ est close, alors
+        \begin{itemize}
+          \item $(\fun x e)$ est close ;
+          \item $v$ est close.
+        \end{itemize}
+        On sait donc que $\Vl(e) \subseteq \{x\}$, d'où par le lemme précédent, $\Vl(e[\sfrac{v}{x}]) = \emptyset$ et donc $e[\sfrac{v}{x}]$ est close.
+      \item[2--6.] Pour les autres cas, on procède de la même manière.
+    \end{enumerate}
+  \end{prv}
+
+  \begin{rmk}
+    De même, si $e \Downarrow v$ où $e$ est close, alors $v$ est close.
+
+    Les relations $\Downarrow$ et $\to$ sont définies sur les expressions et les valeurs closes.
+  \end{rmk}
+
+  \begin{defn}[Définition informelle de l'$\alpha$-conversion]
+    On définit l'$\alpha$-conversion, notée $e =_\alpha e'$ :
+    on a $\fun x e =_\alpha \fun y e'$ si, et seulement si,
+    $e'$ s'obtient en replaçant $x$ par $y$ dans $e$
+    à condition que $y \not\in \Vl(e)$.\footnote{C'est une "variable fraîche".}
+
+    On étend $e =_\alpha e'$ à toutes les expressions : "on peut faire ça partout".
+  \end{defn}
+
+  \begin{exm}[\textit{Les variables liées sont muettes.}]
+    On a :
+    \begin{align*}
+      \fun x x + z &=_\alpha \fun y y + z\\
+      &=_\alpha \fun t t + z\\
+      &\neq _\alpha \fun z z + z
+    .\end{align*}
+  \end{exm}
+  
+  L'intuition est, quand on a $\mathsf{fun}\ x \to e$ et qu'on a besoin de renommer la variable $x$, pour cela on prend $x' \not\in \Vl(e)$.
+
+  \begin{not-lem}
+    Si $E_0 \subseteq \mathcal{V}$ est un ensemble fini de variables, alors il existe $z \not\in E_0$ et $e' \in \mathsf{FUN}$ tel que $\fun x e =_\alpha \fun z e'$.
+    \qed
+  \end{not-lem}
+
+  \begin{rmk}[\textbf{Fondamental}]
+    En fait $\mathsf{FUN}$ désigne l'ensemble des expressions décrites par la grammaire initiale \textit{quotientée} par $\alpha$-conversion.
+  \end{rmk}
+
+  \begin{rmk}
+    On remarque que \[
+      (e =_\alpha e') \implies \Vl(e) = \Vl(e')
+    .\]
+  \end{rmk}
+
+  D'après le ``lemme'', on peut améliorer notre définition de la substitution.
+
+  \begin{defn}
+    Pour $e \in \mathsf{FUN}$, $x \in \mathcal{V}$ et $v$ une valeur \textbf{close}, on définit la \textit{substitution} $e[\sfrac{v}{x}]$ de $x$ par $v$ dans $e$ par :
+    \begin{itemize}
+      \item $k[\sfrac{v}{x}] = k$ ;
+      \item $y[\sfrac{v}{x}] = \begin{cases}
+          v & \text{si}\ x = y\\
+          y & \text{si}\ x \neq y\ ;
+      \end{cases}$
+    \item $(\fun x e)[\sfrac{v}{x}] = (\fun y e)[\sfrac{v}{x}]$ lorsque $x \neq y$ ;
+      \item $(e_1 + e_2)[\sfrac{v}{x}] = (e_1[\sfrac{v}{x}]) + (e_2[\sfrac{v}{x}])$ ;
+      \item $(e_1 \ e_2)[\sfrac{v}{x}] = (e_1[\sfrac{v}{x}]) \ (e_2[\sfrac{v}{x}])$.
+    \end{itemize}
+  \end{defn}
+
+  \section{Ajout des déclarations locales ($\mathsf{FUN}+\mathtt{let}$).}
+
+  On ajoute les déclarations locales (comme pour $\mathsf{EA}\to \mathsf{LEA}$) à notre petit langage fonctionnel.
+  Dans la grammaire des expressions de $\mathsf{FUN}$, on ajoute :
+  \[
+    e ::= \cdots  \mid \letin x {e_1} {e_2}
+  .\]
+
+  Ceci implique d'ajouter quelques éléments aux différentes opérations sur les expressions définies ci-avant :
+  \begin{itemize}
+    \item on définit $\Vl(\letin x {e_1} {e_2}) = \Vl(e_1) \cup (\Vl(e_2) \setminus \{x\})$ ;
+    \item on ne change pas les valeurs : une déclaration locale n'est pas une valeur ;
+    \item on ajoute $\letin x {e_1} {e_2} =_\alpha \letin y {e_1} {e_2'}$, où l'on remplace $x$ par $y$ dans $e_2$ pour obtenir $e_2'$ ;
+    \item pour la substitution, on pose lorsque $x\neq y$ (que l'on peut toujours supposer modulo $\alpha$-conversion) \[
+        (\letin y {e_1} {e_2})[\sfrac{v}{x}] = (\letin y {e_1[\sfrac{v}{x}]} e_2[\sfrac{v}{x}])
+    .\]
+    \item pour la sémantique à grands pas, c'est comme pour $\mathsf{LEA}$ ;
+    \item pour la sémantique à petits pas, on ajoute les deux règles :
+      \[
+      \begin{prooftree}
+        \infer 0[\mathcal{R}_\mathrm{lv}] {\letin x v {e_2} \to e_2[\sfrac{v}{x}]}
+      \end{prooftree}
+      \] 
+      et
+      \[
+      \begin{prooftree}
+        \hypo{e_1 \to e_1'}
+        \infer 1[\mathcal{R}_\mathrm{lg}] {\mathtt{let}\ x = e_1 \ \mathtt{in}\ e_2 \to \mathtt{let}\ x = e_1' \ \mathtt{in}\ e_2}
+      \end{prooftree}
+      .\] 
+      Attention ! On n'a pas de règle \[
+        \cancel{
+          \begin{prooftree}
+            \hypo{e_2 \to e_2'}
+            \infer 1[\mathcal{R}_\mathrm{ld}] {\mathtt{let}\ x = e_1 \ \mathtt{in}\ e_2 \to \mathtt{let}\ x = e_1 \ \mathtt{in}\ e_2'}
+          \end{prooftree}
+        }
+      ,\] 
+      on réduit d'abord l'expression $e_1$ jusqu'à une valeur, avant de passer à $e_2$.
+  \end{itemize}
+
+  Le langage que l'on construit s'appelle $\mathsf{FUN}+\mathtt{let}$.
+
+  \subsection{Traduction de $\mathsf{FUN}+\mathtt{let}$ vers $\mathsf{FUN}$.}
+
+  On définit une fonction qui, à toute expression de $e$ dans $\mathsf{FUN}+\mathtt{let}$ associe une expression notée $\trad e$ dans $\mathsf{FUN}$ (on supprime les expressions locales).
+  L'expression $\trad e$ est définie par induction sur $e$. Il y a 6 cas :
+  \begin{itemize}
+    \item $\trad k = k$ ;
+    \item $\trad x = x$ ;
+    \item $\trad{e_1+e_2} = \trad e_1 + \trad e_2$ ;
+    \item $\trad{e_1\ e_2} = \trad e_1\ \trad e_2$ ;
+    \item $\trad{\fun x e} = \fun x {\trad e}$ ;
+    \item $\trad{\letin x {e_1} {e_2}} = (\fun x {\trad{e_2}})\ \trad{e_1}$.
+  \end{itemize}
+
+  \begin{lem}\label{lem:trad}
+    Pour tout $e \in (\mathsf{FUN}+\mathtt{let})$,
+    \begin{itemize}
+      \item $\trad e$ est une expression de $\mathsf{FUN}$\footnote{\textit{i.e.} $\trad e$ n'a pas de déclarations locales} ;
+      \item on a $\Vl(\trad e) = \Vl (e)$ ;
+      \item $\trad e$ est une valeur \textit{ssi} $e$ est une valeur ;
+      \item $\trad{e[\sfrac{v}{x}]} = \trad e [\sfrac{\trad v}{x}]$\footnote{On le prouve par induction sur $e$, c'est une induction à $6$ cas}.
+    \qed
+    \end{itemize}
+  \end{lem}
+
+  Pour démontrer le lemme~\ref{lem:trad}, on procède par induction sur $e$.
+  C'est long et rébarbatif, mais la proposition ci-dessous est bien plus intéressante.
+
+  \begin{prop}
+    Pour toutes expressions $e, e'$ de $\mathsf{FUN}+\mathtt{let}$, si on a la réduction $e \to_{\mathsf{FUN}+\mathtt{let}} e'$ alors $\trad e \to_{\mathsf{FUN}} \trad{e'}$.
+  \end{prop}
+
+  \begin{prv}
+    On procède par induction sur $e \to e'$ dans $\mathsf{FUN}+\mathtt{let}$.
+    Il y a $8$ cas car il y a 8 règles d'inférences pour $\to$ dans $\mathsf{FUN}+\mathtt{let}$.
+    \begin{itemize}
+      \item \textsl{Cas $\mathcal{R}_\mathrm{lv}$.}
+        Il faut montrer que $\trad{\letin x v {e_2}} \to_{\mathsf{FUN}} \trad{e[\sfrac{v}{x}]}$.
+        Par définition, l'expression de droite vaut \[
+          (\fun x {\trad e_2})\ \trad v \xrightarrow{\mathcal{R}_\beta}_{\mathsf{FUN}} \trad e_2 [\sfrac{\trad v}{x}]
+        ,\] 
+        car $\trad v$ est une valeur
+        par le lemme~\ref{lem:trad}, ce qui justifie $\mathcal{R}_\beta$. De plus, encore par le lemme~\ref{lem:trad}, on a l'égalité entre $\trad e_2 [\sfrac{\trad v}{x}] = \trad{e[\sfrac{v}{x}]}$.
+      \item \textsl{Cas $\mathcal{R}_\mathrm{lg}$.}
+        On sait que $e_1 \to e_1'$ et, par hypothèse d'induction, on a $\trad{e_1} \to \trad {e_1'}$.
+        Il faut montrer que \[
+          \trad{\letin x {e_1} {e_2}} \to \trad{\letin x {e_1'} {e_2}}
+        .\]
+        L'expression de droite vaut \[
+          (\fun x {\trad {e_2}})\ \trad {e_1} \xrightarrow{\mathcal{R}_\mathrm{ad}\ \&\ \text{hyp. ind.}}
+          (\fun x {\trad {e_2}})\ \trad{e_1'}
+        .\] 
+        Et, par définition de $\trad \cdot$, on a l'égalité :
+        \[
+          \trad{\letin x {e_1'} {e_2}} =
+          (\fun x {\trad {e_2}})\ \trad{e_1'}
+        .\] 
+      \item Les autres cas sont laissées en exercice.
+    \end{itemize}
+  \end{prv}
+
+  \begin{prop}
+    Si $\trad e \to \trad{e'}$ alors $e \to e'$.
+  \end{prop}
+  \begin{prv}
+    La proposition ci-dessus est mal formulée pour être prouvée par induction, on la ré-écrit.
+    On démontre, par induction sur la relation $f \to f'$ la propriété suivante :
+    \begin{quote}
+      "quel que soit $e$, si $f = \trad e$ alors il existe  $e'$ une expression telle que $f' = \trad {e'}$ et  $e \to e'$ (dans $\mathsf{FUN}+\mathtt{let}$)",
+    \end{quote}
+    qu'on notera $\mathcal{P}(f,f')$.
+
+    Pour l'induction sur $f \to f'$, il y a $6$ cas.
+    \begin{itemize}
+      \item \textsl{Cas de la règle $\mathcal{R}_\mathrm{ad}$.}
+        On suppose $f_2 \to f_2'$ et par hypothèse d'induction $\mathcal{P}(f_2,f_2')$.
+        On doit montrer $\mathcal{P}(f_1\ f_2, f_1\ f_2')$.
+        On suppose donc $\trad e = f_1\ f_2$.
+        On a deux sous-cas.
+        \begin{itemize}
+          \item \textit{1\textsuperscript{er} sous-cas.}
+            On suppose $e = e_1\ e_2$ et $\trad{e_1} = f_1 = f_2$.
+            Par hypothèse d'induction et puisque $\trad{e_2} = f_2$, il existe $e_2'$ tel que $e_2 \to e_2'$ et $\trad{e_2'} = f'_2$.
+            De $e_2\to e_2'$, on en déduit par $\mathcal{R}_\mathrm{ad}$ que $e_1\ e_2 \to e_1\ e_2'$.
+            On pose~$e' = e_1\ e_2'$ et on a bien $\trad{e'} = \trad{e_1}\ \trad{e_2'}$.
+          \item \textit{2\textsuperscript{ème} sous-cas.}
+            On suppose $e = \letin x {e_1} {e_2}$.
+            Alors,  \[
+              \trad e = \underbrace{(\fun x {\trad{e_2}})}_{f_1}\ \underbrace{\trad{e_1}}_{f_2}
+            .\]
+            Par hypothèse d'induction, il existe $e_1'$ tel que $e_1 \to e_1'$ et $\trad{e_1'} = f_2'$.
+            Posons $e' = (\letin x {e_1'} {e_2})$.
+            On doit vérifier~$\trad e \to \trad{e'}$ ce qui est vrai par $\mathcal{R}_\mathrm{ad}$ et que~$\trad{e'} = f_1\ f_2'$, ce qui est vrai par définition.
+        \end{itemize}
+      \item \textsl{Cas de la règle $\mathcal{R}_\mathrm{ag}$.}
+        On suppose $f_1 \to f_1'$ et l'hypothèse d'induction $\mathcal{P}(f_1, f_1')$.
+        On doit vérifier que $\mathcal{P}(f_1\ v, f_1'\ v)$.
+        On suppose $\trad e = f_1\ v$ et on a deux sous-cas.
+        \begin{itemize}
+          \item \textit{1\textsuperscript{er} sous-cas.}
+            On suppose $e = e_1\ e_2$ et alors $\trad e = \trad {e_1}\ \trad {e_2}$ par le lemme~\ref{lem:trad} et parce que $e_2$ est une valeur (car $\trad {e_2} = v$).
+            On raisonne comme pour la règle $\mathcal{R}_\mathrm{ad}$ dans le premier sous-cas, en appliquant $\mathcal{R}_\mathrm{ag}$.
+          \item \textit{2\textsuperscript{nd} sous-cas}.
+            On suppose $e = (\letin x {e_1} {e_2})$ alors \[
+              \trad e = \underbrace{\fun x {\trad{e_2}}}_{f_1}\ \underbrace{\trad{e_1}}_{f_2}
+            .\]
+            On vérifie aisément ce que l'on doit montrer.
+        \end{itemize}
+      \item Les autres cas se font de la même manière (attention à $\mathcal{R}_\beta$).
+    \end{itemize}
+  \end{prv}
+\end{document}

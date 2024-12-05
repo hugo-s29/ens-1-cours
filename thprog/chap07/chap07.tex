@@ -1,0 +1,826 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Typage en $\mathsf{FUN}$.}
+  \minitoc
+  \section{Définition du système de types.}
+
+  L'ensemble $\mathsf{Typ}$ des types, notés $\tau, \tau_1, \tau',\ldots$, est définit par la grammaire suivante : \[
+  \tau ::= \mathtt{int}  \mid  \tau_1 \to \tau_2
+  .\]
+
+  \begin{note}
+    Attention ! Le type $\tau_1 \to \tau_2 \to \tau_3$ n'est pas égal au type $(\tau_1 \to \tau_2) \to \tau_3$.
+    En effet, dans le premier cas, c'est une fonction qui renvoie une fonction ; et, dans le second cas, c'est une fonction qui prend une fonction.
+  \end{note}
+
+  \begin{defn}
+    Un \textit{environnent de typage}, noté $\Gamma, \Gamma_1, \Gamma',\ldots$, est un dictionnaire sur $(\mathcal{V}, \mathsf{Typ})$, où $\mathsf{Typ}$ est l'ensemble des types.
+
+    Une \textit{hypothèse de typage}, notée $x:\tau$, est un couple $(x,\tau)$.
+
+    On note $\Gamma, x : \tau$ l'extension de $\Gamma$ avec l'hypothèse de typage $x : \tau$ qui n'est définie que lorsque  $x \not\in \operatorname{dom} \Gamma$.\footnote{La définition de $\Gamma, x : \tau$ est "comme on le pense".}
+  \end{defn}
+
+  \begin{rmk}
+    On peut voir/implémenter $\Gamma$ comme des listes finies de couples $(x, \tau)$.
+  \end{rmk}
+
+  \begin{defn}
+    La \textit{relation de typage}, notée $\Gamma \vdash e : \tau$ ("sous les hypothèses $\Gamma$, l'expression $e$ a le type $\tau$") est définie par les règles d'inférences suivantes.
+
+    \[
+    \begin{prooftree}
+      \infer 0[\mathcal{T}_\mathrm{k}]{\Gamma \vdash k : \mathtt{int}}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \infer[left label={\Gamma(x)=\tau}] 0[\mathcal{T}_\mathrm{v}]{\Gamma \vdash x : \tau}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma, x : \tau_1\footnote{On peut toujours étendre $\Gamma$ ainsi, modulo $\alpha$-conversion.} \vdash e_2}
+      \infer 1[\mathcal{T}_\mathrm{f}]{\Gamma \vdash \fun x e : \tau_1 \to \tau_2}
+    \end{prooftree}
+    \]
+
+    \[
+    \begin{prooftree}
+      \hypo{\Gamma \vdash  e_1 : \mathtt{int}}
+      \hypo{\Gamma \vdash  e_2 : \mathtt{int}}
+      \infer 2[\mathcal{T}_\mathrm{p}]{\Gamma \vdash e_1 + e_2 : \mathtt{int}}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\Gamma \vdash e : \tau_1 \to \tau_2}
+      \hypo{\Gamma \vdash e' : \tau_1}
+      \infer 2[\mathcal{T}_\mathrm{a}]{\Gamma \vdash  e\ e' : \tau_2}
+    \end{prooftree}.
+    \]
+  \end{defn}
+
+  \begin{rmk}
+    Pour l'instant, on parle uniquement d'expressions et pas du tout de valeurs ou de sémantique opérationnelle.
+  \end{rmk}
+
+  \begin{rmk}
+    \begin{enumerate}
+      \item On dit que $e$ est \textit{typable} s'il existe $\Gamma$ et $\tau$ tel que $\Gamma \vdash e : \tau$.
+      \item Il y a une règle de typage par construction du langage des expressions.
+    \end{enumerate}
+  \end{rmk}
+
+  \begin{exm}
+    \begin{enumerate}
+      \item L'expression $\fun x x$ est particulière : on peut la typer avec  $\tau \to \tau$ quel que soit $\tau$.
+        Par exemple,
+         \[
+        \begin{prooftree}
+          \infer 0[\mathcal{T}_\mathrm{v}]{x : \mathtt{int} \vdash x : \mathtt{int}}
+          \infer 1[\mathcal{T}_\mathrm{f}]{\emptyset \vdash \fun x x : \mathtt{int} \to \mathtt{int}}
+        \end{prooftree}
+        .\]
+        On aurait pu faire de même avec le type $(\mathtt{int} \to  \mathtt{int}) \to (\mathtt{int} \to  \mathtt{int})$.
+      \item Quel est le type de $\fun g g\ (g\ 7)$ ?
+        {
+          \fontsize{9pt}{9pt}
+        \[
+          \hspace{-3em}
+        \begin{prooftree}
+          \infer 0[\mathcal{T}_\mathrm{v}]{g : \mathtt{int}\to \mathtt{int} \vdash  g : \mathtt{int}\to \mathtt{int}}
+          \infer 0[\mathcal{T}_\mathrm{v}]{\Gamma\vdash g : \mathtt{int}\to \mathtt{int}}
+          \infer 0[\mathcal{T}_\mathrm{k}]{\Gamma\vdash 7 : \mathtt{int}}
+          \infer 2[\mathcal{T}_\mathrm{p}]{g : \mathtt{int}\to \mathtt{int} \vdash g\ 7 : \mathtt{int}}
+          \infer 2[\mathcal{T}_\mathrm{a}]{g : \mathtt{int}\to \mathtt{int} \vdash g\ (g\ 7)}
+          \infer 1[\mathcal{T}_\mathrm{f}]{\emptyset \vdash \fun g g\ (g\ 7) : (\mathtt{int} \to \mathtt{int}) \to \mathtt{int}}
+        \end{prooftree}
+        .\]
+        }
+    \end{enumerate}
+  \end{exm}
+
+  \section{Propriétés du système de types.}
+
+  % Henk Barendregt
+
+  \begin{lem}
+    \begin{itemize}
+      \item Si $\Gamma \vdash e : \tau$ alors $\Vl(e) \subseteq \operatorname{dom}(\Gamma)$.
+      \item \textsl{Affaiblissement.}
+        Si $\Gamma \vdash e : \tau$ alors \[
+          \forall x \not\in \operatorname{dom}(\Gamma),\;\forall \tau_0,\quad \Gamma, x : \tau_0 \vdash e : \tau
+        .\]
+      \item \textsl{Renforcement.}
+        Si $\Gamma, x : \tau_0 \vdash e : \tau$, et si $x\not\in \Vl(e)$ alors on a le typage $\Gamma \vdash  e: \tau$.
+    \end{itemize}
+  \end{lem}
+  \begin{prv}
+    Par induction sur la relation de typage (5 cas).
+  \end{prv}
+
+  \subsection{Propriété de progrès.}
+
+  \begin{lem}
+    \begin{enumerate}
+      \item Si $\emptyset\vdash e: \mathtt{int}$ et $e \not\to$ alors, il existe $k \in \mathds{Z}$ tel que $e = k$.
+      \item Si $\emptyset \vdash  e : \tau_1 \to \tau_2$ et $e \not\to$ alors il existe $x$ et $e_0$ tels que l'on ait $e = \fun x e_0$.
+    \end{enumerate}
+  \end{lem}
+  \begin{prv}
+    Vu en TD.
+  \end{prv}
+
+  \begin{prop}[Propriété de progrès]
+    Si $\emptyset \vdash e : \tau$ alors on a la disjonction :
+    \begin{enumerate}
+      \item soit $e$ est une valeur ;
+      \item soit il existe $e'$ telle que $e \to e'$.
+    \end{enumerate}
+  \end{prop}
+
+  \begin{rmk}~
+    \begin{itemize}
+      \item Si $\emptyset \vdash e_1\ e_2 : \tau$ alors il existe $e'$ tel que $e_1\ e_2 \to e'$.
+      \item Si $\emptyset \vdash e_1 + e_2 : \tau$ alors il existe $e'$ tel que $e_1 + e_2 \to e'$.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{rmk}
+    Par le typage, on a exclu les expressions bloquées car "mal formées" (\textit{e.g.} $3\ 2$ ou $3 + (\fun x x)$).
+  \end{rmk}
+
+  \subsection{Propriété de préservation.}
+
+  Cette propriété a plusieurs noms : préservation du typage, réduction assujettie, \textit{subject reduction}.
+
+  \begin{lem}[typage et substitution]
+    Si l'on a le typage $\emptyset \vdash v : \tau_0$ et $\Gamma, x : \tau_0 \vdash e : \tau$
+    alors on a $\Gamma \vdash e[\sfrac{v}{x}] : \tau$
+  \end{lem}
+  \begin{prv}
+    On prouve cette propriété par induction sur $e$. Il y a 5 cas.
+    \begin{itemize}
+      \item \textsl{Cas $e = y$.} On a deux sous-cas.
+        \begin{itemize}
+          \item \textit{1\textsuperscript{er} sous-cas $x \neq y$.}
+            Dans ce cas, $e[\sfrac{v}{x}] = y$. Il faut montrer $\Gamma \vdash y : \tau$ sachant que $\Gamma, x : \tau_0 \vdash y : \tau$. On applique le lemme de renforcement.
+          \item \textit{2\textsuperscript{nd} sous-cas $x = y$.}
+            Dans ce cas, $e[\sfrac{v}{x}] = v$. Il faut montrer que $\Gamma \vdash v : \tau$.
+            Or, on sait que $\Gamma, x : \tau_0 \vdash  x : \tau$ (d'où $\tau = \tau_0$) et $\emptyset \vdash v : \tau_0$.
+            On conclut par affaiblissement.
+        \end{itemize}
+      \item Les autres cas sont en exercice.
+    \end{itemize}
+  \end{prv}
+
+  \begin{prop}[Préservation du typage]
+    Si $\emptyset \vdash e : \tau$, et $e \to e'$ alors $\emptyset \vdash e' : \tau$.
+  \end{prop}
+  \begin{prv}
+    On montre la propriété par induction sur $\emptyset \vdash e : \tau$.
+    Il y a 5 cas.
+    \begin{itemize}
+      \item \textsl{Cas $\mathcal{T}_\mathrm{v}$.} C'est absurde ! (On n'a pas $\emptyset \vdash x : \tau$.)
+      \item \textsl{Cas $\mathcal{T}_\mathrm{f}$.} Si $(\fun x e)\to e'$ alors \ldots\ On peut conclure immédiatement car les fonctions sont des valeurs, elles ne se réduisent donc pas.
+      \item \textsl{Cas $\mathcal{T}_\mathrm{k}$.} C'est le même raisonnement.
+      \item \textsl{Cas $\mathcal{T}_\mathrm{a}$.} On a $e = e_1\ e_2$.
+        On sait qu'il existe $\tau_0$ un type tel que $\emptyset \vdash e_1 : \tau_0 \to \tau$ ($H_1$) et $\emptyset \vdash e_2 : \tau_0$ ($H_2$).
+        On a également les hypothèses d'induction :
+        \begin{itemize}
+          \item $(H'_1)$ : si $e_1 \to e_1'$ alors $\emptyset\vdash e_1' : \tau_0 \to \tau$ ;
+          \item $(H'_2)$ : si $e_2 \to e_2'$ alors $\emptyset\vdash e_2' : \tau_0$.
+        \end{itemize}
+        On doit montrer que si $e_1 \ e_2 \to e'$ alors $\emptyset \vdash e' : \tau$.
+        Supposons que $e_1\ e_2 \to e'$, il y a 3 sous-cas.
+        \begin{itemize}
+          \item \textit{Sous-cas $\mathcal{R}_\mathrm{ad}$.}
+            Cela veut dire que $e_2 \to e_2'$ et $e' = e_1\ e_2'$.
+            On conclut $\emptyset \vdash e_1 \ e_2' : \tau$ par $(H_2')$ et $(H_1)$.
+          \item \textit{Sous-cas $\mathcal{R}_\mathrm{ag}$.}
+            Cela veut dire que $e_1 \to e_1'$ et $e' = e_1'\ e_2$.
+            On conclut $\emptyset \vdash e_1'\ e_2 : \tau$ par $(H_1')$ et $(H_2)$.
+          \item \textit{Sous-cas $\mathcal{R}_\beta$.}
+            On a $e_1 = \fun x e_0$, $e_2 = v$ et finalement $e' = e_0[\sfrac{v}{x}]$.
+            On doit montrer $\emptyset \vdash e_0[\sfrac{v}{x}] : \tau$.
+            De plus, $(H_1)$ s'énonce par $\emptyset \vdash \fun x e_0 : \tau_0 \to \tau$.
+            Nécessairement (c'est un "\texttt{inversion}" en Rocq), cela provient de $x : \tau_0 \vdash e_0 : \tau$.
+            On en conclut par le lemme de substitution.
+        \end{itemize}
+      \item \textsl{Cas $\mathcal{T}_\mathrm{p}$.} Laissé en exercice.
+    \end{itemize}
+  \end{prv}
+
+
+  \begin{rmk}
+    Avec les propriétés de progrès et préservation implique qu'il n'y a pas de "mauvaises surprises" à l'exécution.
+    On a, en un sens, nettoyé le langage $\mathsf{FUN}$.
+
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \fill[fill=deepblue,very nearly transparent] plot[closed hobby] coordinates {
+        (3.9,10.8) (2.5,8.9) (2.8,5.4) (5.7,5.3) (7.6,8.1) (6,10.5) };
+        \fill[fill=deepgreen,very nearly transparent] plot[closed hobby] coordinates {
+        (5.9,11) (4.9,8.3) (6.1,6.9) (7.8,6.3) (9.6,8.5) (8.6,10.8) (7.5,11.5) };
+        \fill[fill=deepred,very nearly transparent] plot[closed hobby] coordinates {
+        (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+
+        \draw[deepblue] plot[closed hobby] coordinates {
+        (3.9,10.8) (2.5,8.9) (2.8,5.4) (5.7,5.3) (7.6,8.1) (6,10.5) };
+        \draw[deepgreen] plot[closed hobby] coordinates {
+        (5.9,11) (4.9,8.3) (6.1,6.9) (7.8,6.3) (9.6,8.5) (8.6,10.8) (7.5,11.5) };
+        \draw[deepred] plot[closed hobby] coordinates {
+        (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+
+        \begin{scope}
+          \clip plot[closed hobby] coordinates {
+          (3.9,10.8) (2.5,8.9) (2.8,5.4) (5.7,5.3) (7.6,8.1) (6,10.5) };
+          \clip plot[closed hobby] coordinates {
+          (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+          \fill[thick,deeppurple, very nearly transparent] plot[closed hobby] coordinates {
+          (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+          \draw[thick,deeppurple] plot[closed hobby] coordinates {
+          (3.9,10.8) (2.5,8.9) (2.8,5.4) (5.7,5.3) (7.6,8.1) (6,10.5) };
+          \draw[thick,deeppurple] plot[closed hobby] coordinates {
+          (4.6,4.9) (4.9,6.8) (6.5,8.2) (9.3,7.4) (8.9,5.6) (7.9,4.1) (5.8,4) };
+          \node[text=deeppurple,rotate=45] at (6,6.7) {typées \textit{et} closes};
+        \end{scope}
+
+        \node[text=deepred] at (7,4.4) {closes};
+        \node[text=deepgreen] at (8,10.6) {valeurs};
+        \node[text=deepblue] at (3.2,8.5) {typées};
+        \node at (10.2,3.8) {expressions $\mathsf{FUN}$};
+
+        \draw (1, 12) rectangle (12, 3.5);
+      \end{tikzpicture}
+    \end{figure}
+
+    C'est la considération d'un langage \textit{statiquement typé}.
+    On aime savoir qu'OCaml ou Rust ont, pour la sémantique et le système de types, une propriété de progrès et de préservation.
+  \end{rmk}
+
+  \begin{exo}
+    Trouver $e$ et $e'$ deux expressions telles que $\emptyset : e' : \tau$ et $e \to e'$ mais que l'on ait pas $\emptyset \vdash e : \tau$.
+  \end{exo}
+  \begin{sol}
+    Il suffit de trouver une valeur non typable $e_1$, par exemple $\fun x (x\ x)$ ou  $\fun x (19\ 27)$, puis de considérer \[
+      e = (\fun x 3)\ e_1 \to 3
+    .\]
+    Or, $3$ est typable mais $e$ non.
+  \end{sol}
+
+  \section{Questions en lien avec la relation de typage.}
+
+  \begin{itemize}
+    \item \textit{Typabilité.} Pour $e$ donné, existe-t-il $\Gamma, \tau$ tels que $\Gamma \vdash  e : \tau$ ?
+    \item \textit{Vérification/Inférence de types.}
+      Pour $\Gamma$ et $e$ donnés, existe-t-il  $\tau$ tel que l'on ait $\Gamma \vdash e : \tau$ ? ($\triangleright$ OCaml)
+    \item \textit{Habitation.} Pour $\tau$ donné, existe-t-il  $e$ tel que $\emptyset \vdash e : \tau$ ? ($\triangleright$~Rocq\footnote{On peut voir une preuve d'un théorème en Rocq comme fournir une preuve qu'il existe une expression $e$ avec type $\tau$.}\showfootnote)
+  \end{itemize}
+
+  \section{Inférence de types.}
+
+  \subsection{Typage et contraintes.}
+
+  \begin{exm}
+    Dans une version étendue de $\mathsf{FUN}$ (on se rapproche plus au OCaml), si l'on considère le programme :
+    \begin{align*}
+    &\texttt{let rec}\ f\ x\ g \texttt{=}\\
+    &\quad \ldots g\ x\ \ldots\\
+    &\quad \ldots \texttt{if}\ g\ f\ \texttt{then}\ \ldots\ \texttt{else}\ \ldots\\
+    &\quad\ldots\letin h {x\ 7} \ldots
+    \end{align*}
+    On remarque que 
+    \begin{itemize}
+      \item $x$ et $f$ ont le même type ;
+      \item $g$ a un type ${?} \to \mathtt{bool}$ ;
+      \item $x$ a un type $\mathtt{int} \to {?}$.
+    \end{itemize}
+
+    On doit donc lire le programme, et "prendre des notes".
+    Ces "notes" sont des contraintes que doivent vérifier le programme.
+  \end{exm}
+
+  \begin{exm}
+    On souhaite déterminer le type $\tau$ tel que  \[
+    \emptyset\vdash \fun g g\ (g\ 7) : \tau
+    .\]
+    (On sait que $\tau = (\mathtt{int} \to \mathtt{int}) \to \mathtt{int}$.)
+
+    On construit l'arbre de l'expression (l'AST) :
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[sibling distance=30mm]
+        \node[fill=deepblue,text=white,rounded rectangle] (L0){\texttt{fun}}
+        child { node[draw,rectangle] (L11) {$g$} }
+          child { node[fill=deepblue,text=white,rounded rectangle] (L12){\texttt{app}}
+            child { node[fill=deepblue,text=white,rounded rectangle] (L21){\texttt{var}} child { node[draw,rectangle] {$g$} }}
+            child { node[fill=deepblue,text=white,rounded rectangle] (L22){\texttt{app}}
+              child { node[fill=deepblue,text=white,rounded rectangle] (L31){\texttt{var}} child { node[draw,rectangle] {$g$} }}
+              child { node[fill=deepblue,text=white,rounded rectangle] (L32){\texttt{cst}} child { node[draw,rectangle] {$7$} }}
+            }
+          };
+        \tikzset{node distance = 1cm and 1cm}
+        \node[right of=L0] {\color{deepgreen}$T_0$};
+        \node[left of=L11] {\color{deepgreen}$T_g$};
+        \node[right of=L12] {\color{deepgreen}$T_1$};
+        \node[right of=L22] {\color{deepgreen}$T_3$};
+        \node[right of=L21] {\color{deepred}$T_g$};
+        \node[right of=L31] {\color{deepred}$T_g$};
+        \node[right of=L32] {\color{deepred}$\mathtt{int}$};
+      \end{tikzpicture}
+    \end{figure}
+
+    On procède en plusieurs étapes :
+    \begin{enumerate}
+      \item On ajoute des inconnues de types $T_1$, $T_2$ $T_3$, \textit{etc} (en vert).
+      \item On écrit des contraintes faisant intervenir les $T_i$ (en orange/marron).
+        \begin{gather*}
+          \color{deepred}
+          T_0 = T_g \to T_1\\
+          \color{deepred}
+          T_g = T_2 \to T_1\\
+          \color{deepred}
+          T_g = \mathtt{int} \to T_1
+        .\end{gather*}
+      \item On résout les contraintes pour obtenir \[
+          T_0 = (\mathtt{int} \to \mathtt{int}) \to \mathtt{int}
+        .\] 
+    \end{enumerate}
+  \end{exm}
+
+  \begin{exm}[Cas limites]
+    \begin{itemize}
+      \item L'expression $\fun x 7$ admet une infinité de types ($T_x \to \mathtt{int}$).
+      \item L'expression $(\fun x 7)\ (\fun z z)$ a toujours le type $\mathtt{int}$ mais admet une infinité de dérivations.
+    \end{itemize}
+  \end{exm}
+
+  \begin{exm}[Et quand ça ne marche pas ?]
+    On essaie d'inférer le type de l'expression \[
+      \fun x x + (x\ 2)
+    .\]
+
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[sibling distance=30mm]
+        \node[fill=deepblue,text=white,rounded rectangle] (L0){\texttt{fun}}
+        child { node[draw,rectangle] (L11) {$x$} }
+          child { node[fill=deepblue,text=white,rounded rectangle] (L12){\texttt{add}}
+            child { node[fill=deepblue,text=white,rounded rectangle] (L21){\texttt{var}} child { node[draw,rectangle] {$x$} }}
+            child { node[fill=deepblue,text=white,rounded rectangle] (L22){\texttt{app}}
+              child { node[fill=deepblue,text=white,rounded rectangle] (L31){\texttt{var}} child { node[draw,rectangle] {$x$} }}
+              child { node[fill=deepblue,text=white,rounded rectangle] (L32){\texttt{cst}} child { node[draw,rectangle] {$7$} }}
+            }
+          };
+        \tikzset{node distance = 1cm and 1cm}
+        \node[right of=L0] {\color{deepgreen}$T_0$};
+        \node[left of=L11] {\color{deepgreen}$T_x$};
+        \node[right of=L12] {\color{deepgreen}$T_1$};
+        \node[right of=L22] {\color{deepgreen}$T_3$};
+        \node[right of=L21] {\color{deepred}$T_x$};
+        \node[right of=L31] {\color{deepred}$T_x$};
+        \node[right of=L32] {\color{deepred}$~\mathtt{int}$};
+      \end{tikzpicture}
+    \end{figure}
+
+    Les contraintes sont :
+    \begin{gather*}
+      \color{deepred}
+      T_0 = T_x  \to T_1\\
+      \color{deepred}
+      T_1 = T_x = T_2 = \mathtt{int}\\
+      \color{deepred}
+      T_x = \mathtt{int} \to T_2
+    .\end{gather*}
+    \textit{\textbf{Catastrophe !}} On ne peut pas résoudre ce système de contraintes (on ne peut pas avoir $T_x = \mathtt{int}$ et $T_x = \mathtt{int} \to T_2$ en même temps).
+    L'expression n'est donc pas typable.
+  \end{exm}
+
+  \begin{defn}
+    \begin{itemize}
+      \item On se donne un ensemble infini $\mathrm{IType}$ d'\textit{inconnues de type}, notées $T, T_1, T', \textit{etc}$.
+      \item On définit les \textit{types étendus}, notés $\hat{\tau}$, par la grammaire : \[
+          \hat{\tau} ::= \mathtt{int}  \mid \hat{\tau}_1 \to \hat{\tau}_2  \mid T
+        .\]
+      \item L'ensemble des types (\textit{resp}. étendus) est noté $\mathsf{Typ}$ (\textit{resp}.~$\widehat{\mathsf{Typ}}$).
+      \item Les environnement de types étendus sont notés $\widehat{\Gamma}$.
+      \item Ainsi défini, tout $\tau$ est un  $\hat{\tau}$, tout $\Gamma$ est un $\widehat{\Gamma}$.
+      \item Un $\hat{\tau}$ est dit \textit{constant} s'il ne contient pas d'inconnue de type (\textit{i.e.} si c'est un $\tau$).
+    \end{itemize}
+  \end{defn}
+
+  \begin{defn}
+    Une \textit{contrainte de typage} est une paire de types étendus\footnote{\textit{\textbf{Attention}} c'est une paire, pas un couple.}, notée $\hat{\tau}_1 \qeq \hat{\tau}_2$, ou parfois $\hat{\tau}_1 = \hat{\tau}_2$.
+
+    On se donne $e \in \mathsf{FUN}$. On suppose que toutes les variables liées de $e$ sont :
+    \begin{itemize}
+      \item distinctes deux à deux ;
+      \item différentes de toutes les variables libres de $e$.
+    \end{itemize}
+
+    On se donne $\widehat{\Gamma}$ tel que $\Vl(e) \subseteq \mathrm{dom}(\widehat{\Gamma})$.
+    On choisit $T \in \mathrm{IType}$.
+
+    On définit un ensemble de contraintes, notée $\mathsf{CT}(e, \widehat{\Gamma}, T)$ par induction sur $e$, il y a 5 cas :
+    \begin{itemize}
+      \item $\begin{array}{rl}\\
+          \mathsf{CT}(e_1 + e_2, \widehat{\Gamma}, T) =& \mathsf{CT}(e_1, \widehat{\Gamma}, T_1) \cup \mathsf{CT}(e_2, \widehat{\Gamma}, T_2)\\ &{}\cup \{T_1 \qeq \mathtt{int}, T_2 \qeq \mathtt{int}, T \qeq \mathtt{int}\} 
+        \end{array}$
+      \item $\begin{array}{rl}\\
+          \mathsf{CT}(e_1\ e_2, \widehat{\Gamma}, T) =& \mathsf{CT}(e_1, \widehat{\Gamma}, T_1) \cup \mathsf{CT}(e_2, \widehat{\Gamma}, T_2)\\ &{}\cup \{T_1 \qeq T_2 \to T\} 
+        \end{array}$
+      \item $\mathsf{CT}(x, \widehat{\Gamma}, T) = \{T \qeq \widehat{\Gamma}(x)\}$ 
+      \item $\mathsf{CT}(k, \widehat{\Gamma}, T) = \{T \qeq \mathtt{int}\}$ 
+      \item $\begin{array}{rl}\\
+          \mathsf{CT}(\fun x e, \widehat{\Gamma}, T) =& \mathsf{CT}(e, (\widehat{\Gamma}, x: T_x), T_2)\\ &{}\cup \{T \qeq T_1 \to T_2\} 
+        \end{array}$
+    \end{itemize}
+    où les variables $T_1, T_2, T_x$ sont \textit{fraîches} (on notera par la suite \fresh\ $T_1$, $T_2$, $T_x$).
+  \end{defn}
+
+  \begin{rmk}
+    On peut résumer les cas "plus", "application" et "abstraction".
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \node[fill=deepblue,text=white,rounded rectangle] (T0) {\texttt{add}}
+          child { node {$T_1$} }
+          child { node {$T_2$} };
+          \node[right of=T0] {$T_0$};
+          \node[below=2cm of T0] {$T_0 = T_1 = T_2 = \mathtt{int}$};
+      \end{tikzpicture}
+      $\quad$
+      \begin{tikzpicture}
+        \node[fill=deepblue,text=white,rounded rectangle] (T0) {\texttt{app}}
+          child { node {$T_1$} }
+          child { node {$T_2$} };
+          \node[right of=T0] {$T_0$};
+          \node[below=2cm of T0] {$T_1 = T_2 \to T_0$};
+      \end{tikzpicture}
+      $\quad$
+      \begin{tikzpicture}
+        \node[fill=deepblue,text=white,rounded rectangle] (T0) {\texttt{fun}}
+          child { node {$T_1$} }
+          child { node {$T_2$} };
+          \node[right of=T0] {$T_0$};
+          \node[below=2cm of T0] {$T_0 = T_1 \to T_2$};
+      \end{tikzpicture}
+    \end{figure}
+  \end{rmk}
+
+  \begin{defn}
+    Soit $C$ un ensemble de contraintes de typage. On note $\mathrm{Supp}(C)$, le \textit{support} de $C$, l'ensemble des inconnues de type mentionnées dans $C$.
+
+    Une \textit{solution} $\sigma$ de $C$ est un dictionnaire sur $(\mathrm{ITyp}, \widehat{\mathsf{Typ}})$ tel que~$\mathrm{dom}(\sigma) \supseteq \mathrm{Supp}(C)$ et que $\sigma$ égalise toutes les contraintes de $C$.
+
+    Pour $(\hat{\tau}_1 \qeq \hat{\tau}_2) \in C$, on dit que $\sigma$ égalise $\hat{\tau}_1 \qeq \hat{\tau}_2$ signifie que $\sigma(\hat{\tau}_1)$ et $\sigma(\hat{\tau}_2)$ sont le même type étendu.
+
+    Il reste à définir $\sigma(\hat{\tau})$, le résultat de l'application de $\sigma$ à $\hat{\tau}$, par induction sur $\hat{\tau}$, il y a trois cas :
+    \begin{itemize}
+      \item $\sigma(\hat{\tau}_1 \to \hat{\tau}_2) = \sigma(\hat{\tau}_1) \to \sigma(\hat{\tau}_2)$ ;
+      \item $\sigma(\mathtt{int}) = \mathtt{int}$ ;
+      \item $\sigma(T)$ est le type étendu associé à $T$ dans $\sigma$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Avec $\sigma = [T_1 \mapsto \mathtt{int}, T_2 \mapsto (\mathtt{int} \to T_3)]$, on a donc \[
+    \sigma(T_1 \to T_2) = \mathtt{int} \to (\mathtt{int} \to T_3)
+    .\]
+  \end{exm}
+  \begin{exm}
+    La contrainte $T_1 \qeq T_2 \to T_3$ est égalisée par la solution $\sigma = [T_1 \mapsto T_2 \to \mathtt{int}, T_3 \mapsto \mathtt{int}]$.
+  \end{exm}
+
+  \begin{defn}
+    Une \textit{solution constante} de $C$ est un dictionnaire sur $(\mathrm{ITyp}, \mathsf{Typ})$ (et pas $(\mathrm{ITyp}, \widehat{\mathsf{Typ}})$) qui est une solution de $C$.
+  \end{defn}
+
+  \begin{prop}
+    Soit $e \in \mathsf{FUN}$ et soit $\Gamma$ tel que $\Vl(e) \subseteq \mathrm{dom}(\Gamma)$.
+    Soit $T \in \mathrm{ITyp}$.
+    Si $\sigma$ est une solution constante de $\mathsf{CT}(e, \Gamma, T)$, alors $\Gamma \vdash e : \tau$ où $\tau = \sigma(T)$.
+  \end{prop}
+
+  \begin{prv}
+    On procède par induction sur $e$ ; il y a 5 cas.
+    \begin{itemize}
+      \item Dans le cas $e = e_1\ e_2$, on écrit \[
+          \small
+        \mathsf{CT}(e, \Gamma, T) = \mathsf{CT}(e_1, \Gamma, T_1) \cup \mathsf{CT}(e_2, \Gamma, T_2) \cup \{T_1 \qeq T_2 \to T\}
+        ,\]
+        où \fresh\ $T_1$, $T_2$.
+        Soit $\sigma$ une solution constante de  $\mathsf{CT}(e, \Gamma, T)$.
+        Alors, 
+        \begin{itemize}
+          \item $\sigma$ est une solution constante de $\mathsf{CT}(e_1, \Gamma, T_1)$ ;
+          \item $\sigma$ est une solution constante de $\mathsf{CT}(e_2, \Gamma, T_1)$.
+        \end{itemize}
+        Et, par induction, on sait que 
+        \begin{itemize}
+          \item $\Gamma \vdash e_1 : \sigma(T_1)$ ;
+          \item $\Gamma \vdash e_2 : \sigma(T_2)$.
+        \end{itemize}
+        Par ailleurs, $\sigma(T_1) = \sigma(T_2) \to \sigma(T)$.
+        On en conclut en appliquant $\mathcal{T}_\mathrm{a}$.
+      \item Les autres cas se traitent similairement.
+    \end{itemize}
+  \end{prv}
+
+  \begin{prop}
+    Supposons $\Gamma \vdash e : \tau$.
+    Alors, pour tout $T \in \mathrm{ITyp}$, il existe $\sigma$ une solution constante de  $\mathsf{CT}(e, \Gamma, T)$ telle que l'on ait l'égalité $\sigma(T) = \tau$.
+  \end{prop}
+
+  \begin{prv}
+    On procède par induction sur $e$. Il y a 5 cas.
+    \begin{itemize}
+      \item Dans le cas $e = e_1\ e_2$, supposons $\Gamma \vdash  e_1\ e_2 : \tau$.
+        Nécessairement, cette dérivation provient de $\Gamma \vdash e_1 : \tau_2 \to \tau$ et aussi $\Gamma \vdash e_2 : \tau_2$.
+
+        Soit $T_0 \in \mathrm{ITyp}$, on a \[
+          \small
+          \mathsf{CT}(e, \Gamma, T_0) = \mathsf{CT}(e_1, \Gamma, T_1) \cup \mathsf{CT}(e_2, \Gamma, T_2) \cup \{T_1 \qeq T_2 \to T_0\}
+        .\]
+        Et, par induction, on a $\sigma_1$ et $\sigma_2$ des solutions constantes de~$\mathsf{CT}(e_1, \Gamma, T_1)$ et $\mathsf{CT}(e_2, \Gamma, T_2)$ avec $\sigma_1(T_1) = \tau_2 \to \tau$ et $\sigma_2(T_2) = \tau_2$.
+
+        On définit $\sigma$ en posant :
+         \begin{itemize}
+          \item $\sigma(T) = \sigma_1(T)$ si $T \in \mathrm{Supp}(\mathsf{CT}(e_1, \Gamma, T_1))$ ;
+          \item $\sigma(T) = \sigma_2(T)$ si $T \in \mathrm{Supp}(\mathsf{CT}(e_2, \Gamma, T_2))$ ;
+          \item $\sigma(T_0) = \tau$.
+        \end{itemize}
+        On vérifie bien que $\sigma$ est solution constante de $\mathsf{CT}(e, \Gamma, T_0)$.
+      \item Les autres cas se traitent similairement.
+    \end{itemize}
+  \end{prv}
+
+  \begin{thm}
+    On a $\Gamma \vdash e : \tau$ si, et seulement si $\forall T \in \mathrm{ITyp}$, l'ensemble de contraintes $\mathsf{CT}(e, \Gamma, T)$ admet une solution constante $\sigma$ tel que $\sigma(T) = \tau$.
+    \qed
+  \end{thm}
+
+  \begin{rmk}
+    On a caractérisé l'ensemble des dérivations de~$\Gamma \vdash e : \tau$ avec l'ensemble des solutions constantes de~$\mathsf{CT}(e, \Gamma, T)$.
+  \end{rmk}
+
+  \subsection{Termes et unification.}
+
+  On va momentanément oublier $\mathsf{FUN}$, pour généraliser à tout ensemble d'expressions.
+  Ceci permet d'appliquer cet algorithme à une grande variété de "langages".
+
+  \begin{defn}
+    On se donne
+    \begin{itemize}
+      \item un ensemble fini $\Sigma$ de  \textit{constantes}, notées $f, g, a, b$ où chaque constante  $f \in \Sigma$ a un entier naturel nommé \textit{arité} ;
+      \item un ensemble infini $\mathrm{V}$ d'\textit{inconnues}/de \textit{variables}/de \textit{variables d'unification}; notées $X, Y, Z$ (mais parfois $x, y,z$).
+    \end{itemize}
+
+    L'ensemble $\mathsf{T}(\Sigma, \mathrm{V})$ des \textit{termes} sur $(\Sigma, \mathrm{V})$, notés  $t$, $u$, \textit{etc}, est défini de manière inductive, ce qui est décrit par la grammaire : \[
+    t ::= f^k (t_1, \ldots, t_k) \mid X
+    ,\] 
+    où $f$ est une constante d'arité $k$.
+  \end{defn}
+
+  \begin{rmk}
+    L'intuition est que l'on étend, comme lors du passage de $\mathsf{Typ}$ à $\widehat{\mathsf{Typ}}$, un langage de départ pour ajouter des inconnues.
+    La définition inductive a $|\Sigma| + 1$ constructeurs.
+
+    Intuitivement, les  $X \in \mathrm{V}$ ne fait pas partie du langage de départ.
+    Il n'y a pas de liens pour $X$.
+  \end{rmk}
+
+  \begin{exm}
+    Avec $\Sigma = \{f^2, g^1, a^0, b^0\}$, \[
+      t_0 := f(g(a), f(X, f(Y, g(X)))) \in \mathsf{T}(\Sigma, V)
+    \]
+    est un terme.
+  \end{exm}
+
+  \begin{defn}
+    On définit $\mathsf{Vars}(t)$ l'ensemble des inconnues/variables de $t$ par induction sur $t$.
+    Il y a deux familles de cas :
+    \begin{itemize}
+      \item $\mathsf{Vars}(f(t_1, \ldots, t_k)) = \mathsf{Vars}(t_1) \cup \cdots \cup \mathsf{Vars}(t_k)$ ;
+      \item $\mathsf{Vars}(X) = \{X\}$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Avec l'expression $t_0$ précédente, on a \[
+      \mathsf{Vars}(t_0) = \{X,Y\}
+    .\]
+  \end{exm}
+
+  \begin{defn}
+    Une \textit{substitution}, notée $\sigma, \sigma_1, \sigma',$ \textit{etc}, est un dictionnaire sur $(\mathrm{V}, \mathsf{T}(\Sigma, \mathrm{V}))$.
+
+    Si $X \in \mathrm{dom}(\sigma)$, on dit que $\sigma$ est \textit{définie} en $X$.
+
+    Soit $\sigma$ une substitution et $t \in \mathsf{T}(\Sigma, \mathrm{V})$.
+    Le résultat de l'application de $\sigma$ à $t$, noté $\sigma(t)$, est défini par induction sur $t$, il y a deux familles de cas :
+    \begin{itemize}
+      \item $\sigma(f(t_1, \ldots, t_k)) = f(\sigma(t_1), \ldots, \sigma(t_k))$ ;
+      \item $\sigma(X) = X$ si  $X \not\in \mathrm{dom}(\sigma)$ ;
+      \item $\sigma(X)$ est le terme associé à $X$ dans $\sigma$ si $X \in \mathrm{dom}(\sigma)$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Avec $\sigma = [X \mapsto g(Y), Y \mapsto b]$, on a \[
+      \sigma(t_0) = f(g(a), f(\underbrace{g(Y)},f(b,g(\underbrace{g(Y)}))))
+    .\] 
+    \textit{\textbf{Attention !}} On n'a pas de terme en $g(b)$ : c'est une substitution \textit{simultanée}.
+  \end{exm}
+
+  \begin{note}
+    On rappelle qu'un dictionnaire peut être vu comme un ensemble fini de couples $(X, t)$ avec  $X \in \mathrm{V}$ et $t \in \mathsf{T}(\Sigma, \mathrm{V})$ tel que, pour toute variable $X \in \mathrm{V}$, il y a au plus un couple de la forme~$(X,t)$ dans la liste.
+
+    On utilise la notation $[\sfrac{t}{X}]$ pour représenter la notation $[X \mapsto t]$.
+    Ceci est utiliser que lorsqu'on ne change qu'\textit{une} variable.
+  \end{note}
+
+  \begin{defn}
+    Un \textit{problème d'unification} est la donnée d'un ensemble fini de paires de termes (les contraintes) dans $\mathsf{T}(\Sigma, \mathrm{V})$.
+    On note un tel problème $\mathcal{P} = \{t_1 \qeq u_1, \ldots, t_k \qeq u_k \}$.
+
+    Une \textit{solution}, un \textit{unificateur}, d'un tel $\mathcal{P}$ est une substitution $\sigma$ telle que, pour toute contrainte $t \qeq u$ dans $\mathcal{P}$, $\sigma(t)$ et $\sigma(u)$  sont le même terme, ce que l'on note $\sigma(t) = \sigma(u)$.
+
+    On note  $\mathrm{U}(\mathcal{P})$ l'ensemble des unificateurs de $P$.
+  \end{defn}
+
+  \begin{exm}
+    Avec le problème d'unification \[
+    \mathcal{P}_1 = \{f(a,g(X)) \qeq f(Z, Y), g(T) \qeq g(Z) \} 
+    ,\]
+    les substitutions 
+    \begin{itemize}
+      \item $\sigma_1 = [Z \mapsto a, Y \mapsto g(X), T \mapsto a]$ ;
+      \item $\sigma_2 = [Z \mapsto a, Y \mapsto g(b), T\mapsto a, X \mapsto b]$ ;
+    \end{itemize}
+    sont des solutions de $\mathcal{P}_1$. Mais, \[
+      \sigma_3 = [Z \mapsto f(b,b), T \mapsto f(b,b), Y \mapsto g(b), X \mapsto b]
+    \] n'est pas une solution.
+
+    \textsl{Laquelle des solutions $\sigma_1$ et $\sigma_2$ est meilleure ?}
+    On remarque que $\sigma_2 = [\sfrac{b}{X}] \circ \sigma_1$ (où la composition est définie "comme on le pense"\footnote{Elle sera définie formellement ci-après.}).
+    Ainsi, $\sigma_1$ est "plus général" que $\sigma_2$ ; $\sigma_2$ est un "cas particulier" de $\sigma_1$.
+  \end{exm}
+
+  \begin{exm}[Aucune solution]
+    Les problèmes 
+    \begin{itemize}
+      \item $\mathcal{P}_2 = \{f(X,Y) \qeq g(Z)\}$ ;
+      \item $\mathcal{P}_3 = \{f(X,Y) \qeq X\}$
+    \end{itemize}
+    n'ont aucune solution : $\mathrm{U}(\mathcal{P}_2) = \mathrm{U}(\mathcal{P}_3) = \emptyset$.
+  \end{exm}
+
+  \subsection{Algorithme d'unification (du premier ordre).}
+
+  \begin{defn}
+    Un \textit{état} est soit un couple $(\mathcal{P}, \sigma)$, soit $\bot$ (\textit{l'état d'échec}).
+
+    Un état de la forme $(\emptyset, \sigma)$ est appelé \textit{état de succès}.
+
+    Un état qui n'est, ni échec, ni succès, peut s'écrire sous la forme~$(\{t \qeq t'\} \sqcup \mathcal{P}, \sigma)$, la contrainte $t \qeq t'$ étant choisie de manière non-déterministe.
+    
+    On définit une relation binaire $\to$ entre états par :
+    \begin{itemize}
+      \item  $\bot \not\to$ ;
+      \item  $(\emptyset,\sigma) \not\to$ ;
+      \item Il ne reste que les cas ni succès, ni échec, que l'on traite par la disjonction de cas :
+        \begin{enumerate}
+          \item $ \begin{array}{c}
+              \\
+              (\{f(t_1,\ldots,t_k) \qeq f(u_1,\ldots, u_n) \sqcup \mathcal{P}, \sigma\}) \to\\
+              \quad\quad\quad\quad(\{t_1 \qeq u_1, \ldots, t_k \qeq u_k\} \cup \mathcal{P}, \sigma) \quad ;
+            \end{array} $ \label{chap4-unification-match1}
+          \item $(\{f(t_1,\ldots,t_k) \qeq g(u_1,\ldots, u_n) \sqcup \mathcal{P}, \sigma\}) \to \bot$ si $f \neq g$ ; \label{chap4-unification-match2}
+          \item $(\{X\qeq t\} \sqcup \mathcal{P}, \sigma) \to (\mathcal{P}[\sfrac{t}{X}], [\sfrac{t}{X}] \circ \sigma)$ où \label{chap4-unification-match3}
+            \begin{itemize}
+              \item $X \not\in \mathsf{Vars}(t)$,
+              \item $\mathcal{P}[\sfrac{t}{X}] = \{u[\sfrac{t}{X}] \qeq u'[\sfrac{t}{X}]  \mid (u\qeq u') \in \mathcal{P}\}$,
+              \item et $[\sfrac{t}{X}] \circ \sigma$ est la substitution telle que, quel que soit $Y \in \mathrm{V}$, $([\sfrac{t}{X}] \circ \sigma)(Y) = (\sigma(Y))[\sfrac{t}{X}]$ ;
+            \end{itemize}
+          \item $(\{X \qeq t\}\sqcup \mathcal{P}, \sigma) \to \bot$ si $X \in \mathsf{Vars}(t)$ et $t \neq X$ ; \label{chap4-unification-match4}
+          \item $(\{X \qeq X\}\sqcup \mathcal{P}, \sigma) \to (\mathcal{P}, \sigma)$. \label{chap4-unification-match5}
+        \end{enumerate}
+    \end{itemize}
+
+    L'\textit{état initial} de l'algorithme correspond à $(\mathcal{P}, \emptyset)$ : le problème $\mathcal{P}$ muni de la substitution vide $\emptyset$.
+  \end{defn}
+
+  \begin{exm}
+    On applique l'algorithme d'unification comme montré ci-dessous :
+    \begin{align*}
+      &\quad\{\underbrace{f(a,X) \qeq f(Y,a)}_{\text{choix}}, g(X) \qeq g(Y)\}, \emptyset\\
+      \to&\quad\{\underbrace{a \qeq Y}_{\text{choix}}, X \qeq a, g(X) \qeq g(Y)\}, \emptyset\\
+      \to&\quad\{\underbrace{X \qeq a}_{\text{choix}}, g(X) \qeq g(a)\}, [Y \mapsto a]\\
+      \to&\quad\{\underbrace{g(a) \qeq g(a)}_\text{choix}\}, [Y \mapsto a,X \mapsto a]\\
+      \to&\quad\{\underbrace{a\qeq a}_\text{choix}\}, [Y \mapsto a,X \mapsto a]\\
+      \to&\quad\emptyset, [Y \mapsto a,X \mapsto a]\\
+    .\end{align*}
+    On peut remarquer que l'ensemble des clés de $\sigma$ n'apparaît pas dans le problème ni dans les autres termes de la substitution : lorsqu'on ajoute une clé, elle disparaît du problème.
+  \end{exm}
+
+  \begin{defn}
+    Un état $(\mathcal{P}, \sigma)$ est en \textit{forme résolue} si, pour toute clé $X \in \mathrm{dom}(\sigma)$, alors $X$ n'apparaît pas dans $\mathcal{P}$ et, quel que soit la clé $Y \in \mathrm{dom}(\sigma)$ alors $X \not\in  \mathsf{Vars}(\sigma(Y))$.
+  \end{defn}
+
+  \begin{rmk}[Notation]
+    Une substitution $\sigma$ peut être vue comme un problème d'unification, que l'on note $\overset ? \sigma$.
+    (On passe d'un ensemble de couples à un ensemble de paires.)
+  \end{rmk}
+
+  \begin{prop}
+    Si $(\mathcal{P}_0, \sigma_0)$ est en forme résolue et $(\mathcal{P}_0, \sigma_0) \to (\mathcal{P}_1, \sigma_1)$ alors $(\mathcal{P}_1, \sigma_1)$ est en forme résolue et \[
+    \mathrm{U}(\mathcal{P}_0 \cup \overset ? \sigma_0) =
+    \mathrm{U}(\mathcal{P}_1 \cup \overset ? \sigma_1)
+    .\] 
+  \end{prop}
+
+  \begin{prv}[Éléments de preuve]
+    La vraie difficulté se trouve dans le \ref{chap4-unification-match3}ème cas (les cas \ref{chap4-unification-match1} et \ref{chap4-unification-match5} sont immédiats).
+    Pour cela, on utilise le lemme "technique" ci-dessous.
+
+    \begin{lem}
+      Si $X \not\in \mathrm{dom}(\sigma)$ alors \[
+        [\sfrac{t}{X}] \circ \sigma = \big[X \mapsto t, Y_1 \mapsto (\sigma(Y_1))[\sfrac{t}{X}], \ldots, Y_l \mapsto (\sigma(Y_k))[\sfrac{t}{X}]\big]
+      ,\] 
+      où $\mathrm{dom}(\sigma) = \{Y_1, \ldots, Y_k\}$.
+      \qed
+    \end{lem}
+  \end{prv}
+
+  \begin{prop}
+    On note $\to^\star$ la clôture réflexive et transitive de la relation $\to$.
+    \begin{enumerate}
+      \item Un \textit{unificateur le plus général} (\textit{mgu}\footnote{Pour \textit{Most Général Unifier}} dans la littérature anglaise) est une solution $\sigma \in \mathrm{U}(\mathcal{P})$ telle que, quelle que soit $\sigma' \in \mathrm{U}(\mathcal{P})$, il existe $\sigma''$ telle que $\sigma' = \sigma'' \circ \sigma$.
+
+        Si $(\mathcal{P}, \emptyset) \to^\star (\emptyset, \sigma)$ alors $\sigma$ est un unificateur le plus général de $\mathcal{P}$.
+      \item Si $(\mathcal{P}, \emptyset) \to^\star \bot$ alors $\mathrm{U}(\mathcal{P}) = \emptyset$.
+    \end{enumerate}
+  \end{prop}
+  \begin{prv}
+    \begin{enumerate}
+      \item On montre par induction sur $(\mathcal{P}, \emptyset) \to^\star (\emptyset, \sigma)$ l'égalité $\mathrm{U}(\mathcal{P}) = \mathrm{U}(\overset ? \sigma)$ à l'aide de la proposition précédente.
+        Puis, on conclut avec le lemme suivant.
+    \begin{lem}
+      Pour toute substitution $\sigma$, alors $\sigma$ est un unificateur le plus général de $\overset ? \sigma$.
+    \end{lem}
+    \begin{prv}
+      Soit $\sigma' \in \mathrm{U}(\overset ? \sigma)$ et soit $X \in \mathrm{V}$. On montre que $\sigma' \circ \sigma = \sigma'$.
+       \begin{itemize}
+        \item Si $X \in \mathrm{dom}(\sigma)$, alors $\sigma'(\sigma(X)) = \sigma'(X)$ car  $\sigma'$ satisfait la contrainte  $X \qeq \sigma(X)$.
+        \item Si  $X \not\in  \mathrm{dom}(\sigma)$ alors $\sigma'(\sigma(X)) = \sigma'(X)$.
+      \end{itemize}
+      Ainsi $\sigma' \circ \sigma = \sigma'$.
+    \end{prv}
+      \item On montre que si $(\mathcal{P}, \emptyset) \to \bot$ alors $\mathrm{U}(\mathcal{P} \cup \overset ? \sigma)$.
+        Pour le \ref{chap4-unification-match2}nd cas, c'est immédiat.
+        Pour le \ref{chap4-unification-match4}ème cas, on procède par l'absurde.
+        Soit $\sigma_0$ qui satisfait $X \qeq t$ avec $X \in \mathsf{Vars}(t)$ et~$X \neq t$.
+        Alors $\sigma_0(X) = \sigma_0(t)$, qui contient $\sigma_0(X)$ et c'est un sous-ensemble strict. Absurde.
+
+        On raisonne ensuite par induction sur $\to^\star$ pour conclure que $(\mathcal{P}, \emptyset) \to^\star (\mathcal{P}_0, \sigma_0) \to \bot$.
+    \end{enumerate}
+  \end{prv}
+
+  \begin{lem}
+    La relation $\to$ est terminante (il n'y a pas de chaîne infinie avec cette relation).
+  \end{lem}
+  \begin{prv}
+    Vue plus tard.
+  \end{prv}
+
+  \begin{thm}
+    L'algorithme d'unification calcule un unificateur le plus général si, et seulement si le problème initial a une solution.
+    \qed
+  \end{thm}
+
+  \subsection{Retour sur l'inférence de types pour $\mathsf{FUN}$.}
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[every text node part/.style={align=center}]
+      \node[rectangle,fill=deepblue,text=white] (1) {Inférence de types\\$e$ et $\Gamma$};
+      \node[below=3cm of 1,rectangle,fill=deepblue,text=white] (2) {Ensemble de contraintes de typage\\$\mathsf{CT}(e, \Gamma, T_0)$};
+      \node[below=3cm of 2,text=deepblue] (3) {$\bullet$};
+      \node[below left=2cm and 2cm of 3] (4a) {\textbf{\color{deepblue} Retourne $\bot$}\\ $e$ n'est pas typable};
+      \node[below right=2cm and 2cm of 3] (4b) {\textbf{\color{deepblue} Retourne $\sigma$}\\ $\Gamma \vdash e : \sigma'(T_0)$\\ où $\sigma' := \sigma_\text{const} \circ \sigma$\footnotemark};
+
+      \draw[->] (1)--(2) node[midway,draw=deepblue,color=deepblue,rounded rectangle,fill=white] {\sffamily CONTRAINTES};
+      \draw[->] (2)--(3) node[midway,draw=deepblue,color=deepblue,rounded rectangle,fill=white](U) {\sffamily UNIFICATION};
+      \draw[->] (3)--(4a);
+      \draw[->] (3)--(4b);
+
+      \tikzset{every text node part/.style={align=left}}
+      \node[right=0.3cm of U,align=left] {~\\\rlap{Constantes $\Sigma = \{\mathtt{int}^0, {\to}^2\}$}\\\rlap{Variables $\mathrm{V} = \mathrm{ITyp}$}\\~\\\rlap{Les types étendus de $\widehat{\mathsf{Typ}}$}\\ \rlap{correspondent exactement}\\\rlap{aux termes de $\mathsf{T}(\Sigma, \mathrm{V})$}};
+    \end{tikzpicture}
+  \end{figure}
+
+  \footnotetext{L'unificateur le plus général peut contenir des variables dans ses valeurs qui ne sont pas des clés (par exemple lors du typage de $\fun x x$). Il faut donc composer $\sigma$ avec une substitution "constante" pour effacer ces variables inutilisée.}\showfootnote
+
+  Ceci conclut notre étude du petit langage fonctionnel $\mathsf{FUN}$.
+\end{document}

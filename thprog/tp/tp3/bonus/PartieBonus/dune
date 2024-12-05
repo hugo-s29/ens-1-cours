@@ -1,0 +1,10 @@
+(executable
+ (name main))
+
+(ocamllex expr_lexer term_lexer)
+
+(ocamlyacc expr_parser term_parser)
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))
