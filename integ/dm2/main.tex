@@ -1,0 +1,190 @@
+\documentclass{../../td}
+
+\title{DM n°2\\\itshape Mesure \& Intégration}
+\author{Hugo {\scshape Salou}\\ Dept. Informatique}
+
+\newcommand\todo{
+  \color{red}
+  \begin{center}
+    \huge
+    \textbf{TODO}
+  \end{center}
+}
+
+\begin{document}
+  \maketitle
+
+  \chapter*{Exercice 1.}
+
+  \begin{enumerate}
+    \item Pour la linéarité de $\ell_N$, on utilise la linéarité de la somme, et la linéarité des fonctions $c_n$ : si $f, g \in \mathcal{C}_{2\pi}$ et $\alpha \in \mathds{R}$ alors \label{ex1-q1}
+      \begin{align*}
+        c_n(f + \alpha g) &= \frac{1}{2\pi} \int_{-\pi}^\pi (f(t) + \alpha g(t))\:\mathrm{e}^{-int} \:\mathrm{d}t\\
+        &= \frac{1}{2\pi} \int_{-\pi}^\pi f(t)\:\mathrm{e}^{-int}\:\mathrm{d}t + \frac{\alpha}{2\pi} \int_{-\pi}^\pi g(t)\:\mathrm{e}^{-int}\: \mathrm{d}t \\
+        &= c_n(f) + \alpha c_n(g)
+      .\end{align*}
+
+      Pour monter que $\ell_N$ est continue, on montre que c'est une somme fini de fonctions continues car $1$-lipschitzienne.
+      En effet,
+      \begin{align*}
+        |c_n(f)| &\le  \frac{1}{2\pi} \Big|\int_{-\pi}^\pi f(t) \mathrm{e}^{-int}\: \mathrm{d}t\Big|\\
+                 &\le \frac{1}{2\pi} \int_{-\pi}^\pi |f(t)|\; \mathrm{d}t\\
+                 &\le \frac{1}{2\pi} \int_{-\pi}^\pi \|f\|_{\infty}\: \mathrm{d}t\\
+                 &\le \|f\|_{\infty}
+      ,\end{align*}
+      et il en découle que $\ell_N$ est $2N$-lipschitzienne, donc continue.
+      De plus, on a que, pour toute fonction $f \in \mathcal{C}_{2\pi}$ telle que $\|f\|_{\infty} \le 1$, \[
+      \ell_N(f) = \sum_{n \in \llbracket -N,N\rrbracket} \frac{1}{2\pi} \int_{-\pi}^\pi f(t)\: \mathrm{e}^{-int}\: \mathrm{d}t = \frac{1}{2\pi} \int_{-\pi}^\pi f(t) \: \mathrm{D}_N(-t)\: \mathrm{d}t
+      ,\] 
+      d'où, par inégalité triangulaire, \[
+        |\ell_N(f)| \le \frac{1}{2\pi} \int_{-\pi}^\pi |f(t)|\: |\mathrm{D}_N(-t)|\; \mathrm{d}t \le \|f\|_\infty \cdot \underbrace{\frac{1}{2\pi} \int_{-\pi}^\pi |\mathrm{D}_N(t)|\; \mathrm{d}t}_{\|\mathrm{D}_N\|_1}
+      .\]
+      Ainsi, comme $\|f\|_{\infty} \le 1$, on en déduit $|\ell_N(f)| \le \|\mathrm{D}_N\|_1$ quel que soit $f \in \mathcal{C}_{2\pi}$ avec $\|f\|_{\infty} \le 1$. On a donc un majorant de la fonction $|\ell_N|$.
+      D'où $\|\ell_N\| \le \|\mathrm{D}_N\|_1$ par $\sup$.
+    \item Considérons, comme indiqué dans l'indication, les fonctions $f_\varepsilon$ où  $f_\varepsilon(t) = \mathrm{D}_N(t) / (|\mathrm{D}_N(t)| + \varepsilon)$ pour $\varepsilon > 0$.
+      D'une part, on sait que $f_{\varepsilon}$ est $2\pi$-périodique.
+      De plus, la continuité vient de la continuité de $\mathrm{D}_N$ (plus facile à voir sur l'expression avec la somme), et car $|\mathrm{D}_N(t)| + \varepsilon \ge \varepsilon > 0$ si $\varepsilon > 0$.
+      En utilisant l'égalité sur $\ell_N(f)$ précédente, on calcule \[
+        \ell_N(f_{\varepsilon}) = \frac{1}{2\pi} \int_{-\pi}^\pi \frac{\mathrm{D}_N^2(t)}{|\mathrm{D}_N(t)| + \varepsilon}\: \mathrm{d}t = \frac{1}{2\pi} \int_{-\pi}^\pi \frac{|\mathrm{D}_N(t)|^2}{|\mathrm{D}_N(t)| + \varepsilon}\: \mathrm{d}t
+      .\]
+      Or, $g_{\varepsilon} = |\mathrm{D}_N|^2 / (|\mathrm{D}_N| + \varepsilon)$ converge presque partout vers $|\mathrm{D}_N|$ lorsque l'on a $\varepsilon \to 0$.
+      De plus, $g_{\varepsilon}$ est dominée par $|\mathrm{D}_N|$ intégrable.
+      Par le théorème de convergence dominée, 
+      \[
+        |\ell_N(f_\varepsilon)| = \ell_N(f_\varepsilon) \xrightarrow[\;\varepsilon \to 0\;]{} \frac{1}{2\pi} \int_{-\pi}^\pi |\mathrm{D}_N(t)|\:\mathrm{d}t = \| \mathrm{D}_N \|_1
+      .\]
+      On vérifie aisément que
+      \begin{itemize}
+        \item $f_\varepsilon$ est  $2\pi$-périodique et continue (simple à remarquer à partir de la forme de somme d'exponentielles) ;
+        \item $\|f_{\varepsilon}\|_\infty = \sup_{t\: \in\: \left]{-\pi}, \pi \right[}|\mathrm{D}_N(t)| / (|\mathrm{D}_N(t)| + \varepsilon) \le 1$.
+      \end{itemize}
+      On en conclut que \[
+      \|\ell_N\| = \|\mathrm{D}_N\|_1
+      .\]
+    \item On a
+      \begin{align*}
+        \|\mathrm{D}_N\|_1
+        &= \frac{1}{2\pi} \int_{-\pi}^\pi |\mathrm{D}_N(t)|\: \mathrm{d}t\\
+        &= \frac{1}{2\pi} \int_{-\pi}^\pi \frac{|\sin[(2 N +1)t / 2]\,|}{|\sin t / 2\,|}\: \mathrm{d}t\\
+        &= \frac{1}{\pi} \int_{-\frac{\pi}{2}}^{\frac{\pi}{2}} \frac{|\sin (2N+1) u\,|}{|\sin u\,|}\:\mathrm{d}u\\
+        &\ge \frac{1}{\pi} \int_{-\frac{\pi}{2}}^{\frac{\pi}{2}} \frac{|\sin (2N+1) u\,|}{|u|}\:\mathrm{d}u\\
+        &= \frac{1}{\pi} \int_{-N\pi- \frac{\pi}{2}}^{N\pi + \frac{\pi}{2}} \frac{|\sin v\,|}{|v|}\:\mathrm{d}v\\
+        &\xrightarrow[\;N \to \infty\;]{} \frac{1}{\pi} \int_{-\infty}^{+\infty} \frac{|\sin v\,|}{|v|}\: \mathrm{d}v = +\infty
+      .\end{align*}
+      Par minoration, on en déduit que $\|\ell_N\| \to +\infty$ lorsque $N \to \infty$. \label{ex1-q3}
+    \item On applique le théorème de Banach-Steinhaus où les espaces vectoriels sont $E = (\mathcal{C}_{2\pi}, \|\cdot\|_\infty)$ et $F = (\mathds{R}, |\cdot|)$.
+      Pour démontrer que l'espace vecotoriel $\mathcal{C}_{2\pi}$ est complet, on utilise la complétude de $\mathrm{L}^1(\mathds{R}, \mathcal{B}(\mathds{R}), \mu_\mathrm{L})$.
+      Considérons une suite de Cauchy $(g_n)_{n \in \mathds{N}}$ de fonctions dans $\mathcal{C}_{2\pi}$.
+      La suite $(g_n)_{n \in \mathds{N}}$ est une suite de Cauchy de $\mathrm{L}^1(\mathds{R})$, espace complet, qui converge donc vers $g \in \mathrm{L}^1(\mathds{R})$.
+      Or, car la convergence est pour la norme infini, la convergence des $g_n$ est uniforme vers $g$.
+      On sait ainsi que $g$ est continue (car les $g_i$ le sont), par unicité de la limite,
+      \[
+        g(x + 2\pi) \xleftarrow[\;\infty\gets n\;]{} g_n(x + 2\pi) = g_n(x) \xrightarrow[\;n\to \infty\;]{} g(x)
+      .\]
+      On en conclut que $g$ est dans $\mathcal{C}_{2\pi}$. L'espace $E$ est donc complet.
+      On peut donc appliquer le théorème de Banach-Steinhaus avec les applications linéaires continues $(\ell_i)_{i \in \mathds{N}}$ (\textit{c.f.} question~\ref{ex1-q1}) de $E$ dans $F$.
+      Deux cas sont donc possibles.
+      \begin{itemize}
+        \item Ou bien la famille $(\|\ell_i\|)_{i \in \mathds{N}}$ est bornée, \textit{\textbf{absurde}} par la question~\ref{ex1-q3}.
+        \item Ou bien il existe une intersection $A$ dénombrable d'ouverts denses dans $\mathcal{C}_{2\pi}$ telle que $\sup_{N \in \mathds{N}} |\ell_N(f)| = +\infty$ pour toute fonction $f \in A$, \textit{i.e.} que la série de Fourier de $f$ diverge en $0$.
+      \end{itemize}
+  \end{enumerate}
+
+  \chapter*{Exercice 2.}
+
+  \begin{enumerate}
+    \item \label{ex2-q1} Pour montrer que $\phi_g$ est bien définit, il suffit de montrer que si~$g$ et $g'$ sont égales $\mu$-presque partout, alors quel que soit $f$, les fonctions $f\cdot g$ et $f \cdot g'$ sont égales $\mu$-presque partout.
+      Ainsi, on a l'égalité $\int_\Omega f(x)\:g(x)\:\mu(\mathrm{d}x) = \int_\Omega f(x)\:g'(x)\:\mu(\mathrm{d}x)$, d'où $\phi_g = \phi_{g'}$.
+
+      De plus, par l'inégalité de Hölder, on a que \[
+        \Big|\int_\Omega f g\: \mathrm{d}\mu\Big|\le \int_\Omega |f g| \:\mathrm{d}\mu \le \|f\|_{\mathrm{L}^p} \times \|g\|_{\mathrm{L}^q}
+      ,\]
+      qui est fini car les deux termes sont finis : on a bien $\phi_g(f) \in \mathds{R}$.
+      On en conclut que $\phi$ est bien définie.
+
+      La linéarité de $\phi_g$ vient simplement de la linéarité du produit de fonctions et de la linéarité de l'intégrale :
+      \begin{align*}
+      \phi_{\alpha g + \beta h}(f) &= \int_\Omega (\alpha g(x) + \beta h(x))\: f(x)\:\mathrm{d}x\\
+      &= \alpha \int_\Omega g(x)\:f(x)\:\mathrm{d}x + \beta \int_\Omega h(x)\:f(x)\:\mathrm{d}x\\
+      &= \alpha \phi_g(f) + \beta \phi_h(f)
+      .\end{align*}
+
+      Pour la continuité, il suffit de remarquer que $\phi$ est $1$-lipschitzienne.
+      En effet, on veut montrer que (par linéarité) \[
+      \| \phi_g \|_{(\mathrm{L}^p)^*} := \sup_{\|f\|_{\mathrm{L}^p} = 1} | \phi_g(f)| \le \|g\|_{\mathrm{L}^q}
+      .\]
+      Soit $f \in \mathrm{L}^p$ telle que $\|f\|_{\mathrm{L}^p} = 1$.
+      Alors, par l'inégalité de Hölder, on a que \[
+        |\phi_g(f)| = \Big|\int_\Omega f\,g\:\mathrm{d}\mu\Big| \le \int_\Omega |f\,g|\:\mathrm{d}\mu \le \|g\|_{\mathrm{L}^q} \times \cancel{\|f\|_{\mathrm{L}^p}}
+      ,\]et ce, quel que soit $f$ de norme $\mathrm{L}^p$ valant $1$.
+      Ainsi $\|\phi(g)\|_{(\mathrm{L}^p)^*} \le \|g\|_{\mathrm{L}^q}$ et on en déduit que $\phi$ est  $1$-lipschitzienne donc continue.
+    \item \label{ex2-q2} Dans la question~\ref{ex2-q1}, on a montré $(\star) : \|\phi_g\|_{(\mathrm{L}^p)^*} \le \|g\|_{\mathrm{L}^q}$.
+      Il ne reste qu'à montrer l'autre inégalité.
+      Considérons la fonction étagée $u_g = \mathds{1}_{\{g(x) > 0\}} - \mathds{1}_{\{g(x) < 0\}}$.
+      Elle est bien définie car, si on a $g = g'$ $\mu$-presque partout, alors $u_g = u_{g'}$ $\mu$-presque partout.
+      On vérifie que $g = u_g |g|$ : la fonction $u_g$ donne le signe de $g$.
+      Et, elle est mesurable car l'application $g / |g|$ l'est comme quotient de deux fonctions mesurables.
+      On pose $h_{p,g} = u_g / \sqrt[p]{\mu(\Omega)}$ où $\mu(\Omega) \ge 0$ est fini par hypothèse.
+      La fonction $h_g$ est donc mesurable.
+      Ainsi, on a \[
+      \int_\Omega |h_{p,g}|^p\:\mathrm{d}\mu = \frac{1}{\mu(\Omega)} \int_\Omega |u_g|^p\:\mathrm{d}\mu = \frac{1}{\mu(\Omega)}\int_\Omega \mathrm{d}\mu = 1
+      .\] 
+      D'où, $\|h_{p,g}\|_{\mathrm{L}^p} = 1$.
+      Or, \[
+        \Big|\int_{\Omega} h_{p,g}\:g\:\mathrm{d}\mu\Big| = \Big|\int_\Omega |g|\: \mathrm{d}\mu\Big| = \int_\Omega |g|\:\mathrm{d}\mu \le \|g\|_{\mathrm{L}^q}
+      ,\] car $q \ge 2$.
+      On en conclut que $\|\phi_g\|_{(\mathrm{L}^p)^*} \ge \|g\|_{\mathrm{L}^q}$, où l'on a égalité avec l'inégalité $(\star)$ précédente.
+    \item Comme $\gamma \in (\mathrm{L}^p)^*$, on sait que $\gamma : \mathrm{L}^p \to \mathds{R}$ est une application linéaire continue.
+      \begin{enumerate}
+        \item On applique le théorème de représentation de Riesz à l'application linéaire continue $\gamma_{|\mathrm{L}^2} : \mathrm{L}^2 \to \mathds{R}$.
+          En effet, on a l'inclusion de $\mathrm{L}^2 \subseteq \mathrm{L}^p$ car $1 \le p < 2$ et $\Omega$ est de mesure finie (vu en TD).
+          Et, on sait que  $\mathrm{L}^2$ est un espace de Hilbert.
+          Ceci justifie l'utilisation du théorème de représentation de Riesz, et on obtient donc qu'il existe $g \in \mathrm{L}^2$ tel que pour tout~$f \in \mathrm{L}^2$, \[
+          \gamma_{|\mathrm{L}^2}(f) = \langle f, g \rangle_{\mathrm{L}^2} = \int_\Omega f\,g\:\mathrm{d}\mu
+          .\]
+        \item Montrons que $\|g\|_{\mathrm{L}^p}$ est finie.
+          Considérons la suite $(g_n)_{n \in \mathds{N}}$ où l'on pose $g_n := u|g|^{q-1} \mathds{1}_{\{|g|\le n\}}$.
+          La suite $(|g_n|)$ est croissante et converge vers $|g|^{q-1}$.
+          Ainsi, par le théorème de Beppo-Levi, on a que \[
+            \gamma(g_n) = \int_\Omega g\:g_n~\mathrm{d}\mu \xrightarrow[\:n\to \infty\:]{}\int_\Omega |g|^q~\mathrm{d}\mu
+          .\]
+          Et $|\gamma(g_n)| \le \|\gamma\|_{(\mathrm{L}^p)^*}\: \|g_n\|_{\mathrm{L}^p}$ est finie car 
+          \begin{itemize}
+            \item $\|\gamma\|_{(\mathrm{L}^p)^*} < +\infty$ car $\gamma$ est continue ;
+            \item $\|g_n\|_{\mathrm{L}^p}^{p} = \int_{\{|g| \le n\}} |g|^{(q-1)p}\:\mathrm{d}\mu = \int_{\{|g|\le n\}} |g|^p\:\mathrm{d}\mu \le \|g\|_{\mathrm{L}^p}$, qui est finie par l'inclusion $\mathrm{L}^2 \subseteq \mathrm{L}^p$.
+          \end{itemize}
+          On sait donc que $\|g\|_{\mathrm{L}^q}$ est finie car majorée.
+          On en conclut que $g \in \mathrm{L}^q$.
+      \end{enumerate}
+    \item Pour une forme linéaire continue $\gamma \in (\mathrm{L}^p)^*$, on a trouvé $g \in \mathrm{L}^q$ tel que $(\phi_g)_{|\mathrm{L}^2} = \gamma_{|\mathrm{L}^2}$.
+      Soit $f \in \mathrm{L}^p$ quelconque.
+      Par densité de~$\mathrm{L}^2$ dans $\mathrm{L}^p$, il existe une suite $(f_n)_{n \in \mathds{N}}$ de fonctions dans $\mathrm{L}^2$ convergent vers $f$.
+      Ainsi,  \[
+        \phi_g(f)\xleftarrow[\:\infty\gets n\:]{} \phi_g(f_n) = \gamma(f_n) \xrightarrow[\:n\to \infty\:]{} \gamma(f)
+      ,\] par continuité de $\phi_g$ (question~\ref{ex2-q1}) et de $\gamma$ (car $\gamma \in (\mathrm{L}^p)^*$).
+      Ainsi, on a bien $\phi_g(f) = \gamma(f)$ quel que soit  $f \in \mathrm{L}^p$.
+      On en conclut que l'on a $\phi_g = \gamma$ et donc que $\phi$ est surjective. 
+    \item Il ne reste qu'à démontrer que $\phi$ est injective.
+      Soit $g \in \ker \phi$.
+      Ainsi, pour tout $f \in \mathrm{L}^p$, on a $\phi_g(f) = 0$.
+      D'où,  $\|\phi_g\|_{(\mathrm{L}^p)^*} = 0$, et donc (question~\ref{ex2-q2}) $\|g\|_{\mathrm{L}^q} = 0$.
+      Or, par séparation de la norme, on a que $g = 0$ (nulle $\mu$-presque partout implique nulle dans le quotient). 
+      On en déduit que $\ker \phi$ est réduit au singleton trivial ; l'application  $\phi$ est donc injective.
+
+      On en conclut que  $\phi : \mathrm{L}^q \to (\mathrm{L}^p)^*$ est un isomorphisme continu, et on a donc $\mathrm{L}^q \cong (\mathrm{L}^p)^*$.
+  \end{enumerate}
+
+
+  \vfill
+
+  \begin{center}
+    \color{deepblue}
+    \boxed{
+      \textbf{\textit{Fin du DM.}}
+    }
+  \end{center}
+
+
+  \vfill
+
+\end{document}

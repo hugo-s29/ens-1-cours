@@ -36,6 +36,7 @@
 \RequirePackage{colortbl}
 \RequirePackage{nicematrix}
 \RequirePackage{fontspec}
+\RequirePackage{silence}
 \RequirePackage{tablefootnote}
 
 \newcommand\removefootnoteinside[1]{
