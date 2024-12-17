@@ -1,0 +1,356 @@
+\documentclass{../../td}
+
+\title{TD n°3\\\itshape Théorie des catégories}
+\author{Hugo \textsc{Salou}\\ Dept. Informatique}
+
+\renewcommand\thesection{\arabic{chapter}.\Alph{section}}
+\renewcommand\thechapter{\phantom}
+\renewcommand\theequation{\arabic{chapter}.\arabic{equation}}
+\usetikzlibrary{decorations.pathmorphing}
+
+\let\bm\boldsymbol
+\makeatletter
+\newcommand\showfootnote{%
+  \tfn@tablefootnoteprintout% 
+  \gdef\tfn@fnt{0}% 
+}
+\makeatother
+
+\declaretheorem[style=thmredbox, name=Lemme, numbered=no]{lemm}
+
+\newcommand\pullback{\arrow[very near start,description,phantom]{dr}{\lrcorner}}
+\newcommand\pushout{\arrow[very near start,description,phantom]{ul}{\ulcorner}}
+
+\newcommand\id{\ensuremath{\operatorname{id}}}
+\newcommand\ord{\ensuremath{\operatorname{ord}}}
+
+\begin{document}
+  \maketitle
+  
+  {
+    \small
+    \tableofcontents
+  }
+
+
+  \chapter{Exercice 1.}
+  \begin{slshape}
+    \color{deepblue}
+    Montrer que si un foncteur est un adjoint à droite (\textit{resp}. à gauche) alors il est continue (\textit{resp}. cocontinue).
+  \end{slshape}
+
+  Soit $F : \mathbf{D} \to \mathbf{C}$ un foncteur possédant un adjoint à gauche que l'on notera $G : \mathbf{C} \to \mathbf{D}$.
+  Ainsi, on sait que $\mathrm{Hom}(-, G-) \cong \mathrm{Hom}(F-,-)$.
+
+  Considérons un petit diagramme $J : \mathbf{J} \to \mathbf{C}$.
+  Ainsi, on a la chaîne d'isomorphisme :
+  \begin{align*}
+    \mathrm{Hom}(A, G(\lim J))
+    &\cong \mathrm{Hom}(FA, \lim J) \quad \text{par adjoint}\\
+    &\cong \lim \mathrm{Hom}(F A, J) \quad \text{par continuité (TD2)}\\
+    &\cong \lim \mathrm{Hom}(A, GJ) \quad \text{par adjoint}\\
+    &\cong \mathrm{Hom}(A, \lim GJ) \quad \text{par continuité (TD2)}
+  ,\end{align*}
+  pour tout $A \in \mathbf{C}_0$.
+  Ceci étant vrai quel que soit $A$, on a donc l'isomorphisme $\mathcal{Y}(G(\lim J)) \cong \mathcal{Y}(\lim G J)$.
+
+  Par le lemme de Yoneda, on en déduit que $G(\lim J) \cong \lim G J$.
+  On a donc bien la continuité d'un foncteur possédant un adjoint à gauche,~\textit{i.e.} d'un foncteur qui est à un adjoint à droite.
+
+  Par dualité, on a bien le résultat pour les foncteurs possédant un adjoints à droite.
+
+  \chapter{Exercice 2.}
+  \begin{slshape}
+    \color{deepblue}
+    Montrer que si $F : \mathbf{C} \to \mathbf{D}$ est une équivalence de catégories et $G : \mathbf{D} \to \mathbf{C}$ est un quasi-inverse de $F$, alors $F$ est adjoint à gauche à $G$ et $G$ est aussi adjoint à gauche à $F$.
+  \end{slshape}
+
+  On veut construire l'isomorphisme \[
+    \alpha : \mathrm{Hom}(-, G-) \overset \sim \Rightarrow \mathrm{Hom}(F-,-)
+  .\]
+
+  On sait qu'il existe deux isomorphismes naturels \[
+  \theta : \mathrm{id}_\mathbf{D} \Rightarrow  F \circ G \quad\quad \text{ et } \quad\quad \eta : \id_\mathbf{C} \Rightarrow G \circ F
+  .\]
+
+  Considérons $(f : A \to G B) \in \mathrm{Hom}(-, G -)$, et on veut construire une flèche de la forme $\alpha_{A,B}(f) : FA \to B$.
+  On considère le diagramme 
+  \[
+  \begin{tikzcd}
+    A \arrow{dd}{f} &&&& F A \arrow{dd}{Ff} \arrow[dashed]{ddrr}{\alpha_{A,B}(f)} \\
+    \quad\quad\quad\arrow[-,very thick]{rr}{} && F \arrow[-stealth,very thick]{rr}{} && \quad\quad\quad \\
+    G B &&&& F(GB) \arrow{rr}{\theta^{-1}_B} && B
+  \end{tikzcd}
+  ,\] 
+  et on pose $\alpha_{A,B}(f) := \theta_B^{-1} \circ (F f)$.
+  Ceci donne donc un isomorphisme \[
+  \alpha_{A,B} : \mathrm{Hom}(A, G B) \overset\sim\longrightarrow \mathrm{Hom}(FA, B)
+  .\]
+  En effet, l'inverse est $\beta_{A,B} : g \mapsto (G g) \circ \eta_A$ comme le montre le diagramme
+  \[
+  \begin{tikzcd}
+    F A \arrow{dd}{g} &&&& G(F A) \arrow{dd}{Gg} &&  \arrow{ll}{\eta_A} A \arrow[dashed]{ddll}{\beta_{A,B}(f)} \\
+    \quad\quad\quad\arrow[-,very thick]{rr}{} && G \arrow[-stealth,very thick]{rr}{} && \quad\quad\quad \\
+    B &&&& GB
+  \end{tikzcd}
+  .\]
+
+  Ceci démontre ainsi que l'on a deux isomorphismes naturels
+  \begin{gather*}
+    \alpha : \mathrm{Hom}(-, G-) \overset \sim \Rightarrow \mathrm{Hom}(F-,-)\\
+    \beta : \mathrm{Hom}(F-, -) \overset \sim \Rightarrow \mathrm{Hom}(-,G-).
+  \end{gather*}
+  démontrant ainsi que $F$ et $G$ sont adjoints à gauche de $G$ et à droite de $F$ respectivement.
+  
+  \chapter{Exercice 3.}
+  \begin{slshape}
+    \color{deepblue}
+    On montre que les limites dans $\mathbf{Psh}(\mathbf{C}) := [\mathbf{C}^\mathrm{op}, \mathbf{Ens}]$ existent et se calculent point par point.
+    Soit $F : \mathbf{J} \to \mathbf{Psh}(\mathbf{C})$ un diagramme.
+    On rappelle que $F$ se voit comme $\hat{F}$ de $[\mathbf{J} \times \mathbf{C}^\mathrm{op}, \mathbf{Ens}]$.
+    Vu que $\mathbf{Ens}$ est complet, montrer que $\varprojlim F$ existe et vaut en $X$ : \[
+      \big(\!\varprojlim F\big)(X) \cong \varprojlim \hat{F}(-, X)
+    ,\] 
+    ou écrite de façon plus suggestive, \[
+      \big(\!\varprojlim P_\bullet\big)(X) \cong \varprojlim P_\bullet(X)
+    ,\] avec $P_\bullet = F$ (modulo curryfication).
+    Quel est l'énoncé dual ?
+  \end{slshape}
+
+  \chapter{Exercice 4.}
+  \begin{slshape}
+    \color{deepblue}
+    \begin{enumerate}
+      \item On rappelle que pour $f : A \to B$ une fonction, on peut définir le foncteur $f^{-1} : \wp B \to \wp A$ entre catégories posétales. Montrer qu'il admet un adjoint à gauche (bien connu) et un adjoint à droite (à construire).
+      \item En déduire que
+        \begin{itemize}
+          \item $f\big(\bigcup_{i \in I} A_i\big) = \bigcup_{i \in  I} f(A_i)$ ;
+          \item $f^{-1}\big(\bigcup_{i \in I} A_i\big) = \bigcup_{i \in  I} f^{-1}(A_i)$ ;
+          \item $f^{-1}\big(\bigcap_{i \in I} A_i\big) = \bigcap_{i \in  I} f^{-1}(A_i)$ ;
+        \end{itemize}
+      \item Pourquoi $f$ n'a-t-il pas d'adjoint à gauche ?
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item On pose le foncteur image directe, noté $f : \wp A \to \wp B$.
+      Parce que \[
+      f(S) \subseteq T \iff S \subseteq f^{-1}(T)
+      ,\] quels que soient $S$ et $T$, on sait donc que $f$ est adjoint à gauche de $f^{-1}$.
+      Pour l'adjoint à droite, il faut construire un foncteur de la forme~$R : \wp A \to \wp B$ vérifiant l'équivalence 
+      \[
+      S \subseteq R(T) \iff f^{-1}(S) \subseteq T
+      ,\] quels que soient $S$ et $T$.
+
+      On pose \[
+      R(T) := f(A) \setminus f(A \setminus T) 
+      ,\] 
+      et on a bien l'équivalence demandée.
+
+      En effet, si $S \subseteq R(T)$ alors $S \subseteq f(A) = \operatorname{im} f$ et $S \cap f(A \setminus T) = \emptyset$.
+      Ceci implique que $f^{-1}(S) \cap f^{-1}(f(A \setminus T)) = \emptyset$ et donc que l'on ait $f^{-1}(S) \cap (A \setminus T) = \emptyset$ (car $f^{-1}(f(A \setminus T)) \supseteq A \setminus T$).
+      On en déduit que $f^{-1}(S) \subseteq T$
+
+      Réciproquement, si $f^{-1}(S) \subseteq T$, c'est alors que l'on ait $S \subseteq \operatorname{im} f$ et que $S \cap f(A \setminus T) = \emptyset$.
+      On en déduit que $S \subseteq R(T)$.
+
+      Ceci permet de conclure que l'on a bien construit un adjoint à droite du foncteur $f^{-1}$. 
+    \item On applique l'exercice 1. En effet, l'union est la limite du diagramme discret (que l'on notera $A_I$ par la suite) dans la catégorie posétale $\wp X$ (pour $X$ un ensemble quelconque) et la colimite est l'intersection.
+      \begin{itemize}
+        \item On a \[
+          f\Big(\bigcup_{i \in  I} A_i\Big) = f(\lim A_I) = \lim f(A_I) = \bigcup_{i \in  I} f(A_i)
+          \]  car le foncteur $f$ est continu comme adjoint à droite de~$f^{-1}$.
+        \item On a \[
+          f^{-1}\Big(\bigcup_{i \in  I} A_i\Big) = f^{-1}(\lim A_I) = \lim f^{-1}(A_I) = \bigcup_{i \in  I} f^{-1}(A_i)
+          \]  car le foncteur $f^{-1}$ est continu comme adjoint à droite du foncteur~$R$.
+        \item On a \[
+          f^{-1}\Big(\bigcap_{i \in  I} A_i\Big) = f^{-1}(\operatorname{colim} A_I) = \operatorname{colim} f^{-1}(A_I) = \bigcap_{i \in  I} f^{-1}(A_i)
+          \]  car le foncteur $f^{-1}$ est cocontinu comme adjoint à gauche du foncteur~$f$.
+      \end{itemize}
+    \item Supposons que $f$ admette un adjoint à gauche, alors $f$ donc un adjoint à droite, et ainsi il est continu.
+      En particulier, on a l'égalité $f\big(\bigcap_{i \in  I} A_i \big) = \bigcap_{i \in I} f(A_i)$.
+      Sauf que c'est faux !
+      On considère par exemple le cas $A = B = \llbracket 1,3\rrbracket$ muni de l'application \begin{align*}
+        f: \llbracket 1,3\rrbracket  &\longrightarrow \llbracket 1,3\rrbracket \\
+        1 &\longmapsto 1\\
+        2 &\longmapsto 2\\
+        3 &\longmapsto 1\\
+      .\end{align*}
+      Ainsi pour $A_1 = \{1,2\}$ et $A_2 = \{2,3\}$, on a \[
+      f(A_1 \cap A_2) = f(\{2\}) = \{2\}  \quad\quad \text{mais}\quad\quad f(A_1) \cap f(A_2) = \{1,2\} 
+      .\]
+
+      En général, $f$ n'admet pas d'adjoint à gauche.\footnote{À moins que $f$ soit injective, auquel cas $f^{-1}(S) \subseteq T \iff S \subseteq f(T)$ car l'image réciproque $f^{-1}(S)$ ne contient \textit{que} les images de $S$ et rien d'autre.}\showfootnote
+  \end{enumerate}
+
+  \chapter{Exercice 5.}
+  \begin{slshape}
+    \color{deepblue}
+    Montrer qu'une transformation naturelle $\alpha : P \Rightarrow Q$ est un monomorphisme dans  $\mathbf{Psh}(\mathbf{C})$ si et seulement si chaque composante $\alpha_X : P(X) \to Q(X)$ l'est. Quel est l'énoncé dual ?
+
+    \textit{Indice.} Utiliser le lemme de Yoneda dans le sens difficile.
+  \end{slshape}
+
+  On procède en deux temps.
+
+  Considérons $\eta$ et  $\gamma$ comme indiqué dans le diagramme 
+  \[
+  \begin{tikzcd}
+    O \arrow[Rightarrow,bend left]{r}{\eta}  \arrow[Rightarrow,bend right,swap]{r}{\gamma} & P \arrow[Rightarrow]{r}{\alpha} & Q
+  \end{tikzcd}
+  .\]
+  On sait que $\eta = \gamma$ si et seulement si $\eta_X = \gamma_X$ pour tout $X \in \mathrm{ob}(\mathbf{C})$ (et de même pour $\alpha \circ \eta$,$\alpha \circ \gamma$).
+  Supposons que $\alpha \circ \eta = \alpha \circ \gamma$, et que chaque~$\alpha_X$ est un monomorphisme.
+  Ainsi, $\alpha_X \circ \eta_X = \alpha_X \circ \gamma_X$ par définition de la composition et donc~$\eta_X = \gamma_X$ quel que soit $X$.
+  \[
+  \begin{tikzcd}
+    O X \arrow[bend left]{r}{\eta_X} \arrow[bend right,swap]{r}{\gamma_X} & P X \arrow{r}{\alpha_X} & Q X
+  \end{tikzcd}
+  .\] 
+  On en déduit $\eta = \gamma$ et ainsi que $\alpha$ est un monomorphisme.
+
+  Pour l'autre sens, le sens difficile, on suppose que $\alpha : P \Rightarrow Q$ est un monomorphisme.
+  Fixons un $X$ quelconque.
+  On applique le lemme de Yoneda qui donne une transformation naturelle \[\tau : \mathrm{Ev}(-, X) \overset \sim \Rightarrow \mathrm{Nat}(\mathcal{Y}(X), -),\] où l'on a noté $\mathrm{Ev}(F, X)$ le bifoncteur d'évaluation.
+  Ainsi, le diagramme \[
+  \begin{tikzcd}
+    P X \arrow{r}{\alpha_X} \arrow{d}{\tau_P}[swap]{\vertical\sim} & Q X \arrow{d}{\tau_Q}[swap]{\vertical\sim}\\
+    \mathrm{Nat}(\mathcal{Y}(X), P) \arrow{r}{- \circ \alpha} & \mathrm{Nat}(\mathcal{Y}(X), Q)
+  \end{tikzcd}
+  \]
+  commute.
+  Et, si $\alpha$ est un monomorphisme alors $- \circ \alpha$ l'est aussi et il en va de même pour  \[
+    \tau_Q^{-1}\circ (- \circ \alpha) \circ \tau_P
+  ,\] par composition de monomorphismes (isomorphisme implique monomorphisme).
+
+  On en déduit que $\alpha_X$ est un monomorphisme, et ce quel que soit $X$. D'où l'équivalence.
+
+  L'énoncé dual est 
+  \begin{quote}
+    "une transformation naturelle $\alpha : P \Rightarrow Q$ est un épimorphisme dans $\mathbf{Psh}(\mathbf{C})^\mathrm{op}$ si et seulement si chaque composante $\alpha_X : PX \to QX$ l'est".
+  \end{quote}
+
+  \chapter{Exercice 6.}
+  \begin{slshape}
+    \color{deepblue}
+    \begin{enumerate}
+      \item Montrer que $\wp : A \mapsto \wp(A)$ et $f \mapsto \tilde{f}$ (où $\tilde{f}$ est l'image directe) n'est pas représentable.
+      \item Choisir une catégorie d’objet mathématique avec un foncteur d’oubli vers $\mathbf{Ens}$ et montrer qu’il est représentable (ou sinon, pourquoi il ne l’est pas). Les exemples du cours ne sont pas autorisés.
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Par l'absurde supposons le représentable.
+      Ainsi, il existe $A$ un ensemble tel que $\wp- \overset\sim\Rightarrow \mathrm{Hom}(A, -)$.
+
+      Considérons un ensemble fini $B$ de cardinal $m$.
+      Notons $n$ le cardinal de $A$ (potentiellement infini, cela ne posera pas problème s'il l'est).
+      On a ainsi \[
+        2^m\underset {\substack{\uparrow\\\mathclap{\text{dénombrement}}}} =\operatorname{card} \wp(B) \underset {\substack{\uparrow\\\mathclap{\text{isomorphisme}}}} = \operatorname{card} \mathrm{Hom}(A, B) \underset {\substack{\uparrow\\\mathclap{\text{dénombrement}}}}= (\operatorname{card} B)^{\operatorname{card} A} = m^n
+      ,\]
+      ce qui est faux pour un ensemble arbitraire $B$ de cardinal $m$.
+    \item On considère la catégorie des monoïdes $\mathbf{Mon}$ muni des morphismes de monoïdes.
+      Le foncteur d'oubli $U : \mathbf{Mon} \to \mathbf{Ens}$ est défini par :
+      \begin{itemize}
+        \item à un monoïde $(M, \cdot, \epsilon)$ on associe $M$ l'ensemble sous-jacent ;
+        \item à un morphisme $u : (M, \cdot, \epsilon) \to (N, \diamond, \varepsilon)$ on associe l'application $\hat{u} : M \mapsto N, x \mapsto u(x)$ la fonction sous-jacente.
+      \end{itemize}
+
+      On représente un tel foncteur d'oubli par le monoïde libre que l'on notera $(\{1\}^\star, \cdot, \varepsilon)$. (Un monoïde libre sur $X$ est l'ensemble des mots sur l'alphabet $X$ donné.)
+      L'ensemble $\{1\}^\star$ est ainsi égal à \[
+      \{1\}^\star = \{1^n  \mid n \in \mathds{N}\}
+      .\] 
+      L'opération $\cdot$ correspond à la concaténation usuelle des mots ($1^n \cdot 1^m = 1^{n+m}$ en est une conséquence), et $\varepsilon$ correspond au mot vide ($\varepsilon = 1^0$ est aussi une conséquence).
+
+      Le monoïde libre sur $\{1\}$ est isomorphe à $(\mathds{N}, +, 0)$ mais cette construction n'est plus vraie pour des alphabets plus grands (\textit{c.f.} théorie des langages).
+
+      Construisons l'isomorphisme \[
+      \mathrm{Hom}_{\mathbf{Mon}}((\{1\}^\star, \cdot, \varepsilon), (N, \diamond, \epsilon)) \cong N = U(N)
+      .\]
+
+      On définit
+      \begin{align*}
+        \Phi: \mathrm{Hom}_{\mathbf{Mon}}((\{1\}^\star, \cdot, \varepsilon), (N, \diamond, \epsilon)) &\longrightarrow N \\
+        (u : \{1\}^\star \to N) &\longmapsto u(1)
+      .\end{align*}
+      C'est bien un isomorphisme :
+      \begin{itemize}
+        \item \textit{injectivité}, si $f, g : \{1\}^\star \to N$ vérifient $f(1) = g(1)$ mais par morphisme de monoïde, on a que $f(1^n) = f(1)^n = g(1)^n = g(1^n)$ et les  $(1^n)_{n \in N}$ engendrent le monoïde libre (il n'y a rien de plus en réalité), donc $f = g$ ;
+        \item \textit{surjectivité}, pour un élément $x \in N$ on pose le morphisme~$u$ défini par $u(1^n) := x^n$, il vérifie bien que $u(1) = x$, d'où la surjectivité.
+      \end{itemize}
+
+      On en conclut quant à la représentabilité du foncteur d'oubli sur les monoïdes $U : \mathbf{Mon} \to \mathbf{Ens}$.
+  \end{enumerate}
+
+  \chapter{Exercice 7.}
+
+  \begin{slshape}
+    \color{deepblue}
+
+    Dans une catégorie posétale admettant tout produit fini (dite "\textit{cartésienne}"), on appelle (s'il existe) l'exponentiation par $X$ le foncteur~$(-)^{X}$ (s'il existe) adjoint à gauche de
+    \begin{align*}
+      - \times X: \mathbf{C} &\longrightarrow \mathbf{C} \\
+      A &\longmapsto A \times X\\
+      (f : A \to B) &\longmapsto (f \times \id_X : A \times X \to B \times X)
+    .\end{align*}
+
+    \begin{enumerate}
+      \item Décrire l'exponentiation dans $\mathbf{Ens}$.
+      \item Montrer que dans une catégorie admettant tout objet exponentiel que $(A^B)^C \cong A^{B \times C}$.
+      \item Dans une catégorie admettant tout produit fini et tout objet exponentiel (c'est à dire "\textit{clos cartésien}") montrer que si de plus $\mathbf{C}$ est localement petite et contient les coproduits alors \[
+      A \times (B + C) \cong A \times B + A \times C
+      .\]
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Montrons que dans $\mathbf{Ens}$, l'exponentiation $(-)^X$ correspond au foncteur $\mathrm{Hom}(X, -)$.
+      Soient $A,B,X$ trois ensembles.
+      On a donc l'isomorphisme
+      \begin{align*}
+        \Phi: \mathrm{Hom}(A, \mathrm{Hom}(X, B)) &\longrightarrow \mathrm{Hom}(A \times X, B) \\
+        (f : A \to \mathrm{Hom}(X, B)) &\longmapsto \left(
+        \begin{array}{rcl}
+          g : (A \times X) & \to & B\\
+          (a,x) &\mapsto & f(a)(x)
+        \end{array}
+        \right)
+      ,\end{align*}
+      qui est juste une curryfication.
+      D'où $\mathrm{Hom}(X, -)$ est adjoint à gauche de $- \times X$.
+      On en déduit que dans $\mathbf{Ens}$ l'exponentiation existe toujours et qu'il vaut $\mathrm{Hom}(X, -) \cong (-)^X$.
+    \item Soient $X,A,B,C$ des objets.
+      On a la chaine d'isomorphisme suivante :
+      \begin{align*}
+        \mathrm{Hom}(X, (A^B)^C) &\cong \mathrm{Hom}(X \times C, A^B) & \text{par adjoint}\\
+        &\cong \mathrm{Hom}((X \times C) \times B, A) & \text{par adjoint}\\
+        &\cong \mathrm{Hom}(X \times (C \times B), A) & \text{par TD2 (ex1)}\\
+        &\cong \mathrm{Hom}(X \times (B \times C), A) & \text{par TD2 (ex1)}\\
+        &\cong \mathrm{Hom}(X, A^{B \times C}) & \text{par adjoint}
+      .\end{align*}
+
+      On en déduit que $\mathcal{Y}((A^{B})^{C}) \cong \mathcal{Y}(A^{B \times C})$.
+      D'où, $(A^B)^C \cong A^{B \times C}$ par le lemme de Yoneda.
+    \item Le foncteur $A \times -$ admet un adjoint à gauche (justification ?).
+      Il est donc co-continu (exercice 1).
+
+      Considérons $F : \mathbf{J} \to \mathbf{C}$ le diagramme discret  donné ci-dessous \[
+      \begin{tikzcd}
+        B\arrow[loop above]{}{\mathrm{id}_B} & 
+        C\arrow[loop above]{}{\mathrm{id}_C}
+      \end{tikzcd}
+      .\]
+      On a la chaîne d'isomorphismes suivante :
+      \begin{align*}
+        A \times (B + C) &\cong A \times (\operatorname{colim} F)\\
+        &\cong \operatorname{colim} (A \times F)\\
+        &\cong A \times B + A \times C
+      ,\end{align*}
+      car le diagramme $A \times F$ est :\[
+      \begin{tikzcd}
+        A \times B\arrow[loop above]{}{\mathrm{id}_{A \times B}} & 
+        A \times C\arrow[loop above]{}{\mathrm{id}_{A \times C}}
+      \end{tikzcd}
+      .\]
+  \end{enumerate}
+\end{document}

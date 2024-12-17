@@ -245,7 +245,7 @@
   }
 }
 
-\newcommand\vertical[1]{
+\newcommand\vertica[1]{
   \rotatebox[origin=c]{270}{\ensuremath{#1}}
 }
 

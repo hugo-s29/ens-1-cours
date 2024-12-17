@@ -123,7 +123,7 @@
 #let algo-comment(it, color: rgb("#888"), oneline: true) = [
   #set text(0.8em, color)
   #show: emph
-  #text($triangle$, 0.7em) #it
+  #text($triangle.r$, 0.7em) #it
   #if not oneline { linebreak() }
 ]
 

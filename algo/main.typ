@@ -1998,8 +1998,8 @@ Ceci vient du fait qu'un sommet $z$ dans la boucle "*Pour tout*" intérieure n'e
 Ainsi, la taille de sa composante double à chaque fois.
 
 #remark[
-  - La gestion des composantes peut se faire en $bigO(n log^star n)$ et même encore mieux (_$triangle$ structure Union-Find_).
-  - Codez l'algorithme ! Et observez l'apparition de la composante géante (_$triangle$ Erdős–Rényi_). Commenter et décommenter la condition sur la taille des composantes (passage de $n^2$ à~$n log n$).
+  - La gestion des composantes peut se faire en $bigO(n log^star n)$ et même encore mieux (_$triangle.r$ structure Union-Find_).
+  - Codez l'algorithme ! Et observez l'apparition de la composante géante (_$triangle.r$ Erdős–Rényi_). Commenter et décommenter la condition sur la taille des composantes (passage de $n^2$ à~$n log n$).
 ]
 
 === Arbre couvrant de poids minimal.
@@ -3218,350 +3218,536 @@ L'algorithme de calcul d'une triangulation est le suivant :
   })
   ]
 
-  == Problème SWERC.
-  
-  Un problème du SWERC sur de la programmation dynamique :
-  #pb-display(name: pbm[template])[
-    Deux mots $A$ et $B$  en entrée
+== Problème SWERC.
+
+Un problème du SWERC sur de la programmation dynamique :
+#pb-display(name: pbm[template])[
+  Deux mots $A$ et $B$  en entrée
+][
+  Le plus petit _template_ qui satisfait $A$ mais pas $B$.
+]
+
+Par exemple, avec $A = mono(01101)$ et $B = mono(00111)$, la solution est $mono(01)"*"$.
+Et, pour $A = mono(0)^10mono(101)^10$ et $B = mono(0)^10mono(011)^10$, la solution est $"*"mono(10)"*"$.
+
+L'exercice, c'est de trouver un algorithme en programmation dynamique en $|A| dot |B|$.
+
+=== Indépendant de poids max dans un arbre.
+
+#pb-display(loose: true)[
+  Un arbre sur un ensemble de nœuds $V$ où chaque nœud $v$ a un poids $p(v) >= 0$.
+][
+  Un indépendant $I subset.eq V$ (les nœuds dans $I$ sont deux à deux non adjacents) et tels que $p(I)$ est maximum.
+]
+
+Pour résoudre ce problème, on utilise de la programmation dynamique.
+
+#algo[
+  Enraciner l'arbre\
+  #algo-for[*_tout_* nœud $v$][
+    Calculer $a(v)$ et $b(v)$ où
+    $a(v)$ est la valeur de poids maximale d'un indépendant de $B_v$ contenant $v$ (le sous-arbre enraciné en $v$)
+    et $b(v)$ est la valeur de pods maximal d'un indépendant de $B_v$ ne contenant pas $v$.
+  ]
+]
+
+Initialisation : si $v$ est une feuille on a $a(v) := p(v)$ et $b(v) := 0$.
+
+Induction :
+$ a(v) := p(v) + sum_(w "enfant de" v) b(w) quad quad quad b(v) := sum_(w "enfant de" v) max(a(w), b(w)) $
+
+
+= Analyse amortie.
+
+
+== Tableau dynamique.
+#example[
+  - On initialise un tableau $bold(T)$ de taille 1.
+  - On écrit un nouvel élément ($bold(T)[1]$)
+  - On écrit un nouvel élément, mais pas de place, on double donc la taille de $bold(T)$, et on réécrit $bold(T)[1]$ et $bold(T)[2]$
+  - On écrit un nouvel élément, mais pas de place, on double donc la taille de $bold(T)$, et on réécrit $bold(T)[1]$, $bold(T)[2]$ et $bold(T)[3]$
+  - On écrit un nouvel élément ($bold(T)[4]$) et on a la place.
+  - Et ainsi de suite.
+]
+
+*Calcul direct.*
+  On note $C_i$ le coût d'écriture du $i$-ème élément dans le tableau.
+  Ainsi, on a $ C_1 = 1 quad C_2 = 2 quad C_3 = 3 quad C_4 = 1 quad C_5 = 5. $
+
+  Quel est le coût amorti des $C_i$ ?
+  On a $C_i = 1$ sauf si $i = 2^k + 1$ auquel cas $C_i = i$.
+
+  Que vaut $sum_(i=1)^(2^n + 1) C_i$ ?
+  $ sum_(i=1)^(2^n + 1) C_i = 2^n + 1 + sum_(j=0)^n 2^j = 2^n + 1 + 2^(n+1) - 1 = 3 dot 2^n $
+  On a un coût d'environ 
+  $ (3 dot 2^n) / (2^n + 1) approx 3. $
+
+*Méthode des acomptes.*
+Pourquoi le coût est-il de $3$ par opérations ?
+
+- Chaque élément paye 1 pour s'inscrire.
+- Chaque élément paye 1 pour sa duplication.
+- Chaque élément $i$ paye la duplication de $j = i - 2^(ceil(log_2 i) - 1)$ (son homonyme dans le tableau avant qu'il soit dupliqué).
+
+*Méthode du potentiel.*
+Trouver une fonction potentiel~$phi_i >= 0$ telle que le cout amorti 
+$ hat(C)_i = C_i + (phi_i - phi_(i-1)) <= 3 $
+
+Ainsi, 
+$ sum_(i=1)^k hat(C)_i = overbrace(sum_(i=1)^k C_i, C) + phi_k - phi_0 $
+d'où $C = 3k - phi_k + phi_0$
+(On a en général $phi_0 = 0$.)
+
+Dans notre cas, on choisit la fonction de potentiel $phi_i = 2 i - n$, où l'entier $n$ est la taille du tableau dans lequel $i$ est inscrit.
+On a bien $phi_i >= 0$ car un élément est toujours écrit dans la deuxième moitié du tableau.
+
+Si $i != 2^k + 1$ alors 
+$ hat(C)_i = 1 + (2_i - n) - (2(i-1) - n) = 3 $
+et si $i = 2^k + 1$,
+$ hat(C)_i = (2^k + 1) + 2(2^k + 1) - 2^(k+1) - (2 dot 2^k - 2^k) = 3. $
+
+// Thomassé est d'albedo 1
+// François est d'albedo 2
+
+== Compteur et code de Gray
+
+Peut-on énumérer tous les ${0, 1}^k$ en changeant à chaque étape $1$ bit entre un élément et son successeur.
+Par exemple $00$, $01$, $10$, $11$.
+
+L'idée est de parcourir un chemin dans l'hypercube de dimension $H^n$.
+Pour cela, il suffit de parcourir un chemin dans $H^(n-1)$, de changer la dernière coordonnée, puis de parcourir le même chemin en sens inverse dans la 2ème copié de $H^(n-1)$.
+
+Pour visualiser, passé la dimension 3, c'est compliqué.
+Mais le calcul reste vrai.
+- 0000
+- 0001
+- 0011
+- 0010
+- 0110
+- 0111
+- 0101
+- 0100
+- 1100
+- 1101
+- 1111
+- 1110
+- 1010
+- 1011
+- 1001
+- 1000
+
+Par contre, pour trouver le lien entre un élément et son successeur, c'est plus compliqué :
+- si on contient un nombre pair de 1, on change le premier bit
+- sinon on change le bit le plus à gauche du "1" le plus à droite.
+(À démontrer.)
+
+
+Le code de Gray est une façon compacte "en temps" de représenter ${0, 1}^n$.
+
+La variante en espace : trouver le mot de ${0,1}^star$ le plus court qui contient tous les mots (comme facteur) de ${0,1}^k$.
+Par exemple, le mot $00 11 0$ est une solution pour $k = 2$.
+
+#theorem(name: [De Bruijn])[
+  Il existe un mot cyclique de longueur $2^k$ tel que tous les mots de ${0,1}$ apparaissent comme facteurs (dans le sens direct).
+]
+#proof[
+  On utilise l'_automate de De Bruijn_ : les états sont des mots de ${0,1}^k$ (ici on traite le cas $k = 3$) et les transitions sont $x -> y$ si $y$ est un décalage de $x$.
+
+  La question est : existe-t-il un cycle qui passe par tous les sommets ?
+  Oui ! Il existe un cycle hamiltonien $11101000$. Mieux encore, il existe un cycle un cycle eulérien (un cycle qui passe par tous les arcs exactement une fois) car les degrés entrants et sortants sont constants et égaux, et que le graphe est connexe.
+  Ceci donne un mot pour ${0,1}^(k+1)$.
+  Ici, on a $1001101011110000$.
+]
+
+
+= Approximation.
+
+#let OPT = "OPT"
+#let APX = $bold("APX")$
+
+== Introduction.
+
+On considère ici des problèmes d'optimisation où la solution doit maximiser ou minimiser une certaine fonction objectif. On notera en général $OPT$ la valeur optimale.
+On dit qu'un problème est~$NP$-dur ou $NP$-difficile si son problème de décision associé (_e.g._ $OPT >= k$) est $NP$-complet.
+
+Les problèmes d'optimisations sont souvent difficiles (voyageur du commerce, ou sac à dos) on aimerait trouver une solution approchée.
+On se fixe une valeur $C > 1$.
+On dira qu'un algorithme (polynomial) est une $C$-approximation si 
+- pour un problème de maximisation, il retourne une solution de valeur au moins $OPT \/ C$ ;
+- pour un problème de minimisation, il retourne une solution de valeur au plus $OPT dot C$.
+(Mais vous verrez des $1/2$-approximations dans les problèmes de maximisation dans la littérature.)
+
+S'il existe une valeur $C > 1$ telle qu'il existe un algorithme polynomial de $C$-approximation, on dit que le problème est dans~$APX$.
+
+S'il existe une valeur $C$ telle que l'existence d'un algorithme de $C$-approximation implique $PP = NP$ alors le problème est $APX$-dur.
+
+On parle de _schéma d'approximation polynomial_ si pour tout $epsilon > 0$ il existe un algorithme de $(1+epsilon)$-approximation polynomial si l'on est dans un des trois cas :
+/ PTAS.:#footnote[_Polynomial time approximation scheme_] l'approximation est en $bigO(n^(f(1/epsilon)))$ ;
+/ Efficient-PTAS.: l'approximation est en $bigO(f(1/epsilon)n^c)$ ;
+/ Fully-PTAS.: l'approximation est polynomiale en $1/epsilon$ et en $n$.
+
+== Illustration avec le problème du sac à dos.
+
+On considère $cal(O) = {O_1, ..., O_n}$ les objets et $V$ un volume maximal.
+Chaque $O_i$ a un prix $p_i$ et un volume $v_i$.
+On veut $I subset.eq [n]$ tel que $sum_(i in I) v_i <= V$ et qui maximise $sum_(i in I) p_i$.
+
+Ce problème est $NP$-dur en codage binaire et polynomiale en codage unaire (programmation dynamique).
+
+On supoose que $v_i <= V$ pour tout $i$.
+
+=== Algorithme de $2$-approximation.
+
+On a intérêt à choisir les objets de meilleur qualité $q_i := p_i \/ v_i$. Pour simplifier, on suppose que les $q_i$ sont distincts deux à deux.
+
+L'idée est qu'on trie les objets par ordre décroissant de qualité (On suppose que l'ordre donné est celui là).
+On fait un algorithme glouton. *En $APX$, Glouton est votre ami.*
+
+L'idée est de choisir le plus grand $t$ tel que $sum_(i <= t) v_i <= V$.
+L'algorithme consiste à retourner le maximum entre ${O_1, ..., O_t}$ et ${O_(t+1)}$.
+
+Pour le voir (et cela permet "l'intuition"), on pratique la "relaxation fractionnaire".
+Pour cela, on sélectionne une fraction~$x_i$ de chaque objet $O_i$.
+On considère le problème de maximisation sous-contrainte, noté $(P)$, suivant :
+#quote[
+  Maximiser $sum_(i = 1)^n p_i x_i$ sous la contrainte $sum_(i=1)^n v_i x_i <= V$ et $0 <= x_i <= 1$ pour $i in [|1,n|]$.
+]
+
+On peut résoudre en temps polynomial (avec votre solveur favori) et retourne une solution $(x_i^star)$ de valeur $p^star = sum_(i=1)^n p_i x^star_i$.
+Noter que la solution optimale du problème initial $"OPT" subset.eq cal(O)$ de valeur $p$ vérifie $p <= p^star$ car $OPT$ est une solution de $(P)$ en posant $x_i = 1$ si $O_i in "OPT"$ et $0$ sinon.
+
+Soit $i < j$. Si $x_j^star > 0$ alors $x_i^star = 1$.
+En effet, sinon, on peut transférer une partie de $x_j^star$ sur $x_i^star$.
+Supposons par l'absurde que $x_j^star > 0$  et $x_i^star < 1$.
+On choisit $epsilon_i <= 1 - x_i^star$ et $epsilon_j <= x_j^star$ tels que $v_i epsilon_i = v_j epsilon_j$.
+On ajoute $epsilon_i$ à $x_i^star$, on enlève $epsilon_j$ à $x_j^star$.
+On trouve une nouvelle solution (valide par considération du volume) du prix total :
+$ p + epsilon_i p_i - epsilon_j p_j = p + (epsilon_i p_i - (v_i epsilon_i) / v_j p_j) = p + epsilon_i v_i underbrace((p_i / v_i - p_j / v_j), > 0) $
+une contradiction.
+
+Résumons, on a 
+$ p({ O_1, ..., O_(t+1) }) >= p^star >= p $
+donc
+$ p({ O_1, ..., O_t }) + p({O_(t+1)}) >= p $
+l'un des deux est donc plus grand que $p \/ 2$.
+On en conclut que l'on a bien une $2$-approximation.
+
+=== _Polynomial time approximation scheme_.
+
+On veut, pour tout $epsilon > 0$, construire en temps polynomial une solution de prix au moins $(1-epsilon) p$.
+
+*Principe de dualité.*
+On se base sur l'objectif aussi bien que sur les contraintes (ici, le prix).
+
+Si l'élément $O_(t+1)$ a un prix $p_(t+1) <= epsilon p$ alors la solution gloutonne a un prix d'au moins $(1-epsilon)p$.
+De plus, on sait que le nombre d'objets de prix supérieurs stricts à $epsilon p$ est au plus $1/epsilon$ dans $"OPT"$.
+
+
+On note $cal(O)' subset.eq cal(O)$ l'ensemble des objets de prix supérieur strict à $epsilon p$.
+
+#algo(name: [GUESS & GLOUTON])[
+  #algo-for[tout ensemble $X subset.eq cal(O)'$ de taille $<= 1/epsilon$][
+    Mettre $X$ dans la solution $S_x$.\
+    Compléter $S_X$ avec un choix glouton sur $cal(O) without cal(O)'$.
+  ]
+
+  #algo-return[
+    le meilleur $S_X$.
+  ]
+]
+
+La complexité de cet algorithme est en $bigO(n^(1\/epsilon)) dot "comp(Glouton)"$.
+
+On a cependant un problème : on ne connait pas $p$. La solution est de calculer $p'$ le prix du glouton (on a donc $p' >= p \/ epsilon$).
+Au lieu du $cal(O)'$ précédent, on considère tous les $O_i$ de prix $> epsilon p'$.
+On considère alors tous les sous ensembles de taille $<= 2 / epsilon$.
+
+C'est un algorithme inefficace mais qui ouvre la voie.
+
+=== FPTAS pour le problème du Sac à Dos.
+
+Reprenons l'algorithme de programmation dynamique du sac à dos mais en se basant sur les prix (plutôt que sur les volumes).
+
+Notons $s(i, p)$ le volume minimal d'une solution de prix $o$ incluse dans ${ O_1, ..., O_i }$ (ou $+oo$ si aucune solution n'existe).
+
+/ Conditions initiales: on pose $s(i, 0) = 0$ pour tout $i in [|1,n|]$ et $s(0, p) = +oo$ pour $p != 0$.
+/ Induction: $s(i,p) = min(s(i-1,p), s(i-1,p - p_i) + v_i)$
+/ Fin: On retourne le $p$ maximal tel que $s(n,p) <= V$.
+
+La complexité est en $bigO(n dot sum_(i=1)^n p_i)$.
+
+L'idée est, comme on cherche une solution approchée, on n'a (peut-être) pas besoin de toute la précision des $p_i$.
+Considérons $alpha > 0$ tel que l'algorithme de programmation dynamique, appliqué aux valeurs $p_i' = floor(alpha p_i)$ retourne une solution $"OPT"'$ telle que l'on ait $p("OPT"') >= (1-epsilon)p$.
+Quelle contrainte a-t-on sur $alpha$ ?
+
+Par partie entière, on sait que $alpha p_i - 1 <=_((1)) p_i' <=_((2)) alpha p_i$ et donc 
+$ p("OPT"') = sum_(i in "OPT"') p_i &>= 1/alpha sum_(i in "OPT"') p'_i "par" (1)\
+&>= 1/alpha sum_(i in "OPT") p'_i " par optimalité de OPT"'\
+&>= 1/alpha sum_(i in "OPT") (alpha p_i - 1) " par" (2)\
+&>= p - (|"OPT"|)/alpha\
+&>= p - n / alpha
+$
+Pour avoir une solution de poids $>= (1-epsilon)p$, il faut nécessairement que $n / alpha <= epsilon p$.
+On veut $alpha >= n / (epsilon p)$.
+Il suffit de choisir $p'$ (la valeur de la solution gloutonne) au lieu de $p$ et de poser $alpha = n / (epsilon p')$.
+
+*Remarque.* On peut aussi choisir $p_max$ au lieu de $p'$ où l'on a noté $p_max = max_(i in [|1,n|]) p_i$.
+
+La complexité est alors en $bigO(n sum_(i = 1)^n p'_i) = bigO(n^3 / epsilon)$.
+On a donc un~_FPTAS_.
+
+En effet, 
+$ sum_(i=1)^n p'_i <= alpha sum_(i=1)^n p_i = n/(epsilon p') sum_(i=1)^n p_i = n/epsilon sum_(i=1)^n underbrace(p_i/p', <=1) = bigO(n^2/epsilon). $
+
+Ainsi, si $p'$ n'est pas une fraction positive des $sum_(i in [|1,n|]) p_i$ alors on a une complexité en $bigO(n^2 / epsilon)$.
+
+== Transversaux de poids minimal (_aka_ #pbm[MinHittingSet]).
+
+On considère le problème
+#pb-display(name: pbm[$k$-transversal])[
+  $E subset.eq binom([n], k)$ un ensemble de parties de taille $k$ et $omega : [n] -> RR^+$ une fonction de poids
+][
+  $T subset.eq [n]$ tel que $T sect e != emptyset$ pour toute arête $e in E$, et $omega(T)$ est minimal.
+]
+
+#example[
+  Pour $k=2$ et $omega : n |-> 1$, c'est le problème de #pbm[MinimumVertexCover].
+]
+
+Aussi, pour $omega : n |-> 1$, on a un algorithme de $k$-approximation trivial : on construit (glouton) des éléments de $E$ deux à deux disjoints $e_1, ..., e_t$ tels que $forall e in E, exists i, e sect e_i != emptyset$.
+On retourne ensuite $union_(i=1)^n e_i =: S$.
+
+*Remarque.*
+On a forcément $|"OPT"| >= t$ (car il doit toucher tous les $e_i$ et la solution $S$ vérifie $|S| = t k <= k |"OPT"|$).
+On a donc bien obtenu une $k$-approximation.
+
+Deux théorèmes intéressants :
+#theorem[
+  À moins que $PP = NP$, il n'existe pas de $(sqrt(2)-epsilon)$-approximation pour #pbm[VertexCover] quel que soit $epsilon > 0$.
+]
+
+#theorem[
+  À moins que la "_Unique Game Conjecture_" soit fausse, il n'existe pas de $(2-epsilon)$-approximation pour #pbm[VertexCover].
+]
+
+Peut-on trouver une $k$-approximation pour une fonction de poids $omega$ arbitraire ?
+
+=== Arrondi en relaxation fractionnaire.
+
+On considère la relaxation fractionnaire $(P)$ du problème précédent :
+#quote[
+  Minimiser $sum_(i=1)^n omega(i) x_i$ sous les contraintes $sum_(i in e) x_i >= 1$ pour toute arête $e in E$, et $x_i >= 0$.
+]
+Dans le problème, le $x_i$ représente la fraction de l'élément $i$ choisi dans $T$.
+
+Notions $"OPT"^star = (x_i^star)$ une solution optimale de $(P)$.
+
+Remarquons que $omega("OPT") >= sum_(i=1)^n omega(i) x_i^star$, car $"OPT"$ est un élément du domaine de $(P)$ (en posant $x_i = 1$ si $i in "OPT"$ et $0$ sinon).
+
+À présent, on calcule une solution $(x_i^star)$.
+On construit une solution $0 \/ 1$ comme suit :
+- si $x_i^star >= 1/k$, on pose $x_i' = 1$ ;
+- sinon, on pose $x_i' = 0$.
+
+On a que $omega("OPT"') <= k omega("OPT"^star) <= k omega("OPT")$ donc a bien construit une $k$-approximation.
+
+Il y a cependant deux problèmes :
++ on doit résoudre $(P)$ ;
++ si $k = 10$, alors la taille de $E$ est (peut-être) en $Theta(n^10)$. Pourrait-on faire une $k$-approximation avec seulement un oracle pour $E$ ?
+
+Un oracle est un algorithme résolvant le problème suivant :
+#pb-display(loose: true)[
+  $T$ (un potentiel transversal)
+][
+  VRAI si $T$ est un transversal \
+  FAUX *et* $e in E$ tel que $e sect T = emptyset$.
+]
+
+On a ainsi "caché" $E$ (l'ensemble $E$ pourrait même être de taille exponentielle, du moment qu'on a un oracle).
+
+On utilise un algorithme nommé _primal dual_ pour construire une $k$-approximation du problème de #pbm[$k$-transversal].
+
+#algo(name: [PrimalDual])[
+  Initialiser $T = emptyset$ et $y : E -> NN$ telle que $y(dot) = 0$.
+
+  #algo-while[
+    $exists e in E, e sect T = emptyset$ (*_oracle_*)
   ][
-    Le plus petit _template_ qui satisfait $A$ mais pas $B$.
+    Augmenter $y(e)$ jusqu'à atteindre, pour un certain $i in e$ l'égalité $sum_(f in.rev i) y(f) = omega(i)$.
+
+    $T <- T union {i}$
   ]
 
-  Par exemple, avec $A = mono(01101)$ et $B = mono(00111)$, la solution est $mono(01)"*"$.
-  Et, pour $A = mono(0)^10mono(101)^10$ et $B = mono(0)^10mono(011)^10$, la solution est $"*"mono(10)"*"$.
+  #algo-return[$T$]
+]
 
-  L'exercice, c'est de trouver un algorithme en programmation dynamique en $|A| dot |B|$.
+À la fin de l'algorithme $T$ est bien transversal, mais de quelle~"qualité" ?
+Calculons à présent $omega(T)$.
 
-  === Indépendant de poids max dans un arbre.
+$
+omega(T) = sum_(i in T) omega(i) &= sum_(i in T) sum_(e in.rev i) y(e)\
+&= sum_(e in E) |e sect T| dot y(e)\
+""_((star)) &<= k sum_(e in E) y(e)\
+$
+car $(star)$ toute les parties ont taille $<= k$;
 
-  #pb-display(loose: true)[
-    Un arbre sur un ensemble de nœuds $V$ où chaque nœud $v$ a un poids $p(v) >= 0$.
+On montre maintenant que si $T_"opt"$ est la solution optimale du problème #pbm[$k$-transversal], alors $sum_(e in E) y(e) <= omega(T_"opt")$ ; on aura alors que $omega(T) <= k med omega(T_"opt")$ et par conséquent que $T$ est une $k$-approximation de #pbm[$k$-transversal].
+
+On a 
+$ omega(T_"opt") = sum_(i in T_"opt") omega(i) >= sum_(i in T_"opt") sum_(e in.rev i) y(e) = sum_(e in E) underbrace(|T_"opt" sect e|, >= 1 \ "car" T_"opt" \ "transversal") y(e) >= sum_(e in E) y(e). $
+
+L'algorithme Primal Dual est une généralisation de l'algorithme de Dijkstra.
+L'algorithme de Dijkstra est un algorithme primal dual.
+On rappelle que l'algorithme de Dijkstra résout le problème ci-dessous :
+#pb-display(loose: true)[
+  Graphe avec des longueurs sur les arêtes, et deux sommets $s$ et $t$ du graphe,
+][
+  Un plus court chemin de $s$ à $t$
+]
+
+*C'est un problème de transversal.*
+Un chemin de $s$ à $t$ est un transversal de l'ensemble des coupes de $s$ à $t$, _i.e._ l'ensemble des arêtes entre $S$ et $T$ où $S union.dot T = V$ et $s in S$ et $t in T$.
+Et un chemin de longueur minimale est précisément un transversal de longueur minimale des coupes de $s$ à $t$.
+
+Il reste à définir l'_oracle_.
+Si on se donne un ensemble $F$ qui n'est *pas* un transversal des coupes, on retourne une coupe $C_F$ telle que $C_F sect F = emptyset$.
+Ainsi, on choisit $C_F$ la coupe, $S$ et $T$ avec $|S|$ minimal et où
+$ S = { y | y "atteignable depuis" s "pour un certain chemin de" F }. $
+
+Avec cet oracle, Primal Dual correspond exactement à Dijkstra.
+
+
+#align(center, line())
+
+Dans l'algorithme de Christofides, il est utilisé le fait que calculer un couplage de poids max (dans un graphe quelconque) est dans~$PP$ (algorithme d'Edmonds). On aurait juste besoin de pouvoir l'approximer.
+
+$=>$ Est-il possible d'approximer le couplage de taille maximal dans un graphe arbitraire ?
+*Oui* avec le paradigme de *_recherche locale_*.
+
+== Paradigme de recherche locale.
+
+Le but est d'obtenir un couplage de taille $(4\/5)|"OPT"|$.
+#algo(name: [Recherche locale])[
+  #algo-comment[On part d'une solution]\
+  Soit $C$ le couplage vide.
+
+  #algo-while[
+    il existe un couplage $C'$ qui diffère de $C$ sur au plus~$7$ arêtes et tel que $|C'| > |C|$
   ][
-    Un indépendant $I subset.eq V$ (les nœuds dans $I$ sont deux à deux non adjacents) et tels que $p(I)$ est maximum.
+    $C <- C'$
   ]
+]
 
-  Pour résoudre ce problème, on utilise de la programmation dynamique.
+À la fin $C$ est une $4/5$ approximation de $"OPT"$.
 
-  #algo[
-    Enraciner l'arbre\
-    #algo-for[*_tout_* nœud $v$][
-      Calculer $a(v)$ et $b(v)$ où
-      $a(v)$ est la valeur de poids maximale d'un indépendant de $B_v$ contenant $v$ (le sous-arbre enraciné en $v$)
-      et $b(v)$ est la valeur de pods maximal d'un indépendant de $B_v$ ne contenant pas $v$.
-    ]
+Noter que $"OPT" union C$ est une union de cycles et de chemins.
+Si on avait $|C| < 4/5 |"OPT"|$ il existe un cycle ou un chemin où cette inégalité est vérifiée :
+- sur les cycles, c'est impossible car un cycle est nécessairement alternant ;
+- sur les chemins, c'est possible s'il alterne entre arêtes dans $"OPT"$, puis dans $C$, puis dans $"OPT"$, puis dans $C$, _etc_.
+  Pour avoir $|C| < 4/5 |"OPT"|$, on doit avoir que la longueur du chemin est au plus $7$, échanger les arêtes de $C$ sur ce chemin pour les arêtes de $|"OPT"|$ fournit une meilleur solution.
+
+Autre algorithmes de recherche locale :
+- 2-approximation pour #pbm[MaxCut] (précédent TD) ;
+- descente de gradient (M1) ;
+- algorithme du simplex (M1) ;
+- réseaux de Hopfield (prochain TD).
+
+
+== Paradigme de relaxation fractionnaire.
+
+#quote[
+En stage, en recherche, _etc_, pensez à la relaxation fractionnaire. Une fois faite, _dualisez_.
+]
+
+L'idée est qu'on part d'un problème $P$, et on écrit un problème linéaire appelé _primal_ $(P)$, où 
+$(P)$ consiste à maximiser $bold(c)^sans(upright(T)) bold(x)$ sous les contraintes $bold(A) bold(x) <= bold(b)$ et $bold(x) >= bold(0)$.
+
+#theorem(name: [dualité])[
+  Le problème $(P)$ a une solution optimale de valeur $v$ si et seulement si $(D)$ a une solution optimale de valeur $v$ où le problème~_$(D)$ dual de $(P)$_ consiste à minimiser $bold(b)^sans(upright(T)) bold(y)$ sous les contraintes $bold(A)^upright(sans(T)) bold(y) >= bold(c)$ et $bold(y) >= bold(0)$.
+]
+
+Les problèmes viennent deux par deux : le primal est le dual.
+
+#example(name: [Couplage dans un graphe])[
+  Si $x$ est une distribution de poids sur les arêtes, alors la relaxation fractionnaire du couplage est de trouver une telle distribution qui vérifie que le poids des arêtes incidentes a un sommet est au plus $1$.
+  Le problème s'écrit donc "maximiser $bold(1) bold(x)$ sous les contraintes $bold(A) bold(x) <= bold(1)$ et $bold(x) >= bold(0)$",
+  où $bold(A)$ est la matrice d'incidence, en colonne les arêtes, et en ligne les sommets.
+
+  Le problème dual est alors de "minimiser $bold(1) bold(y)$ sous les contraintes~$bold(A)^upright(sans(T)) bold(y) >= bold(1)$ et $bold(y) >= 0$". 
+  Ainsi $y$ est une distribution de poids sur les sommets telle que pour chaque arête $u v$ on a $y(u) + y(v) >= 1$.
+  C'est la relaxation fractionnaire de #pbm[vertex cover].
+
+  #figure(
+  cetz.canvas({
+    import cetz.draw: *
+
+    circle((0, 0), radius: 0.1, fill: blue, stroke: none, name: "a")
+    circle((0, 1), radius: 0.1, fill: blue, stroke: none, name: "b")
+    circle((1, 1/2), radius: 0.1, fill: blue, stroke: none, name: "c")
+
+    line("a", "b")
+    line("c", "b")
+    line("a", "c")
+
+    circle((0, 0), radius: 0.1, fill: blue, stroke: none, name: "a")
+    circle((0, 1), radius: 0.1, fill: blue, stroke: none, name: "b")
+    circle((1, 1/2), radius: 0.1, fill: blue, stroke: none, name: "c")
+  })
+  )
+
+  Dans le triangle ci-dessous, on a 
+  #[
+    #set text(0.7em)
+  $ mat("couplage max"; M quad  1) <= mat("couplage max frac."; M^* quad 3/2) = mat("vertex cover frac."; V C ^* quad 3/2) < mat("vertex cover min"; V C quad 2). $
   ]
+]
 
-  Initialisation : si $v$ est une feuille on a $a(v) := p(v)$ et $b(v) := 0$.
-
-  Induction :
-  $ a(v) := p(v) + sum_(w "enfant de" v) b(w) quad quad quad b(v) := sum_(w "enfant de" v) max(a(w), b(w)) $
-
-
-  = Analyse amortie.
-
-
-  == Tableau dynamique.
-  #example[
-    - On initialise un tableau $bold(T)$ de taille 1.
-    - On écrit un nouvel élément ($bold(T)[1]$)
-    - On écrit un nouvel élément, mais pas de place, on double donc la taille de $bold(T)$, et on réécrit $bold(T)[1]$ et $bold(T)[2]$
-    - On écrit un nouvel élément, mais pas de place, on double donc la taille de $bold(T)$, et on réécrit $bold(T)[1]$, $bold(T)[2]$ et $bold(T)[3]$
-    - On écrit un nouvel élément ($bold(T)[4]$) et on a la place.
-    - Et ainsi de suite.
-  ]
 
-  *Calcul direct.*
-    On note $C_i$ le coût d'écriture du $i$-ème élément dans le tableau.
-    Ainsi, on a $ C_1 = 1 quad C_2 = 2 quad C_3 = 3 quad C_4 = 1 quad C_5 = 5. $
+== Paradigme d'algorithmes randomisés.
 
-    Quel est le coût amorti des $C_i$ ?
-    On a $C_i = 1$ sauf si $i = 2^k + 1$ auquel cas $C_i = i$.
-
-    Que vaut $sum_(i=1)^(2^n + 1) C_i$ ?
-    $ sum_(i=1)^(2^n + 1) C_i = 2^n + 1 + sum_(j=0)^n 2^j = 2^n + 1 + 2^(n+1) - 1 = 3 dot 2^n $
-    On a un coût d'environ 
-    $ (3 dot 2^n) / (2^n + 1) approx 3. $
+=== Calcul d'un couplage parfait.
 
-  *Méthode des acomptes.*
-  Pourquoi le coût est-il de $3$ par opérations ?
+Considérons $A union.dot B$ un graphe biparti.
+Décider s'il existe un couplage parfait est dans $PP$.
 
-  - Chaque élément paye 1 pour s'inscrire.
-  - Chaque élément paye 1 pour sa duplication.
-  - Chaque élément $i$ paye la duplication de $j = i - 2^(ceil(log_2 i) - 1)$ (son homonyme dans le tableau avant qu'il soit dupliqué).
+On veut un algorithme qui
+- s'il retourne VRAI, alors il existe un couplage parfait ;
+- s'il retourne FAUX, avec une probabilité de $1/2$ il n'existe pas de couplage.
 
-  *Méthode du potentiel.*
-  Trouver une fonction potentiel~$phi_i >= 0$ telle que le cout amorti 
-  $ hat(C)_i = C_i + (phi_i - phi_(i-1)) <= 3 $
+Soit $bold(M) = (m_(a,b))_(a in A, b in B)$ la matrice de $A union.dot B$, où 
+$ m_(a,b) = cases(1 & "si" a-b, 0 & "sinon".) $
+On peut supposer $A = B = [n]$.
 
-  Ainsi, 
-  $ sum_(i=1)^k hat(C)_i = overbrace(sum_(i=1)^k C_i, C) + phi_k - phi_0 $
-  d'où $C = 3k - phi_k + phi_0$
-  (On a en général $phi_0 = 0$.)
+Un couplage parfait est équivalent à l'existence d'une permutation~$sigma in frak(S)_n$ vérifiant $m_(i, sigma(i)) = 1$ pour $i in [n]$.
+Ainsi, c'est équivalent à l'existence d'une permutation $sigma$ telle que $product_(i in [n]) m_(i,sigma(i)) = 1$.
 
-  Dans notre cas, on choisit la fonction de potentiel $phi_i = 2 i - n$, où l'entier $n$ est la taille du tableau dans lequel $i$ est inscrit.
-  On a bien $phi_i >= 0$ car un élément est toujours écrit dans la deuxième moitié du tableau.
+*Rappel.*
+Le _déterminant_ de $bold(M)$ est :
+$ det bold(M) = sum_(sigma in frak(S)_n) (-1)^("sgn"(sigma)) product_(i in [n]) m_(i, sigma(i)) $
+et le _permanent_ de $bold(M)$ 
+$ "perm" bold(M) = sum_(sigma in frak(S)_n) product_(i in [n]) m_(i, sigma(i)). $
 
-  Si $i != 2^k + 1$ alors 
-  $ hat(C)_i = 1 + (2_i - n) - (2(i-1) - n) = 3 $
-  et si $i = 2^k + 1$,
-  $ hat(C)_i = (2^k + 1) + 2(2^k + 1) - 2^(k+1) - (2 dot 2^k - 2^k) = 3. $
+Le permanent calcule le nombre de couplages parfaits.
+Dommage, calculer le permanent est un problème $sharp PP$-complet.
 
-  // Thomassé est d'albedo 1
-  // François est d'albedo 2
-  
-  == Compteur et code de Gray
+L'idée est qu'on calcule $det bold(M)$ si non nul alors on retourne vrai, en revanche on peut avoir $det bold(M) = 0$ par "simplification des termes".
 
-  Peut-on énumérer tous les ${0, 1}^k$ en changeant à chaque étape $1$ bit entre un élément et son successeur.
-  Par exemple $00$, $01$, $10$, $11$.
+#algo(name: [Tutte])[
+  Remplacer chaque arête (_i.e._ "$1$" dans la matrice) par une valeur aléatoire entre $1$ et $2n$ pour obtenir $bold(M)$.
 
-  L'idée est de parcourir un chemin dans l'hypercube de dimension $H^n$.
-  Pour cela, il suffit de parcourir un chemin dans $H^(n-1)$, de changer la dernière coordonnée, puis de parcourir le même chemin en sens inverse dans la 2ème copié de $H^(n-1)$.
+  Retourner VRAI si $det bold(M) != 0$ et FAUX sinon.
+]
 
-  Pour visualiser, passé la dimension 3, c'est compliqué.
-  Mais le calcul reste vrai.
-  - 0000
-  - 0001
-  - 0011
-  - 0010
-  - 0110
-  - 0111
-  - 0101
-  - 0100
-  - 1100
-  - 1101
-  - 1111
-  - 1110
-  - 1010
-  - 1011
-  - 1001
-  - 1000
+Avec une probabilité $>= 1/2$ s'il existe un couplage parfait, alors $det bold(M) != 0$ dans l'algorithme précédent.
+On ajoute deux remarques.
+- Cela marche pour les graphes généraux : étant donné un graphe $G$, poser $bold(M)$ comme sa matrice d'adjacence, où l'on remplace $m_(i,j)$ par $C$ et $m_(j,i)$ par $-C$ avec $C$ tiré aléatoirement dans $[|1,2n|]$. Avec la même conclusion, si le déterminant est non-nul alors couplage ; s'il nul, alors avec une probabilité $<= 1/2$ il y a un couplage.
+- Ce qui sous-tend Tutte c'est la propriété suivante :
+  si $P in RR[x_1, ..., x_n]$ est un polynôme de degré $d$ multivarié et non identiquement nul alors si on tire aléatoirement des $x_i$ dans ${1, ..., 2d}$ alors avec probabilité $>= 1/2$ l'évaluation est non nulle.
+  On réalise l'application directe au déterminant.
 
-  Par contre, pour trouver le lien entre un élément et son successeur, c'est plus compliqué :
-  - si on contient un nombre pair de 1, on change le premier bit
-  - sinon on change le bit le plus à gauche du "1" le plus à droite.
-  (À démontrer.)
 
 
-  Le code de Gray est une façon compacte "en temps" de représenter ${0, 1}^n$.
 
-  La variante en espace : trouver le mot de ${0,1}^star$ le plus court qui contient tous les mots (comme facteur) de ${0,1}^k$.
-  Par exemple, le mot $00 11 0$ est une solution pour $k = 2$.
-
-  #theorem(name: [De Bruijn])[
-    Il existe un mot cyclique de longueur $2^k$ tel que tous les mots de ${0,1}$ apparaissent comme facteurs (dans le sens direct).
-  ]
-  #proof[
-    On utilise l'_automate de De Bruijn_ : les états sont des mots de ${0,1}^k$ (ici on traite le cas $k = 3$) et les transitions sont $x -> y$ si $y$ est un décalage de $x$.
-
-    La question est : existe-t-il un cycle qui passe par tous les sommets ?
-    Oui ! Il existe un cycle hamiltonien $11101000$. Mieux encore, il existe un cycle un cycle eulérien (un cycle qui passe par tous les arcs exactement une fois) car les degrés entrants et sortants sont constants et égaux, et que le graphe est connexe.
-    Ceci donne un mot pour ${0,1}^(k+1)$.
-    Ici, on a $1001101011110000$.
-  ]
-
-
-  = Approximation.
-
-  #let OPT = "OPT"
-  #let APX = $bold("APX")$
-
-  == Introduction.
-
-  On considère ici des problèmes d'optimisation où la solution doit maximiser ou minimiser une certaine fonction objectif. On notera en général $OPT$ la valeur optimale.
-  On dit qu'un problème est~$NP$-dur ou $NP$-difficile si son problème de décision associé (_e.g._ $OPT >= k$) est $NP$-complet.
-
-  Les problèmes d'optimisations sont souvent difficiles (voyageur du commerce, ou sac à dos) on aimerait trouver une solution approchée.
-  On se fixe une valeur $C > 1$.
-  On dira qu'un algorithme (polynomial) est une $C$-approximation si 
-  - pour un problème de maximisation, il retourne une solution de valeur au moins $OPT \/ C$ ;
-  - pour un problème de minimisation, il retourne une solution de valeur au plus $OPT dot C$.
-  (Mais vous verrez des $1/2$-approximations dans les problèmes de maximisation dans la littérature.)
-
-  S'il existe une valeur $C > 1$ telle qu'il existe un algorithme polynomial de $C$-approximation, on dit que le problème est dans~$APX$.
-
-  S'il existe une valeur $C$ telle que l'existence d'un algorithme de $C$-approximation implique $PP = NP$ alors le problème est $APX$-dur.
-
-  On parle de _schéma d'approximation polynomial_ si pour tout $epsilon > 0$ il existe un algorithme de $(1+epsilon)$-approximation polynomial si l'on est dans un des trois cas :
-  / PTAS.:#footnote[_Polynomial time approximation scheme_] l'approximation est en $bigO(n^(f(1/epsilon)))$ ;
-  / Efficient-PTAS.: l'approximation est en $bigO(f(1/epsilon)n^c)$ ;
-  / Fully-PTAS.: l'approximation est polynomiale en $1/epsilon$ et en $n$.
-
-  == Illustration avec le problème du sac à dos.
-
-  On considère $cal(O) = {O_1, ..., O_n}$ les objets et $V$ un volume maximal.
-  Chaque $O_i$ a un prix $p_i$ et un volume $v_i$.
-  On veut $I subset.eq [n]$ tel que $sum_(i in I) v_i <= V$ et qui maximise $sum_(i in I) p_i$.
-
-  Ce problème est $NP$-dur en codage binaire et polynomiale en codage unaire (programmation dynamique).
-
-  On supoose que $v_i <= V$ pour tout $i$.
-
-  === Algorithme de $2$-approximation.
-
-  On a intérêt à choisir les objets de meilleur qualité $q_i := p_i \/ v_i$. Pour simplifier, on suppose que les $q_i$ sont distincts deux à deux.
-
-  L'idée est qu'on trie les objets par ordre décroissant de qualité (On suppose que l'ordre donné est celui là).
-  On fait un algorithme glouton. *En $APX$, Glouton est votre ami.*
-
-  L'idée est de choisir le plus grand $t$ tel que $sum_(i <= t) v_i <= V$.
-  L'algorithme consiste à retourner le maximum entre ${O_1, ..., O_t}$ et ${O_(t+1)}$.
-
-  Pour le voir (et cela permet "l'intuition"), on pratique la "relaxation fractionnaire".
-  Pour cela, on sélectionne une fraction~$x_i$ de chaque objet $O_i$.
-  On considère le problème de maximisation sous-contrainte, noté $(P)$, suivant :
-  #quote[
-    Maximiser $sum_(i = 1)^n p_i x_i$ sous la contrainte $sum_(i=1)^n v_i x_i <= V$ et $0 <= x_i <= 1$ pour $i in [|1,n|]$.
-  ]
-
-  On peut résoudre en temps polynomial (avec votre solveur favori) et retourne une solution $(x_i^star)$ de valeur $p^star = sum_(i=1)^n p_i x^star_i$.
-  Noter que la solution optimale du problème initial $"OPT" subset.eq cal(O)$ de valeur $p$ vérifie $p <= p^star$ car $OPT$ est une solution de $(P)$ en posant $x_i = 1$ si $O_i in "OPT"$ et $0$ sinon.
-
-  Soit $i < j$. Si $x_j^star > 0$ alors $x_i^star = 1$.
-  En effet, sinon, on peut transférer une partie de $x_j^star$ sur $x_i^star$.
-  Supposons par l'absurde que $x_j^star > 0$  et $x_i^star < 1$.
-  On choisit $epsilon_i <= 1 - x_i^star$ et $epsilon_j <= x_j^star$ tels que $v_i epsilon_i = v_j epsilon_j$.
-  On ajoute $epsilon_i$ à $x_i^star$, on enlève $epsilon_j$ à $x_j^star$.
-  On trouve une nouvelle solution (valide par considération du volume) du prix total :
-  $ p + epsilon_i p_i - epsilon_j p_j = p + (epsilon_i p_i - (v_i epsilon_i) / v_j p_j) = p + epsilon_i v_i underbrace((p_i / v_i - p_j / v_j), > 0) $
-  une contradiction.
-
-  Résumons, on a 
-  $ p({ O_1, ..., O_(t+1) }) >= p^star >= p $
-  donc
-  $ p({ O_1, ..., O_t }) + p({O_(t+1)}) >= p $
-  l'un des deux est donc plus grand que $p \/ 2$.
-  On en conclut que l'on a bien une $2$-approximation.
-
-  === _Polynomial time approximation scheme_.
-
-  On veut, pour tout $epsilon > 0$, construire en temps polynomial une solution de prix au moins $(1-epsilon) p$.
-
-  *Principe de dualité.*
-  On se base sur l'objectif aussi bien que sur les contraintes (ici, le prix).
-
-  Si l'élément $O_(t+1)$ a un prix $p_(t+1) <= epsilon p$ alors la solution gloutonne a un prix d'au moins $(1-epsilon)p$.
-  De plus, on sait que le nombre d'objets de prix supérieurs stricts à $epsilon p$ est au plus $1/epsilon$ dans $"OPT"$.
-
-
-  On note $cal(O)' subset.eq cal(O)$ l'ensemble des objets de prix supérieur strict à $epsilon p$.
-
-  #algo(name: [GUESS & GLOUTON])[
-    #algo-for[tout ensemble $X subset.eq cal(O)'$ de taille $<= 1/epsilon$][
-      Mettre $X$ dans la solution $S_x$.\
-      Compléter $S_X$ avec un choix glouton sur $cal(O) without cal(O)'$.
-    ]
-
-    #algo-return[
-      le meilleur $S_X$.
-    ]
-  ]
-
-  La complexité de cet algorithme est en $bigO(n^(1\/epsilon)) dot "comp(Glouton)"$.
-
-  On a cependant un problème : on ne connait pas $p$. La solution est de calculer $p'$ le prix du glouton (on a donc $p' >= p \/ epsilon$).
-  Au lieu du $cal(O)'$ précédent, on considère tous les $O_i$ de prix $> epsilon p'$.
-  On considère alors tous les sous ensembles de taille $<= 2 / epsilon$.
-
-  C'est un algorithme inefficace mais qui ouvre la voie.
-
-  === FPTAS pour le problème du Sac à Dos.
-
-  Reprenons l'algorithme de programmation dynamique du sac à dos mais en se basant sur les prix (plutôt que sur les volumes).
-
-  Notons $s(i, p)$ le volume minimal d'une solution de prix $o$ incluse dans ${ O_1, ..., O_i }$ (ou $+oo$ si aucune solution n'existe).
-
-  / Conditions initiales: on pose $s(i, 0) = 0$ pour tout $i in [|1,n|]$ et $s(0, p) = +oo$ pour $p != 0$.
-  / Induction: $s(i,p) = min(s(i-1,p), s(i-1,p - p_i) + v_i)$
-  / Fin: On retourne le $p$ maximal tel que $s(n,p) <= V$.
-
-  La complexité est en $bigO(n dot sum_(i=1)^n p_i)$.
-
-  L'idée est, comme on cherche une solution approchée, on n'a (peut-être) pas besoin de toute la précision des $p_i$.
-  Considérons $alpha > 0$ tel que l'algorithme de programmation dynamique, appliqué aux valeurs $p_i' = floor(alpha p_i)$ retourne une solution $"OPT"'$ telle que l'on ait $p("OPT"') >= (1-epsilon)p$.
-  Quelle contrainte a-t-on sur $alpha$ ?
-
-  Par partie entière, on sait que $alpha p_i - 1 <=_((1)) p_i' <=_((2)) alpha p_i$ et donc 
-  $ p("OPT"') = sum_(i in "OPT"') p_i &>= 1/alpha sum_(i in "OPT"') p'_i "par" (1)\
-  &>= 1/alpha sum_(i in "OPT") p'_i " par optimalité de OPT"'\
-  &>= 1/alpha sum_(i in "OPT") (alpha p_i - 1) " par" (2)\
-  &>= p - (|"OPT"|)/alpha\
-  &>= p - n / alpha
-  $
-  Pour avoir une solution de poids $>= (1-epsilon)p$, il faut nécessairement que $n / alpha <= epsilon p$.
-  On veut $alpha >= n / (epsilon p)$.
-  Il suffit de choisir $p'$ (la valeur de la solution gloutonne) au lieu de $p$ et de poser $alpha = n / (epsilon p')$.
-
-  *Remarque.* On peut aussi choisir $p_max$ au lieu de $p'$ où l'on a noté $p_max = max_(i in [|1,n|]) p_i$.
-
-  La complexité est alors en $bigO(n sum_(i = 1)^n p'_i) = bigO(n^3 / epsilon)$.
-  On a donc un~_FPTAS_.
-
-  En effet, 
-  $ sum_(i=1)^n p'_i <= alpha sum_(i=1)^n p_i = n/(epsilon p') sum_(i=1)^n p_i = n/epsilon sum_(i=1)^n underbrace(p_i/p', <=1) = bigO(n^2/epsilon). $
-
-  Ainsi, si $p'$ n'est pas une fraction positive des $sum_(i in [|1,n|]) p_i$ alors on a une complexité en $bigO(n^2 / epsilon)$.
-
-  == Transversaux de poids minimal (_aka_ #pbm[MinHittingSet]).
-
-  On considère le problème
-  #pb-display(name: pbm[$k$-transversal])[
-    $E subset.eq binom([n], k)$ un ensemble de parties de taille $k$ et $omega : [n] -> RR^+$ une fonction de poids
-  ][
-    $T subset.eq [n]$ tel que $T sect e != emptyset$ pour toute arête $e in E$, et $omega(T)$ est minimal.
-  ]
-
-  #example[
-    Pour $k=2$ et $omega : n |-> 1$, c'est le problème de #pbm[MinimumVertexCover].
-  ]
-
-  Aussi, pour $omega : n |-> 1$, on a un algorithme de $k$-approximation trivial : on construit (glouton) des éléments de $E$ deux à deux disjoints $e_1, ..., e_t$ tels que $forall e in E, exists i, e sect e_i != emptyset$.
-  On retourne ensuite $union_(i=1)^n e_i =: S$.
-
-  *Remarque.*
-  On a forcément $|"OPT"| >= t$ (car il doit toucher tous les $e_i$ et la solution $S$ vérifie $|S| = t k <= k |"OPT"|$).
-  On a donc bien obtenu une $k$-approximation.
-
-  Deux théorèmes intéressants :
-  #theorem[
-    À moins que $PP = NP$, il n'existe pas de $(sqrt(2)-epsilon)$-approximation pour #pbm[VertexCover] quel que soit $epsilon > 0$.
-  ]
-
-  #theorem[
-    À moins que la "_Unique Game Conjecture_" soit fausse, il n'existe pas de $(2-epsilon)$-approximation pour #pbm[VertexCover].
-  ]
-
-  Peut-on trouver une $k$-approximation pour une fonction de poids $omega$ arbitraire ?
-
-  === Arrondi en relaxation fractionnaire.
-
-  On considère la relaxation fractionnaire $(P)$ du problème précédent :
-  #quote[
-    Minimiser $sum_(i=1)^n omega(i) x_i$ sous les contraintes $sum_(i in e) x_i >= 1$ pour toute arête $e in E$, et $x_i >= 0$.
-  ]
-  Dans le problème, le $x_i$ représente la fraction de l'élément $i$ choisi dans $T$.
-
-  Notions $"OPT"^star = (x_i^star)$ une solution optimale de $(P)$.
-
-  Remarquons que $omega("OPT") >= sum_(i=1)^n omega(i) x_i^star$, car $"OPT"$ est un élément du domaine de $(P)$ (en posant $x_i = 1$ si $i in "OPT"$ et $0$ sinon).
-
-  À présent, on calcule une solution $(x_i^star)$.
-  On construit une solution $0 \/ 1$ comme suit :
-  - si $x_i^star >= 1/k$, on pose $x_i' = 1$ ;
-  - sinon, on pose $x_i' = 0$.
-
-  On a que $omega("OPT"') <= k omega("OPT"^star) <= k omega("OPT")$ donc a bien construit une $k$-approximation.
-
-  Il y a cependant deux problèmes :
-  + on doit résoudre $(P)$ ;
-  + si $k = 10$, alors la taille de $E$ est (peut-être) en $Theta(n^10)$. Pourrait-on faire une $k$-approximation avec seulement un oracle pour $E$ ?
-
-  Un oracle est un algorithme résolvant le problème suivant :
-  #pb-display[
-    $T$ (un potentiel transversal)
-  ][
-    VRAI si $T$ est un transversal \
-    FAUX *et* $e in E$ tel que $e sect T = emptyset$.
-  ]
 
 
 
@@ -3776,7 +3962,7 @@ C'est dur à résoudre exactement...
 
 En effet, le théorème ci-dessous l'explique.
 #theorem(name: [Valient])[
-  Compter le nombre de couplages dans un graphe biparti est un problème $bold("#P")$-complet.#footnote[Analogue de $bold("NP")$-complet pour la complexité de comptage de solution d'un problème.]
+  Compter le nombre de couplages dans un graphe biparti est un problème $sharp PP$-complet.#footnote[Analogue de $bold("NP")$-complet pour la complexité de comptage de solution d'un problème.]
 ]
 
 Si on savait compter efficacement, alors on saurait tirer uniformément.

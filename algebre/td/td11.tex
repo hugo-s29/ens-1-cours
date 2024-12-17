@@ -1,0 +1,154 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Théorie des caractères.}
+  \minitoc
+
+  \section{Exercice 1. \textit{Rappels de cours}}
+  \begin{enonce}
+    Montrer que :
+    \begin{enumerate}
+      \item une représentation $(V, \rho)$ est irréductible si, et seulement si on a $\langle \chi_V, \chi_V \rangle = 1$ ;
+      \item deux représentations $(V, \rho)$ et  $(V', \rho')$ sont isomorphes si, et seulement si  $\chi_V = \chi_{V'}$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item
+      On procède en deux temps.
+      \begin{itemize}
+        \item "$\implies$". Si $V$ est irréductible alors, par le lemme de Schur, on a $\dim \mathrm{Hom}_G(V, V) = 1$ et donc \[
+            \langle \chi_V, \chi_V \rangle = \dim \mathrm{Hom}_G(V, V) = 1
+          \]
+        \item "$\impliedby$".
+          Si on écrit $V = \bigoplus_{k = 1}^r W_k^{n_k}$ où $W_k$ est une représentation irréductible, deux ) deux non isomorphe, et avec~$n_k \ge 1$.
+          Ainsi,
+          \[
+            \langle \chi_V, \chi_V \rangle = \Big\langle \chi_V, \sum_{k=1}^r n_k \chi_{W_k} \Big\rangle = \sum_{k=1}^r n_k \langle \chi_V, \chi_{W_k} \rangle = \sum_{k=1}^r n_k^2
+          .\]
+          Or, $\langle \chi_V, \chi_V \rangle = 1$ donc $\sum_{k=1}^r n_k^2 = 1$ avec $n_k \ge 1$.
+          On en déduit que $r = 1$ et $n_1 = 1$. 
+          Ainsi $V$ est irréductible.
+      \end{itemize}
+    \item Soient $(V, \rho)$ et  $(V', \rho')$ deux représentations de  $G$.
+      On décompose $V = \sum_{W_k \in \mathcal{I}_G} W_k^{n_k}$ avec les $W_k$ irréductibles, et deux à deux non isomorphes.
+      Or, $\langle \chi_V, \chi_{W_k}\rangle = n_k$.
+      \begin{itemize}
+        \item "$\implies$".
+          Si $(V, \rho) \cong (V', \rho')$, alors il existe  $u \in \mathrm{GL}(V, W)$
+          tel que pour tout $g \in G$, \[
+          \rho'(g) = u \circ \rho(g) \circ u^{-1}
+          .\]
+          Ainsi, $\chi_V(g) = \Tr(\rho(g)) = \Tr(\rho'(g)) = \chi_{V'}(g)$.
+          On en conclut $\chi_V = \chi_{V'}$.
+        \item "$\impliedby$".
+          Si $\chi_V = \chi_{V'}$ alors $\langle \chi_{V'}, \chi_{W_k} \rangle = n_k$ et donc \[
+          V' \cong \bigoplus_{W_k \in \mathcal{I}_G} W_k^{n_k} = V
+          .\]
+      \end{itemize}
+  \end{enumerate}
+
+  \section{Exercice 2. \textit{Représentation d'une action de groupe}}
+
+  \begin{enonce}
+    Soit $G$ un groupe fini agissant sur un ensemble fini $X$. On note également~$\mathcal{O}_1, \ldots, \mathcal{O}_k$ les orbites de $X$ sous l'action de $G$.
+    On définit la représentation associée à cette action de la manière suivante : on pose \[
+      V_X := \bigoplus_{x \in X} \mathds{C} e_x
+    ,\] et $g \in G$ agit sur $V_X$ par \[
+    g \cdot \Big(\sum_{x \in X} a_x e_x\Big) := \sum_{x \in X} a_x e_{g\cdot x}
+    .\]
+    \begin{enumerate}
+      \item Montrer que $\chi_{V_X}(g) = \# \{x \in X  \mid  g \cdot x = x\}$.
+      \item
+        \begin{enumerate}
+          \item Montrer que $V_X^G$ est engendré par les $e_{\mathcal{O}_i} := \sum_{x \in \mathcal{O}_i} e_x$.
+          \item En déduire que le nombre d'orbite de $X$ est égal à~$\dim(V_X^G)$.
+        \end{enumerate}
+    \end{enumerate}
+    On suppose que l'action de $G$ est transitive. La représentation se décompose donc en $\mathds{1} \oplus H$ où $H$ ne contient pas de sous-représentation isomorphe à la représentation triviale.
+    \begin{enumerate}[resume*]
+      \item On fait agir $G$ sur $X \times X$ de manière diagonale. Montrer que~$\chi_{V_{X\times X}} = \chi_{V_X}$.
+      \item On dit que $G$ \textit{agit deux fois transitivement} si $\# X \ge 2$ et pour tous couples $(x_1, y_1), (x_2, y_2) \in X \times X$ avec $x_1 \neq y_1$ et $x_2 \neq y_2$ il existe $g \in G$ tel que $g \cdot (x_1, y_1) = (x_2, y_2)$.
+
+        Montrer que $G$ agit deux fois transitivement si et seulement si l'action $G \curvearrowright X \times X$ a deux orbites.
+      \item Montrer que $G$ agit deux fois transitivement si et seulement si~$\langle \chi_{V_X}^2, \mathds{1} \rangle = 2$ si et seulement si $H$ est irréductible.
+    \end{enumerate}
+    \textbf{Applications :}
+    \begin{enumerate}[resume*]
+      \item On prend l'action naturelle de $\mathfrak{S}_n$ sur $\llbracket 1,n\rrbracket$.
+        \begin{enumerate}
+          \item Retrouver que $V_X$ se décompose en une somme de deux représentations irréductibles $\mathds{1} \oplus H$.
+          \item Calculer le caractère de la représentation standard.
+        \end{enumerate}
+        \item On prend l'action par translation de $G$ sur lui-même. Calculer le caractère de la représentation régulière.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item On considère la base duale $(e^\star_x)_{x \in X}$ de $(e_x)_{x \in X}$.
+      Alors, pour tout~$g \in G$, on a 
+      \begin{align*}
+        \chi_{V_X}(g) &= \Tr(\rho_X(g))\\
+        &= \sum_{x \in X} e_x^\star(\rho_X(g)(e_x)) \\
+        &= \sum_{x \in X} e_x^\star(e_{g \cdot x})\\
+        &= \# \{x \in X  \mid g \cdot x = x\}
+      .\end{align*}
+
+    \item
+      \begin{enumerate}
+        \item On sait que \[
+            V_X^G = \{v \in V_X  \mid \forall g \in G, g \cdot v = v\}
+          .\]
+          Or,  \[
+            g \cdot e_{\mathcal{O}_i} = \sum_{x \in \mathcal{O}_i} e_{g \cdot x} = \sum_{x \in \mathcal{O}_i} e_x = e_{\mathcal{O}_i}
+          ,\]donc $e_{\mathcal{O}_i} \in V_X^G$, et donc $\vect ((e_{\mathcal{O}_i})_i) \subseteq V_X^G$.
+          Réciproquement, soit $v \in V_X^G$.
+          On écrit $v = \sum_{x \in X} \lambda_x e_x$.
+          Alors, pour tout élément $g  \in G$, $g \cdot x = x$ donc $\lambda_{g \cdot x} = \lambda_x$ pour tout $x \in X$.
+          Autrement dit, si $x, y \in \mathcal{O}_i$ alors $\lambda_x = \lambda_y =: \lambda_{\mathcal{O}_i}$.
+          Donc 
+          \[
+            v = \sum_{x \in X} \lambda_x e_x = \sum_{i=1}^k \lambda_{\mathcal{O}_i} \sum_{x \in \mathcal{O}_i} e_x = \sum_{i = 1}^k \lambda_{\mathcal{O}_i} e_{\mathcal{O}_i} \in \vect((e_{\mathcal{O}_i})_i)
+          ,\] 
+          d'où l'inclusion réciproque et donc l'égalité.
+        \item Les $(e_{\mathcal{O}_i})$ forment une famille libre car les $(e_i)$ le sont et car les  $\mathcal{O}_i$ forment une partition de $X$.
+          Ainsi, \[
+          \dim (V_X^G) = \dim \vect((e_{\mathcal{O}_i})_i) = k
+          .\]
+      \end{enumerate}
+    \item On fait agir $G$ sur $X \times X$ par \textit{action diagonale}, c'est à dire que \[
+        g \cdot (x,y) := (g \cdot x, g\cdot y)
+      .\]
+      Ainsi, pour $g \in G$, par combinatoire,
+      \begin{align*}
+        \chi_{V_{X \times X}}(g)
+        &= \# \{(x,y) \in X \times X  \mid g\cdot  (x,y) = (x,y) \}\\
+        &= (\# \{x \in X  \mid g \cdot x = x\})^2 \\
+        &= \big(\chi_{V_X}(g)\big)^2
+      .\end{align*}
+    \item Soit $D := \{(x,x)  \mid x \in X\}$. C'est une orbite de l'action de $G$ sur~$X \times X$ par transitivité de l'action $G \curvearrowright X$.
+      Ainsi, on a la chaîne d'équivalences suivante :
+      \begin{gather*}
+        G \curvearrowright X \times X \text{ admet deux orbites }\\
+        \rotatebox{90}{$\iff$}\\
+        (X \times X) \setminus D \text{ est une orbite }\\
+        \rotatebox{90}{$\iff$}\\
+        \forall x_1 \neq y_1, x_2 \neq y_2, \exists g \in G, g\cdot (x_1, x_2) = (x_2, y_2)
+      ,\end{gather*}
+      d'où l'équivalence.
+    \item On ré-écrit les propriétés étudiées :
+      \begin{enumerate}[label=(\textit{\roman*})]
+        \item \label{td11-ex2-q5-1} $G$ agit deux fois transitivement sur $X$ ;
+        \item \label{td11-ex2-q5-2} $\langle \chi_{V_X}^2, \mathds{1} \rangle = 2$ ;
+        \item \label{td11-ex2-q5-3} $H$ irréductible.
+      \end{enumerate}
+
+      \begin{itemize}
+        \item "\ref{td11-ex2-q5-1}$\implies$\ref{td11-ex2-q5-2}"
+          \begin{align*}
+            \langle \chi_{V_X}^2, \mathds{1} \rangle = \langle \chi_{V_{X \times X}}, \mathds{1} \rangle &= \frac{1}{G} \sum_{g \in G} \overline{\chi_{V_X}(g)}\\
+            &= \overline{\dim(V^G_{X \times X})} = \dim(V_{X \times X}^G)
+          .\end{align*}
+      \end{itemize}
+  \end{enumerate}
+  \mathds{Z}

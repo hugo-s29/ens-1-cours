@@ -123,6 +123,7 @@
 
 
   Le sens inverse, la réciproque, s'appelle la \textit{complétude}.
+  On l'étudiera rapidement après.
 
   \begin{rmk}
     Concrètement, on écrit des programmes annotés.
@@ -141,4 +142,34 @@
       \end{tikzpicture}
     \end{figure}
   \end{rmk}
+
+  Pour démontrer la complétude de la logique de Hoare, on s'appuie sur la notion de \textit{plus faible précondition} : étant données une commande $c$ et une assertion $B$, alors la \textit{plus faible précondition} associée à $c,B$ est  l'ensemble des états mémoire \[
+  \mathrm{wp}(c, B) := \{\sigma  \mid c,\sigma \Downarrow \sigma' \implies \sigma' \models B\}
+  .\]
+  Ainsi, $\mathrm{wp}(c, B)$ est l'ensemble des états mémoire à partir duquels on aboutit à un état satisfaisant $B$, après une exécution terminante de $c$.
+
+  \begin{prop}
+    Pour toute commande $c$ et toute formule $B$, il existe une assertion $\mathrm{W}(c, B)$ telle que $\sigma \models \mathrm{W}(c, B)$ si et seulement si $\sigma \in \mathrm{wp}(c, B)$.
+  \end{prop}
+  \begin{prv}[esquisse]
+    On procède par induction sur $c$.
+    Tout fonctionne, sauf pour  \textit{while}\ldots\
+    Pour le cas de la boucle \textit{while}, on utilise la caractérisation suivante :
+    \begin{gather*}
+      \sigma \in \mathrm{wp}(\while b {c_0}, B)\\
+      \text{\rotatebox{90}{$\iff$}}\\
+      \forall k, \forall \sigma_0, \ldots,\sigma_k \text{ si } \sigma_0 = \sigma \text{ et } \forall i < k, (\sigma_i, b \Downarrow \mathtt{true} \text{ et } c_0, \sigma_i \Downarrow \sigma_{i+1})\\
+      \text{ alors }\sigma_k \models b \lor B
+    .\end{gather*}
+    On peut définir cette assertion en définissant des assertions pour :
+    \begin{itemize}
+      \item décrire un état mémoire $\sigma_i$ ($X^i_1 = v_1 \land \cdots \land X_n^i = v_n$) ;
+      \item exprimer les conditions $\sigma_i, c \Downarrow \sigma_{i+1}$ par induction ;
+      \item exprimer les quantifications $\forall k, \sigma_0, \ldots, \sigma_k$\ldots\ on demande à Kurt Gödel.
+    \end{itemize}
+
+    Ainsi, on a bien une assertion $\mathrm{W}(c, B)$ telle que \[
+    \forall \sigma, \quad\quad \sigma \in \mathrm{wp}(c, B) \iff \sigma \models \mathrm{W}(c,B)
+    .\] 
+  \end{prv}
 \end{document}
