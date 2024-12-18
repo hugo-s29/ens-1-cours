@@ -4,8 +4,6 @@
   \chapter{Mémoire structurée, logique de séparation}
   \minitoc
 
-  \section{$\mathsf{IMP}$ avec tas.}
-
   La syntaxe des commandes de $\mathsf{IMP}$ avec tas est définie par la grammaire 
   \begin{align*}
     c ::= \ &x \ceq a  \mid \mathtt{skip}  \mid c_1 \col c_2  \mid \ifte b {c_1} {c_2}  \mid \while b c\\
@@ -34,7 +32,7 @@
 
   L'allocation $\mathtt{alloc}$ est \textit{dynamique}, similaire à \texttt{malloc} en C, où l'on alloue de la mémoire dans l'espace mémoire appelé \textit{tas}.
 
-  \subsection{Sémantique opérationnelle.}
+  \section{Sémantique opérationnelle de $\mathsf{IMP}$ avec tas.}
 
   \begin{defn}[États mémoire]
     Un état mémoire est la donnée de 
@@ -120,7 +118,7 @@
     \item La quatrième formule permet de ne pas parler du tas. Intuitivement $A$ "observe" uniquement la composante $\sigma$ et alors $A$ est une formule de la logique de Hoare.
   \end{itemize}
 
-  \subsection{Triplets de Hoare pour la logique de séparation.}
+  \section{Triplets de Hoare pour la logique de séparation.}
 
   On rappelle  que $ \{A\}  \{A'\} $ est définir avec $A,A'$ closes.
   La validité d'un triplet de Hoare en logique de séparation est défini par $\models \{A\} c \{A'\}$ si et seulement si dès que $\sigma, h \models A$ et $c, \sigma, h \Downarrow \sigma', h'$ alors  $\sigma', h' \models A'$.
@@ -149,4 +147,4 @@
       \infer 0{\vdash \{[x = x_0] * (a \mapsto x_1)\} x\ceq [a] \{[x = x_1] * (a[\sfrac{x_0}{x}] \mapsto x_1)\}}
     \end{prooftree}
   \end{gather*}
- \end{document}
+\end{document}

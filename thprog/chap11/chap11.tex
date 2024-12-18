@@ -1,0 +1,268 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Réécriture.}
+  \minitoc
+
+  \begin{defn}
+    Soit $\to$ une relation binaire sur un ensemble $E$. Le~$2$-uplet $(E, \to)$ est un \textit{SRA}, pour \textit{système de réécriture abstraite}.
+
+    Soit $x_0 \in E$. Une \textit{divergence} issue de $x_0$ est une suite $(x_i)_{i \in \mathds{N}}$ telle que, pour tout $i$, on a $x_i \to x_{i+1}$.
+
+    La relation $\to$ est \textit{terminante} ou \textit{termine} si et seulement si, quel que soit $x \in E$, il n'y a pas de divergence issue de $x$.
+
+    La relation $\to$ diverge s'il existe une divergence.
+  \end{defn}
+
+  \begin{exm}
+    En général, une relation réflexive est divergente.
+  \end{exm}
+
+  \begin{thm}
+    Une relation $(E, \to)$ est terminante si et seulement si elle satisfait  le \textit{principe d'induction bien fondée (PIBF)} suivant :
+    \begin{quote}
+      Pour tout prédicat $\mathcal{P}$ sur $E$, si pour tout $x \in E$ \[
+        \big[\forall y \in E, x \to y \text{ implique } \mathcal{P}(y)\big] \text{ implique } \mathcal{P}(x)
+      \] alors, pour tout $x \in E$, $\mathcal{P}(x)$.
+    \end{quote}
+
+    En particulier, dans le principe d'induction bien fondée, on demande que les feuilles (les éléments sans successeurs) vérifient le prédicat.
+  \end{thm}
+  \begin{prv}
+    \begin{itemize}
+      \item "PIBF $\implies$ terminaison".
+        Montrons que, quel que soit $x \in E$, \[
+        \mathcal{P}(x) \; : \; \text{"il n'y a pas de divergence issue de $x$"}
+        .\]
+        Soit $\mathrm{Next}(x) = \{y \in E  \mid x \to y\}$.
+        On suppose que, pour tout $y \in \mathrm{Next}(x)$, on a $\mathcal{P}(y)$.
+        On en déduit $\mathcal{P}(x)$ car, sinon, une divergence ne passerait pas par $y \in \mathrm{Next}(x)$.
+        Par le principe d'induction bien fondée, on en déduit \[\forall x \in E, \mathcal{P}(x),\] autrement dit, la relation $\to$ termine.
+      \item "$\lnot$PIBF  $\implies$ diverge", par contraposée.
+        On suppose qu'il existe un prédicat $\mathcal{P}$ tel que, \[
+        \forall x, (\forall y, x \to y \text{ implique } \mathcal{P}(y)) \text{ implique }\mathcal{P}(x)
+        ,\] et que l'on n'ait pas, $\forall x \in E, \mathcal{P}(x)$ autrement dit qu'il existe $x_0 \in E$ tel que $\lnot \mathcal{P}(x)$.
+
+        Intéressons-nous à $\mathrm{Next}(x_0) = \{ y \in E \mid x_0 \to y\}$.
+        Si, pour tout $y \in \mathrm{Next}(x_0)$ on a $\mathcal{P}(y)$ alors par hypothèse $\mathcal{P}(x_0)$, ce qui est impossible.
+        Ainsi, il existe $x_1 \in \mathrm{Next}(x_0)$ tel que~$\lnot \mathcal{P}(x_1)$.
+        On itère ce raisonnement, ceci crée notre divergence.
+    \end{itemize}
+  \end{prv}
+
+  \begin{rmk}
+    L'induction bien fondée s'appelle aussi l'induction~\textit{noethérienne}, en référence à Emmy Noether, mathématicienne allemande du IX--Xème siècle.
+  \end{rmk}
+
+  Une application de ce principe d'induction est le \textit{lemme de König}.
+  \begin{defn}
+    \begin{itemize}
+      \item Un arbre est \textit{fini} s'il a un nombre fini de nœuds (\textit{infini} sinon).
+      \item Un arbre est à \textit{branchement fini} si tout nœud a un nombre fini d'enfants immédiats.
+      \item Une branche est \textit{infinie} si elle contient un nombre infini de nœuds.
+    \end{itemize}
+  \end{defn}
+
+  \begin{lem}[Lemme de König]
+    Si un arbre est à branchement fini est infini alors il contient une branche infinie.
+  \end{lem}
+
+  \begin{prv}
+    On considère $E$ l'ensemble des nœuds de l'arbre, et on définit la relation $\to$ par : on a  $x\to y$ si $y$ est enfant immédiat de~$x$.
+    On montre qu'un arbre à branchement fini sans branche infinie (\textit{i.e.} la relation $\to$ termine) est fini.
+    On choisit la propriété~$\mathcal{P}(x)$ : "le sous-arbre enraciné en $x$ est fini."
+
+    Montrons que, quel que soit $x$, $\mathcal{P}(x)$ et pour ce faire, utilisons le principe d'induction bien fondée puisque la relation $\to$ termine.
+    On doit montrer que, si $\forall y \in \mathrm{Next}(x), \mathcal{P}(y)$ implique $\mathcal{P}(x)$.
+    Ceci est vrai car l'embranchement est fini.
+  \end{prv}
+
+
+  \section{Liens avec les définitions inductives.}
+
+
+  On considère $E$ l'ensemble inductif défini par la grammaire suivante :
+  \[
+  t ::= \mathtt{F}  \mid \mathtt{N}(t_1, k, t_2)
+  .\]
+  C'est aussi le plus petit point fixe de l'opérateur $f$ associé (par le théorème de Knaster--Tarski).
+
+  On définit la relation $\to$ binaire sur $E$ par : on a $x \to y$ si et seulement si on a $x = \mathtt{N}(y,k,z)$ ou $x = \mathtt{N}(z,k,y)$.
+
+  On sait que la relation $\to$ termine. En effet, l'ensemble des arbres finis est un point fixe de la fonction $f$, donc $E$ ne contient que des arbres finis.
+
+  Le principe d'induction bien fondée nous dit que, pour $\mathcal{P}$ un prédicat sur $E$, pour montrer $\forall x, \mathcal{P}(x)$, il suffit de montrer que, quel que soit~$x$, si $(\forall y, x \to y \text{ implique } \mathcal{P}(y))$ alors $\mathcal{P}(x)$.
+  Autrement dit, il suffit de montrer que $\mathcal{P}(\mathtt{E})$ puis de montrer que, si $\mathcal{P}(t_1)$ et $\mathcal{P}(t_2)$ alors on a que~$\mathcal{P}(\mathtt{N}(t_1, k, t_2))$.
+
+  On retrouve le principe d'induction usuel.
+
+  Ce même raisonnement, on peut le réaliser quel que soit l'ensemble inductif, car la relation de "sous-élément" termine toujours puisque il n'y a que des éléments finis dans l'ensemble inductif.
+
+  \section{Établir la terminaison.}
+
+  \begin{thm}
+    Soient $(B, >)$ un SRA terminant, et $(A, \to)$ un SRA.
+    Soit $\varphi : A \to B$ un \textit{plongement}, c'est à dire une application vérifiant \[
+    \forall a, a' \in A, \quad\quad a \to a' \text{ implique } \varphi(a) > \varphi(a')
+    .\]
+    Alors, la relation $\to$ termine.
+  \end{thm}
+
+  \begin{thm}
+    Soient $(A, \to_A)$ et $(B, \to_B)$ deux SRA.
+
+    Le \textit{produit lexicographique} de $(A, \to_A)$ et $(B, \to_B)$ est le SRA, que l'on notera $(A \times B, \to_{A \times B})$, défini par \[
+      (a, b) \to_{A \times B} (a', b') \text{ ssi } \begin{cases}
+        (1) \; a \to_A a' \text{ (et $b'$ quelconque) }\\[-0.2em]
+        \quad\quad\quad\text{ou}\\[-0.2em]
+        (2)\; a = a' \text{ et } b \to_B b'
+      \end{cases}
+    .\]
+
+    Alors, les relations $(A, \to_A)$ et $(B, \to_B)$ terminent si et seulement si la relation $(A \times B, \to_{A \times B})$ termine.
+  \end{thm}
+
+  \begin{prv}
+    \begin{itemize}
+      \item "$\implies$".
+        Supposons qu'il existe une divergence pour $(A \times B, \to_{A \times B})$ :
+        \[
+          (a_0, b_0) \to_{A \times B} (a_1, b_1) \to_{A \times B} (a_2, b_2) \to_{A \times B} \cdots
+        .\] 
+
+        Dans cette divergence,
+        \begin{itemize}
+          \item soit on a utilisé $(1)$ une infinité de fois, et alors en projetant sur la première composante et en ne conservant que les fois où l'on utilise $(1)$, on obtient une divergence  $\to_A$ ;
+          \item soit on a utilisé $(1)$ un nombre fini de fois, et alors à partir d'un certain rang $N$, pour tout $i \ge N$, on a l'égalité $a_i = a_N$, et donc on obtient une divergence pour $\to_B$ : \[
+          b_N \to_B b_{N+1} \to_B b_{N+2} \to \cdots 
+          .\]
+        \end{itemize}
+      \item "$\impliedby$".
+        On montre que, si on a une divergence pour $\to_A$ alors on a une divergence pour $\to_{A \times B}$ (on utilise $(1)$ une infinité de fois) ; puis que si on a une divergence pour $\to_B$ alors on a une divergence pour $\to_{A \times B}$ (on utilise $(2)$ une infinité de fois).
+    \end{itemize}
+  \end{prv}
+
+  \section{Application à l'algorithme d'unification.}
+
+  On note $(\mathcal{P}, \sigma) \to (\mathcal{P}', \sigma')$ la relation définie par l'algorithme d'unification (on néglige le cas où $(\mathcal{P}, \sigma) \to \bot$).
+
+  On note $|\mathcal{P}|$ la somme des tailles (vues comme des arbres) des contraintes de $\mathcal{P}$ et $|\mathsf{Vars}\ \mathcal{P}|$ le nombre de variables.
+
+  On définit $\varphi : (\mathcal{P}, \sigma) \mapsto (|\mathsf{Vars}\ \mathcal{P}|, |\mathcal{P}|)$.
+
+  Rappelons la définition de la relation $\to$ dans l'algorithme d'unification :
+  \begin{enumerate}
+    \item\label{chap11-unif-1} $ \begin{array}{c}
+        \\
+        (\{f(t_1,\ldots,t_k) \qeq f(u_1,\ldots, u_n) \sqcup \mathcal{P}, \sigma\}) \to\\
+        \quad\quad\quad\quad(\{t_1 \qeq u_1, \ldots, t_k \qeq u_k\} \cup \mathcal{P}, \sigma) \quad ;
+      \end{array} $
+    \item \label{chap11-unif-2} $(\{f(t_1,\ldots,t_k) \qeq g(u_1,\ldots, u_n) \sqcup \mathcal{P}, \sigma\}) \to \bot$ si $f \neq g$ ;
+    \item \label{chap11-unif-3} $(\{X\qeq t\} \sqcup \mathcal{P}, \sigma) \to (\mathcal{P}[\sfrac{t}{X}], [\sfrac{t}{X}] \circ \sigma)$ où $X \not\in \mathsf{Vars}(t)$ ;
+    \item \label{chap11-unif-4} $(\{X \qeq t\}\sqcup \mathcal{P}, \sigma) \to \bot$ si $X \in \mathsf{Vars}(t)$ et $t \neq X$ ;
+    \item \label{chap11-unif-5} $(\{X \qeq X\}\sqcup \mathcal{P}, \sigma) \to (\mathcal{P}, \sigma)$.
+  \end{enumerate}
+
+  Appliquons le plongement pour montrer que $\to$ termine.
+  On s'appuie sur le fait que le produit $(\mathds{N}, >) \times (\mathds{N}, >)$ est terminant (produit lexicographique).
+
+  Dans~\ref{chap11-unif-1}, $|\mathsf{Vars}\ \mathcal{P}|$ ne change pas et $|\mathcal{P}|$ diminue.
+  Puis dans~\ref{chap11-unif-3}, $|\mathsf{Vars}\ \mathcal{P}|$ diminue.
+  Et dans~\ref{chap11-unif-5}, on a $|\mathsf{Vars}\ \mathcal{P}|$ qui décroit ou ne change pas, mais~$|\mathcal{P}|$ diminue.
+  Dans les autres cas, on arrive, soit sur $\bot$.
+
+  On en conclut que l'algorithme d'unification termine.
+
+
+  \section{Multiensembles.}
+
+  \begin{defn}
+    Soit $A$ un ensemble. Un \textit{multiensemble} sur $A$ est la donnée d'une fonction $M : A \to \mathds{N}$.
+    Un multiensemble $M$ est \textit{fini} si $\{a \in A  \mid M(a) > 0\}$ est fini.
+
+    Le multiensemble vide, noté $\emptyset$, vaut $a \mapsto 0$.
+
+    Pour deux multiensembles $M_1$ et $M_2$ sur $A$, on définit 
+    \begin{itemize}
+      \item  $(M_1 \cup M_2)(a) = M_1(a) + M_2(a)$ ;
+      \item $(M_1 \ominus M_2)(a) = M_1(a) \ominus M_2(a)$ où l'on a $(n + k)\ominus n = k$ mais $n \ominus (n + k) = 0$.
+    \end{itemize}
+
+    On note $M_1 \subseteq M_2$ si, pour tout $a \in A$, on a $M_1(a) \le M_2(a)$.
+
+    La \textit{taille} de $M$ est $|M| = \sum_{a \in A} M(a)$.
+
+    On note $x \in M$ dès lors que $x \in A$ et que $M(x) > 0$.
+  \end{defn}
+
+  \begin{exm}
+    Si on lit $\{1, 1, 1, 2, 3, 4, 3, 5\}$ comme un multiensemble $M$, on obtient que $M(1) = 3$, et $M(2) = 1$, et $M(3) = 2$, et $M(4) = 1$, et $M(5) = 1$, et finalement pour tout autre entier  $n$, $M(n) = 0$.
+  \end{exm}
+
+  \begin{defn}[Extension multiensemble.]
+    Soit $(A, >)$ un SRA.
+    On lui associe une relation notée  $>_\mathrm{mul}$ définie sur les multiensembles \textit{finis} sur $A$ en définissant~$M >_\mathrm{mul} N$ si et seulement s'il existe $X,Y$ deux multiensembles sur $A$ tels que 
+    \begin{itemize}
+      \item $\emptyset \neq X \subseteq M$ ;
+      \item $N = (M \ominus X) \cup Y$\footnote{C'est ici la soustraction usuelle : il n'y a pas de soustraction qui "pose problème".}
+      \item $\forall  y \in Y, \exists x \in X, x > y$.
+    \end{itemize}
+  \end{defn}
+
+  Les multiensembles $X$ et $Y$ sont les "témoins" de $M >_\mathrm{mul} N$.
+
+  \begin{exm}
+    Dans $(\mathds{N}, >)$, on a \[
+      \{1, 2, \underbrace{5}_X\} >_\mathrm{mul} \{1, 2, \underbrace{4, 4, 4, 4, 3, 3, 3, 3, 3}_Y\} 
+    .\]
+  \end{exm}
+
+  \begin{thm}
+    La relation $>$ termine si et seulement si $>_\mathrm{mul}$ termine.
+  \end{thm}
+  \begin{prv}
+    \begin{itemize}
+      \item "$\impliedby$". Une divergence de $>$ induit une divergence de  $>_\mathrm{mul}$.
+      \item "$\implies$".
+        On se donne une divergence pour $>_\mathrm{mul}$ :
+        \[
+        M_0 >_\mathrm{mul} M_1 >_\mathrm{mul} M_2 >_\mathrm{mul} \cdots
+        ,\] et on montre que $>$ diverge
+        À chaque $M_i >_\mathrm{mul} M_{i+1}$ correspondent $X_i$ et $Y_i$ suivant la définition de $>_\mathrm{mul}$.
+
+        On sait qu'il y a une infinité de $i$ tel que $Y_i \neq \emptyset$.
+        En effet, si au bout d'un moment $Y_i$ est toujours vide alors 
+        $|M_i|$ décroit strictement, impossible.
+
+        Représentons cela sur un arbre.
+
+        \begin{figure}[H]
+          \centering
+          \begin{tikzpicture}
+            \node[draw, rounded rectangle] (1) {racine};
+            \node[draw, rounded rectangle,below left=0.5cm and 1cm of 1] (2a) {};
+            \node[draw, rounded rectangle,below left=0.5cm and 0cm of 1, fill=black] (2b) {};
+            \node[draw, rounded rectangle,below right=0.5cm and 0cm of 1] (2c) {};
+            \node[draw, rounded rectangle,below right=0.5cm and 1cm of 1, fill=black] (2d) {};
+            \draw (1) -- (2a);
+            \draw (1) -- (2b);
+            \draw (1) -- (2c);
+            \draw (1) -- (2d);
+            \node[draw, rounded rectangle,below left=0.5cm and 0.25cm of 2b] (3a) {};
+            \node[draw, rounded rectangle,below right=0.5cm and 0.25cm of 2b] (3b) {};
+            \node[draw, rounded rectangle,below=0.5cm of 2d] (3c) {};
+            \draw (2b) -- (3a);
+            \draw (2b) -- (3b);
+            \draw (2d) -- (3c);
+            \node[draw,deepred,rectangle,fit=(2a) (2b) (2c) (2d)] (M0) {};
+            \node[deepred,right=0.5cm of 2d] {$M_0$};
+            \draw[deepblue] plot [smooth cycle, tension=0.7] coordinates {(-1.6,-0.6) (-0.3, -1.4) (0.5, -0.6) (1.6, -1.5) (1.6, -2.1) (0.5, -1.3) (-0.3, -2.1) (-1.6, -1.2)};
+            \node[deepblue,right=0.5cm of 3c] {$M_1$};
+          \end{tikzpicture}
+        \end{figure}
+
+        On itère le parcours en obtenant un arbre à branchement fini, qui est infini (observation du dessin) donc par le lemme de König il a une branche infinie.
+        Par construction d'enfant de $a$ correspond à $a > a'$, d'où divergence pour $>$.
+    \end{itemize}
+  \end{prv}
+\end{document}
