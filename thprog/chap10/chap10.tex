@@ -1,0 +1,152 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+  \chapter{Mémoire structurée, logique de séparation}
+  \minitoc
+
+  \section{$\mathsf{IMP}$ avec tas.}
+
+  La syntaxe des commandes de $\mathsf{IMP}$ avec tas est définie par la grammaire 
+  \begin{align*}
+    c ::= \ &x \ceq a  \mid \mathtt{skip}  \mid c_1 \col c_2  \mid \ifte b {c_1} {c_2}  \mid \while b c\\
+          &x \ceq [a]  \mid [x_1] \ceq a  \mid x \ceq \mathtt{alloc}(k)  \mid \mathtt{free}(a).
+  \end{align*}
+  Les expressions arithmétiques et booléennes restent inchangées.
+
+  Ces quatre nouvelles constructions correspondent respectivement à 
+  \begin{itemize}
+    \item l'accès à une case mémoire ;
+    \item la modification d'une valeur d'une case mémoire ;
+    \item l'allocation de $k$ cases mémoires ;
+    \item la libération de cases mémoires.
+  \end{itemize}
+
+  \begin{rmk}
+    C'est un langage impératif de bas niveau : on manipule de la mémoire directement.
+    On ne s'autorise pas tout, cependant. On ne s'autorise pas, par exemple, \[
+      [x + i + 1] \ceq [t + i] + [t + i - 1]
+    ,\] mais on demande d'écrire \[
+      x \ceq [t+i]\col y \ceq [t + i - 1] \col [x + i + 1] \ceq x + y
+    .\]
+  \end{rmk}
+
+  On raffine $\mathsf{IMP}$ : avant, les cases vivaient quelque part, mais on ne sait pas où, ce sont des registres ; maintenant, peut aussi allouer des "blocs" de mémoire, et on peut donc parler de cases mémoires adjacentes.
+
+  L'allocation $\mathtt{alloc}$ est \textit{dynamique}, similaire à \texttt{malloc} en C, où l'on alloue de la mémoire dans l'espace mémoire appelé \textit{tas}.
+
+  \subsection{Sémantique opérationnelle.}
+
+  \begin{defn}[États mémoire]
+    Un état mémoire est la donnée de 
+    \begin{itemize}
+      \item $\sigma$ un \textit{registre}, c-à-d un dictionnaire sur $(\mathrm{V}, \mathds{Z})$ ;
+      \item $h$ un \textit{tas}, c-à-d un dictionnaire sur $(\mathds{N}, \mathds{Z})$, c'est un gros tableau.\footnote{On appelle parfois $\mathsf{IMP}$ avec tas, $\mathsf{IMP}$ avec tableau.}
+    \end{itemize}
+
+    On définit $h[k_1 \mapsto k_2]$ que si $k_1 \in \mathrm{dom}(h)$ et alors il vaut le dictionnaire où l'on assigne $k_2$ à $k_1$.
+    
+    On définit $h_1 \uplus h_2$ que si $\mathrm{dom}(h_1) \cap \mathrm{dom}(h_2) = \emptyset$ et vaut l'union de dictionnaires $h_1$ et $h_2$.
+  \end{defn}
+
+  On définit ainsi la sémantique dénotationnelle comme la relation ${\Downarrow}$ est une relation quinaire (\textit{i.e.} avec $5$ éléments) notée $c, \sigma, h \Downarrow \sigma', h'$ où  $c$ est une commande, $h,h'$ sont deux tas, et $\sigma, \sigma'$ sont deux registres.
+
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{a, \sigma \Downarrow k}
+      \infer[left label={\sigma' = \sigma[x \mapsto k]}] 1{x \ceq a, \sigma, h \Downarrow \sigma', h}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{c_1, \sigma, h \Downarrow \sigma', h'}
+      \hypo{c_2, \sigma', h' \Downarrow \sigma'', h''}
+      \infer 2{c_1 \col c_2, \sigma, h \Downarrow \sigma'', h''}
+    \end{prooftree}
+    \\[1em]
+    \begin{prooftree}
+      \hypo{a, \sigma \Downarrow k}
+      \infer[left label={\substack{k' = h(k)\\ \sigma' = \sigma[x \mapsto k']}}] 1{x \ceq [a], \sigma, h \Downarrow \sigma' h}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{a_1, \sigma \Downarrow k_1}
+      \hypo{a_2, \sigma \Downarrow k_2}
+      \infer[left label={h' = h[k_1 \mapsto k_2]\text{\footnote{On sous-entend ici que $k_1 \in \mathrm{dom}(h)$.}\showfootnote}}] 2{[a_1] \ceq a_2, \sigma, h \Downarrow \sigma, h'}
+    \end{prooftree}
+    \\[1em]
+    \begin{prooftree}
+      \infer[left label={\substack{\{k', \ldots, k' + k - 1\} \cap \mathrm{dom}(h) = \emptyset \\ k > 0\\ h' = h \uplus \{k' \mapsto 0, \ldots, k' + k - 1 \mapsto 0\}\\ \sigma' = \sigma[x \mapsto k']}}] 0{x \ceq \mathtt{alloc}(k), \sigma, h \Downarrow \sigma', h'}
+    \end{prooftree}
+  \end{gather*}
+  \[
+    \begin{prooftree}
+      \hypo{a, \sigma \Downarrow k}
+      \infer[left label={h = h' \uplus \{k \mapsto k'\}}] 1{\mathtt{free}(a), \sigma, h \Downarrow \sigma, h'}
+    \end{prooftree}
+  .\]
+
+  \section{Logique de séparation.}
+
+  \begin{defn}
+    On définit les assertions dans $\mathsf{IMP}$ avec tas comme l'enrichissement des assertions $\mathsf{IMP}$ avec les constructions $\mathtt{emp}$, $\mapsto$ et $*$ :
+    \[
+      A ::= {\cdots}  \mid \mathtt{emp}  \mid a_1 \mapsto a_2  \mid A_1 * A_2
+    .\]
+
+    On enrichit ainsi la relation de satisfaction :
+    \begin{itemize}
+      \item $\sigma, h \models \mathtt{emp}$ si et seulement si $h = \emptyset$ ;
+      \item $\sigma, h \models a_1 \to a_2$ si et seulement si $a_1, \sigma \Downarrow k_1$, et $a_2, \sigma \Downarrow k_2$ et~$h = [k_1 = k_2]$ (le tas est un singleton) ;
+      \item $\sigma, h \models A_1 * A_2$ si et seulement si $h = h_1 \uplus h_2$ avec $\sigma, h_1 \models A_1$ et $\sigma, h_2 \models A_2$.
+    \end{itemize}
+  \end{defn}
+
+  L’opérateur $*$ est appelé \textit{conjonction séparante} : on découpe le tas en deux, chaque partie étant "observée" par une sous-assertion.
+
+  \begin{note}[Notations]
+    \begin{itemize}
+      \item On note $a \mapsto \_$ pour $\exists i, a \mapsto i$.
+      \item On note $a_1 \hookrightarrow a_2$ pour $(a_1 \mapsto a_2) * \mathtt{true}$.
+      \item On note $a \mapsto (a_1, \ldots, a_n)$ pour \[
+          (a \mapsto a_1) * (a + 1 \mapsto a_2) * \cdots * (a + n - 1 \mapsto a_n)
+        .\]
+      \item On note $[A]$ pour $A \land \mathtt{emp}$.
+    \end{itemize}
+  \end{note}
+  Ces notations signifient respectivement :
+  \begin{itemize}
+    \item La première formule dit qu'une case mémoire est allouée en $a$ (ou plutôt que si $a$ s'évalue en $k$, alors il y a une case mémoire allouée en $k$).
+    \item La seconde formule dit que la case mémoire $a_1$ est allouée, et contient $a_2$ quelque part dans le tas.
+    \item La troisième formule dit que les $n$ cases mémoires suivant $a$ contiennent respectivement $a_1$, puis $a_2$, \textit{etc}.
+    \item La quatrième formule permet de ne pas parler du tas. Intuitivement $A$ "observe" uniquement la composante $\sigma$ et alors $A$ est une formule de la logique de Hoare.
+  \end{itemize}
+
+  \subsection{Triplets de Hoare pour la logique de séparation.}
+
+  On rappelle  que $ \{A\}  \{A'\} $ est définir avec $A,A'$ closes.
+  La validité d'un triplet de Hoare en logique de séparation est défini par $\models \{A\} c \{A'\}$ si et seulement si dès que $\sigma, h \models A$ et $c, \sigma, h \Downarrow \sigma', h'$ alors  $\sigma', h' \models A'$.
+
+  Parmi les règles d'inférences pour la logique de séparation, il y a la "\textit{frame rule}" ou "\textit{règle d'encadrement}" :
+  \[
+  \begin{prooftree}
+    \hypo{\vdash \{A\} c \{A'\}}
+    \infer[left label=\substack{\text{aucune variable $x \in \mathsf{vars}(B)$}\\\text{n'est modifiée par $c$}}] 1{\vdash \{A*B\} c \{A'*B\}}
+  \end{prooftree}
+  .\]
+  Elle permet de \textit{zoomer}, et de ce concentrer sur un comportent local.
+
+  Les règles suivantes définissent une logique sur les commandes de $\mathsf{IMP}$ avec tas.
+  \begin{gather*}
+    \begin{prooftree}
+      \infer 0{\vdash \{\mathtt{emp}\}x \ceq \mathtt{alloc}(k) \{x \mapsto (0, \ldots, 0)\}}
+    \end{prooftree}\\[1em]
+    \begin{prooftree}
+      \infer 0{\vdash \{a \mapsto \_\} \mathtt{free}(a) \{\mathtt{emp}\}}
+    \end{prooftree}\quad\quad
+    \begin{prooftree}
+      \infer 0{\vdash \{a_1 \mapsto \_\} [a_1] \ceq a_2 \{a_1 \mapsto a_2\}}
+    \end{prooftree}\\[1em]
+    \begin{prooftree}
+      \infer 0{\vdash \{[x = x_0] * (a \mapsto x_1)\} x\ceq [a] \{[x = x_1] * (a[\sfrac{x_0}{x}] \mapsto x_1)\}}
+    \end{prooftree}
+  \end{gather*}
+ \end{document}

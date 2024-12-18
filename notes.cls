@@ -36,7 +36,6 @@
 \RequirePackage{colortbl}
 \RequirePackage{nicematrix}
 \RequirePackage{fontspec}
-\RequirePackage{silence}
 \RequirePackage{tablefootnote}
 
 \newcommand\removefootnoteinside[1]{
@@ -245,7 +244,7 @@
   }
 }
 
-\newcommand\vertica[1]{
+\newcommand\vertical[1]{
   \rotatebox[origin=c]{270}{\ensuremath{#1}}
 }
 

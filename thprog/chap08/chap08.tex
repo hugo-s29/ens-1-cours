@@ -387,37 +387,4 @@
 
   Le plus grand point fixe ne contient que des dérivations infinies, qui correspondent à des exécutions divergentes d’un programme $\mathsf{IMP}$ à partir d’un état mémoire donné.
   En effet, ceci vient du fait que, si on interprète ces règles comme des règles inductives, la relation obtenue est l'ensemble vide\ldots
-
-
-  \section{$\mathsf{IMP}$ avec tas/gros tableau.}
-
-  La syntaxe des commandes de $\mathsf{IMP}$ avec tas est définie par la grammaire 
-  \begin{align*}
-    c ::= \ &x \ceq a  \mid \mathtt{skip}  \mid c_1 \col c_2  \mid \ifte b {c_1} {c_2}  \mid \while b c\\
-          &x \ceq [a]  \mid [x_1] \ceq a  \mid x \ceq \mathtt{alloc}(k)  \mid \mathtt{free}(a).
-  \end{align*}
-  Les expressions arithmétiques et booléennes restent inchangées.
-
-  \begin{rmk}
-    C'est un langage impératif de bas niveau : on manipule de la mémoire directement.
-    On ne s'autorise pas tout, cependant. On ne s'autorise pas, par exemple, \[
-      [x + i + 1] \ceq [t + i] + [t + i - 1]
-    ,\] mais on demande d'écrire \[
-      x \ceq [t+i]\col y \ceq [t + i - 1] \col [x + i + 1] \ceq x + y
-    .\]
-  \end{rmk}
-
-  \subsection{Sémantique dénotationnelle.}
-
-  \begin{defn}[États mémoire]
-    Un état mémoire est la donnée de 
-    \begin{itemize}
-      \item $\sigma$ un \textit{registre}, c-à-d un dictionnaire sur $(\mathrm{V}, \mathds{Z})$ ;
-      \item $h$ un \textit{tas}, c-à-d un dictionnaire sur $(\mathds{N}, \mathds{Z})$, c'est un gros tableau.\footnote{On appelle parfois $\mathsf{IMP}$ avec tas, $\mathsf{IMP}$ avec tableau.}
-    \end{itemize}
-
-    On définit $h[k_1 \mapsto k_2]$ que si $k_1 \in \mathrm{dom}(h)$ et alors il vaut le dictionnaire où l'on assigne $k_2$ à $k_1$.
-    
-    On définit $h_1 \uplus h_2$ que si $\mathrm{dom}(h_1) \cap \mathrm{dom}(h_2) = \emptyset$ et vaut l'union de dictionnaires $h_1$ et $h_2$.
-  \end{defn}
 \end{document}
