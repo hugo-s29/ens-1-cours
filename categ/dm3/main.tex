@@ -23,6 +23,9 @@
 
 \newcommand\id{\ensuremath{\operatorname{id}}}
 \newcommand\ord{\ensuremath{\operatorname{ord}}}
+\newcommand\colim{\ensuremath{\operatorname{colim}}}
+
+\usepackage{amssymb}
 
 \begin{document}
   \maketitle
@@ -116,6 +119,26 @@
     ,\] avec $P_\bullet = F$ (modulo curryfication).
     Quel est l'énoncé dual ?
   \end{slshape}
+
+  Comme $\mathbf{Ens}$ est complet, la limite $\varprojlim \hat{F}(-, X)$ existe et on note alors~$\{\phi_{A,X}: \varprojlim \hat{F}(-, X) \to \hat{F}(A, X) \}$ le cône limite.
+  De plus, on a que \[
+    (\varprojlim F)(Y) = \{\psi_X : \varprojlim (F-)(Y) \to (F X)Y\} 
+  .\]
+  Et, par curryfication, on a que 
+  \[
+    \begin{tikzcd}[column sep={160,between origins}]
+    \arrow{d}{\phi_X} \varprojlim (F-)(Y) \arrow{r}{\text{curryfication}}[swap]{\sim} & \varprojlim \hat{F}(-, Y) \arrow{d}{\psi_X}\\
+    (F X)Y \arrow{r}{\text{curryfication}}[swap]{\sim} & \hat{F}(X,Y).
+  \end{tikzcd}
+  .\]
+  Ceci implique l'isomorphisme \[
+    (\varprojlim F)(X) \cong \varprojlim \hat{F}(-, X)
+  .\]
+
+  L'énoncé dual est que $\varinjlim F$ existe (car $\mathbf{Ens}$ est co-complet) et peut se calculer point par point avec :
+  \[
+    (\varinjlim F)(X) \cong \varinjlim \hat{F}(-, X)
+  .\] 
 
   \chapter{Exercice 4.}
   \begin{slshape}
@@ -296,7 +319,7 @@
 
     \begin{enumerate}
       \item Décrire l'exponentiation dans $\mathbf{Ens}$.
-      \item Montrer que dans une catégorie admettant tout objet exponentiel que $(A^B)^C \cong A^{B \times C}$.
+      \item Montrer que dans une catégorie admettant tout objet exponentiel $(A^B)^C \cong A^{B \times C}$.
       \item Dans une catégorie admettant tout produit fini et tout objet exponentiel (c'est à dire "\textit{clos cartésien}") montrer que si de plus $\mathbf{C}$ est localement petite et contient les coproduits alors \[
       A \times (B + C) \cong A \times B + A \times C
       .\]
@@ -353,4 +376,302 @@
       \end{tikzcd}
       .\]
   \end{enumerate}
+
+  \chapter{Exercice 8.}
+
+  \begin{slshape}
+    \color{deepblue}
+    On dit qu'une catégorie est \textit{filtrante} si tout diagramme fini admet un cocône.
+
+    \begin{enumerate}
+      \item Pourquoi cela généralise la notion d'ordre filtrant (\textit{c.f.} TD 2) ?
+    \end{enumerate}
+    On appelle \textit{(co)limite filtrante} une (co)limite indexée par une catégorie filtrante.
+    Dans une catégorie localement petite, on appelle un objet $X$ \textit{compact} dès lors que $h^X := \mathrm{Hom}(X, -)$ commute avec les limites filtrées.
+
+    \begin{enumerate}[resume*]
+      \item Montrer qu'un objet $X$ est compact si et seulement si toute flèche $X \overset u \to \operatorname{colim} U_i$, pour un diagramme $U_\bullet$ filtrant, se factorise par  $X \overset f \to U_j \overset {\iota_j} \to \operatorname{colim} U_i$. \label{ex8-q2}
+      \item Quels sont les objets compacts de $\mathcal{O}_X$ la catégorie des ouverts munie des inclusions de l'espace topologique $X$ ? (\textit{Indice} : le nom est bien choisi).
+      \item Quels sont les objets compacts de $\mathbf{Ens}$ ?
+      \item Quels sont les objets compacts de $\mathbf{Vect}_\mathds{k}$ ?
+      \item Qu'en est-il de $\mathbf{Grp}$ ?
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Considérons une catégorie posétale $\mathbf{C}$ munie d'un ordre filtrant noté $\preceq$.
+      Montrons que c'est une catégorie filtrante.
+
+      Montrons que tout diagramme fini de cardinal $n$ admet un cocône par récurrence sur $n \in \mathds{N}^\star$.
+
+      \begin{itemize}
+        \item Pour $n = 1$, on considère un diagramme $F$ de cardinal 1.
+          Un cocône de ce diagramme est celui ci-dessous :
+          \[
+          \begin{tikzcd}
+            F X \arrow{d}{\id_{F X}}\\
+            F X
+          \end{tikzcd}
+          .\] 
+        \item Pour un diagramme $F$ de cardinal $n+1$, on isole un élément de ce diagramme $X_0$ et on considère le diagramme~$F'$ contenant les $n$ autres éléments.
+          Par hypothèse de récurrence, ce diagramme possède un cocône $C'$ muni des morphismes $\phi'_X : F' X \to C'$.
+          Parce que $\preceq$ est filtrant, il existe~$C \in \mathbf{C}$ tel que $X_0\preceq C$ et $C' \preceq C$.
+          Le diagramme suivant est donc un cocône sur $F$ :
+          \[
+          \begin{tikzcd}[column sep={40,between origins}, row sep={40, between origins}]
+            F X_0 \arrow{ddrr}{} & & F X_1 \arrow[swap]{drr}{} & F X_2 \arrow[swap]{dr}{} & \cdots  & F X_{n-1} \arrow[swap]{dl}{} & F X_n \arrow{dll}{}\\
+                  &&&& C' \arrow{dll}{}\\
+                  &&C
+          \end{tikzcd}
+          .\]
+      \end{itemize}
+      On en conclut que toute catégorie posétale sur un ordre filtrant est une catégorie filtrante.
+    \item On procède par équivalence.
+      \begin{align*}
+        & \text{$X$ compact} \\
+        \iff & \forall U_\bullet \text{ diag. filtrant}, \colim h^X(U_i) \cong h^X(\colim U_i)\\
+        \iff & \forall U_\bullet \text{ diag. filtrant}, \underbrace{\colim \mathrm{Hom}(X, U_i)}_{\{\phi_i : \mathrm{Hom}(X, U_i) \to N\} } \cong \mathrm{Hom}(X, \colim U_i) \\
+        \iff & \forall U_\bullet \text{ diag. filtrant}, \forall u : X \to \colim U_\bullet, \exists ! i \in I,\\
+             & \quad\quad\quad\quad\quad \text{le diagramme suivant commute}
+      \end{align*}
+      \[
+        \begin{tikzcd}
+          X \arrow{dd}{u} \arrow{dr}{\phi_i} \\
+          & U_i \arrow{dl}{\iota_i}\\
+          \colim U_\bullet
+        \end{tikzcd}
+      ,\]
+      où l'on a noté $(\iota_i : U_i \to \colim U_\bullet)$ le cocône limite sur $U_\bullet$ et $N$ la pointe du cocône limite $\colim \mathrm{Hom}(X, U_i)$.
+
+    \item Montrons que $Y$ est compact (au sens que chaque couverture par ouvert de $Y$ admet une sous-couverture finie de $Y$) si et seulement si $Y$ est un objet compact dans $\mathcal{O}_X$.
+      Je noterai "objet compact" pour la définition catégorique et "compact topologique" pour la définition topologique.
+
+      Dans cette catégorie, la colimite correspond à l'union ensembliste.
+      Considérons un recouvrement $\bigcup_{i \in  I} U_i = Y$, pour $Y$ quelconque.
+      Le diagramme \begin{align*}
+        K: \wp_\text{finies}(I) &\longrightarrow \mathcal{O}_X \\
+        I\supseteq J &\longmapsto \bigcup_{j \in J} U_j
+      \end{align*} est filtrant (toute famille finie de partie finie admet une union finie) et sa colimite vaut $\bigcup_{i \in  I} U_i = Y$.
+
+      Ainsi, si $Y$ est un objet compact, alors il existe $J \subseteq I$ fini et $f$ tel que le diagramme suivant commute :
+      \[
+      \begin{tikzcd}
+        Y \arrow{dr}{f} \arrow{dd}{\id_Y}\\
+        & \bigcup_{j \in J} U_j \arrow{dl}{\iota_J}\\
+        \bigcup_{i \in  I} U_i = Y
+      \end{tikzcd}
+      .\]
+      Ceci implique nécessairement que $\bigcup_{j \in J} U_j = Y$ avec $J$ fini.
+      On en conclut que tout recouvrement de $Y$ admet un sous-recouvrement fini, donc que $Y$ est un compact topologique.
+
+      Réciproquement, si $Y$ est un compact topologique, et soit $U_\bullet : I \to \mathcal{O}_X$ un diagramme filtrant quelconque.
+      Montrons l'isomorphisme \[
+        \mathrm{Hom}_{\mathcal{O}_X}(Y, \colim U_\bullet) \cong \colim \mathrm{Hom}_{\mathcal{O}_X}(Y, U_\bullet)
+      .\] 
+      L'ensemble à droite est vide si et seulement si $\colim U_\bullet = \bigcup_{i \in  I} U_i \subsetneq Y$, et c'est un singleton sinon (argument de continuité).
+      Dans le premier cas, ceci implique que tous les ensembles $\mathrm{Hom}_{\mathcal{O}_X}(Y, U_i)$ par le même argument et donc $\colim \mathrm{Hom}_{\mathcal{O}_X}(Y, U_\bullet)$ est vide.
+      Dans l'autre cas, par compacité topologique de $Y$, on sait que l'on peut extraire un sous-ensemble fini $J \subseteq I$ tel que $Y = \bigcup_{j \in  J} U_j$.
+      Et, vu que le diagramme $U_\bullet$ est filtré, alors il existe un cocône sur $J$, de pointe $p$.
+      On en déduit que~$U_c \supseteq \bigcup_{j \in J}U_j = X$, d'où $U_c = X$.
+      On a donc bien l'isomorphisme demandé.
+
+
+    \item Montrons qu'un ensemble est compact (au sens d'être un objet compact dans $\mathbf{Ens}$) si et seulement s'il est fini.
+
+      Remarquons que l'union ensembliste est une colimite filtrée, et que pour une famille finie d'ensembles finis, leur union est fini.
+
+      Considérons un ensemble compact $X = \bigcup_{i \in  I} U_i$ où les éléments~$U_i \subseteq X$ sont des sous-ensembles finis, et où $I$ est une catégorie filtrante.
+      Alors, par la question~\ref{ex8-q2}, il existe~$i \in I$ et $f$ tel que le diagramme suivant commute :
+      \[
+      \begin{tikzcd}
+        X \arrow{dd}{\id_X} \arrow{dr}{f} \\
+        & U_i \arrow{dl}{\iota_i} \\
+        \colim U_\bullet = X
+      \end{tikzcd}
+      .\]
+      On en déduit que nécessairement $U_i \cong X$, ce qui implique $X$ fini.
+
+      Réciproquement, soit $U_\bullet : I \to \mathbf{Ens}$  un diagramme filtrant quelconque.
+      On a l'isomorphisme : \[
+        \mathrm{Hom}(X, \underbrace{\colim U_\bullet}_{\bigcup_{i \in  I} U_i}) \cong \underbrace{\colim \mathrm{Hom}(X, U_\bullet)}_{\bigcup_{i \in  I} \mathrm{Hom}(X, U_\bullet)}
+      ,\]
+      par les propriétés des applications usuelles sur les ensembles.
+
+
+
+    \item Considérons un espace vectoriel $E$.
+      On pose $E = \bigoplus_{i \in I} \operatorname{vect}(e_i)$.
+      On "décompose" ainsi $E$ en somme directe de sous-espaces vectoriels de dimension $1$.
+      On note $U_i = \operatorname{vect} e_i$.
+
+      Le diagramme \begin{align*}
+        K: \wp_\text{finies}(I) &\longrightarrow \mathbf{Vect}_\mathds{k} \\
+        J &\longmapsto \bigoplus_{j \in J} U_j
+      ,\end{align*}
+      c'est un diagramme filtrant (la somme d'espace vectoriels existe toujours, et c'est un espace vectoriel) et sa colimite vaut $\bigoplus_{i \in I} U_i = E$.
+
+      Ce diagramme filtrant permet la factorisation
+      \[
+      \begin{tikzcd}
+        E \arrow{dd}{\id_E} \arrow{dr}{f}\\
+        & \bigoplus_{j \in J} U_j \arrow{dl}{\iota_j}\\
+        E = \bigoplus_{i \in I} U_i
+      \end{tikzcd}
+      .\]
+      On en déduit que $E = \bigoplus_{j \in J} U_j$ avec $J$ fini, donc que $E$ est de dimension finie.
+
+      Réciproquement, si $U_\bullet : I \to \mathbf{Vect}_\mathds{k}$ est un diagramme filtrant quelconque, où $X$ est fini. Montrons l'isomorphisme \[
+        \mathrm{Hom}(X, \underbrace{\colim U_\bullet}_{\bigoplus_{i \in  I} U_i}) \cong \underbrace{\colim \mathrm{Hom}(X, U_\bullet)}_{\bigoplus_{i \in  I} \mathrm{Hom}(X, U_\bullet)}
+      ,\] en décomposant les applications sous chacune de leurs coordonnées (possible car $X$ est fini).
+      D'où la réciproque.
+    \item Pour $\mathbf{Grp}$, on procède quasi-exactement que pour $\mathbf{Vect}_\mathds{k}$.
+      On décompose un groupe $G$ en $\langle g_i \mid i \in I \rangle$, et on pose le diagramme 
+      \begin{align*}
+        K: \wp_\text{finies}(I) &\longrightarrow \mathbf{Grp} \\
+        J &\longmapsto \langle g_i  \mid i \in J \rangle
+      .\end{align*}
+      On montre, très similairement au raisonnement réalisé dans les précédente question, que $G$ est compact si et seulement si $G = \langle g_i  \mid i \in J \rangle$ avec $J$ fini.
+      Autrement dit, $G$ est compact si et seulement s'il est engendré par un nombre fini d'éléments.
+  \end{enumerate}
+
+  \chapter{Exercice 10.}
+
+  \begin{slshape}
+    \color{deepblue}
+    \begin{enumerate}
+      \item Montrer que $\mathbf{Co} \backslash \mathds{K} \cong \mathbf{Ext}_\mathds{K}$ où $\mathbf{Co}$ est la catégorie des corps et~$\mathbf{Ext}_\mathds{K}$ est la catégorie des extensions $\mathds{L}$ de $\mathds{K}$ ayant pour flèches les $\mathds{K}$-morphismes de corps.
+      \item Donner de même une description équivalente de $\mathbf{Ens} \backslash \{*\}$ avec~$\{*\}$ un singleton.
+    \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Une extension d'un corps $\mathds{K}$ est un couple $(\mathds{L}, \iota)$ où $\iota : \mathds{K} \to \mathds{L}$ est un morphisme de corps.
+      Et, un objet de $\mathbf{Co} \backslash \mathds{K}$ est un couple~$(\mathds{L}, \iota)$ où $\mathds{L}$ est un corps et  $\iota : \mathds{K} \to \mathds{L}$ est un morphisme de corps (car morphisme de $\mathbf{Co}$.)
+
+      On a donc correspondance exacte des objets.
+
+      Si on a un morphisme d'extension $u : \mathds{L} \to \mathds{L}'$, alors $u$ vaut l'identité sur $\mathds{K}$ (par définition de morphisme d'extensions) et c'est un morphisme de corps.
+      Par ces deux contraintes, le diagramme ci-dessous commute :
+      \[
+      \begin{tikzcd}
+                                                   & \mathds{K}\\
+        \mathds{L} \arrow{rr}{u} \arrow[swap]{ur}{\iota} && \mathds{L}'\arrow{ul}{\iota'}
+      \end{tikzcd}
+      .\]
+      
+      Ceci conclut quant à l'isomorphisme des deux catégories.
+
+    \item Construisons l'isomorphisme entre les catégories $\mathbf{Ens} \backslash \{*\}$ et~$\mathbf{Ens_p}$ où $\mathbf{Ens_p}$ est la catégorie des espaces pointés :
+      \begin{align*}
+        \mathbf{Ens} \backslash \{*\} &\overset \sim \longleftrightarrow \mathbf{Ens_p} \\
+         (A, \pi : \{*\} \to A) &\longmapsto (A,  \pi(*))\\
+         (A, \pi : {*} \mapsto p) &\longmapsfrom (A,  p)\\
+         ((A, \pi) \overset u \to (A', \pi')) &\longmapsto ((A, \pi(*)) \overset u \to (A', \pi'(*)))\\
+         u \circ \pi = \pi' & \phantom{\longmapsto} \quad u(\pi(*)) = \pi'(*)\\
+         ((A, \pi : * \mapsto p) \overset u \to (A', \pi' : * \mapsto p')) &\longmapsfrom ((A, p) \overset u \to (A', p))\\
+         u \circ \pi = \pi' & \phantom{\longmapsto} \quad u(p) = p'
+      .\end{align*}
+  \end{enumerate}
+
+  \chapter{Exercice 11.}
+  
+  \begin{slshape}
+    \color{deepblue}
+    Soient $\mathbf{C}$ une petite catégorie, $\mathbf{E}$ une catégorie, et $F : \mathbf{C} \to \mathbf{E}$ un diagramme tel que $\lim_\mathbf{C} F$ existe.
+    Montrer que la catégorie des cônes sur $F$ est isomorphe à la catéogorie relative à $\lim_\mathbf{C} F$.
+    Si $\colim_\mathbf{C} F$ existe, énoncer et démontrer la proposition duale.
+  \end{slshape}
+
+  Notons $\{\psi_X : \lim_\mathbf{C} \to F X\}_{X \in \mathbf{C}}$ le cône limite.
+
+  On construit l'isomorphisme suivant :
+  \begin{align*}
+    \textbf{Cônes}_\mathbf{C}(F) &\overset \sim \longleftrightarrow \mathbf{C} / {\lim}_\mathbf{C} F \\
+    \{\phi_X : C \to F X\}_{X \in \mathbf{C}} &\longmapsto (C, \Phi : C \to {\lim}_\mathbf{C} F)\\
+    \{\phi_X := \psi_X \circ \Phi \}_{X \in \mathbf{C}} & \longmapsfrom (C, \Phi : C \to {\lim}_\mathbf{C} F)\\
+    (u : C \to C') & \longleftrightarrow (u : (C, \Phi) \to (C', \Phi'))\\
+    \psi_X \circ u = \psi'_X & \phantom{\longmapsto} \quad \Phi \circ u = \Phi'
+  .\end{align*}
+  où, dans le premier cas, on utilise la propriété universelle de la limite sur $F$.
+  Pour l'équivalence entre $\psi_X \circ u = \psi'_X$ et  $\Phi \circ u = \Phi'$ on procède par :
+  \begin{itemize}
+    \item "$\implies$". propriété universelle ;
+    \item "$\impliedby$". par morphisme de cocône.
+  \end{itemize}
+
+  La propriété duale est : la catégorie des cocônes sur $F$ est isomorphe à la catégorie corelative à $\colim_\mathbf{C} F$.
+  On procède par dualité.
+  \begin{itemize}
+    \item la colimite $\colim_\mathbf{C} F$ est une limite dans la catégorie opposée ;
+    \item un cocône sur $F$ est un cône dans la catégorie opposée ;
+    \item on a $(\mathbf{C} \backslash X)^\mathrm{op} = \mathbf{C}^\mathrm{op}/ X$.
+  \end{itemize}
+
+  \chapter{Exercice 12.}
+
+  \begin{slshape}
+    \color{deepblue}
+    On donne (pour la première fois!) la définition de propriété universelle la plus commune, celle de morphisme universelle.
+    Soit $G : \mathbf{D} \to \mathbf{C}$ un foncteur, et soit $X \in \mathbf{C}$.
+    On définit le \textit{morphisme universel} de $X$ vers~$G$ par un couple $(A, u : X \to GA)$ tel que tout morphisme $f : X \to G B$ on dispose d'un unique $g : A \to B$ tel que le triangle suivant  (à droite) commute :
+  \[
+  \begin{tikzcd}
+    A \arrow[dashed]{dd}{g} &&&& G A \arrow{dd}{G g} & X \arrow{l}{u} \arrow{ddl}{f} \\
+    \quad\quad\quad\arrow[-,very thick]{rr}{} && G \arrow[-stealth,very thick]{rr}{} && \quad\quad\quad \\
+    B &&&& GB
+  \end{tikzcd}
+  .\]
+  \begin{enumerate}
+    \item Montrer qu'un morphisme universel de $X$ vers $G : \mathbf{D} \to \mathbf{C}$ est tout simplement un objet initial de la catégorie fléchée $\mathbf{D} \backslash X$.
+    \item Montrer que le foncteur $\mathrm{Hom}(X, G -) : \mathbf{D} \to \mathbf{Ens}$ est représenté par $A$ où $\eta : h^A \overset \sim \Rightarrow \mathrm{Hom}(X, G-)$ revient à dire que $(A, \eta_A(\id_A) : X \to G A)$ est le morphisme universel de $X$ dans $G$.
+    \item Montrer aussi qu'une propriété universelle est une version locale d'un adjoint, c'est-à-dire un adjoint $F$ à gauche de $G$ répond pour tout $X$ au problème universel de $X$ vers $G$ avec $(F X, \eta_X : X \to GFX)$ où $\eta$ est l'unité de  $F \dashv G$.
+  \end{enumerate}
+  \end{slshape}
+
+  \begin{enumerate}
+    \item Un objet initial  de la catégorie relative $\mathbf{D} \backslash X$ est un objet de la forme $(A, u: X \to GA)$ tel que pour tout autre objet $(B, v : X \to G B)$ on a un unique morphisme $g : A \to B$ qui fait commuter le diagramme suivant :
+      \[
+  \begin{tikzcd}
+    A \arrow[dashed]{dd}{g} &&&& G A \arrow{dd}{G g} & X \arrow{l}{u} \arrow{ddl}{v} \\
+    \quad\quad\quad\arrow[-,very thick]{rr}{} && G \arrow[-stealth,very thick]{rr}{} && \quad\quad\quad \\
+    B &&&& GB
+  \end{tikzcd}
+      .\]
+      Ainsi, un morphisme universel de $X$ vers $G : \mathbf{D} \to \mathbf{C}$ est tout simplement un objet initial de la catégorie $\mathbf{D} \backslash X$.
+    \item On pose l'isomorphisme 
+      \begin{align*}
+        \eta_B: \mathrm{Hom}(A,B) &\longrightarrow \mathrm{Hom}(X, GB) \\
+        g &\longmapsto G g \circ u
+      ,\end{align*}
+      car $(A, u)$ est est un morphisme universel.
+      Le carré suivant commute
+      \[
+      \begin{tikzcd}
+        \mathrm{Hom}(A, B)  \arrow{d}{\eta_B}[swap]{\sim} \arrow{r}{f \circ -} & \mathrm{Hom}(A, C) \arrow{d}{\eta_C}[swap]{\sim} \\
+        \mathrm{Hom}(X, GB) \arrow{r}{G f \circ -} & \mathrm{Hom}(X, GC)
+      \end{tikzcd}
+      ,\] 
+      d'où $\eta$ est une transformation naturelle $\mathrm{Hom}(A, -) \Rightarrow \mathrm{Hom}(X, G -)$.
+      On conclut que $A$ représente $\mathrm{Hom}(X, G -)$.
+    \item 
+      On a l'isomorphisme naturel $\alpha : \mathrm{Hom}(X, G -) \Rightarrow \mathrm{Hom}(F X, -)$ où 
+      \begin{align*}
+        \alpha_B: \mathrm{Hom}(X, G B) &\longrightarrow \mathrm{Hom}(F X, B) \\
+        f &\longmapsto \varepsilon_B \circ F f
+      ,\end{align*}
+      où $\varepsilon : FG \Rightarrow \id_\mathbf{C}$.
+      Ceci implique que, pour $f : X \to GB$, il existe un unique morphisme $g \in \mathrm{Hom}(FX, B)$.
+      Ainsi, par adjoint \[
+      G (\alpha_B(f)) \circ \eta_X = G (\varepsilon_B \circ F f) \circ \eta_X = f
+      .\]
+      Ceci implique que le diagramme suivant commute : \[
+      \begin{tikzcd}
+        FX \arrow[dashed,swap]{dd}{\alpha_B(f)} &&&& G FX \arrow[swap]{dd}{G (\alpha_B f)} & X \arrow{l}{\eta_X} \arrow{ddl}{f} \\
+        \quad\quad\quad\arrow[-,very thick]{rr}{} && G \arrow[-stealth,very thick]{rr}{} && \quad\quad\quad\quad\quad \\
+        B &&&& GB
+      \end{tikzcd}
+      .\]
+      Ceci permet d'en conclure que $(FX, \eta_X)$ est un morphisme universel.
+  \end{enumerate}
+
 \end{document}
