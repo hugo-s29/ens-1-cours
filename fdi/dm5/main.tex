@@ -1,0 +1,113 @@
+\documentclass{../../notes}
+
+\title{DM n°5 -- FDI}
+\author{Hugo \scshape Salou}
+
+\usepackage{multicol}
+
+\def\algorithmicrequire{\textbf{Entrée}}
+\def\algorithmicensure{\textbf{Sortie}}
+\def\algorithmicend{\textbf{fin}}
+\def\algorithmicif{\textbf{si}}
+\def\algorithmicthen{\textbf{alors}}
+\def\algorithmicelse{\textbf{sinon}}
+\def\algorithmicelsif{\algorithmicelse\ \algorithmicif}
+\def\algorithmicendif{\algorithmicend\ \algorithmicif}
+\def\algorithmicfor{\textbf{pour}}
+\def\algorithmicprocedure{\textbf{Procédure}}
+\def\algorithmicfunction{\textbf{Fonction}}
+\def\algorithmicforall{\textbf{pour tout}}
+\def\algorithmicdo{\textbf{faire}}
+\def\algorithmicendfor{\algorithmicend\ \algorithmicfor}
+\def\algorithmicwhile{\textbf{tant que}}
+\def\algorithmicendwhile{\algorithmicend\ \algorithmicwhile}
+\def\algorithmicloop{\textbf{répéter indéfiniment}}
+\def\algorithmicendloop{\algorithmicend\ \algorithmicloop}
+\def\algorithmicrepeat{\textbf{répéter}}
+\def\algorithmicuntil{\textbf{jusqu'à que}}
+\def\algorithmicprint{\textbf{afficher}}
+\def\algorithmicreturn{\textbf{retourner}}
+\def\algorithmictrue{\textsc{vrai}}
+\def\algorithmicfalse{\textsc{faux}}
+
+\let\Sortie\Ensure
+\let\Entree\Require
+\floatname{algorithm}{\color{deepblue}Algorithme}
+
+\begin{document}
+  \maketitle
+
+  \begin{enumerate}
+    \item Considérons un ensemble fini $E$.
+      On montre, par récurrence sur~$|E|$, que $E$ est récursif primitif.\label{q1}
+      \begin{itemize}
+        \item Dans le cas où $|E| = 0$, alors $E = \emptyset$ alors $\chi_E = \mathbf{0}$, où $\mathbf{0}$ est la fonction constante nulle.
+        \item Considérons $|E| = n + 1$.
+          Soit $x \in E$ et $E' := E \setminus \{x\}$.
+          Par hypothèse de récurrence $\chi_{E'}$ est primitive récursive.
+          En TD, on a vu que la construction "$\mathtt{if}\ldots \mathtt{then}\ldots \mathtt{else}$"\footnote{Pour la lisibilité, j'écrirais cette construction comme une commande, et non comme un appel à une fonction (c'est un petit abus de notations).}\showfootnote\ (avec $\mathtt{true}$ représenté par $1$ et $\mathtt{false}$ par $0$) pouvait être réalisée par une fonction primitive récursive, on s'appuie donc sur cette construction.
+          De même, le test d'égalité peut être réalisé (il suffit de calculer les deux quasi-différences dans $\mathds{N}$ et de vérifier que les deux sont nulles).
+          On a donc \[
+            \chi_{E}(y) = \mathtt{if}\ \mathtt{eq}(x,y)\ \mathtt{then}\ \mathbf{1}(y)\ \mathtt{else}\ \chi_{E'}(y)
+          .\]
+      \end{itemize}
+      Ainsi, tout ensemble fini est récursif primitif.
+
+      En notant $E = \{x_1, \ldots, x_n\}$, le raisonnement par récurrence donne la fonction primitive récursive :
+      \begin{align*}
+        \chi_E(y) ={}& \mathtt{if}\ \mathtt{eq}(x_1, y)\ \mathtt{then}\ \mathbf{1}(x)\ \mathtt{else}\\
+                     & \mathtt{if}\ \mathtt{eq}(x_2, y)\ \mathtt{then}\ \mathbf{1}(x)\ \mathtt{else}\\
+                     & \mathtt{if}\ \mathtt{eq}(x_3, y)\ \mathtt{then}\ \mathbf{1}(x)\ \mathtt{else}\\
+                     & \qquad \qquad \qquad \vdots \\
+                     & \mathtt{if}\ \mathtt{eq}(x_n, y)\ \mathtt{then}\ \mathbf{1}(x)\ \mathtt{else}\\
+                     & \mathbf{0}(x)
+      .\end{align*}
+
+      Montrons que $P_k$ est récursif primitif en montrant que $k\mathds{N}$ l'est.
+      En TD, on a implémenté la fonction $\mathtt{div}$  calculant le quotient modulo un nombre précisé en argument, et $\mathtt{mult}$ calculant le produit.
+      On pose donc \[
+        \chi_{k\mathds{N}}(x) = \mathtt{eq}(\mathtt{mult}(\mathtt{div}(x, k), k), x)
+      .\]
+      En effet, on a \[
+      x \in k \mathds{N} \iff k  \mid x \iff \left\lfloor \frac{x}{k} \right\rfloor \times k = x
+      .\]
+
+      (On aurait aussi pu passer par la fonction $\mathtt{mod}$ définie en TD.)
+    \item Supposons $A$ et $B$ primitifs récursifs.
+      Alors, les ensembles $A \cap B$, $A \cup B$ et $A^\mathrm{C}$ le sont.
+      En effet, on a :
+      \begin{itemize}
+        \item $\chi_{A \cap B}(x) = \mathtt{mult}(\chi_A(x), \chi_B(x))$ ;
+        \item $\chi_{A \cup B}(x) = \mathtt{sub}(\mathtt{add}(\chi_A(x), \chi_B(x)), \chi_{A \cap B}(x))$ ;
+        \item $\chi_{A^\mathrm{C}}(x) = \mathtt{sub}(\mathbf{1}(x), \chi_A(x))$.
+      \end{itemize}
+      Ces relations proviennent des relations entre fonctions indicatrices :
+      \begin{gather*}
+        \chi_{A \cap B} = \chi_A \times \chi_B\\
+        \chi_{A \cup B} = \chi_A + \chi_B - \chi_{A \cap B}\\
+        \chi_{A^\mathrm{C}} = 1 - \chi_A
+      \end{gather*}
+
+      On en conclut que les ensembles primitifs récursifs sont clos par les opérations ensemblistes $\cap$, $\cup$ et $-^\mathrm{C}$.
+    \item On a 
+      \begin{align*}
+        g(x) = {}&\mathtt{if}\ \chi_{A_1}(x)\ \mathtt{then}\ f_1(x)\ \mathtt{else}\\
+               &\mathtt{if}\ \chi_{A_2}(x)\ \mathtt{then}\ f_2(x)\ \mathtt{else}\\
+               &\mathtt{if}\ \chi_{A_3}(x)\ \mathtt{then}\ f_3(x)\ \mathtt{else}\\
+               & \qquad \qquad \qquad \vdots \\
+               &\mathtt{if}\ \chi_{A_k}(x)\ \mathtt{then}\ f_k(x)\ \mathtt{else}\\
+               & f(x)
+      .\end{align*}
+      (La fonction définie en question~\ref{q1} est un cas particulier où l'on a posé~$A_i = \{x_i\}$ (et donc $\chi_{A_i}(x) = \mathtt{eq}(x,x_i)$), $f_i = \mathbf{1}$ et $f = \mathbf{0}$, on retrouve ainsi la même fonction primitive récursive.)
+      Formellement, on procède par récurrence sur $k$.
+      \begin{itemize}
+        \item Pour $k = 0$, on pose $g = f$, qui est primitive récursive.
+        \item Pour $k > 0$, on considère $g'$ définie "cas par cas" (par hypothèse de récurrence) sur les $k$ cas~$((A_1, f_1), \ldots, (A_k, f_k))$, primitive récursive, et on a \[
+          g(x) = \mathtt{if}\ \chi_{A_{k+1}}(x)\ \mathtt{then}\ f_{k+1}(x)\ \mathtt{else}\ g'(x)
+          ,\]
+          qui est aussi primitive récursive, d'où l'hérédité.
+      \end{itemize}
+      Ceci permet de conclure que les fonctions primitives récursives sont closes par schéma de définition par cas.
+  \end{enumerate}
+\end{document}
+

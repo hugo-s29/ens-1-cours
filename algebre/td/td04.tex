@@ -9,6 +9,7 @@
     Soit $\sigma = \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\ 4 & 6 & 9 & 7 & 2 & 5 & 8 & 1 & 3 \end{pmatrix} \in \mathfrak{S}_9$.
     Déterminer sa décomposition canonique en produit de cycles disjoints, son ordre, sa signature, une décomposition en produit de transposition ainsi que $\sigma^{100}$.
   \end{enonce}
+
   On a $\sigma = \begin{pmatrix} 1 & 4 & 7 & 8 \end{pmatrix} \begin{pmatrix} 2 & 6 & 5 \end{pmatrix}\begin{pmatrix} 3 & 9 \end{pmatrix}$.
   Son ordre est le PPCM des ordres précédent, c'est donc $12$.
   Sa signature est $(-1) \times 1 \times (-1) = 1$.
@@ -31,6 +32,7 @@
       \item En déduire que si $n \ge 5$ est impair, alors $\mathfrak{A}_n$ est engendré par les permutations $(1\;2\;3)$ et $(3\;4\;\cdots\; n)$ et que si $n \ge 4$ est pair, alors $\mathfrak{A}_n$ est engendré par $(1\;2\;3)$ et $(1\;2)(3\;4\;\cdots\; n)$.
     \end{enumerate}
   \end{enonce}
+
   \begin{enumerate}
     \item On utilise le fait que tout $\sigma \in \mathfrak{A}_n$ se décompose comme produit d'un nombre pair de transpositions.
       Puis, on utilise les égalités 
@@ -48,6 +50,6 @@
 
   \section{Exercice 3.}
   \begin{enonce}
-    Soit $n \le 5$.
+    Soit $n \le 5$. Démontrer que deux permutations de $\mathfrak{S}_n$ sont conjuguées si et seulement si elles ont même ordre et même signature. Vérifier que c'est faux si $n = 6$.
   \end{enonce}
 \end{document}

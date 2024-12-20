@@ -37,7 +37,7 @@
 \begin{document}
   \maketitle
 
-  Dans la première solution, on n'utilise pas de quine mais on instaure une propriété très utilise : "pour toute lettre du programme, elle apparait exactement 10 fois". Pour réaliser cela, on cache beaucoup de caractères dans un commentaire (comme par exemple \texttt{f} ou \texttt{[}).
+  Dans la première solution, on n'utilise pas de quine mais on instaure une propriété très utilie : "pour toute lettre du programme, elle apparait exactement 10 fois". Pour réaliser cela, on cache beaucoup de caractères dans un commentaire (comme par exemple \texttt{f} ou \texttt{[}).
 
   \begin{lstlisting}[language=Python,caption=Solution sans quine au DM 4,breaklines=true,postbreak=\mbox{\textcolor{deepblue}{$\hookrightarrow$}\space}]
 import sys; print(10 if sys.argv[1] in "\"\\\n#ev.famit ;p(:n0[rl)1s]gyo" else 0) #eeeeeeevvvvvvvv........ffffffffaaaaaaaammmmmmmmiiiiitttttttppppppp\\\\\\((((((((:::::::::"""""""nnnnnn0000000[[[[[[[[rrrrrr;;;;;;;;llllllll))))))))1111111ssss]]]]]]]]ggggggggyyyyyyyoooooooo
@@ -51,9 +51,9 @@ import sys; print(10 if sys.argv[1] in "\"\\\n#ev.famit ;p(:n0[rl)1s]gyo" else 0
 #
 #
   \end{lstlisting}
-  C'est moche, pas toujours généralisable, mais ça répond au DM.
+  C'est pas joli, très peu généralisable, mais ça répond au DM.
 
-  J'ai quand même proposé une seconde solution à ce DM n'utilisant pas cette technique mais utilisant une quine, c'est à dire un programme qui s'écrit lui même.
+  J'ai quand même proposé une seconde solution à ce DM une \textit{quine} (sans tricher comme à la proposition précédente), c'est à dire un programme qui s'écrit lui même.
   La solution est encore plus concise mais utilise des "\textit{string format}" (à la \texttt{printf} en C).
 
   \begin{lstlisting}[language=Python,caption=Solution avec quine au DM 4, breaklines=true, postbreak=\mbox{\textcolor{deepblue}{$\hookrightarrow$}\space}]
