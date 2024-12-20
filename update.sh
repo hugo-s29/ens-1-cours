@@ -15,7 +15,6 @@ cp thprog/chap07/chap07.pdf ../web/public/data/ens1/thprog-chap07.pdf
 cp thprog/chap08/chap08.pdf ../web/public/data/ens1/thprog-chap08.pdf
 cp thprog/chap09/chap09.pdf ../web/public/data/ens1/thprog-chap09.pdf
 cp thprog/chap10/chap10.pdf ../web/public/data/ens1/thprog-chap10.pdf
-cp thprog/chap11/chap11.pdf ../web/public/data/ens1/thprog-chap11.pdf
 
 cp integ/main.pdf ../web/public/data/ens1/integ.pdf
 

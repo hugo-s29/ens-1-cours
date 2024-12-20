@@ -1,175 +1,150 @@
 \documentclass[../main]{subfiles}
 
 \begin{document}
-  \chapter{Logiques de programmes}
+  \chapter{Mémoire structurée, logique de séparation}
   \minitoc
 
-  \section{Logique de Floyd--Hoare.}
+  La syntaxe des commandes de $\mathsf{IMP}$ avec tas est définie par la grammaire 
+  \begin{align*}
+    c ::= \ &x \ceq a  \mid \mathtt{skip}  \mid c_1 \col c_2  \mid \ifte b {c_1} {c_2}  \mid \while b c\\
+          &x \ceq [a]  \mid [x_1] \ceq a  \mid x \ceq \mathtt{alloc}(k)  \mid \mathtt{free}(a).
+  \end{align*}
+  Les expressions arithmétiques et booléennes restent inchangées.
 
-  On considère des formules logiques, des \textit{assertions} (définies formellement ci-après), que l'on notera $A$, $A'$, $B$, \textit{etc}.
-  Un triplet de Hoare est de la forme $\{A\} c \{A'\}$ (la notation est inhabituelle pour les triplets, mais c'est une notation commune dans le cas des triplets de Hoare), où l'on nomme $A$ la \textit{précondition} et $A'$ la \textit{postcondition}.
-
-  \begin{exm}
-    Les triplets suivants sont des triplets de Hoare :
-    \begin{enumerate}
-      \item $\{x \ge 1\} y \ceq x + 2 \{x\ge 1 \land y \ge 3\}$ qui est une conclusion naturelle ;
-      \item $\{n \ge 1\} c_\text{fact} \{r = n!\}$ où l'on note $c_\text{fact}$ la commande \[
-          x \ceq n\col z \ceq 1 \col \while {(x > 0)} {(z \ceq z \times x \col x \ceq x - 1)}\;
-        ,\]
-        qui calcule naturellement la factorielle de $n$ ;
-      \item $\{x < 0\} c \{\mathtt{true}\}$ même s'il ne nous dit rien d'intéressant (tout état mémoire vérifie $\mathtt{true}$) ;
-      \item $\{x < 0\}c \{\mathtt{false}\}$ qui diverge dès lors que $x < 0$.
-    \end{enumerate}
-  \end{exm}
-
-  On considère un ensemble $I \ni i$ infini d'\textit{index}, des "inconnues".
-  On commence par définir les expressions arithmétiques étendues \[
-    a ::= \ubar{k}  \mid a_1 \oplus a_2  \mid x  \mid i
-  ,\]
-  puis définit les \textit{assertions} par la grammaire ci-dessous :
-  \[
-    A ::= bv  \mid A_1 \lor A_2  \mid A_1 \land A_2 \mid a_1 \ge a_2  \mid \exists i, A
-  .\]
-
-  On s'autorisera à étendre, implicitement, les opérations réalisées dans les expressions arithmétiques, et les comparaisons effectuées dans les assertions.
-
-  On ajoute la liaison d'$\alpha$-conversion : les assertions $\exists i, x = 3 * i$ et~$\exists j, x = 3 * j$ sont $\alpha$-équivalentes.
-  On note $i\ell(A)$ l'ensemble des index libres de l'assertion~$A$, et on dira que $A$ est \textit{close} dès lors que~$i\ell(A) = \emptyset$.
-  On note aussi $A[\sfrac{k}{i}]$ l'assertion $A$ où $k \in \mathds{Z}$ remplace~$i \in I$.
-
-  \begin{defn}
-    Considérons $A$ close et $\sigma \in \mathcal{M}$.
-    On définit par induction sur $A$ (4 cas) une relation constituée de couples $(\sigma, A)$, notés  $\sigma \models A$ ("$\sigma$ satisfait $A$"), et en notant $\sigma \not\models A$ lorsque~$(\sigma, A)$ n'est pas dans la relation :
-    \begin{itemize}
-      \item $\sigma \models \mathtt{true}$ $\forall \sigma \in \mathcal{M}$ ;
-      \item $\sigma \models A_1 \lor A_2$ si et seulement si $\sigma \models A_1$ ou $\sigma \models A_2$ ;
-      \item $\sigma \models a_1 \ge a_2$ si et seulement si on a $a_1, \sigma \Downarrow k_1$ et $a_2, \sigma \Downarrow k_2$ et $k_1 \ge k_2$ ;
-      \item $\sigma \models \exists i, A$ si et seulement s'il existe $k \in \mathds{Z}$ tel que $\sigma \models A[\sfrac{k}{i}]$.
-    \end{itemize}
-
-    On écrit $\models A$ ("$A$ est valide") lorsque pour tout $\sigma$ tel que $\mathrm{dom}(\sigma) \supseteq \mathsf{vars}(A)$, on a $\sigma \models A$.
-  \end{defn}
-
-  \subsection{Règles de la logique de Hoare : dérivabilité des triplets de Hoare.}
-
-  Les triplets de Hoare, notés $\{A\} c \{A'\}$ avec $A$ et $A'$ closes, où $A$ est \textit{précondition}, $c$ est commande $\mathsf{IMP}$, et $A'$ est \textit{postcondition}.
-  On définit une relation $\vdash \{A\} c \{A'\}$ sur les triplets de Hoare :
-  \begin{gather*}
-    \begin{prooftree}
-      \hypo{\vdash \{A \land b\} c_1 \{A'\}}
-      \hypo{\vdash \{A \land \lnot b\} c_2 \{A'\}}
-      \infer 2{\vdash \{A\} \ifte b {c_1} {c_2} \{A'\}}
-    \end{prooftree}
-    \quad\quad
-    \begin{prooftree}
-      \infer 0{\vdash \{A\} \mathtt{skip} \{A\}}
-    \end{prooftree}\\[1em]
-    \begin{prooftree}
-      \hypo {\vdash \{A\} c_1 \{A'\} }
-      \hypo {\vdash \{A'\} c_2 \{A''\} }
-      \infer 2{\vdash \{A\} c_1 \col c_2 \{A''\}}
-    \end{prooftree}
-    \quad\quad
-    \begin{prooftree}
-      \hypo{\vdash \{A \land b\} c \{A\}}
-      \infer 1{\{A\} \while b c \{A \land \lnot B\}}
-    \end{prooftree}\\[1em]
-    \begin{prooftree}
-      \hypo{\{A\}  c \{A'\}}
-      \infer[left label={\begin{array}{l}\models B \implies A\\ \models A' \implies B'\end{array}}] 1{\{B\}  c \{B'\}}
-    \end{prooftree}
-    \quad\quad
-    \begin{prooftree}
-      \infer 0{\{A[\sfrac{a}{x}]\} x \ceq a \{A\} }
-    \end{prooftree}
-  \end{gather*}
-  La dernière règle semble à l'envers, mais c'est parce que la logique de Hoare fonctionne fondamentalement à l'envers.
-
-  Dans la règle de dérivation pour la boucle \texttt{while}, l'assertion manipulée, $A$, est un \textit{invariant}.
-
-  L'avant dernière règle s'appelle la \textit{règle de conséquence} : on ne manipule pas le programme, la commande, mais plutôt les pré- et post-conditions.
-
-  La relation $\vdash \{A\} c \{A'\}$ s'appelle la \textit{sémantique opérationnelle} de $\mathsf{IMP}$.
-
-  \begin{defn}
-    On définit la relation de \textit{satisfaction}, sur les triplets de la forme $\{A\} c \{A'\}$ avec $A,A'$ closes, avec
-    $\sigma \models \{A\}c \{A'\}$ si et seulement si dès lors que $\sigma \models A$ et $c, \sigma \Downarrow \sigma'$ alors on a~$\sigma' \models A'$. 
-
-    On définit ensuite la relation de \textit{validité} par $\models \{A\} c \{A'\}$ si et seulement si pour tout $\sigma \in \mathcal{M}$, $\sigma \models \{A\}c \{A'\}$.
-  \end{defn}
-
-  \begin{thm}[Correction de la logique de Hoare.]
-    Si $\vdash \{A\} c \{A'\}$ alors $\models \{A\} c \{A'\}$.
-  \end{thm}
-  \begin{prv}
-    On procède par induction sur $\vdash \{A\} c \{A'\}$. Il y a 6 cas.
-    \begin{itemize}
-      \item \textsl{Règle de conséquence}.
-        On sait \[
-        \models B \implies A \text{ et }\models A' \implies B'
-        ,\]et l'hypothèse d'induction.
-        On doit montrer $\models \{B\}c \{B'\}$.
-        Soit $\sigma$ tel que $\models B$, et supposons $c, \sigma \Downarrow \sigma'$.
-        On a $\models A$ par hypothèse.
-        Puis, par hypothèse d'induction, $\sigma' \models A'$ et donc $\sigma' \models B'$.
-      \item \textsl{Règle \texttt{while}}.
-        Considérons $c = \while b {c_0}$.
-        On sait par induction que $\models \{A \land b\}c_0 \{A\}$ et l'hypothèse d'induction.
-        Il faut montrer $\models \{A\} \while b {c_0} \{A \land \lnot b\}$, c'est à dire, si $\sigma \models A$ et $(\star) : \while b {c_0}, \sigma \Downarrow \sigma'$ alors $\sigma' \models A \land \lnot b$.
-        Pour montrer cela, il est nécessaire de faire une induction sur la dérivation de $(\star)$, "sur le nombre d'itérations dans la boucle".
-      \item Autres cas en exercice.
-    \end{itemize}
-  \end{prv}
-
-
-  Le sens inverse, la réciproque, s'appelle la \textit{complétude}.
-  On l'étudiera rapidement après.
+  Ces quatre nouvelles constructions correspondent respectivement à 
+  \begin{itemize}
+    \item l'accès à une case mémoire ;
+    \item la modification d'une valeur d'une case mémoire ;
+    \item l'allocation de $k$ cases mémoires ;
+    \item la libération de cases mémoires.
+  \end{itemize}
 
   \begin{rmk}
-    Concrètement, on écrit des programmes annotés.
-    \begin{figure}[H]
-      \centering
-      \begin{tikzpicture}[anchor=west,text width=4.5cm]
-        \node[color=deepred] (A) {$\{x \ge 1\}$};
-        \node[below of=A, color=deepblue] (B) {$\{x \ge 1 \land x + 2 + x + 2 \ge 6\}$};
-        \node[below of=B] (C) {$y \ceq x + 2 \col$};
-        \node[below of=C, color=deepblue] (D) {$\{x \ge 1 \land y + y \ge 6\}$};
-        \node[below of=D] (E) {$z \ceq y + y$};
-        \node[below of=E, color=deepblue] (F) {$\{x \ge 1 \land z \ge 6\}$};
-        \node[below of=F, color=deepred] (G) {$\{x \ge 1 \land z \ge 6\}$};
-        \draw[-implies,deepred,double equal sign distance] (A.west) to[bend right] (B.west);
-        \draw[-implies,deepred,double equal sign distance] (F.west) to[bend right] (G.west);
-      \end{tikzpicture}
-    \end{figure}
+    C'est un langage impératif de bas niveau : on manipule de la mémoire directement.
+    On ne s'autorise pas tout, cependant. On ne s'autorise pas, par exemple, \[
+      [x + i + 1] \ceq [t + i] + [t + i - 1]
+    ,\] mais on demande d'écrire \[
+      x \ceq [t+i]\col y \ceq [t + i - 1] \col [x + i + 1] \ceq x + y
+    .\]
   \end{rmk}
 
-  Pour démontrer la complétude de la logique de Hoare, on s'appuie sur la notion de \textit{plus faible précondition} : étant données une commande $c$ et une assertion $B$, alors la \textit{plus faible précondition} associée à $c,B$ est  l'ensemble des états mémoire \[
-  \mathrm{wp}(c, B) := \{\sigma  \mid c,\sigma \Downarrow \sigma' \implies \sigma' \models B\}
-  .\]
-  Ainsi, $\mathrm{wp}(c, B)$ est l'ensemble des états mémoire à partir duquels on aboutit à un état satisfaisant $B$, après une exécution terminante de $c$.
+  On raffine $\mathsf{IMP}$ : avant, les cases vivaient quelque part, mais on ne sait pas où, ce sont des registres ; maintenant, peut aussi allouer des "blocs" de mémoire, et on peut donc parler de cases mémoires adjacentes.
 
-  \begin{prop}
-    Pour toute commande $c$ et toute formule $B$, il existe une assertion $\mathrm{W}(c, B)$ telle que $\sigma \models \mathrm{W}(c, B)$ si et seulement si $\sigma \in \mathrm{wp}(c, B)$.
-  \end{prop}
-  \begin{prv}[esquisse]
-    On procède par induction sur $c$.
-    Tout fonctionne, sauf pour  \textit{while}\ldots\
-    Pour le cas de la boucle \textit{while}, on utilise la caractérisation suivante :
-    \begin{gather*}
-      \sigma \in \mathrm{wp}(\while b {c_0}, B)\\
-      \text{\rotatebox{90}{$\iff$}}\\
-      \forall k, \forall \sigma_0, \ldots,\sigma_k \text{ si } \sigma_0 = \sigma \text{ et } \forall i < k, (\sigma_i, b \Downarrow \mathtt{true} \text{ et } c_0, \sigma_i \Downarrow \sigma_{i+1})\\
-      \text{ alors }\sigma_k \models b \lor B
-    .\end{gather*}
-    On peut définir cette assertion en définissant des assertions pour :
+  L'allocation $\mathtt{alloc}$ est \textit{dynamique}, similaire à \texttt{malloc} en C, où l'on alloue de la mémoire dans l'espace mémoire appelé \textit{tas}.
+
+  \section{Sémantique opérationnelle de $\mathsf{IMP}$ avec tas.}
+
+  \begin{defn}[États mémoire]
+    Un état mémoire est la donnée de 
     \begin{itemize}
-      \item décrire un état mémoire $\sigma_i$ ($X^i_1 = v_1 \land \cdots \land X_n^i = v_n$) ;
-      \item exprimer les conditions $\sigma_i, c \Downarrow \sigma_{i+1}$ par induction ;
-      \item exprimer les quantifications $\forall k, \sigma_0, \ldots, \sigma_k$\ldots\ on demande à Kurt Gödel.
+      \item $\sigma$ un \textit{registre}, c-à-d un dictionnaire sur $(\mathrm{V}, \mathds{Z})$ ;
+      \item $h$ un \textit{tas}, c-à-d un dictionnaire sur $(\mathds{N}, \mathds{Z})$, c'est un gros tableau.\footnote{On appelle parfois $\mathsf{IMP}$ avec tas, $\mathsf{IMP}$ avec tableau.}
     \end{itemize}
 
-    Ainsi, on a bien une assertion $\mathrm{W}(c, B)$ telle que \[
-    \forall \sigma, \quad\quad \sigma \in \mathrm{wp}(c, B) \iff \sigma \models \mathrm{W}(c,B)
-    .\] 
-  \end{prv}
+    On définit $h[k_1 \mapsto k_2]$ que si $k_1 \in \mathrm{dom}(h)$ et alors il vaut le dictionnaire où l'on assigne $k_2$ à $k_1$.
+    
+    On définit $h_1 \uplus h_2$ que si $\mathrm{dom}(h_1) \cap \mathrm{dom}(h_2) = \emptyset$ et vaut l'union de dictionnaires $h_1$ et $h_2$.
+  \end{defn}
+
+  On définit ainsi la sémantique dénotationnelle comme la relation ${\Downarrow}$ est une relation quinaire (\textit{i.e.} avec $5$ éléments) notée $c, \sigma, h \Downarrow \sigma', h'$ où  $c$ est une commande, $h,h'$ sont deux tas, et $\sigma, \sigma'$ sont deux registres.
+
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{a, \sigma \Downarrow k}
+      \infer[left label={\sigma' = \sigma[x \mapsto k]}] 1{x \ceq a, \sigma, h \Downarrow \sigma', h}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{c_1, \sigma, h \Downarrow \sigma', h'}
+      \hypo{c_2, \sigma', h' \Downarrow \sigma'', h''}
+      \infer 2{c_1 \col c_2, \sigma, h \Downarrow \sigma'', h''}
+    \end{prooftree}
+    \\[1em]
+    \begin{prooftree}
+      \hypo{a, \sigma \Downarrow k}
+      \infer[left label={\substack{k' = h(k)\\ \sigma' = \sigma[x \mapsto k']}}] 1{x \ceq [a], \sigma, h \Downarrow \sigma' h}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{a_1, \sigma \Downarrow k_1}
+      \hypo{a_2, \sigma \Downarrow k_2}
+      \infer[left label={h' = h[k_1 \mapsto k_2]\text{\footnote{On sous-entend ici que $k_1 \in \mathrm{dom}(h)$.}\showfootnote}}] 2{[a_1] \ceq a_2, \sigma, h \Downarrow \sigma, h'}
+    \end{prooftree}
+    \\[1em]
+    \begin{prooftree}
+      \infer[left label={\substack{\{k', \ldots, k' + k - 1\} \cap \mathrm{dom}(h) = \emptyset \\ k > 0\\ h' = h \uplus \{k' \mapsto 0, \ldots, k' + k - 1 \mapsto 0\}\\ \sigma' = \sigma[x \mapsto k']}}] 0{x \ceq \mathtt{alloc}(k), \sigma, h \Downarrow \sigma', h'}
+    \end{prooftree}
+  \end{gather*}
+  \[
+    \begin{prooftree}
+      \hypo{a, \sigma \Downarrow k}
+      \infer[left label={h = h' \uplus \{k \mapsto k'\}}] 1{\mathtt{free}(a), \sigma, h \Downarrow \sigma, h'}
+    \end{prooftree}
+  .\]
+
+  \section{Logique de séparation.}
+
+  \begin{defn}
+    On définit les assertions dans $\mathsf{IMP}$ avec tas comme l'enrichissement des assertions $\mathsf{IMP}$ avec les constructions $\mathtt{emp}$, $\mapsto$ et $*$ :
+    \[
+      A ::= {\cdots}  \mid \mathtt{emp}  \mid a_1 \mapsto a_2  \mid A_1 * A_2
+    .\]
+
+    On enrichit ainsi la relation de satisfaction :
+    \begin{itemize}
+      \item $\sigma, h \models \mathtt{emp}$ si et seulement si $h = \emptyset$ ;
+      \item $\sigma, h \models a_1 \to a_2$ si et seulement si $a_1, \sigma \Downarrow k_1$, et $a_2, \sigma \Downarrow k_2$ et~$h = [k_1 = k_2]$ (le tas est un singleton) ;
+      \item $\sigma, h \models A_1 * A_2$ si et seulement si $h = h_1 \uplus h_2$ avec $\sigma, h_1 \models A_1$ et $\sigma, h_2 \models A_2$.
+    \end{itemize}
+  \end{defn}
+
+  L’opérateur $*$ est appelé \textit{conjonction séparante} : on découpe le tas en deux, chaque partie étant "observée" par une sous-assertion.
+
+  \begin{note}[Notations]
+    \begin{itemize}
+      \item On note $a \mapsto \_$ pour $\exists i, a \mapsto i$.
+      \item On note $a_1 \hookrightarrow a_2$ pour $(a_1 \mapsto a_2) * \mathtt{true}$.
+      \item On note $a \mapsto (a_1, \ldots, a_n)$ pour \[
+          (a \mapsto a_1) * (a + 1 \mapsto a_2) * \cdots * (a + n - 1 \mapsto a_n)
+        .\]
+      \item On note $[A]$ pour $A \land \mathtt{emp}$.
+    \end{itemize}
+  \end{note}
+  Ces notations signifient respectivement :
+  \begin{itemize}
+    \item La première formule dit qu'une case mémoire est allouée en $a$ (ou plutôt que si $a$ s'évalue en $k$, alors il y a une case mémoire allouée en $k$).
+    \item La seconde formule dit que la case mémoire $a_1$ est allouée, et contient $a_2$ quelque part dans le tas.
+    \item La troisième formule dit que les $n$ cases mémoires suivant $a$ contiennent respectivement $a_1$, puis $a_2$, \textit{etc}.
+    \item La quatrième formule permet de ne pas parler du tas. Intuitivement $A$ "observe" uniquement la composante $\sigma$ et alors $A$ est une formule de la logique de Hoare.
+  \end{itemize}
+
+  \section{Triplets de Hoare pour la logique de séparation.}
+
+  On rappelle  que $ \{A\}  \{A'\} $ est définir avec $A,A'$ closes.
+  La validité d'un triplet de Hoare en logique de séparation est défini par $\models \{A\} c \{A'\}$ si et seulement si dès que $\sigma, h \models A$ et $c, \sigma, h \Downarrow \sigma', h'$ alors  $\sigma', h' \models A'$.
+
+  Parmi les règles d'inférences pour la logique de séparation, il y a la "\textit{frame rule}" ou "\textit{règle d'encadrement}" :
+  \[
+  \begin{prooftree}
+    \hypo{\vdash \{A\} c \{A'\}}
+    \infer[left label=\substack{\text{aucune variable $x \in \mathsf{vars}(B)$}\\\text{n'est modifiée par $c$}}] 1{\vdash \{A*B\} c \{A'*B\}}
+  \end{prooftree}
+  .\]
+  Elle permet de \textit{zoomer}, et de ce concentrer sur un comportent local.
+
+  Les règles suivantes définissent une logique sur les commandes de $\mathsf{IMP}$ avec tas.
+  \begin{gather*}
+    \begin{prooftree}
+      \infer 0{\vdash \{\mathtt{emp}\}x \ceq \mathtt{alloc}(k) \{x \mapsto (0, \ldots, 0)\}}
+    \end{prooftree}\\[1em]
+    \begin{prooftree}
+      \infer 0{\vdash \{a \mapsto \_\} \mathtt{free}(a) \{\mathtt{emp}\}}
+    \end{prooftree}\quad\quad
+    \begin{prooftree}
+      \infer 0{\vdash \{a_1 \mapsto \_\} [a_1] \ceq a_2 \{a_1 \mapsto a_2\}}
+    \end{prooftree}\\[1em]
+    \begin{prooftree}
+      \infer 0{\vdash \{[x = x_0] * (a \mapsto x_1)\} x\ceq [a] \{[x = x_1] * (a[\sfrac{x_0}{x}] \mapsto x_1)\}}
+    \end{prooftree}
+  \end{gather*}
 \end{document}

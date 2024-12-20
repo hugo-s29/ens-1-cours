@@ -1,3 +1,8 @@
 typst-finite
 .DS_Store
 docs
+cours-particuliers
+pad-tracker
+algebre/_hidden
+prog
+thprog/tp/tp3/**/_build
