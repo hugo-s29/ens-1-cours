@@ -4,6 +4,8 @@ Dans ce dépôt, vous trouverez les notes de cours, les TDs, les TPs, et les DMs
 La quantité de documents mis en ligne dépend des cours (certains cours n'ont pas de notes de cours, d'autres pas de TDs, _etc_).
 Bonne lecture !
 
+▶ Site internet : [http://167.99.84.84/ens1](http://167.99.84.84/ens1)
+
 ## Semestre 1.
 
 **_Dept. Informatique_**
@@ -13,7 +15,7 @@ Bonne lecture !
 - **Prog.** Programmation ▶ [/prog](https://gitlab.aliens-lyon.fr/hsalou/l3prog-tp1) (TPs uniquement)
 - **ThProg.** Théorie de la Programmation ▶ [/thprog](/thprog/) (Notes de cours uniquement)
 
-**_Dept. Mathématiques**
+**_Dept. Mathématiques_**
 
 - **Algèbre 1.** ▶ [/algebre1](/algebre1/) (TDs et DMs)
 - **Intégration et Mesure.** ▶ [/integration](/integration/) (Notes de cours, et DM2)
@@ -29,6 +31,6 @@ Bonne lecture !
 - **ProFon.** Projet Fonctionnel ▶ [/profon](/profon/) (???)
 - **EPS.** Enseignement en Programmation Sportive ▶ [/eps](/eps/) (???)
 
-**_Dept. Mathématiques**
+**_Dept. Mathématiques_**
 
 - **Algèbre 2.** ▶ [/algebre2](/algebre2/) (???)
