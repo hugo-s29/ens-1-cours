@@ -80,15 +80,15 @@ Section Expressions_arithmétiques_simples.
       apply RTC_imply; constructor.
   Qed.
 
-  Proposition EA_Big_steps_implies_Small_steps: forall a k,
+  Proposition EA_Big_steps_implies_Small_steps: forall k a,
     (a -->* (Cst k)) -> (a ⇓ k).
   Proof.
-    intros. inversion_clear H.
+    intro k; induction a; intro; inversion_clear H.
     - constructor.
+    - inversion H0.
     - induction H0.
-      * inversion_clear H1.
-        + constructor; constructor.
-        + inversion_clear H.
-      * inversion_clear H1.
-
+      + inversion_clear H1.
+        * constructor; constructor.
+        * inversion H.
+      +
       

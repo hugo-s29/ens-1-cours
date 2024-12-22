@@ -3,6 +3,6 @@ typst-finite
 docs
 cours-particuliers
 pad-tracker
-algebre/_hidden
+**/_hidden
 prog
 thprog/tp/tp3/**/_build
