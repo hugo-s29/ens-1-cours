@@ -43,3 +43,8 @@ cp algebre1/td/td09.pdf ../web/public/data/ens1/algebre1-td9.pdf
 cp algebre1/td/td10.pdf ../web/public/data/ens1/algebre1-td10.pdf
 cp algebre1/td/td11.pdf ../web/public/data/ens1/algebre1-td11.pdf
 cp algebre1/td/td12.pdf ../web/public/data/ens1/algebre1-td12.pdf
+
+
+cp algo1/main.pdf _hidden/Algorithmique-1.pdf
+cp thprog/main.pdf _hidden/Théorie-de-la-programmation.pdf
+cp integration/main.pdf _hidden/Integration-et-Mesure.pdf

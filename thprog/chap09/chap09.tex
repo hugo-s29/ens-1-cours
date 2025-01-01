@@ -7,7 +7,7 @@
   La syntaxe des commandes de $\mathsf{IMP}$ avec tas est définie par la grammaire 
   \begin{align*}
     c ::= \ &x \ceq a  \mid \mathtt{skip}  \mid c_1 \col c_2  \mid \ifte b {c_1} {c_2}  \mid \while b c\\
-          &x \ceq [a]  \mid [x_1] \ceq a  \mid x \ceq \mathtt{alloc}(k)  \mid \mathtt{free}(a).
+            &x \ceq \ptr{a}  \mid \ptr{x_1} \ceq a  \mid x \ceq \mathtt{alloc}(k)  \mid \mathtt{free}(a).
   \end{align*}
   Les expressions arithmétiques et booléennes restent inchangées.
 
@@ -22,9 +22,9 @@
   \begin{rmk}
     C'est un langage impératif de bas niveau : on manipule de la mémoire directement.
     On ne s'autorise pas tout, cependant. On ne s'autorise pas, par exemple, \[
-      [x + i + 1] \ceq [t + i] + [t + i - 1]
+      \ptr{x + i + 1} \ceq \ptr{t + i} + \ptr{t + i - 1}
     ,\] mais on demande d'écrire \[
-      x \ceq [t+i]\col y \ceq [t + i - 1] \col [x + i + 1] \ceq x + y
+      x \ceq \ptr{t+i}\col y \ceq \ptr{t + i - 1} \col \ptr{x + i + 1} \ceq x + y
     .\]
   \end{rmk}
 
@@ -62,13 +62,13 @@
     \\[1em]
     \begin{prooftree}
       \hypo{a, \sigma \Downarrow k}
-      \infer[left label={\substack{k' = h(k)\\ \sigma' = \sigma[x \mapsto k']}}] 1{x \ceq [a], \sigma, h \Downarrow \sigma' h}
+      \infer[left label={\substack{k' = h(k)\\ \sigma' = \sigma[x \mapsto k']}}] 1{x \ceq \ptr{a}, \sigma, h \Downarrow \sigma' h}
     \end{prooftree}
     \quad\quad
     \begin{prooftree}
       \hypo{a_1, \sigma \Downarrow k_1}
       \hypo{a_2, \sigma \Downarrow k_2}
-      \infer[left label={h' = h[k_1 \mapsto k_2]\text{\footnote{On sous-entend ici que $k_1 \in \mathrm{dom}(h)$.}\showfootnote}}] 2{[a_1] \ceq a_2, \sigma, h \Downarrow \sigma, h'}
+      \infer[left label={h' = h[k_1 \mapsto k_2]\text{\footnote{On sous-entend ici que $k_1 \in \mathrm{dom}(h)$.}\showfootnote}}] 2{\ptr{a_1} \ceq a_2, \sigma, h \Downarrow \sigma, h'}
     \end{prooftree}
     \\[1em]
     \begin{prooftree}
@@ -102,7 +102,7 @@
 
   \begin{note}[Notations]
     \begin{itemize}
-      \item On note $a \mapsto \_$ pour $\exists i, a \mapsto i$.
+      \item On note $a \mapsto \texttt{\_}$ pour $\exists i, a \mapsto i$.
       \item On note $a_1 \hookrightarrow a_2$ pour $(a_1 \mapsto a_2) * \mathtt{true}$.
       \item On note $a \mapsto (a_1, \ldots, a_n)$ pour \[
           (a \mapsto a_1) * (a + 1 \mapsto a_2) * \cdots * (a + n - 1 \mapsto a_n)
@@ -120,8 +120,8 @@
 
   \section{Triplets de Hoare pour la logique de séparation.}
 
-  On rappelle  que $ \{A\}  \{A'\} $ est définir avec $A,A'$ closes.
-  La validité d'un triplet de Hoare en logique de séparation est défini par $\models \{A\} c \{A'\}$ si et seulement si dès que $\sigma, h \models A$ et $c, \sigma, h \Downarrow \sigma', h'$ alors  $\sigma', h' \models A'$.
+  On rappelle  que $ \{A\} c \{A'\} $ est définir avec $A,A'$ closes.
+  La validité d'un triplet de Hoare en logique de séparation est défini par~$\models \{A\} c \{A'\}$ si et seulement si dès que $\sigma, h \models A$ et $c, \sigma, h \Downarrow \sigma', h'$ alors  $\sigma', h' \models A'$.
 
   Parmi les règles d'inférences pour la logique de séparation, il y a la "\textit{frame rule}" ou "\textit{règle d'encadrement}" :
   \[
@@ -138,13 +138,13 @@
       \infer 0{\vdash \{\mathtt{emp}\}x \ceq \mathtt{alloc}(k) \{x \mapsto (0, \ldots, 0)\}}
     \end{prooftree}\\[1em]
     \begin{prooftree}
-      \infer 0{\vdash \{a \mapsto \_\} \mathtt{free}(a) \{\mathtt{emp}\}}
+      \infer 0{\vdash \{a \mapsto \texttt{\_}\} \mathtt{free}(a) \{\mathtt{emp}\}}
     \end{prooftree}\quad\quad
     \begin{prooftree}
-      \infer 0{\vdash \{a_1 \mapsto \_\} [a_1] \ceq a_2 \{a_1 \mapsto a_2\}}
+      \infer 0{\vdash \{a_1 \mapsto \texttt{\_}\} \ptr{a_1} \ceq a_2 \{a_1 \mapsto a_2\}}
     \end{prooftree}\\[1em]
     \begin{prooftree}
-      \infer 0{\vdash \{[x = x_0] * (a \mapsto x_1)\} x\ceq [a] \{[x = x_1] * (a[\sfrac{x_0}{x}] \mapsto x_1)\}}
+      \infer 0{\vdash \{[x = x_0] * (a \mapsto x_1)\} x\ceq \ptr{a} \{[x = x_1] * (a[\sfrac{x_0}{x}] \mapsto x_1)\}}
     \end{prooftree}
   \end{gather*}
 \end{document}
