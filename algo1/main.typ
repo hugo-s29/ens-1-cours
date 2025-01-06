@@ -3746,16 +3746,172 @@ On ajoute deux remarques.
   On réalise l'application directe au déterminant.
 
 
+= Algorithmes exacts exponentiels.
+
+Dans cette section, on s'intéresse à résoudre des problèmes $NP$-difficiles sur des petites instances.
+C'est-à-dire trouver $c$ le plus petit possible pour une complexité en $c^n$.
+
+*Notation.* On notera $bigO^star (c^n) = bigO(c^n dot p(n))$ pour un polynôme $p$.
+
+== Paradoxe des anniversaires.
+
+*N'ayez pas plus de $sqrt(n)$ confiance !*
+
+L'objectif est de signer un contrat pour une valeur $1000 med euro$.
+Pour assurer que le contrat est valide, on utilise une fonction de _hash_ qui, à un contrat, associe un nombre $h in {1, ..., N}$.
+
+On supPpose que $N$ est grand, plus grand que la capacité de calcul, qu'il est donc impossible de trouver (calculer) un texte lisible pour une valeur de hash $h$ donnée.
+
+Ce que l'on souhaite éviter, c'est d'avoir un contrat pour $2000 med euro$ de même hash $h$.
+
+L'idée est que l'on prépare $sqrt(N)$ bon contrats (ceux d'une valeur~$1000 med euro$) et l'autre prépare $sqrt(N)$ mauvais contrats (ceux d'une valeur $2000 med euro$).
+On n'a qu'une probabilité $ (1 - 1/sqrt(N))^sqrt(N) -->_(n->+oo) 1/e $ d'avoir une collision.
+
+Avec une probabilité supérieure à $1/2$, avec une puissance de calcul~$sqrt(N)$ (bien plus raisonnable), on peut calculer deux contrats de même hash.
+
+
+== Meet in the middle.
+
+On peut résoudre le problème #pbm[Somme] en $2^n$ par force brute.
+Peut-on le faire en $sqrt(2^n) = 2^(n/2)$ ?
+Oui, l'idée est de procéder comme ci-après.
+- Partitionner $T$ en $T_1$ et $T_2$ de taille $n\/2$ ;
+- Calculer toutes les sommes partielles $P_1$ de $T_1$ ($-> bigO^star (2^(n/2))$) ;
+- Calculer toutes les sommes partielles $P_2$ de $T_2$ ($-> bigO^star (2^(n/2))$) ;
+- Trier $P_1$ et $P_2$ (au moment de la construction).
+Pour trouver $S$, on prend $x_a in P_1$ et $y_b in P_2$ (avec $a = 1$ et $b = (2^(n/2))$ au début) puis 
+- si $x_a + y_b < S$ alors $a <- a + 1$ ;
+- si $x_a + y_b > S$ alors $b <- b - 1$.
+
+On obtient la solution en $bigO^star (2^(n/2))$.
+
+== 3-SAT avec affectation partielle.
+
+En force brute, on peut construire une affectation en $bigO^star (2^n)$.
+
+Par _affectation partielle_ on entend une fonction partielle $a : {x_1, ..., x_n} harpoon {bold(sans(V)), bold(sans(F))}$, ou de manière équivalente une fonction totale $ a : {x_1, ..., x_n } -> {bold(sans(V)), bold(sans(F)), square}$.
+
+On impose des règles :
++ Si une clause de $F$ possède un littéral $bold(sans(V))$, on la supprime ;
++ Si une clause de $F$ ne possède que des littéraux $bold(sans(F))$, on retourne FAUX ;
++ Si une clause de $F$ possède un littéral $bold(sans(F))$, on la supprime ;
++ Si une clause de $F$ possède un littéral, on l'affecte à $bold(sans(V))$ ;
++ Si $F$ est vide, on retourne VRAI.
+
+#algo(name: [Premier algorithme $R$])[
+  #algo-if[il existe une clause $(ell_1 or ell_2)$ dans $F$][
+    #algo-return[ ] #h(1fr)~
+      $ &R(F, a union {ell_1 = bold(sans(V)), ell_2 = bold(sans(V))}) or\ &R(F, a union {ell_1 = bold(sans(V)), ell_2 = bold(sans(F))}) or\ &R(F, a union {ell_1 = bold(sans(F)), ell_2 = bold(sans(V))}) $
+  ][
+    il existe une clause $(ell_1 or ell_2 or ell_3)$
+  ][
+    #algo-return[
+      les 7 possibilités
+    ]
+  ]
+  On traite aussi les cas "plus triviaux"
+]
+
+On obtient une complexité en $bigO^star (1.91^n)$.
+Peut-on faire mieux ?
+
+
+#algo(name: [Second algorithme $R'$])[
+  #algo-if[il existe une clause $(ell_1 or ell_2)$ dans $F$][
+    De même
+  ][
+    il existe une clause $(ell_1 or ell_2 or ell_3)$
+  ][
+    #algo-return[ ] #h(1fr)~
+    $ &R(F, a union {ell_1 = bold(sans(V))}) or\ &R(F, a union {ell_1 = bold(sans(F)), ell_2 = bold(sans(V))}) or\ &R(F, a union {ell_1 = bold(sans(F)), ell_2 = bold(sans(F)), ell_3 = bold(sans(V))}) $
+  ]
+]
+
+On obtient alors une complexité en $bigO^star (1.84^n)$.
+
+Pour continuer, on utilise une méthode décrite par Monien & Speckenmeyer.
+On dit qu'une affectation $a$ est _autarcique_ si toutes les clauses qui intersectent $a$ sont positives.
+Si $a$ est une clause non autarcique, on a au moins une clause qui est réduite, et donc devient de taille 2.
+On fait un branchement sur les clauses de taille 2.
+
+On obtient une complexité en $bigO^star (1.618^n)$.
+
+== 3-SAT en recherche locale.
+
+Le but est, à partir d'une affectation totale $a$, on la modifie jusqu'à trouver une solution.
+
+On notera $a plus.circle (ell_i = b)$ pour dire que l'on affecte $b$ à $ell_i$ dans la nouvelle affectation, et sinon on fait comme dans $a$.
+
+#algo(name: [HAM$(F, a, h)$])[
+  #algo-if[
+    $a$ satisfait $F$
+  ][
+    #algo-return[VRAI (ou $a$)]
+  ][
+    $h = 0$
+  ][
+    #algo-return[FAUX]
+  ][
+    Il existe une clause $ell_1 or ell_2 or ell_3$ non satisfaite par $a$ dans $F$.
+    #algo-return[ ] #h(1fr)~
+    $ &"HAM"(F, a plus.circle {ell_1 = bold(sans(V))}, h-1) or\ &"HAM"(F, a plus.circle {ell_1 = bold(sans(F)), ell_2 = bold(sans(V))}, h-1) or\ &"HAM"(F, a plus.circle {ell_1 = bold(sans(F)), ell_2 = bold(sans(F)), ell_3 = bold(sans(V))}, h-1) $
+  ]
+]
+
+Remarquons qu'exécuter $"HAM"(F, a = * |-> bold(sans(V)), h = n)$ résout 3-SAT.
+
+De plus, la distance entre $a$ et une affectation (si elle existe) qui satisfait $F$ décroit de 1, d'où sa correction.
+Mais, il a une complexité en $bigO^star (3^n)$...
+
+On peut aussi exécuter 
+$ "HAM"(F, a = * |-> bold(sans(V)), h = n\/2) or "HAM"(F, a = * |-> bold(sans(F)), h = n\/2), $
+et on obtient une complexité en $bigO^star (3^(n/2)) = bigO^star (1.73^n)$.
+
+On peut généraliser : on prend $s$-points qui couvrent avec leur $h$-voisinage tout hypercube de dimension $n$ (l'espace des valuations).
+C'est un code-correcteur-_like_.
+On obtient une complexité en~$bigO^star (s 3^t)$.
+
+Tentons avec $t = n / 4$.
+Combien faut-il de points sur l'hypercube de dimension $n$ pour que leur voisinage à distance $n/4$ couvre tout ?
+
+On a une borne inf, appelée _borne de volume_, c'est $2^n / "“taille du voisinage”"$
+où la “taille du voisinage” est 
+$ 1 + n + binom(n, 2) + dots.c + binom(n, n\/4) tilde bigTheta^star binom(n, n \/ 4) tilde 2^(H(1/4) dot n). $
+La borne inf est donc $2^((1 - H(1/4)) dot n)$.
+
+La bonne nouvelle est qu'il suffit de choisir $2^((1 - H(1/4)) dot n) dot p(n)$ points choisis aléatoirement.
+On a donc $s = bigO^star (2^((1 - H(1/4)) dot n))$ points pour~$t = 1/4$, ce qui donne un branchement de $3^(n/4)$.
+La complexité est en $2^((1 - H(1/4)) dot n) dot 3^(n/4)$.
+
+On rappelle que $H(p) = -p log_2 p - (1-p) log_2 (1-p)$.
+On calcule donc $H(1/4) = 2 - 3/4 log 3$.
+Ceci simplifie le calcul de la complexité en $2^((log 3 - 1) dot n) = (3/2)^n = 1.5^n$.
+C'est bien mieux !
+
+== Nombre chromatique.
+
+On note $chi(G)$ le _nombre chromatique_ d'un graphe $G$, c'est-à-dire le plus petit nombre d'ensembles indépendants qui couvrent $V$.
 
 
 
+Comment décider si, par exemple, $chi(G) <= sqrt(\# V)$ ? En force brute, on a $bigTheta^star (sqrt(n)^n)$.
 
+#theorem(name: [Björklund & Husfeld, 2006])[
+  On peut calculer $chi(G)$ en $bigO^star (2^n)$.
+]
 
+On note $C_k (G)$ le nombre de couvertures de $V$ par $I_1, ..., I_k$ (c'est bien un $k$-uplet et non un ensemble de taille $k$) indépendants de $G$, puis $S(X)$ pour $X subset.eq V$ le nombre d'indépendants disjoints de $X$.
 
+#theorem[
+  $ C_k (G) = sum_(X subset.eq V) (-1)^abs(X) dot s(X)^k $
+]
 
+Puis, pour calculer $s(X)$, il suffit de procéder par programmation dynamique :
+- $s(V) = 1$ ;
+- $forall X, forall v in.not X, s(X) = s(X union {v}) + s(X union {v} union N(v))$,
+où $N(v)$ est le voisinage de $v$.
 
-
-
+On peut calculer $s(X)$ en $bigO^star (2^n)$.
 
 
 
