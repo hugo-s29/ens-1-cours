@@ -3,4 +3,215 @@
 \begin{document}
   \chapter{Actions de groupes et théorèmes de Sylow}
   \minitoc
+
+  \section{Exercice 1.}
+
+  \begin{enonce}
+    Soit $G$ un groupe infini possédant un sous-groupe strict d'indice fini. Montrer que $G$ n'est pas simple.
+  \end{enonce}
+
+  Soit $H \lneq G$ un groupe tel que $[G : H]$ est fini.
+
+  L'idée est que l'on réalise l'action $G \curvearrowright G / H$ avec $g \cdot x H := (gx)H$.
+  On considère le morphisme \begin{align*}
+    \varphi: G &\longrightarrow \mathfrak{S}(G / H) \\
+    g &\longmapsto (xH \mapsto g \cdot xH)
+  .\end{align*}
+  On a $\ker \varphi \triangleleft G$ et  $\ker \varphi \neq \{e\}$ par cardinalité.
+  En effet, $\# G = +\infty$ et puis $\#\mathfrak{S}(G / H) = [G : H]!$ qui est fini.
+
+  Montrons que $\ker \varphi \neq G$.
+  Si $g \in \ker\varphi$ alors pour tout  $g' \in G$, on a \[
+  g g' H = g' H
+  ,\] 
+  ce qui est vrai si et seulement si $(g')^{-1} g g' \in H$.
+  En particulier pour~$g' := e$, on a $g \in H$.
+  Mais $H$ est un sous-groupe strict de $G$ d'où~$\ker \varphi \neq G$.
+
+  On en conclut que $G$ n'est pas simple.
+
+  \section{Exercice 2. \textit{Nombre de sous-espaces vectoriels}}
+
+  \begin{enonce}
+    Soient $\mathds{k}$ un corps fini de cardinal $q$ et $m \le n$ deux entiers. Notons~$X$ l'ensemble des sous-espaces vectoriels de dimension $m$ de $\mathds{k}^n$.
+    En étudiant l'action de $\mathrm{GL}_n(\mathds{k})$ sur $X$, calculer le nombre de sous-espaces vectoriels de dimension $m$ de $\mathds{k}^n$.
+  \end{enonce}
+
+  \section{Exercice 3.} \label{td3-ex3}
+  \begin{enonce}
+    Soit $G$ un groupe fini.
+    \begin{enumerate}
+      \item Soit $p$ un nombre premier qui divise l'ordre de $G$ et soit $S$ un~$p$-Sylow de $G$.
+        Montrer que les trois conditions suivantes sont équivalentes :
+        \begin{enumerate}
+          \item $S$ est l'unique $p$-Sylow de $G$ ; \label{td3-ex3-q1a}
+          \item $S$  est distingué dans $G$ ; \label{td3-ex3-q1b}
+          \item $S$ est stable par tout automorphisme de $G$ (on dit que $S$ est un sous-groupe caractétistique de $G$). \label{td3-ex3-q1c}
+        \end{enumerate}
+      \item On va généraliser ce résultat à d'autres groupes que les $p$-Sylow. Soit $k$ un entier divisant $\#G$ et tek que $k$ est premier à $\frac{\#G}{k}$.
+        On pose $X_k$ l'ensemble des sous-groupes $H \le G$ d'ordre $k$.
+        \begin{enumerate}
+          \item Montrer que si $X_k$ contient un unique sous-groupe $G$ alors $G$ est caractéristique (et donc distingué).
+          \item Montrer réciproquement que si $H \in X_k$ est distingué alors on a~$X_k = \{H\}$.\\
+            \textit{On pourra considérer la projection $\pi : H' \to G / H$ où $H'$ est un élément de $X_k$.}
+        \end{enumerate}
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item 
+      \[
+      \begin{tikzcd}
+        \text{\ref{td3-ex3-q1a}} \arrow[Rightarrow,bend right]{r}{} \arrow[Rightarrow, bend right=40]{rr}{} & \arrow[Rightarrow, bend right]{l} \text{\ref{td3-ex3-q1b}} & \text{\ref{td3-ex3-q1c}} \arrow[Rightarrow, bend right]{l}{}
+      \end{tikzcd}
+      .\] 
+      \begin{itemize}
+        \item "\ref{td3-ex3-q1a} $\implies$ \ref{td3-ex3-q1b}".
+          Montrons que $S$ est distingué dans $G$.
+          Pour tout $g \in G$, $g S g^{-1}$ est un $p$-Sylow, donc $g S g^{-1} = S$.
+        \item "\ref{td3-ex3-q1b} $\implies$ \ref{td3-ex3-q1a}".
+          Soient $S$ et $S'$ deux $p$-Sylow. Alors, ils sont conjugués : il existe $g \in G$ tel que $S' = g S g^{-1}$.
+          Or, $S$ est distingué donc $S' = g S g^{-1} = S$.
+        \item "\ref{td3-ex3-q1a} $\implies$ \ref{td3-ex3-q1c}".
+          Soit $\varphi \in \mathrm{Aut}(G)$.
+          Alors $\# \varphi(S) = \# S$ car~$\varphi$ bijectif.
+          D'où $\varphi(S)$ est un  $p$-Sylow de $G$ et donc $\varphi(S) = S$.
+        \item "\ref{td3-ex3-q1c} $\implies$ \ref{td3-ex3-q1b}".
+          Soit $g \in G$ et doit \begin{align*}
+            \mathrm{Aut}(G) \ni \varphi_g: G &\longrightarrow G \\
+            h &\longmapsto ghg^{-1}
+          .\end{align*}
+          Alors, $\varphi_g(S) = g S g^{-1} = S$ par hypothèse et donc $S \triangleleft G$.
+      \end{itemize}
+    \item 
+  \end{enumerate}
+
+  \section{Exercice 4. \textit{Groupes d'ordre $pq$}}
+
+  \begin{enonce}
+    \begin{enumerate}
+      \item Soit $G$ un groupe d'ordre $15$.
+        \begin{enumerate}
+          \item Compter le nombre de $3$-Sylow et le nombre de $5$-Sylow de~$G$.
+          \item En déduire que $G$ est forcément cyclique.
+        \end{enumerate}
+      \item Plus généralement, soit $G$ un groupe d'ordre $pq$ avec $p<q$ et où $p,q$ sont premiers.
+        \begin{enumerate}
+          \item On suppose que $q \not\equiv 1 \pmod p$. Démontrer que $G$ est cyclique.
+          \item Exhiber des nombres premiers $p$ et $q$ et un groupe d'ordre~$pq$ non abélien.
+        \end{enumerate}
+    \end{enumerate}
+  \end{enonce}
+  \begin{enumerate}
+    \item 
+      \begin{enumerate}
+        \item Par les théorèmes de Sylow, on sait que $n_3$, le nombre de $3$-Sylow dans $G$ vérifie $n_3 \not\equiv 1 \pmod 3$ et $n_3  \mid 5$, d'où $n_3 = 1$.
+          De même, on a que $n_5 = 1$.
+        \item Soit $S_3$ et $S_5$ les uniques $3$-Sylow et $5$-Sylow de $G$.
+          On sait que~$S_3$ contient $e$ et deux éléments d'ordre $3$.
+          De même, on sait que~$S_5$ contient $e$ et $4$ éléments d'ordre $5$.
+          De plus, $\#(G \setminus (S_3 \cup S_5)) = 8$ donc si $x \in G \setminus(S_3 \cup S_5)$ alors $x \neq e$ et $x$ n'est pas d'ordre $3$ (car sinon $x \in S_3$) et il n'est pas d'ordre $5$ pour la même raison.
+          On en déduit que $x$ est d'ordre 15 et $G = \langle x \rangle$.
+      \end{enumerate}
+    \item 
+      \begin{enumerate}
+        \item Avec les notations précédentes, on a $n_q  \mid p$ et $n_q \equiv 1 \pmod q$ donc $n_q \in \{1, p\}$.
+          De plus, $p < q$ donc $p \not\equiv 1 \pmod q$ d'où $n_q = 1$.
+          De même, $n_p \equiv 1 \pmod p$ et $n_p  \mid q$ d'où $n_p \in \{1,q\}$.
+          Or, $q \not\equiv 1 \pmod p$  et donc $n_p = 1$.
+
+          Soient $S_p$ et $S_q$ les uniques $p$- et $q$-Sylow de $G$.
+          Ainsi 
+          \begin{itemize}
+            \item $S_p$ contient $e$ est $(p-1)$ éléments d'ordre $p$ ;
+            \item $S_q$ contient $e$ est $(q-1)$ éléments d'ordre $q$.
+          \end{itemize}
+          Et, 
+          \[
+          \#(G \setminus S_p \cup S_q) = pq - 1 - (p-1) - (q-1) = (p-1)(q-1) > 0
+          .\]
+          Si $x \in G \setminus (S_p \cup S_q) \neq \emptyset$ alors $x$ n'est pas d'ordre $1$, ni $p$ ni $q$.
+          D'où $\ord x = pq$ (par Lagrange) et donc $G = \langle x \rangle \cong \mathds{Z} / pq \mathds{Z}$.
+        \item Avec $p = 2$ et $q = 3$ on a $3 \equiv 1 \pmod 2$ mais \[
+            G = \mathfrak{S}_3 \ncong \mathds{Z}/6\mathds{Z}
+        .\] 
+      \end{enumerate}
+  \end{enumerate}
+
+  \section{Exercice 5. \textit{Théorèmes de Sylow et simplicité des groupes}}
+
+  \begin{enonce}
+    Soit $G$ un groupe.
+    \begin{enumerate}
+      \item 
+        \begin{enumerate}
+          \item Montrer que si $\#G = 20$ alors  $G$ n'est pas simple.
+          \item Plus généralement, montrer que si $\#G = p^a k$ avec $p$ premier et $k$ un entier non divisible par $p$ et $1 < k < p$, alors  $G$ n'est pas simple.
+        \end{enumerate}
+      \item Montrer que si $\# G = 40$ alors  $G$ n'est pas simple (fonctionne aussi avec $\#G = 45$).
+      \item En faisant agir $G$ par conjugaison sur l'ensemble de ses $p$-Sylow pour un $p$ bien choisi, montrer que si $\# G = 48$ alors  $G$ n'est pas simple.
+      \item (\textit{Plus difficile}) Montrer que si $\#G = 30$ ou $56$, alors $G$ n'est pas simple.
+      \item Conclure qu'un groupe simple de cardinal non premier est d'ordre au moins $60$.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item 
+      \begin{enumerate}
+        \item On a $\# G = 2^2 \times 5$ donc on a $n_5 = 1$. Par l'\ref{td3-ex3}, on sait qu'il existe un unique $5$-Sylow et donc qu'il est distingué.
+        \item Pour $\#G = p^a k$ avec  $p \nmid k$ et  $1 < k < p$ on a  $n_p  \mid k$ d'où $n_p \le k$.
+          De plus, $n_p \equiv 1 \pmod p$ donc si  $n_p \neq 1$ alors $n_p \ge p+1 > k$, \textit{\textbf{absurde}}.
+          On en déduit que $n_p = 1$ et donc que l'unique $p$-Sylow est distingué.
+          On en conclut que $G$ n'est pas simple.
+      \end{enumerate}
+    \item On a $n_5  \mid 8$ et $n_5 \equiv 1 \pmod 5$ donc $n_5 =1$. On procède comme précédemment.
+    \item On a $\# G = 48 = 2^3 \times 3$.
+      On sait que $n_2 \in \{1,3\} $ et $n_3 \in \{1,4,16\}$.
+      On fait agir $G$ sur $\mathrm{Syl}_2(G)$ l'ensemble des $2$-Sylow de~$G$ par :
+      \[
+        g \cdot S := g S g^{-1}
+      .\]
+      Ceci induit un morphisme \[
+        \varphi : G \longrightarrow \mathfrak{S}_{n_2}
+      .\]
+      On a deux cas :
+      \begin{itemize}
+        \item si $n_2 = 1$, alors on a fini ;
+        \item  si $n_2 = 3$ alors  $\ker \varphi \neq \{e\} $ (car $\# G = 48$ et  $\#\mathfrak{S}_3 = 3! = 6$) et, de plus, par les théorèmes de Sylow, l'action est transitive, d'où $\ker \varphi \triangleleft G$ et  $\{e\}  \neq \ker\varphi \neq G$ d'où $G$ n'est pas simple.
+      \end{itemize}
+  \end{enumerate}
+
+  \section{Exercice 6.}
+  
+  \begin{enonce}
+    Soit $G$ un groupe fini simple d'ordre supérieur ou égal à $3$.
+    \begin{enumerate}
+      \item Soit $H \lneq G$ un sous-groupe strict de $G$. Montrer qu'il existe un morphisme injectif $\varphi : G \hookrightarrow \mathfrak{S}(G / H)$ et donc que  $\# G  \mid [G : H]!$. (\textit{Indication : faire agir $G$ sur $G / H$.})
+      \item Montrer que $\varphi(G) \subseteq \mathfrak{A}(G / H)$ et donc que $\#G  \mid \frac{1}{2} [G:H]!$.
+      \item Soit $p$ un nombre premier divisant $\#G$. On note $n_p$ le nombre de $p$-Sylow de $G$.
+        \begin{enumerate}
+          \item Montrer qu'il existe un morphisme injectif $\varphi_p : G \hookrightarrow \mathfrak{A}_{n_p}$ et donc que $\# G  \mid \frac{1}{2} n_p!$.
+          \item En déduire qu'un groupe d'ordre $80$ ou $112$ n'est pas simple.
+        \end{enumerate}
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item On fait agir $G$ sur $G / H$ en posant $g \cdot (g'H) := (g g')H$.
+      Ceci induit un morphisme $\varphi : G \to \mathfrak{S}(G / H)$.
+      Il est injectif car $\ker \varphi \triangleleft G$ donc, par simplicité de $G$,
+       \begin{itemize}
+        \item $\ker \varphi = \{e\}$ ;
+        \item $\ker \varphi = G$ mais l'ordre de  $G$ est supérieur à $3$ donc $\varphi$ est non-nulle.
+      \end{itemize}
+      Enfin, par le premier théorème d'isomorphisme :
+      \[
+        G / \ker \varphi = G \cong \im \varphi \le \mathfrak{S}(G / H)
+      ,\] 
+      d'où $\# G  \mid [G : H]!$ par cardinalité et Lagrange.
+    \item Montrons que $\varphi(G) \subseteq \mathfrak{A}(G / H)$ en montrant $\varphi^{-1}(\mathfrak{A}(G / H)) = G$.
+      On sait que $\mathfrak{A}(G / H) \triangleleft \mathfrak{S}(G / H)$ d'où  $\varphi^{-1}(\mathfrak{A}(G / H)) \triangleleft G$.
+      Par cardinalité, il est impossible que $\varphi ^{-1}(\mathfrak{A}(G / H)) = \{e\}$.
+      On en conclut que $\varphi ^{-1}(\mathfrak{A}(G / H)) = G$.
+  \end{enumerate}
 \end{document}
