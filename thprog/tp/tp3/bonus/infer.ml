@@ -1,6 +1,7 @@
 open Term
 open Term_type
 open Type
+open Unif
 
 (* Il faudrait deja de quoi créer les variables "X1", "X2", etc *)
 let fresh = 
