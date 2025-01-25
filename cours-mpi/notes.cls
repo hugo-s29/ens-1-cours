@@ -21,8 +21,12 @@
 \RequirePackage{slantsc}
 \RequirePackage{mleftright} % scale sets like { BIG THING HERE |  }
 \RequirePackage{mathtools}
+\RequirePackage{colortbl}
+\RequirePackage{centernot}
+\RequirePackage{nicematrix}
 \RequirePackage{tikz}
-\usetikzlibrary {automata,positioning}
+\RequirePackage{tikz-cd}
+\usetikzlibrary {automata,positioning,backgrounds, shapes}
 \RequirePackage{svg}
 \RequirePackage{tablefootnote}
 
@@ -34,6 +38,13 @@
 }
 
 \let\footnote\tablefootnote
+
+\makeatletter
+\newcommand\showfootnote{%
+  \tfn@tablefootnoteprintout% 
+  \gdef\tfn@fnt{0}% 
+}
+\makeatother
 
 \RequirePackage{array}
 \RequirePackage{ebproof}
@@ -75,7 +86,7 @@
 
 \renewcommand\lstlistingname{Code}
 
-\mdfsetup{skipabove=1em,skipbelow=0em}
+\mdfsetup{skipabove=1em,skipbelow=0em,innertopmargin=1em}
 
 \theoremstyle{definition}
 
@@ -154,6 +165,19 @@
   \renewcommand{\labelitemiii}{\color{deepblue}•}
 }
 
+\newcommand\problem[4][\relax]{
+  \begin{figure}[H]
+    \centering
+    \arrayrulecolor{deepblue}
+    \setlength\arrayrulewidth{1pt}
+    \begin{NiceTabular}{r|p{10cm}}
+      \Block{2-1}{\textsc{#1}} & \textbf{Entrée.} #3\\
+                          & \textbf{Sortie.} #4
+    \end{NiceTabular}
+    \label{#2}
+  \end{figure}
+}
+
 
 \declaretheorem[style=thmgreenbox, name=Définition]{defn} \defineMarkerColor{defn}{deepgreen} \removefootnoteinside{defn}
 \declaretheorem[style=thmbluebox, name=Exemple]{exm}      \defineMarkerColor{exm}{deepblue}   \removefootnoteinside{exm}
@@ -185,6 +209,32 @@
 \RequirePackage[makeroom, thicklines]{cancel}
 \renewcommand{\CancelColor}{\color{nicered}}
 
+\floatname{algorithm}{Algorithme}
+\def\algorithmicrequire{\textbf{Entrée}}
+\def\algorithmicensure{\textbf{Sortie}}
+\def\algorithmicend{\textbf{fin}}
+\def\algorithmicif{\textbf{si}}
+\def\algorithmicthen{\textbf{alors}}
+\def\algorithmicelse{\textbf{sinon}}
+\def\algorithmicelsif{\algorithmicelse\ \algorithmicif}
+\def\algorithmicendif{\algorithmicend\ \algorithmicif}
+\def\algorithmicfor{\textbf{pour}}
+\def\algorithmicprocedure{\textbf{Procédure}}
+\def\algorithmicfunction{\textbf{Fonction}}
+\def\algorithmicforall{\textbf{pour tout}}
+\def\algorithmicdo{\textbf{faire}}
+\def\algorithmicendfor{\algorithmicend\ \algorithmicfor}
+\def\algorithmicwhile{\textbf{tant que}}
+\def\algorithmicendwhile{\algorithmicend\ \algorithmicwhile}
+\def\algorithmicloop{\textbf{répéter indéfiniment}}
+\def\algorithmicendloop{\algorithmicend\ \algorithmicloop}
+\def\algorithmicrepeat{\textbf{répéter}}
+\def\algorithmicuntil{\textbf{jusqu'à que}}
+\def\algorithmicprint{\textbf{afficher}}
+\def\algorithmicreturn{\textbf{retourner}}
+\def\algorithmictrue{\textsc{vrai}}
+\def\algorithmicfalse{\textsc{faux}}
+
 \RequirePackage[explicit]{titlesec}
 \titleformat{\section}{\fontsize{16}{18}\sffamily\bfseries}{\thesection}{16pt}{#1}
 \titleformat{\subsection}{\fontsize{14}{16}\sffamily\bfseries}{\thesubsection}{14pt}{#1}
@@ -205,6 +255,8 @@
     linkcolor=deepblue,
     urlcolor=blue
 }
+
+\setlength{\parskip}{7pt}
 
 \renewcommand\maketitle{
   \begin{titlepage}
