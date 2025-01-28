@@ -1,0 +1,31 @@
+\documentclass{../notes}
+
+\title{Projet fonctionnel}
+\author{Basé sur le cours de Daniel \textsc{Hirschkoff}\\ Notes prises par Hugo \textsc{Salou}}
+
+\usepackage{pdflscape}
+
+\begin{document}
+  \maketitle
+
+  \dominitoc
+  \tableofcontents
+
+  \pagebreak
+
+  \chapter*{Introduction.}
+
+  Le cours se décompose en deux parties :
+  \begin{itemize}
+    \item une partie \textit{pratique} ($\sim 2/3$ du cours) avec de la programmation OCaml en binôme ;
+    \item une partie \textit{théorique} : avec du $\lambda$-calcul, typage et lien avec la logique.
+  \end{itemize}
+
+  Pour la partie pratique, on développe \textit{fouine}, un sur-ensemble du langage $\mathsf{FUN}$.
+  Le produit attendu est un interprète OCaml, c'est-à-dire :
+  \[
+    \text{fichier texte} \xrightarrow{\text{frontend}} \mathtt{expr} \xrightarrow{\text{fonction \texttt{eval}}} \text{valeur / affichage console}
+  .\]
+
+\end{document}
+
