@@ -1,0 +1,66 @@
+\documentclass{../../td}
+
+\title{T.D. -- Algèbre 2}
+\author{Hugo \textsc{Salou}}
+
+\usepackage{subfiles}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+
+\ifSubfilesClassLoaded{%
+  \renewcommand\thesection{\arabic{section}}
+  \renewcommand\thepart{\Roman{part}}
+  \renewcommand\thechapter{\phantom}
+  \renewcommand\theequation{\arabic{section}.\arabic{equation}}
+  \AtEndDocument{\tableofcontents}
+}{}
+
+\newenvironment{enonce}{
+  \begin{slshape}
+  \color{deepblue}
+}{
+  \end{slshape}
+}
+
+\DeclareMathOperator\id{id}
+\DeclareMathOperator\im{im}
+\DeclareMathOperator\Tr{Tr}
+\DeclareMathOperator\ord{ord}
+\DeclareMathOperator\vect{vect}
+
+
+% Example : \refexo{td1}{3} -> 3 with either a link to td1-ex3 or to td1.pdf
+\newcommand\refexo[2]{%
+  \ifSubfilesClassLoaded{%
+    \href{http://167.99.84.84/data/ens1/algebre2-#1.pdf}{#2}%
+  }{%
+    \hyperref[#1-ex#2]{#2}%
+  }%
+}
+
+% Example : \reftd{1} -> 1 with either a link to td1 or to td1.pdf
+\newcommand\reftd[1]{%
+  \ifSubfilesClassLoaded{%
+    \href{http://167.99.84.84/data/ens1/algebre2-td#1.pdf}{#1}%
+  }{%
+    \hyperref[td#1]{#1}%
+  }%
+}
+
+\usepackage{stackengine}
+\stackMath
+\renewcommand\ntriangleleft{\mathbin{\stackengine{0pt}{\triangleleft}{/}{O}{c}{F}{T}{L}}}
+
+
+\begin{document}
+  \maketitle
+
+  \dominitoc
+  \tableofcontents
+
+  \pagebreak
+
+  %\subfile{td00.tex}
+  \subfile{td01.tex}
+\end{document}
+

@@ -1,0 +1,190 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Idéaux et anneaux noethériens}
+
+  \section{Exercice 1.}
+
+  \begin{enonce}
+    \begin{enumerate}
+      \item Se répéter dix fois : "Un idéal n'est pas un sous-anneau et l'image d'un idéal par un morphisme d'anneau n'est pas nécessairement un idéal" (et trouver des exemples).
+      \item Montrer que l'image d'un idéal par un morphisme d'anneaux surjectif est un idéal.
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item L'idéal $I = 2\mathds{Z}$ n'est pas un sous-anneau car $1 \not\in I$.
+      On considère le morphisme d'anneau \begin{align*}
+        f: \mathds{Z} &\longrightarrow \mathds{Q} \\
+        x &\longmapsto x
+      ,\end{align*}
+      et on a $f(n\mathds{Z}) = n \mathds{Z}$ qui n'est pas un idéal de $\mathds{Q}$ (car $\mathds{Q}$ est un corps, donc n'a pour idéaux que $\mathds{Q}$ et $\{0\}$).
+    \item Soit $f : A \to B$ un morphisme d'anneaux surjectif, et $I$ un idéal de $A$.
+      \begin{itemize}
+        \item Soient $x_1, x_2 \in f(I)$. Soient $y_1, y_2 \in I$ tels que $x_1 = f(y_1)$ et $x_2 = f(y_2)$.
+          D'où, $x_1 + x_2 = f(y_1 + y_2) \in f(I)$ car $y_1 + y_2 \in I$.
+        \item Soit $x \in f(I)$ et $b \in B$. Il existe $y \in I$ tel que $f(y) = x$.
+          Par surjectivité, il existe $a \in A$ tel que $b = f(a)$.
+          Ainsi, $bx = f(ay) \in f(I)$, car $ay \in I$.
+      \end{itemize}
+  \end{enumerate}
+
+  \section{Exercice 2. \textit{Terminologie}}
+
+  \begin{enonce}
+    Soit $A$ un anneau et soient $a, b$ deux éléments de $A$.
+    \begin{enumerate}
+      \item Montrer que $a$ est inversible si et seulement si $(a) = A$.
+      \item Montrer que $a$ divise $b$ si et seulement si $(b) \subseteq (a)$.
+      \item On suppose que $A$ est intègre.
+        \begin{enumerate}
+          \item Montrer que $a \in A$ est premier si et seulement si $(a)$ est un idéal premier.
+          \item Montrer que $a$ est irréductible dans $A$ si et seulement si $(a)$ est maximal parmi les idéaux principaux de $A$. En déduire que, si tout idéal de $A$ est principal, alors $a$ est irréductible si et seulement si $(a)$ est maximal.
+          \item Donner un exemple d'anneau $A$ et d'élément irréductible $a \in A$ tel que $(a)$ n'est pas maximal parmi les idéaux de~$A$.
+        \end{enumerate}
+    \end{enumerate}
+  \end{enonce}
+
+  \begin{enumerate}
+    \item Montrons que $a \in A^\times \iff (a) = A$.
+      On a la chaîne d'équivalences :
+      \[
+        (a) = A \iff 1 \in (a) \iff \exists b \in A, ab = 1 \iff a \in A^\times
+      .\] 
+    \item Montrons que $a  \mid b \iff (b) \subseteq (a)$.
+      D'une part, on a \[
+        a  \mid b \iff \exists c \in A, b  = a c \underset {(\star)}\implies (b) \subseteq (a)
+      .\]
+      Et d'autre part, on a bien l'implication réciproque de $(\star)$, car si~$(b) \subseteq (a)$ alors $b \in (a)$ et donc il existe $c \in A$ tel que $b = a c$.
+    \item 
+      \begin{enumerate}
+        \item On a :
+          {
+          \footnotesize
+          \begin{align*}
+            a \text{ premier}
+            \iff& [\forall b, c \in A, a  \mid b c \implies a \mid b \text{ ou } a \mid c]\\
+            \iff& [\forall b, c \in A, (bc) \subseteq (a) \implies (b) \subseteq (a) \text{ ou } (c) \subseteq (a)]\\
+            \iff& (a) \text{ est un idéal premier}
+          .\end{align*}
+          }
+        \item 
+          \begin{itemize}
+            \item Si $(a)$ est maximal parmi les idéaux principaux, et si $a = b c$ alors $b  \mid a$, et donc $(a) \subseteq (b)$.
+              \begin{itemize}
+                \item Soit $(b) = A$ et donc  $b \in A^\times$.
+                \item Soit $(b) = (a)$ alors, il existe $d \in A$ tel que $b = a d$.
+                  D'où,  $b = bcd$ et, car  $A$ intègre, $cd = 1$ d'où on a que $c \in A^\times$.
+              \end{itemize}
+            \item Réciproquement, on a 
+              \begin{align*}
+                (a) \subseteq (b) \implies& b  \mid a\\
+                \implies& \exists c \in A, a = b c\\
+                \implies& \exists (b,c) \in A^\times \times A \cup A \times A^\times, a = b c\\
+                \implies& (b) = A \text{ ou } (b) = (a)
+              .\end{align*}
+          \end{itemize}
+        \item On considère $A = \mathds{Z}[X]$ et $a = 2$ irréductible.
+          Alors, $(2) \subseteq (2, X) \neq \mathds{Z}[X]$ et $(X) \subseteq (2, X) \neq \mathds{Z}[X]$.
+      \end{enumerate}
+  \end{enumerate}
+
+  \section{Exercice 3. \textit{Quotienteries}}
+
+  \begin{enumerate}
+    \item On a, pour $a, b \in A$ :
+      \[
+      \bar{a} \bar{b} = \bar{0} \in A / I \iff a b \in I
+      .\]
+      D'où, 
+      si $I$ premier, alors $\bar{a} = \bar{0}$ ou $\bar{b} = \bar{0}$.
+      Réciproquement, si $ab \in I$ alors $\bar{a} = \bar{0}$ ou $\bar{b} = \bar{0}$, et donc $a \in I$ ou $b \in I$.
+
+      Ensuite, on a pour $a \in A$, \[
+      \bar{a} \in (A / I)^\times \iff (a) + I = A
+      .\] 
+      Ainsi, si $I$ est maximal, et si  $\bar{a} \in (A / I) \setminus \{0\}$, alors $a\not\in I$ et $(a) + I$ contient strictement $I$, d'où $(a) + I = A$ et  $\bar{a} \in (A / I)^\times$.
+      Réciproquement, soit $I \subseteq J \subseteq A$, et s'il existe $x \in J \setminus I$, alors $xnar \in (A / I) \setminus \{0\}$ et donc il existe $y \in A$ tel que $\bar{x} \bar{y} = \bar{1}$ et donc $A = (x) + I \subseteq J$ et donc $J = A$.
+    \item Soit $B$ un anneau et $f : A \to B$ un morphisme d'anneau tel que $I \subseteq \ker f$.
+      Montrons qu'il existe un unique morphisme $\bar{f} : A / I \to B$ tel que $f = \bar{f} \circ \pi$.
+      \begin{itemize}
+        \item \textit{Unicité}.
+          Si $\bar{f} : A / I \to B$ est tel que $\bar{f} \circ \pi = f$.
+          Alors, parce que $\pi$ est surjectif, on a que $\forall x \in A/I, \exists a \in A, x = \pi(a)$, et donc $\bar{f}(x) = f(a)$.
+        \item \textit{Existence}.
+          On pose \begin{align*}
+            \bar{f}: A / I &\longrightarrow B \\
+            \bar{x} &\longmapsto f(x)
+          .\end{align*}
+          \begin{itemize}
+            \item C'est bien défini car si $\pi(a) = \pi(b)$ alors $a-b \in I \subseteq \ker f$ et donc $f(a) = f(b)$.
+            \item C'est bien un morphisme :
+               \begin{itemize}
+                \item $\bar{f}(\bar{1}) = f(1) = 1$ ;
+                \item $\bar{f}(\bar{a} + \bar{b}) = \bar{f}(\overline{a + b}) = f(a+b) = f(a) + f(b) = \bar{f}(\bar{a}) + \bar{f}(\bar{b})$ ;
+                \item $\bar{f}(\bar{a} \times  \bar{b}) = \bar{f}(\overline{a \times  b}) = f(a \times b) = f(a) \times  f(b) = \bar{f}(\bar{a}) \times  \bar{f}(\bar{b})$.
+              \end{itemize}
+          \end{itemize}
+      \end{itemize}
+    \item Soit $f : A \to B$, alors il existe un unique morphisme $\bar{f} : A / \ker f \to B$ tel que $f = \bar{f} \circ \pi$.
+      Par construction $\im \bar{f} = \im f$ et donc $\bar{f} : A / \ker f \to \im f$ est surjectif.
+      Montrons que $\bar{f}$ est injective.
+      Si $\bar{f}(\bar{x}) = 0$ alors $f(x) = 0$ et donc  $x \in \ker f$ d'où on a $\bar{x} = \bar{0} \in A / \ker f$.
+      On en conclut : \[
+      A / \ker f \cong \im f
+      .\] 
+    \item Soient $I \subseteq J \subseteq A$ et on note $J / I = \pi_I(J)$.
+      Alors, $(A / I) / (J / I) \cong A / J$.
+      En effet, on pose 
+      \begin{align*}
+        f: A/I &\longrightarrow A/J \\
+        a + I &\longmapsto a + J
+      ,\end{align*}
+      qui est un morphisme d'anneaux bien défini.
+
+      Pour $a \in A$, $f(a + I) = a + J$ donc  $f$ est surjective.
+
+      Et, 
+      \begin{align*}
+        \ker f &= \mleft\{\,a + I \in  A / I \;\middle|\; a + J = \bar{0} \in A / J\,\mright\} \\ 
+        &= \mleft\{\,a + I \in A / I \;\middle|\; a \in J\,\mright\} \\
+        &= \pi_I(J) = J / I \\
+      .\end{align*}
+      On en conclut, par le premier théorème d'isomorphisme que \[
+        (A / I) / (J / I) \cong A / J
+      .\]
+    \item On considère la bijection croissante 
+      \begin{align*}
+        \{I \subseteq J \triangleleft A \}   &\longleftrightarrow \{\bar{K} \triangleleft A / I\}  \\ 
+        J &\longmapsto \pi_I(J) \\
+        \pi^{-1}(\bar{K}) & \longmapsfrom \bar{K}
+      .\end{align*}
+      On vérifie aisément que :
+      \begin{itemize}
+        \item pour $J \supseteq I$, $\pi ^{-1}(\pi(J)) = J$ ;
+        \item pour $\bar{K} \triangleleft A / I$, $\pi(\pi^{-1}(\bar{K})) = \bar{K}$ ;
+        \item l'application est croissante.
+      \end{itemize}
+
+      Si $P \triangleleft A$ est premier et tel que  $I \subseteq P$ alors, par le 3ème théorème d'isomorphisme, on a \[
+        (A / I) / \pi(P) = (A / I) / (P / I) \cong A / P
+      ,\] et ce dernier est intègre et on conclut.
+
+      Réciproquement, si $\bar{P} \triangleleft A / I$ est premier, alors $\bar{P} = \pi(\pi^{-1}(\bar{P}))$ et donc $(A / I) / \bar{P} \cong A / \pi^{-1}(\bar{P})$ et le premier est intègre, donc on conclut.
+    \item On pose \begin{align*}
+          f: A[X] &\longrightarrow (A / I)[X] \\
+        \sum a_i X^i &\longmapsto \sum \bar{a}_i X^i
+      .\end{align*}
+      On montre que $\im f = (A / I)[X]$ et que  $\ker f = I \: A[X]$.
+  \end{enumerate}
+
+  \section{Exercice 4. \textit{Division euclidienne par un polynôme unitaire}}
+
+  \section{Exercice 5. \textit{Application : étude d'une courbe algébrique}}
+
+  \section{Exercice 6. \textit{Lemme d'évitements des premiers}}
+
+  \section{Exercice 7. \textit{Anneaux noethériens}}
+
+  \section{Exercice 8. \textit{Existence et finitude des idéaux premiers minimaux}}
+\end{document}
