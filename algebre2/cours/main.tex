@@ -1,0 +1,29 @@
+\documentclass{../../notes}
+
+\title{Algèbre 2}
+\author{Hugo SALOU}
+
+\usepackage{subfiles}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+
+\ifSubfilesClassLoaded{%
+  \renewcommand\thesection{\arabic{section}}
+  \renewcommand\thepart{\Roman{part}}
+  \renewcommand\thechapter{\phantom}
+  \renewcommand\theequation{\arabic{section}.\arabic{equation}}
+  \AtEndDocument{\tableofcontents}
+}{}
+
+
+\begin{document}
+  \maketitle
+
+  
+  \dominitoc
+  \tableofcontents
+
+  \pagebreak
+
+  \subfile{chap01.tex}
+\end{document}

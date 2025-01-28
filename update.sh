@@ -1,5 +1,19 @@
 cd /Users/hugos29/Documents/ecole/ens1/
 
+# ==========
+# SEMESTRE 2
+# ==========
+cp algebre2/cours/main.pdf ../web/public/data/ens1/algebre2.pdf
+cp algebre2/cours/chap01.pdf ../web/public/data/ens1/algebre2-chap01.pdf
+
+cp log/main.pdf ../web/public/data/ens1/logique.pdf
+cp log/chap00.pdf ../web/public/data/ens1/logique-chap00.pdf
+cp log/chap01.pdf ../web/public/data/ens1/logique-chap01.pdf
+
+# ==========
+# SEMESTRE 1
+# ==========
+
 cp algo1/main.pdf ../web/public/data/ens1/algo1.pdf
 
 cp thprog/main.pdf ../web/public/data/ens1/thprog.pdf
@@ -43,7 +57,6 @@ cp algebre1/td/td09.pdf ../web/public/data/ens1/algebre1-td9.pdf
 cp algebre1/td/td10.pdf ../web/public/data/ens1/algebre1-td10.pdf
 cp algebre1/td/td11.pdf ../web/public/data/ens1/algebre1-td11.pdf
 cp algebre1/td/td12.pdf ../web/public/data/ens1/algebre1-td12.pdf
-
 
 cp algo1/main.pdf _hidden/Algorithmique-1.pdf
 cp thprog/main.pdf _hidden/Théorie-de-la-programmation.pdf

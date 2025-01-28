@@ -1,0 +1,48 @@
+\documentclass{../notes}
+
+\title{Logique}
+\author{Basé sur le cours de Natacha \textsc{Portier}\\ Notes prises par Hugo \textsc{Salou}}
+
+\usepackage{subfiles}
+
+\ifSubfilesClassLoaded{%
+  \renewcommand\thesection{\arabic{section}}
+  \renewcommand\thepart{\Roman{part}}
+  \renewcommand\thechapter{\phantom}
+  \renewcommand\theequation{\arabic{section}.\arabic{equation}}
+}{}
+
+
+\DeclareFontFamilySubstitution{OT2}{cmr}{wncyr}
+\newcommand{\textcyr}[1]{%
+  \begin{hyphenrules}{nohyphenation}%
+    \fontencoding{OT2}\selectfont #1%
+  \end{hyphenrules}%
+}
+
+% Question Equal =^?
+\newcommand\qeq{\ensuremath{\mathrel{\overset ? =}}}
+\newcommand\fresh{\textcyr{I}}
+
+\newcommand\ifte[3]{\ensuremath{\mathtt{if}\ #1\ \mathtt{then}\ #2\ \mathtt{else}\ #3}}
+\newcommand\ceq{\ensuremath{\mathrel{\texttt{:=}}}}
+\newcommand\col{\ensuremath{\mathrel{\texttt{;}}}}
+\newcommand\while[2]{\ensuremath{\mathtt{while}\ #1\ \mathtt{do}\ #2}}
+\newcommand\ptr[1]{\ensuremath{\text{\texttt{[$#1$]}}}}
+
+\usepackage{pdflscape}
+
+\newcommand{\parens}[1]{\verb|(|\ensuremath{#1}\verb|)|}
+
+\begin{document}
+  \maketitle
+
+  \dominitoc
+  \tableofcontents
+
+  \pagebreak
+
+  \subfile{chap00.tex}
+  \subfile{chap01.tex}
+\end{document}
+
