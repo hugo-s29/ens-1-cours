@@ -1,0 +1,30 @@
+\documentclass{../notes}
+
+\title{Probabilités}
+\author{Basé sur le cours de Guillaume \textsc{Aubrin}\\ Notes prises par Hugo \textsc{Salou}}
+
+\usepackage{subfiles}
+
+\ifSubfilesClassLoaded{%
+  \renewcommand\thesection{\arabic{section}}
+  \renewcommand\thepart{\Roman{part}}
+  \renewcommand\thechapter{\phantom}
+  \renewcommand\theequation{\arabic{section}.\arabic{equation}}
+}{}
+
+\newcommand{\ind}{\perp\!\!\!\!\!\:\perp}
+
+
+\begin{document}
+  \maketitle
+
+  \dominitoc
+  \tableofcontents
+
+  \pagebreak
+
+  \setcounter{chapter}{-1}
+  \subfile{chap00.tex}
+  \subfile{chap01.tex}
+\end{document}
+

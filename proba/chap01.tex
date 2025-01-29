@@ -1,0 +1,135 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Événements, probabilités, variables aléatoires.}
+
+  \section{Espaces de probabilités.}
+
+  \begin{defn}
+    Un \textit{espace de probabilité} est la donnée de 
+    \begin{itemize}
+      \item un ensemble $\Omega$ ;
+      \item un ensemble $\mathcal{F} \subseteq \wp(\Omega)$ de parties de $\Omega$, appelées \textit{événements} ;
+      \item une fonction $\mathrm{P} : \mathcal{F} \to [0,1]$ qui associe à un événement sa probabilité ;
+    \end{itemize}
+    qui vérifie les axiomes suivants 
+    \begin{enumerate}
+      \item l'ensemble $\mathcal{F}$ est une  \textit{tribu} (ou \textit{$\sigma$-algèbre}) :
+        \begin{itemize}
+          \item $\Omega \in \mathcal{F}$ ;
+          \item si $A \in \mathcal{F}$ alors $\Omega \setminus A \in \mathcal{F}$ ;
+          \item si $(A_n)_{n \in \mathds{N}}$ est dans $\mathcal{F}$ alors $\bigcup_{n \in \mathds{N}} A_n \in \mathcal{F}$ ;
+        \end{itemize}
+      \item l'application $\mathrm{P}$ est une \textit{mesure de probabilité} :
+        \begin{itemize}
+          \item $\mathrm{P}(\Omega) = 1$ ;
+          \item $\mathrm{P}(\emptyset) = 0$ ;
+          \item\relax[\textit{$\sigma$-additivité}] si $(A_n)_{n \in \mathds{N}}$ sont des événements disjoints (\textit{i.e.} $A_n \cap A_m = \emptyset$ si $n \neq m$) alors \[
+          \mathrm{P}\Big( \bigcup_{n \in \mathds{N}} A_n \Big) = \sum_{n \in \mathds{N}} \mathrm{P}(A_n)
+          .\]
+        \end{itemize}
+    \end{enumerate}
+  \end{defn}
+
+  On supposera donné un espace de probabilité $(\Omega, \mathcal{F}, \mathrm{P})$.
+
+  \begin{exm}
+    Si $\Omega$ est un ensemble fini, on peut choisir  $\mathcal{F} = \wp(\Omega)$ et $\mathrm{P}(A) = |A| / |\Omega|$.
+    On dit que $\mathrm{P}$ est la \textit{probabilité uniforme} sur $\Omega$.
+  \end{exm}
+
+  \begin{exm}
+    Si $\Omega$ est fini ou dénombrable et si $(p_\omega)_{\omega \in \Omega}$ sont des réels positifs tels que $\sum_{\omega \in \Omega} p_\omega = 1$, on peut prendre $\mathcal{F} = \wp(\Omega)$ et poser $\mathrm{P}(A) = \sum_{\omega \in A} p_\omega$.
+    On a alors défini une probabilité à partir de $p_\omega = \mathrm{P}(\{\omega\}) = p_\omega$.
+  \end{exm}
+
+  Si $A$ et $B$ sont deux événements avec $A \subseteq B$ alors $\mathrm{P}(A) \le \mathrm{P}(B)$.
+  En effet, il suffit d'écrire $\mathrm{P}(B) = \mathrm{P}(A) + \mathrm{P}(B \setminus A)$.
+
+  \begin{lem}[Borne de l'union]
+    Si $(A_n)_{n \in I}$ est une famille finie ou dénombrable d'événements, alors \[
+    \mathrm{P}\Big( \bigcup_{n \in I} A_n \Big) \le \sum_{n \in I} \mathrm{P}(A_n)
+    .\]
+  \end{lem}
+  \begin{prv}
+    On pose $B_n = A_n \setminus \big( \bigcup_{k < n} A_k\big)$. Les $(B_n)$ sont disjoints, et  $\bigcup_{n \in I} A_n = \bigcup_{n \in I} B_n$.
+    On a donc \[
+    \mathrm{P}\Big( \bigcup_{n \in I} A_n\Big) =
+    \mathrm{P}\Big( \bigcup_{n \in I} B_n\Big)
+    = \sum_{n \in I} \mathrm{P}(B_n) \le \sum_{n \in I}\mathrm{P}(A_n)
+    .\]
+  \end{prv}
+
+  Une question naturelle est : pourquoi ne pas prendre toujours $\mathcal{F} = \wp(\Omega)$ ?
+  \begin{itemize}
+    \item Il y a des cas où on ne peut pas, pour des raisons liées à l'infini (en particulier dans le cas non dénombrable).
+    \item Même dans le cas discret, on a parfois intérêt à considérer plusieurs tribus.
+  \end{itemize}
+
+  \section{Indépendance.}
+
+  \begin{defn}
+    Deux événements $A$ et $B$ sont \textit{indépendants}, noté~$A \ind B$, si $\mathrm{P}(A \cap B) = \mathrm{P}(A) \times \mathrm{P}(B)$.
+  \end{defn}
+
+  \begin{defn}
+    Si $\mathrm{P}(B) > 0$, la \textit{probabilité de $A$ selon $B$} est la probabilité $\mathrm{P}(A  \mid B) = \mathrm{P}(A \cap B) / \mathrm{P}(B)$.
+    On a donc $A \ind B \iff \mathrm{P}(A  \mid B) = \mathrm{P}(A)$.
+  \end{defn}
+
+  \begin{lem}
+    Si $(A_n)$ est une partition fini ou dénombrable de $\Omega$ en événements et $B$ un événement, 
+    \[
+    \mathrm{P}(B) = \sum_{n} \mathrm{P}(B \cap A_n) = \sum_{n} \mathrm{P}(B  \mid A_n) \cdot \mathrm{P}(A_n)
+    .\] \qed
+  \end{lem}
+
+  \begin{defn}
+    Si $(A_i)$ est une famille finie ou infinie d'événements, on dit qu'ils sont  \textit{indépendants} si, pour tout $J \subseteq I$ non-vide, \[
+    \mathrm{P}\Big( \bigcap_{i \in J} A_i\Big) = \prod_{i \in J} \mathrm{P}(A_i)
+    .\] 
+  \end{defn}
+
+  \begin{exm}
+    On a que $(A, B, C)$ sont indépendants si et seulement si les quatre conditions sont vérifiées :
+    \begin{itemize}
+      \item $\mathrm{P}(A \cap B \cap C) = \mathrm{P}(A) \cdot \mathrm{P}(B) \cdot \mathrm{P}(C)$ ;
+      \item $\mathrm{P}(A \cap B) = \mathrm{P}(A) \cdot \mathrm{P}(B)$ ;
+      \item $\mathrm{P}(A \cap C) = \mathrm{P}(A) \cdot \mathrm{P}(C)$ ;
+      \item $\mathrm{P}(B \cap C) = \mathrm{P}(B) \cdot \mathrm{P}(C)$.
+    \end{itemize}
+  \end{exm}
+
+  \begin{rmk}
+    On a l'implication "$(A_n)$ indépendant" $\implies$ "$(A_n)$ deux-à-deux indépendant"
+    mais la réciproque est \textit{\textbf{fausse}}.
+  \end{rmk}
+
+  \section{Théorèmes d'existence.}
+
+  Le théorème suivant justifie l'existence des suites finies ou dénombrables de "\textit{bit}s aléatoires indépendants".
+
+  \begin{thm}[Existence de \textit{bit}s aléatoires]
+    \begin{enumerate}
+      \item Pour tout entier $n \in \mathds{N}$, il existe un espace de probabilité $(\Omega_n, \mathcal{F}_n, \mathrm{P}_n)$ qui contient $n$ événements indépendants de probabilité $\frac{1}{2}$.
+      \item Il existe un espace de probabilité $(\Omega, \mathcal{F}, \mathrm{P})$ qui contient une suite dénombrable d'événements de probabilité $\frac{1}{2}$.
+    \end{enumerate}
+  \end{thm}
+  \begin{prv}
+    \begin{enumerate}
+      \item On pose $\Omega_n = \{0,1\}^n$, $\mathcal{F}_n = \wp(\Omega_n)$, et $\mathrm{P}_n$ la probabilité uniforme.
+        Si on pose \[
+        A_k = \mleft\{\,\omega = (\omega_1, \ldots, \omega_n) \in \{0,1\}^n \;\middle|\; \omega_k = 1\,\mright\} 
+        ,\]
+        alors \[
+        \mathrm{P}(A_k) = \frac{|A_k|}{|\Omega_n|} = \frac{2^{n-1}}{2^{n}} = \frac{1}{2}
+        .\]
+        Si $J \subseteq \{1, \ldots, n\}$, en notant $p = |J|$, alors 
+         \[
+        \mathrm{P}\Big(\bigcap_{j \in J} A_j\Big) = \frac{\Big|\bigcap_{j \in J} A_j\Big|}{|\Omega_n|} = \frac{2^{n-p}}{2^n} = \frac{1}{2^p}  = \prod_{j \in J} \mathrm{P}(A_j)
+        .\]
+        On a donc indépendance de $(A_k)_{1 \le k \le n}$.
+      \item On l'admet ($\triangleright$ existence de la mesure de Lebesgue).
+    \end{enumerate}
+  \end{prv}
+\end{document}
