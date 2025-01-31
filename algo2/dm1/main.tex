@@ -1,0 +1,310 @@
+\documentclass{../../notes}
+
+\title{DM n°1\\[-0.3em] \itshape Algorithmique 2}
+\author{Hugo \scshape Salou}
+
+\tikzset{
+  initial text=,
+  node distance=2cm,
+  auto,
+  every state/.style={draw=deepblue,thick},
+  every path/.style={draw=deepblue},
+}
+
+\begin{document}
+  \maketitle
+
+  \chapter{Condition nécessaire et suffisante.}
+
+  Une condition nécessaire pour avoir une attribution "Noël canadien" est la suivante :
+  en notant $j = \arg\max_{i \in \llbracket 1,n\rrbracket  } d_i$, \[
+  d_j \le  \sum_{i \in \llbracket 1,n\rrbracket \setminus \{j\}} d_i
+  .\]
+
+  Cette condition est nécessaire car, si l'on a $d_j > \sum_{i \neq j} d_i$, alors on ne peut pas construire d'attribution pour la famille (il y a au plus $\sum_{i \neq j} d_i$ échanges de cadeaux, et il en faudrait plus pour en attribuer à toute la famille $j$).
+
+  Pour montrer que c'est une condition suffisante, on propose un algorithme (en l'occurrence l'algorithme~\ref{algo:2-3}) qui maintient cette condition comme invariant et qui donne une attribution.
+
+  De manière équivalente, la condition s'écrit \[
+    (\star) :  \quad 2 \max_{i \in \llbracket 1,n\rrbracket} d_i \le \sum_{i=1}^n d_i
+  .\] 
+
+
+  \chapter{Algorithme pour les cycles courts.}
+
+  Pour cet algorithme, on utilise une structure de données un peu particulière : un tableau de piles (où les piles sont implémentées avec des listes chaînées).
+  La structure de donnée ressemble donc à un rideau de perles.
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=8]
+      \node[draw, rectangle, scale=1.5] (x1) {};
+      \node[draw, rectangle, scale=1.5, left of=x1] (x2) {};
+      \node[draw, rectangle, scale=1.5, left of=x2] (x3) {};
+      \node[draw, rectangle, scale=1.5, left of=x3] (x4) {};
+      \node[draw, rectangle, scale=1.5, left of=x4] (x5) {};
+      \node[draw, rectangle, scale=1.5, left of=x5] (x6) {};
+      \node[draw, rectangle, scale=1.5, left of=x6] (x7) {};
+      \node[draw, rectangle, scale=1.5, left of=x7] (x8) {};
+      \node[draw, rectangle, scale=1.5, left of=x8] (x9) {};
+      \node[draw, rectangle, scale=1.5, left of=x9] (x10) {};
+      \node[draw, rectangle, scale=1.5, left of=x10] (x11) {};
+      \node[draw, rectangle, scale=1.5, left of=x11] (x12) {};
+      \node[draw, rectangle, scale=1.5, left of=x12] (x13) {};
+      \node[draw, rectangle, scale=1.5, left of=x13] (x14) {};
+      \node[draw, rectangle, scale=1.5, left of=x14] (x15) {};
+      \node[draw, rectangle, scale=1.5, left of=x15] (x16) {};
+      \node[draw, rectangle, scale=1.5, left of=x16] (x17) {};
+      \node[draw, rectangle, scale=1.5, left of=x17] (x18) {};
+      \node[draw, rectangle, scale=1.5, left of=x18] (x19) {};
+      \node[draw, rectangle, scale=1.5, left of=x19] (x20) {};
+      \node[draw, rectangle, scale=1.5, left of=x20] (x21) {};
+      \node[draw, rectangle, scale=1.5, left of=x21] (x22) {};
+      \node[draw, rectangle, scale=1.5, left of=x22] (x23) {};
+      \node[draw, rectangle, scale=1.5, left of=x23] (x24) {};
+      \node[draw, rectangle, scale=1.5, left of=x24] (x25) {};
+      \node[draw, rectangle, scale=1.5, left of=x25] (x26) {};
+      \node[draw, rectangle, scale=1.5, left of=x26] (x27) {};
+      \node[draw, rectangle, scale=1.5, left of=x27] (x28) {};
+      \node[draw, rectangle, scale=1.5, left of=x28] (x29) {};
+      \node[draw, rectangle, scale=1.5, left of=x29] (x30) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x2] (x2a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x2a1] (x2a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x3] (x3a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x5] (x5a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x5a1] (x5a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x6] (x6a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x8] (x8a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x9] (x9a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x9a1] (x9a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x9a2] (x9a3) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x15] (x15a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x16] (x16a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x16a1] (x16a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x17] (x17a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x17a1] (x17a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x17a2] (x17a3) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x17a3] (x17a4) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x17a4] (x17a5) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x19] (x19a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x19a1] (x19a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x22] (x22a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x22a1] (x22a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x24] (x24a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x26] (x26a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x26a1] (x26a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x27] (x27a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x28] (x28a1) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x28a1] (x28a2) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x28a2] (x28a3) {};
+      \node[draw, circle, scale=0.6, below=0.2em of x29] (x29a1) {};
+      \draw (x2) -- (x2a1);
+      \draw (x2a1) -- (x2a2);
+      \draw (x3) -- (x3a1);
+      \draw (x5) -- (x5a1);
+      \draw (x5a1) -- (x5a2);
+      \draw (x6) -- (x6a1);
+      \draw (x8) -- (x8a1);
+      \draw (x9) -- (x9a1);
+      \draw (x9a1) -- (x9a2);
+      \draw (x9a2) -- (x9a3);
+      \draw (x15) -- (x15a1);
+      \draw (x16) -- (x16a1);
+      \draw (x16a1) -- (x16a2);
+      \draw (x17) -- (x17a1);
+      \draw (x17a1) -- (x17a2);
+      \draw (x17a2) -- (x17a3);
+      \draw (x17a3) -- (x17a4);
+      \draw (x17a4) -- (x17a5);
+      \draw (x19) -- (x19a1);
+      \draw (x19a1) -- (x19a2);
+      \draw (x22) -- (x22a1);
+      \draw (x22a1) -- (x22a2);
+      \draw (x24) -- (x24a1);
+      \draw (x26) -- (x26a1);
+      \draw (x26a1) -- (x26a2);
+      \draw (x27) -- (x27a1);
+      \draw (x28) -- (x28a1);
+      \draw (x28a1) -- (x28a2);
+      \draw (x28a2) -- (x28a3);
+      \draw (x29) -- (x29a1);
+    \end{tikzpicture}
+    \caption{Structure "rideau de perles"}
+  \end{figure}
+
+  L'initialisation d'une telle structure (chaque pile étant initialement vide) se fait en $\mathrm{O}(N)$ où $N$ est la taille du tableau que l'on veut allouer.
+  Pour simplifier, on supposera que le tableau est indicé à partir de $0$.
+
+  En l'occurrence, on utilise une telle structure pour catégoriser les différentes familles en fonction du nombre de personnes respectives. J'appellerai cardinal d'une famille le nombre de personnes dans cette famille.
+  Sur cette structure, on garde deux indices : les indices (donc ici les cardinaux) des deux plus grandes familles considérés.
+
+  \begin{algorithm}[H]
+    \centering
+    \begin{algorithmic}[1]
+      \Statex \Comment {Initialisation et précalculs}
+      \State $N \gets \sum_{i = 1}^n d_i$
+      \State On initialise $R$ un rideau de perles de taille $N + 1$.
+      \State $m, m' \gets 0, 0$
+      \For{$i = 1$ à $n$}
+      \State $R[d_i]$.push($i$)
+      \State $m, m' \gets$ les deux plus grands éléments de  $[m, m', d_i]$\footnote{Ce n'est pas un ensemble ici mais bien une liste de $3$ éléments. De plus, on choisit bien $m \ge m'$}
+      \EndFor
+
+      \vspace{0.5em}
+      \Statex \Comment {Vérification de faisabilité}
+
+      \If{$N < 2m$}
+      \State \Return Impossible de trouver une attribution \label{algo:2-3-line-check}
+      \EndIf
+
+      \vspace{0.5em}
+      \Statex \Comment {Cas de $N$ impair}
+
+      \If{$N$ est impair}
+      \State $i \gets R[m]$.pop()
+      \State $j \gets R[m']$.pop()
+      \State On choisit $k$ différent de $i$ et $j$. 
+      \State On choisit $p_i$ une personne non-attribuée de la famille $i$.
+      \State On choisit $p_j$ une personne non-attribuée de la famille $j$.
+      \State On choisit $p_k$ une personne non-attribuée de la famille $k$.
+      \State On attribue $p_i \to p_j \to p_k \to p_i$.
+      \State $R[m - 1]$.push($i$)
+      \State $R[m' - 1]$.push($j$) \label{algo:2-3-odd}
+      \If{$R[m]$ est vide} $m \gets m - 1$ \EndIf
+      \If{$R[m']$ est vide} $m' \gets m' - 1$ \EndIf
+      \EndIf
+
+      \vspace{0.5em}
+      \Statex \Comment {Partie gloutonne avec structure de donnée}
+
+      \While{$m > 0$} \label{algo:2-3-while-loop}
+      \State $i \gets R[m]$.pop()
+      \State $j \gets R[m']$.pop()
+      \State On choisit $p_i$ une personne non-attribuée de la famille $i$.
+      \State On choisit $p_j$ une personne non-attribuée de la famille $j$.
+      \State On attribue $p_i \rightleftarrows p_j$.
+
+      \State $R[m - 1]$.push($i$)
+      \State $R[m' - 1]$.push($j$)
+
+      \If{$R[m]$ est vide} $m \gets m - 1$ \EndIf
+      \If{$R[m']$ est vide} $m' \gets m' - 1$ \EndIf
+      \EndWhile
+    \end{algorithmic}
+    \caption{Attribution avec des $2$- ou des $3$-cycles}
+    \label{algo:2-3}
+  \end{algorithm}
+  \showfootnote
+
+  Afin de simplifier les explications, on suppose que, lorsque quelqu'un a eu une attribution, il disparait de la famille.
+  Ainsi, le cardinal d'une famille $i$, que l'on notera $d'_i$, correspond maintenant au nombre de personnes n'ayant pas été attribuées.
+
+  \textbf{Théorème.} \textsl{L'algorithme~\ref{algo:2-3} calcule en $\mathrm{O}(N)$, où $N = \sum_{i=1}^n d_i$, une attribution "Noël canadien" maximisant le nombre de cycles, si cela est possible, ou dit "impossible" si cela n'est pas possible.}
+
+  \textit{Preuve.} L'algorithme~\ref{algo:2-3} maintient quelques invariants :
+  \begin{enumerate}
+    \item pour le rideau de perles, on a que $R[i]$ contient des familles de cardinal $i$ ;
+    \item une fois la ligne~\ref{algo:2-3-line-check} passée, on a toujours $\sum_{i=1}^n d'_i \ge 2 m$ ;
+    \item une fois la ligne~\ref{algo:2-3-odd} passée, on a toujours $\sum_{i=1}^n d'_i$ pair ;
+    \item $m, m'$ correspondent aux deux plus grands cardinaux de familles.
+  \end{enumerate}
+
+  On montre les invariants ci-dessus.
+  \begin{enumerate}
+    \item Initialement, c'est vrai, puis après les ajouts de la partie "initialisation", on a toujours que la famille $i$ est de cardinal $d_i$, et enfin, on attribue a exactement un élément, donc le cardinal décroit de $1$.
+    \item Après~\ref{algo:2-3-line-check}, on a bien l'inégalité, et elle est conservée car, on décroit la somme de $2$ (car deux attributions), et la valeur de $m$ de un, sauf dans le cas où $m$ reste fixée, ce qui correspond à $m = m'$, et dans ce cas, on a bien $\sum_{i=1}^n d_i \ge 2m + 2$ (on a au moins $2$ de leste dans l'inégalité), d'où la conservation.
+    \item On décroît à chaque fois de $2$, et c'est vrai après la ligne~\ref{algo:2-3-odd}.
+    \item On remplit bien $R$ en maintenant cette propriété, et on la conserve bien à chaque tour de boucle.
+  \end{enumerate}
+
+  On n'attribue jamais un cadeau à deux personnes de la même famille car on retire la famille du rideau de perles avant de prendre la famille suivante.
+  Les attributions en $2$-cycles et un éventuel $3$-cycle sont optimales (dans le but de minimiser la taille des cycles), en effet on devrait avoir des $1$-cycles si l'on voulait faire plus court, mais cela n'est pas autorisé.
+
+  Et, il n'y a pas de personne n'ayant pas été attribuée, car, à la fin de l'algorithme, $m = \max_{i \in \llbracket 1,n\rrbracket  } d'_i = 0$, donc toutes les familles ont été complètement attribuée.
+
+  On en conclut que l'algorithme fournit une attribution lorsque la condition $(\star)$ est vérifiée.
+  Ceci justifie également que la condition $(\star)$ est suffisante.
+
+  Avant la boucle de la ligne~\ref{algo:2-3-while-loop}, la complexité est en $\mathrm{O}(N)$.
+  Et, la boucle réalise au plus~$N / 2$ tours de boucles, car on réalise au plus~$(N / 2) \times 2$ attributions (on néglige le $3$-cycle, car il n'a lieu qu'une fois).
+  D'où une complexité en $\mathrm{O}(N)$.
+  \hfill $\square$
+
+  \chapter{Algorithme pour l'unique cycle long.}
+
+  On part de la solution en $2$- et $3$-cycles donné par l'algorithme précédent, et on se donne un algorithme permettant d'agrandir un cycle en ajoutant un $2$-cycle dedans.
+  Ainsi, on commence, soit par un $2$-cycle choisi au hasard, soit par l'éventuel $3$-cycle créé (si $N$ est impair).
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \begin{scope}
+        \node[draw, circle] (a) {A};
+        \node[draw, circle, right of=a] (b) {B};
+        \node[draw, circle, below of=a] (c) {C};
+        \node[draw, circle, right of=c] (d) {D};
+
+        \node[above of=a] (a0) {};
+        \node[above of=b] (b0) {};
+
+        \draw[decorate, decoration=snake, -latex] (b) to[bend right] (b0) to[bend right] (a0) to[bend right] (a);
+
+        \draw[-latex, thick] (a) to (b);
+        \draw[<->, thick] (c) to (d);
+      \end{scope}
+
+      \begin{scope}[shift={(5,0)}]
+        \node[draw, circle] (a) {A};
+        \node[draw, circle, right of=a] (b) {B};
+        \node[draw, circle, below of=a] (c) {C};
+        \node[draw, circle, right of=c] (d) {D};
+
+        \node[above of=a] (a0) {};
+        \node[above of=b] (b0) {};
+
+        \draw[decorate, decoration=snake, -latex] (b) to[bend right] (b0) to[bend right] (a0) to[bend right] (a);
+
+        \draw[-latex, thick] (a) to (d);
+        \draw[-latex, thick] (d) to (c);
+        \draw[-latex, thick] (c) to (b);
+      \end{scope}
+    \end{tikzpicture}
+    \caption{Agrandir un cycle}
+  \end{figure}
+
+  Dans la figure ci-dessus, on distingue les attributions \tikz \draw[->, thick] (0, 0) to (0.5, 0);, qui sont celles donné par l'algorithme précédent, et les attributions \tikz[baseline=-2] \draw[-latex, thick] (0, 0) to (0.5, 0);, qui sont celles générées par l'algorithme de construction de cycles.
+
+  Il est important de justifier la construction.
+  Comme on considère des $2$-cycles, on peut inverser les deux personnes comme on le veut sans casser l'attribution.
+  Ainsi, quitte à permuter C et D, on peut s'assurer que A n'est pas dans la même famille que D, et que C et B ne sont pas dans la même famille non plus.
+  En effet, si avec les deux permutations on ne peut pas garantir cette condition, c'est que A, B, C et D sont dans la même famille.
+  Mais, c'est impossible car notre algorithme maintient l'invariant que l'on conserve une attribution valide.
+
+  \begin{algorithm}
+    \centering
+    \begin{algorithmic}[1]
+      \State On exécute l'algorithme~\ref{algo:2-3}.
+
+      \State Si l'on a ajouté le $3$-cycle dans l'algorithme~\ref{algo:2-3}, et sinon on considère un $2$-cycle (le dernier produit par exemple).
+      On note le cycle considéré $C$.
+
+      \While{il existe un $2$-cycle différent de $C$}
+      \State Soit $p_i \rightleftarrows p_j$ ce $2$-cycle.
+      \State On l'ajoute dans $C$ comme montré sur la figure précédente (en mettant à jour $C$ par la suite).
+      \Statex \Comment{On doit donc faire la disjonction de cas avec les familles de $\mathrm{A}$, $\mathrm{B}$, $\mathrm{C}$ et $\mathrm{D}$. Mais, ça peut se faire en $\mathrm{O}(1)$ si l'on représente une personne comme un couple numéro de famille, numéro de personne dans la famille.}
+      \EndWhile
+    \end{algorithmic}
+    \caption{Calcul d'un cycle de taille maximale}
+    \label{algo:max}
+  \end{algorithm}
+
+  \textbf{Théorème.} \textsl{L'algorithme~\ref{algo:max} renvoie un cycle de longueur maximale (en supposant la condition nécessaire et suffisante précédente) avec une complexité en $\mathrm{O}(N)$ où $N$ est le nombre total de personnes.}
+
+  \textit{Preuve}.
+  On maintient comme invariant que l'on a une attribution valide.
+  Le nombre de cycles dans le graphe diminue strictement, jusqu'à atteindre $1$ : on a donc un unique cycle à la fin de l'algorithme.
+  En effet, ceci est assuré car on produit toujours $N / 2$ $2$-cycles, ou un $3$-cycle et $(N-3) / 2$ $2$-cycles, avec l'algorithme~\ref{algo:2-3}.
+  On a donc moins de $N / 2$ tours de boucle, et on manipule des cycles comme des listes chaînées, donc le traitement dans la boucle se fait en $\mathrm{O}(1)$. (On suppose avoir une pile de cycles pour récupérer les cycles produits par l'algorithme~\ref{algo:2-3}.)
+  D'où la complexité en $\mathrm{O}(N)$.
+  \hfill $\square$
+\end{document}
