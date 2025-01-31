@@ -1,0 +1,427 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{La logique du premier ordre.}
+
+  \section{Les termes.}
+
+  On commence par définir les \textit{termes}, qui correspondent à des objets mathématiques.
+  Tandis que les formules relient des termes et correspondent plus à des énoncés mathématiques.
+
+  \begin{defn}
+    Le langage $\mathcal{L}$ (du premier ordre)
+    est la donnée d'une famille (pas nécessairement finie) de symboles de trois sortes :
+    \begin{itemize}
+      \item les symboles de \textit{constantes}, notées $c$ ;
+      \item les symboles de \textit{fonctions}, avec un entier associé, leur \textit{arité}, notées $f(x_1, \ldots, x_n)$ où $n$ est l'arité ;
+      \item les symboles de \textit{relations}, avec leur arité, notées $\mathcal{R}$, appelés \textit{prédicats}.
+    \end{itemize}
+    Les trois ensembles sont disjoints.
+  \end{defn}
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Les constantes peuvent être vues comme des fonctions d'arité $0$.
+      \item On aura toujours dans les relations : "$=$" d'arité $2$, et "$\bot$" d'arité $0$.
+      \item On a toujours un ensemble de variables $\mathcal{V}$.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{exm}
+    Le langage $\mathcal{L}_\mathrm{g}$ de la théorie des groupes est défini par :
+    \begin{itemize}
+      \item une constante : $c$,
+      \item deux fonctions : $f_1$ d'arité $2$ et $f_2$ d'arité $1$ ;
+      \item la relation $=$.
+    \end{itemize}
+    Ces symboles sont notés usuellement $e$, $*$, $\square^{-1}$ ou bien $0$, $+$, $-$.
+  \end{exm}
+
+  \begin{exm}
+    Le langage $\mathcal{L}_\mathrm{co}$ des corps ordonnés est défini par :
+    \begin{itemize}
+      \item deux constantes $0$ et $1$,
+      \item quatre fonctions $+$, $\times$, $-$ et $\square^{-1}$,
+      \item deux relations $=$ et $\le$.
+    \end{itemize}
+  \end{exm}
+
+  \begin{exm}
+    Le langage $\mathcal{L}_\mathrm{ens}$ de la théorie des ensembles est défini par :
+    \begin{itemize}
+      \item une constante $\emptyset$,
+      \item trois fonctions $\cap$, $\cup$ et $\square^\mathsf{c}$,
+      \item trois relations $=$, $\in$ et $\subseteq$.
+    \end{itemize}
+  \end{exm}
+
+  \begin{defn}
+    \begin{description}
+      \item[Par le haut.]
+        L'ensemble $\mathcal{T}$ des termes sur le langage $\mathcal{L}$ est le plus petit ensemble de mots sur $\mathcal{L} \cup \mathcal{V} \cup \{\verb|(|, \verb|)|, \verb|,|\}$ tel
+        \begin{itemize}
+          \item qu'il contienne $\mathcal{V}$ et les constantes ;
+          \item qui est stable par application des fonctions, c'est-à-dire que pour des termes $t_1, \ldots, t_n$ et un symbole de fonction $f$ d'arité $n$, alors $f(t_1, \ldots, t_n)$ est un terme.\footnote{Attention : le "$\ldots$" n'est pas un terme mais juste une manière d'écrire qu'on place les termes à côté des autres.}
+        \end{itemize}
+      \item[Par le bas.]
+        On pose \[
+          \mathcal{T}_0 = \mathcal{V} \cup \{c  \mid c \text{ est un symbole de constante de } \mathcal{L} \} 
+        ,\] 
+        puis \[
+        \mathcal{T}_{k+1} = \mathcal{T}_k \cup \mleft\{\,f(t_1, \ldots t_n) \;\middle|\;
+        \begin{array}{c}
+          f \text{ fonction d'arité } n\\
+          t_1, \ldots, t_n \in \mathcal{T}_k
+        \end{array}\,\mright\}  
+        ,\] et enfin \[
+        \mathcal{T} = \bigcup_{n \in \mathds{N}} \mathcal{T}_n
+        .\]
+    \end{description}
+  \end{defn}
+
+  \begin{rmk}
+    Dans la définition des termes, un n'utilise les relations.
+  \end{rmk}
+
+  \begin{exm}
+    \begin{itemize}
+      \item Dans $\mathcal{L}_\mathrm{g}$, $*(*(x,\square^{-1}(y)), e)$ est un terme, qu'on écrira plus simplement en $(x * y^{-1}) * e$.
+      \item Dans $\mathcal{L}_\mathrm{co}$, $(x + x) + (-0)^{-1}$ est un terme.
+      \item Dans $\mathcal{L}_\mathrm{ens}$, $(\emptyset^\mathsf{c} \cup \emptyset) \cap (x \cup y)^\mathsf{c}$ est un terme.
+    \end{itemize}
+  \end{exm}
+
+  \begin{defn}
+    Si $t$ et $u$ sont des termes et $x$ est une variable, alors~$t[x:u]$ est le mot dans lequel les lettres de  $x$ ont été remplacées par le mot $u$.
+    Le mot $t[x:u]$ est un terme (preuve en exercice).
+  \end{defn}
+
+  \begin{exm}
+    Avec $t = (x * y^{-1}) * e$ et $u = x * e$, alors on a \[
+      t[x:u] = ((x*e) * y^{-1}) * e
+    .\]
+  \end{exm}
+
+  \begin{defn}
+    \begin{itemize}
+      \item Un terme \textit{clos} est un terme sans variable (par exemple $(0 + 0)^{-1}$).
+      \item La \textit{hauteur} d'un terme est le plis petit $k$ tel que $t \in \mathcal{T}_k$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exo}
+    \begin{itemize}
+      \item Énoncer et prouver le lemme de lecture unique pour les termes.
+      \item Énoncer et prouver un lemme de bijection entre les termes et un ensemble d'arbres étiquetés.
+    \end{itemize}
+  \end{exo}
+
+  \section{Les formules.}
+
+  \begin{defn}
+    \begin{itemize}
+      \item Les formules sont des mots sur l'alphabet \[ \mathcal{L} \cup \mathcal{V} \cup \{\verb|(|, \verb|)|, \verb|,|, \exists, \forall, \land, \lor, \lnot, \to \} .\] 
+      \item Une \textit{formule atomique} est une formule de la forme $\mathcal{R}(t_1, \ldots, t_n)$ où $\mathcal{R}$ est un symbole de relation d'arité $n$ et $t_1, \ldots, t_n$ des termes.
+      \item L'ensemble des \textit{formules} $\mathcal{F}$ du langage $\mathcal{L}$ est défini par 
+        \begin{itemize}
+          \item on pose $\mathcal{F}_0$ l'ensemble des formules atomiques ;
+          \item on pose $\mathcal{F}_{k+1} = \mathcal{F}_k \cup \mleft\{\,
+              \begin{array}{c}
+                (\lnot F)\\
+                (F \to G)\\
+                (F \lor G)\\
+                (F \land G)\\
+                \exists x\: F\\
+                \exists x\: G\\
+              \end{array}
+            \;\middle|\; 
+            \begin{array}{c}
+              F,G \in \mathcal{F}_k\\
+              x \in \mathcal{V}
+            \end{array}
+          \,\mright\}$ ;
+        \item et on pose enfin $\mathcal{F} = \bigcup_{n \in \mathds{N}} \mathcal{F}_n$.
+        \end{itemize}
+    \end{itemize}
+  \end{defn}
+
+  \begin{exo}
+    La définition ci-dessus est "par le bas". Donner une définition par le haut de l'ensemble $\mathcal{F}$.
+  \end{exo}
+
+  \begin{exm}
+    \begin{itemize}
+      \item Dans $\mathcal{L}_\mathrm{g}$, un des axiomes de la théorie des groupes s'écrit \[
+        \forall x\: \exists x\: (x * y = e \land y * x = e)
+        .\]
+      \item Dans $\mathcal{L}_\mathrm{co}$, l'énoncé "le corps est de caractéristique 3" s'écrit \[
+        \forall x\: (x + (x + x) = 0)
+        .\] 
+      \item Dans $\mathcal{L}_\mathrm{ens}$, la loi de De Morgan s'écrit \[
+          \forall x\: \forall y\: (x^\mathsf{c} \cup y^\mathsf{c} = (x \cap y)^\mathsf{c})
+        .\]
+    \end{itemize}
+  \end{exm}
+
+  \begin{exo}
+    \begin{itemize}
+      \item Donner et montrer le lemme de lecture unique.
+      \item Énoncer et donner un lemme d'écriture en arbre.
+    \end{itemize}
+  \end{exo}
+
+  \begin{rmk}[Conventions d'écriture.]
+    On note :
+    \begin{itemize}
+      \item $x \le  y$ au lieu de ${\le}(x,y)$ ;
+      \item $\exists x \ge 0\: (F)$ au lieu de $\exists x\: (x \ge 0 \land F)$ ;
+      \item $\forall x \ge 0\: (F)$ au lieu de $\forall x\: (x \ge 0 \to F)$ ;
+      \item $A \leftrightarrow B$ au lieu de $(A \to B) \land (B \to A)$ ;
+      \item $t \neq u$ au lieu de $\lnot (t = u)$.
+    \end{itemize}
+
+    On enlèves les parenthèses avec les conventions de priorité 
+    \begin{enumerate}
+      \item[0.] les symboles de relations (le plus prioritaire) ;
+      \item les symboles $\lnot, \exists, \forall$ ;
+      \item les symboles $\land$ et $\lor$ ;
+      \item le symbole $\to$ (le moins prioritaire).
+    \end{enumerate}
+  \end{rmk}
+
+  \begin{exm}
+    Ainsi, $\forall x \: A \land B \to \lnot C \lor D$ s'écrit \[
+      (((\forall x\:A) \land B) \to ((\lnot C) \lor D))
+    .\]
+  \end{exm}
+
+  \begin{rmk}
+    Le calcul propositionnel est un cas particulier de la logique du premier ordre
+    où l'on ne manipule que des relations d'arité $0$ (pas besoin des fonctions et des variables) : les "variables" du calcul propositionnel sont des formules atomiques ; et on n'a pas de relation "$=$".
+  \end{rmk}
+
+  \begin{rmk}
+    On ne peut pas exprimer \textit{a priori} :
+    \begin{itemize}
+      \item  des quantifications sur en ensemble\footnote{En dehors de $\mathcal{L}_\mathrm{ens}$, en tout cas.} ;
+      \item "$\exists n\ \exists x_1\: \ldots \: \exists x_n $" une formule qui dépend d'un paramètre ;
+      \item le principe de récurrence : si on a $\mathcal{P}(0)$ pour une propriété $\mathcal{P}$ et que si $\mathcal{P}(n) \to \mathcal{P}(n+1)$ alors on a $\mathcal{P}(n)$ pour tout $n$.
+    \end{itemize}
+  \end{rmk}
+
+  Quelques définitions techniques qui permettent de manipuler les formules.
+
+  \begin{defn}
+    L'ensemble des sous-formules de $F$, noté $\mathrm{S}(F)$ est défini par induction :
+    \begin{itemize}
+      \item si $F$ est atomique, alors on définit $\mathrm{S}(F) = \{F\}$ ;
+      \item si $F = F_1 \oplus F_2$ (avec $\oplus$ qui est $\lor$, $\to$ ou $\land$)
+         alors on définit~ $\mathrm{S}(F) = \mathrm{S}(F_1) \cup \mathrm{S}(F_2) \cup \{F\}$ ;
+      \item si $F = \lnot F_1$, ou $F = \mathsf{Q}x\: F_1$ avec~$\mathsf{Q} \in \{\forall, \exists\}$, alors on définit $\mathrm{S}(F) = \mathrm{S}(F_1) \cup \{F\}$.
+    \end{itemize}
+    C'est l'ensemble des formules que l'on voit comme des sous-arbres de l'arbre équivalent à la formule $F$.
+  \end{defn}
+
+  \begin{defn}
+    \begin{itemize}
+      \item La \textit{taille} d'une formule, est le nombre de connecteurs ($\lnot$,  $\lor$,  $\land$,  $\to$), et de quantificateurs ($\forall $, $\exists $).
+      \item La racine de l'arbre est 
+        \begin{itemize}
+          \item rien su la formule est atomique ;
+          \item "$\oplus$" si $F = F_1 \oplus F_2$ avec $\oplus$ un connecteur (binaire ou unaire) ;
+          \item "$\mathsf{Q}$" si $F = \mathsf{Q}x\: F_1$ avec $\mathsf{Q}$ un quantificateur.
+        \end{itemize}
+    \end{itemize}
+  \end{defn}
+
+  \begin{defn}
+    \begin{itemize}
+      \item Une \textit{occurrence} d'une variable est un endroit où la variable apparait dans la formule (\textit{i.e.} une feuille étiquetée par cette variable).
+      \item Une occurrence d'une variable est \textit{liée} si elle se trouve dans une sous-formule dont l'opérateur principal est un quantificateur appelé à cette variable (\textit{i.e.} un $\forall x\: F'$ ou un $\exists x\: F'$).
+      \item Une occurrence d'une variable est \textit{libre} quand elle n'est pas liée.
+      \item Une variable est libre si elle a au moins une occurrence libre, sinon elle est liée.
+    \end{itemize}
+  \end{defn}
+
+  \begin{rmk}
+    On note $F(x_1, \ldots, x_n)$ pour dire que les variables libres sont $F$ sont parmi $\{x_1, \ldots, x_n\}$.
+  \end{rmk}
+
+  \begin{defn}
+    Une formule est \textit{close} si elle n'a pas de variables libres.
+  \end{defn}
+
+  \begin{defn}[Substitution]
+    On note $F[x := t]$ la formule obtenue en remplaçant toutes les occurrences libres de  $x$ par $t$, après renommage éventuel des occurrences des variables liées de $F$ qui apparaissent dans $t$.
+  \end{defn}
+
+  \begin{defn}[Renommage]
+    On donne une définition informelle et incomplète ici.
+    On dit que les formules $F$ et $G$ sont $\alpha$-équivalentes si elle sont syntaxiquement identiques à un renommage près des occurrences liées des variables.
+  \end{defn}
+
+  \begin{exm}
+    On pose \[
+    F(x,z) := \forall y\:(x * y = y * z) \land \forall x\: (x * x = 1)
+    ,\]
+    et alors 
+    \begin{itemize}
+      \item $F(z,z) = F[x := z] = \forall y\:(z * y = y * z) \land \forall x\: (x * x = 1)$ ;
+      \item $F(y^{-1}, x) = F[x := y^{-1}] = \forall {\color{nicered} u}\:(y^{-1} * {\color{nicered} u} = {\color{nicered} u} * z) \land \forall x\: (x * x = 1)$.
+    \end{itemize}
+    On a procédé à un renommage de $y$ à ${\color{red} u}$.
+  \end{exm}
+
+  \section{Les démonstrations en déduction naturelle.}
+
+  \begin{defn}
+    Un \textit{séquent} est un coupe noté $\Gamma \vdash F$ (où $\vdash $ se lit "montre" ou "thèse") tel que $\Gamma$ est un ensemble de formules appelé \textit{contexte} (\textit{i.e.} l'ensemble des hypothèses), la formule $F$ est la \textit{conséquence} du séquent.
+  \end{defn}
+
+  \begin{rmk}
+    Les formules ne sont pas nécessairement closes. Et on note souvent $\Gamma$ comme une liste.
+  \end{rmk}
+
+  \begin{defn}
+    On dit que $\Gamma \vdash F$ est \textit{prouvable}, \textit{démontrable} ou \textit{dérivable}, s'il peut être obtenu par une suite finie de règles (\textit{c.f.} ci-après).
+    On dit qu'une formule $F$ est \textit{prouvable} si $\emptyset\vdash F$ l'est.
+  \end{defn}
+
+  \begin{defn}[Règles de la démonstration]
+    Une règle s'écrit \[
+    \begin{prooftree}
+      \hypo{\text{\textit{prémisses} : des séquents}}
+      \infer 1[\text{nom de la règle}] {\text{\textit{conclusion} : un séquent}}
+    \end{prooftree}
+    .\]
+
+    \begin{description}
+      \item[Axiome.]
+        \[
+        \begin{prooftree}
+          \infer 0[\mathsf{ax}] {\Gamma, A \vdash A}
+        \end{prooftree}
+        \]
+      \item[Affaiblissement.]
+        \[
+          \begin{prooftree}
+            \hypo{\Gamma \vdash A}
+            \infer 1[\mathsf{aff}] {\Gamma, B \vdash A}
+          \end{prooftree}
+        \]
+      \item[Implication.]
+        \[
+        \begin{prooftree}
+          \hypo{\Gamma, A \vdash B}
+          \infer 1[\to_\mathsf{i}] {\Gamma \vdash A \to B}
+        \end{prooftree}
+        \quad\quad
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A \to B}
+          \hypo{\Gamma \vdash A}
+          \infer 2[\to_\mathsf{e}\footnote{Aussi appelée \textit{modus ponens}}] {\Gamma \vdash B}
+        \end{prooftree}
+        \]
+      \item[Conjonction.]
+        \[
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A}
+          \hypo{\Gamma \vdash B}
+          \infer 2[\land_\mathsf{i}] {\Gamma \vdash A \land B}
+        \end{prooftree}
+        \quad
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A \land B}
+          \infer 1[\lor_\mathsf{e}^\mathsf{g}]{\Gamma \vdash A}
+        \end{prooftree}
+        \quad
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A \land B}
+          \infer 1[\lor_\mathsf{e}^\mathsf{d}]{\Gamma \vdash B}
+        \end{prooftree}
+        \] 
+      \item[Disjonction.]
+        \[
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A}
+          \infer 1[\lor_\mathsf{i}^\mathsf{g}]{\Gamma \vdash A \lor B}
+        \end{prooftree}
+        \quad
+        \begin{prooftree}
+          \hypo{\Gamma \vdash B}
+          \infer 1[\lor_\mathsf{i}^\mathsf{d}]{\Gamma \vdash A \lor B}
+        \end{prooftree}
+        \]~ \[
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A \lor B}
+          \hypo{\Gamma, A \vdash C}
+          \hypo{\Gamma, B \vdash C}
+          \infer 3[\lor_\mathsf{e}\footnote{C'est un raisonnement par cas}]{\Gamma \vdash C}
+        \end{prooftree}
+        .\] 
+      \item[Négation.]
+        \[
+        \begin{prooftree}
+          \hypo{\Gamma, A \vdash \bot}
+          \infer 1[\lnot_\mathsf{i}]{\Gamma \vdash \lnot A}
+        \end{prooftree}
+        \quad\quad
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A}
+          \hypo{\Gamma \vdash \lnot A}
+          \infer 2[\lnot_\mathsf{e}]{\Gamma \vdash \bot}
+        \end{prooftree}
+        \]
+      \item[Absurdité classique.]
+        \[
+        \begin{prooftree}
+          \hypo{\Gamma, \lnot A \vdash \bot}
+          \infer 1[\bot_\mathsf{e}]{\Gamma \vdash A}
+        \end{prooftree}
+        \]
+        (En logique intuitionniste, on retire l'hypothèse $\lnot A$ dans la prémisse.)
+      \item[Quantificateur universel.]
+        \[
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A}
+          \infer[left label=
+          \begin{array}{r}
+            \text{si $x$ n'est pas libre}\\
+            \text{dans les formules de $\Gamma$}
+          \end{array}
+          ] 1[\forall_\mathsf{i}]{\Gamma \vdash \forall x \: A}
+        \end{prooftree}
+        \]~\[
+        \begin{prooftree}
+          \hypo{\Gamma \vdash \forall x\:A}
+          \infer[left label=
+          \begin{array}{r}
+            \text{quitte à renommer les}\\
+            \text{variables liées de $A$ qui}\\
+            \text{apparaissent dans $t$}
+          \end{array}
+          ] 1[\forall_\mathsf{e}]{\Gamma \vdash A[x := t]}
+        \end{prooftree}
+        \]
+      \item[Quantificateur existentiel.]
+        \[
+          \begin{prooftree}
+            \hypo{\Gamma \vdash A[x := t]}
+            \infer 1[\exists_\mathsf{i}]{\Gamma \vdash \exists x \: A}
+          \end{prooftree}
+         \]~
+        \[
+          \begin{prooftree}
+            \hypo{\Gamma \vdash \exists x\: A}
+            \hypo{\Gamma, A \vdash C}
+            \infer[left label={
+              \begin{array}{r}
+                \text{avec $x$ ni libre dans $C$ ou}\\
+                \text{dans les formules de $\Gamma$}
+              \end{array}
+            }] 2[\exists_\mathsf{e}]{\Gamma \vdash C}
+          \end{prooftree}
+         \]
+    \end{description}
+  \end{defn}
+\end{document}

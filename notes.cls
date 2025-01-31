@@ -23,7 +23,7 @@
 \RequirePackage{mleftright} % scale sets like { BIG THING HERE |  }
 \RequirePackage{mathtools}
 \RequirePackage{tikz}
-\usetikzlibrary{automata, positioning, arrows, tikzmark, shapes.geometric, hobby, patterns, shapes.multipart}
+\usetikzlibrary{automata, positioning, arrows, tikzmark, shapes.geometric, hobby, patterns, shapes.multipart, decorations.pathmorphing}
 \RequirePackage{svg}
 \RequirePackage{subcaption}
 \RequirePackage{soulutf8}
