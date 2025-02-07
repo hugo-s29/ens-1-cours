@@ -3,17 +3,13 @@ cd /Users/hugos29/Documents/ecole/ens1/
 # ==========
 # SEMESTRE 2
 # ==========
-cp algebre2/cours/main.pdf ../web/public/data/ens1/algebre2.pdf
-cp algebre2/cours/chap01.pdf ../web/public/data/ens1/algebre2-chap01.pdf
-
-cp algebre2/td/main.pdf ../web/public/data/ens1/algebre2-td.pdf
-cp algebre2/td/td01.pdf ../web/public/data/ens1/algebre2-td01.pdf
 
 cp algo2/main.pdf ../web/public/data/ens1/algo2.pdf
 
 cp log/main.pdf ../web/public/data/ens1/logique.pdf
 cp log/chap00.pdf ../web/public/data/ens1/logique-chap00.pdf
 cp log/chap01.pdf ../web/public/data/ens1/logique-chap01.pdf
+cp log/chap02.pdf ../web/public/data/ens1/logique-chap02.pdf
 
 cp proba/main.pdf ../web/public/data/ens1/proba.pdf
 cp proba/chap00.pdf ../web/public/data/ens1/proba-chap00.pdf
