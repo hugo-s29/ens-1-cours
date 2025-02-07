@@ -30,7 +30,3 @@ Bonne lecture !
 - **Proba.** Probabilités ▶ [/proba](/proba/) (???)
 - **ProFon.** Projet Fonctionnel ▶ [/profon](/profon/) (Quelques notes de cours)
 - **EPS.** Enseignement en Programmation Sportive ▶ [/eps](/eps/) ((Tentatives de) solutions aux problèmes)
-
-**_Dept. Mathématiques_**
-
-- **Algèbre 2.** ▶ [/algebre2](/algebre2/) (Notes de cours et TDs)
