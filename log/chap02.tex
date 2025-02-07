@@ -14,7 +14,7 @@
     \begin{itemize}
       \item les symboles de \textit{constantes}, notées $c$ ;
       \item les symboles de \textit{fonctions}, avec un entier associé, leur \textit{arité}, notées $f(x_1, \ldots, x_n)$ où $n$ est l'arité ;
-      \item les symboles de \textit{relations}, avec leur arité, notées $\mathcal{R}$, appelés \textit{prédicats}.
+      \item les symboles de \textit{relations}, avec leur arité, notées $R$, appelés \textit{prédicats}.
     \end{itemize}
     Les trois ensembles sont disjoints.
   \end{defn}
@@ -121,7 +121,7 @@
   \begin{defn}
     \begin{itemize}
       \item Les formules sont des mots sur l'alphabet \[ \mathcal{L} \cup \mathcal{V} \cup \{\verb|(|, \verb|)|, \verb|,|, \exists, \forall, \land, \lor, \lnot, \to \} .\] 
-      \item Une \textit{formule atomique} est une formule de la forme $\mathcal{R}(t_1, \ldots, t_n)$ où $\mathcal{R}$ est un symbole de relation d'arité $n$ et $t_1, \ldots, t_n$ des termes.
+      \item Une \textit{formule atomique} est une formule de la forme $R(t_1, \ldots, t_n)$ où $R$ est un symbole de relation d'arité $n$ et $t_1, \ldots, t_n$ des termes.
       \item L'ensemble des \textit{formules} $\mathcal{F}$ du langage $\mathcal{L}$ est défini par 
         \begin{itemize}
           \item on pose $\mathcal{F}_0$ l'ensemble des formules atomiques ;
@@ -424,4 +424,342 @@
          \]
     \end{description}
   \end{defn}
+  % TODO
+
+
+  \section{La sémantique.}
+
+  \begin{defn}
+    Soit $\mathcal{L}$ un langage de la sémantique du premier ordre.
+    On appelle \textit{interprétation} (ou \textit{modèle}, ou \textit{structure}) du langage $\mathcal{L}$ l'ensemble $\mathcal{M}$ des données suivantes :
+    \begin{itemize}
+      \item un ensemble non vide, noté $|\mathcal{M}|$, appelé \textit{domaine} ou \textit{ensemble de base} de $\mathcal{M}$ ;
+      \item pour chaque symbole $c$ de constante, un élément $c_\mathcal{M}$ de $|\mathcal{M}|$ ;
+      \item pour chaque symbole $f$ de fonction $n$-aire, une fonction $f_\mathcal{M} : |\mathcal{M}|^n \to |\mathcal{M}|$ ;
+      \item pour chaque symbole $R$ de relation $n$-aire (sauf pour l'égalité "$=$"), un sous-ensemble $R_\mathcal{M}$ de $|\mathcal{M}|^n$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{rmk}
+    \begin{itemize}
+      \item La relation "$=$" est toujours interprétée par la vraie égalité :
+        \[
+        \{(a,a)  \mid a \in |\mathcal{M}|\} 
+        .\]
+      \item On note, par abus de notation, $\mathcal{M}$ pour $|\mathcal{M}|$.
+      \item Par convention, $|\mathcal{M}|^0 = \{\emptyset\}$.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{exm}
+      Avec $\mathcal{L}_\mathrm{corps} = \{0, 1, +, \times , -, \square^{-1}\} $, on peut choisir 
+      \begin{itemize}
+        \item $|\mathcal{M}| = \mathds{R}$ avec $0_\mathds{R}$, $1_\mathds{R}$, $+_\mathds{R}$, $\times_\mathds{R}$, $-_\mathds{R}$ et $\square^{-1}_\mathds{R}$ ;
+        \item ou $|\mathcal{M}| = \mathds{R}$ avec $2_\mathds{R}$, $2_\mathds{R}$, $-_\mathds{R}$, $+_\mathds{R}$, \textit{etc}.
+      \end{itemize}
+  \end{exm}
+
+  Définissions la \textit{vérité}.
+
+  \begin{defn}
+    Soit $\mathcal{M}$ une interprétation de $\mathcal{L}$.
+    \begin{itemize}
+      \item Un \textit{environnement} est une fonction de l'ensemble des variables dans $|\mathcal{M}|$.
+      \item Si $e$ est un environnement et $a \in |\mathcal{M}|$, on note $e[x:=a]$ l'environnement $e'$ tel que $e'(x) = a$ et pour $y \neq x$, $e(y) = e'(y)$.
+      \item La \textit{valeur} d'un terme $t$ dans l'environnement $e$, noté $\Val_\mathcal{M}(t,e)$, est définie par induction sur l'ensemble des termes de la façon suivante :
+        \begin{itemize}
+          \item $\Val_\mathcal{M}(c, e) = c_\mathcal{M}$ si $c$ est une constante ;
+          \item $\Val_\mathcal{M}(c,e) = e(x)$ si $x$ est une variable ;
+          \item $\Val_\mathcal{M}(f(t_1, \ldots, t_n), e) = f_\mathcal{M}(\Val_\mathcal{M}(t_1, e), \ldots, \Val_\mathcal{M}(t_n, e))$.
+        \end{itemize}
+    \end{itemize}
+  \end{defn}
+
+  \begin{rmk}
+    La valeur est $\Val_\mathcal{M}(t, e)$ est un élément de $|\mathcal{M}|$.
+  \end{rmk}
+
+  \begin{exm}
+    Dans $\mathcal{L}_\mathrm{arith} = \{0, 1, +, \times\}$, avec le modèle \[
+    \mathcal{M} : \mathds{N}, 0_\mathds{N}, 1_\mathds{N}, +_\mathds{N}, \times_\mathds{N}
+    ,\] et l'environnement \[
+    e : \quad x_1 \mapsto 2_\mathds{N} \quad x_2 \mapsto 0_\mathds{N} \quad x_3 \mapsto 3_\mathds{N}
+    ,\] 
+    alors la valeur du terme $t := (1 \times x_1) + (x_2 \times x_3) + x_2$ est $2_\mathds{N} = (1 \times 2) + (0 \times 3) + 0 $.
+  \end{exm}
+
+  \begin{lem}
+    La valeur $\Val_\mathcal{M}(t, e)$ ne dépend que de la valeur de $e$ sur les variables de $t$.
+    \qed
+  \end{lem}
+
+  \begin{nota}
+    \begin{itemize}
+      \item Lorsque cela est possible, on oublie $\mathcal{M}$ et $e$ dans la notation, et on note $\Val(t)$.
+      \item À la place de  $\Val_\mathcal{M}(t,e)$  quand $x_1, \ldots, x_n$ sont les variables de $t$ et $e(x_1) = a_1, \ldots, e(x_n) = a_n$, on note $t[a_1, \ldots, a_n]$ ou aussi~$t[x_1 := a_1, \ldots, x_n := a_n]$.
+        C'est un \textit{terme à paramètre}, mais attention ce n'est \textit{\textbf{ni un terme, ni une substitution}}.
+    \end{itemize}
+  \end{nota}
+
+  \begin{defn}
+    Soit $\mathcal{M}$ une interprétation d'un langage $\mathcal{L}$.
+    La \textit{valeur} d'une formule $F$ de $\mathcal{L}$ dans l'environnement $e$ est un élément de $\{0,1\}$ noté $\Val_\mathcal{M}(F, e)$ et définie par induction sur l'ensemble des formules par 
+
+    {
+      \footnotesize
+    \begin{itemize}
+      \item $\Val_\mathcal{M}(R(t_1, \ldots, t_n), e) = 1$  ssi $(\Val_\mathcal{M}(t_1, e), \ldots, \Val_\mathcal{M}(t_n ,e)) \in R_\mathcal{M}$ ;
+      \item $\Val_\mathcal{M}(\bot, e) = 0$ ;
+      \item $\Val_\mathcal{M}(\lnot F, e) = 1 - \Val_\mathcal{M}(F, e)$ ;
+      \item $\Val_\mathcal{M}(F \land G, e) = 1$ ssi $\Val_\mathcal{M}(F, e) = 1$ et $\Val_\mathcal{M}(G, e) = 1$ ;
+      \item $\Val_\mathcal{M}(F \lor G, e) = 1$ ssi $\Val_\mathcal{M}(F, e) = 1$ ou $\Val_\mathcal{M}(G, e) = 1$ ;
+      \item $\Val_\mathcal{M}(F \to G, e) = 1$ ssi $\Val_\mathcal{M}(F, e) = 0$ ou $\Val_\mathcal{M}(G, e) = 1$ ;
+      \item $\Val_\mathcal{M}(\forall x\:F, e) = 1$ ssi pour tout $a \in |\mathcal{M}|$, $\Val_\mathcal{M}(F, e[x := a]) = 1$ ;
+      \item $\Val_\mathcal{M}(\exists x\:F, e) = 1$ ssi il existe $a \in |\mathcal{M}|$, $\Val_\mathcal{M}(F, e[x := a]) = 1$.
+    \end{itemize}
+    }
+  \end{defn}
+
+
+  \begin{rmk}
+    \begin{itemize}
+      \item On se débrouille pour que les connecteurs aient leur sens courant, les "mathématiques naïves".
+      \item Dans le cas du calcul propositionnel, si $R$ est d'arité $0$, \textit{i.e.} une variable propositionnelle, comme $|\mathcal{M}|^0 = \{\emptyset\}$ alors on a deux possibilité :
+        \begin{itemize}
+          \item ou bien $R = \emptyset$, et alors on convient que $\Val_\mathcal{M}(R, e) = 0$ ;
+          \item ou bien $R = \{\emptyset\} $, et alors on convient que $\Val_\mathcal{M}(R, e) = 1$.
+        \end{itemize}
+    \end{itemize}
+  \end{rmk}
+
+  \begin{rmk}
+    On verra plus tard qu'on peut construire les entiers avec 
+    \begin{itemize}
+      \item $0 : \emptyset$,
+      \item $1 : \{\emptyset\}$,
+      \item $2 : \{\emptyset, \{\emptyset\}\}$,
+      \item $\;\vdots \quad \vdots$
+      \item  $n + 1 : n \cup \{n\}$,
+      \item $\;\vdots \qquad \vdots$
+    \end{itemize}
+  \end{rmk}
+
+  \begin{nota}
+    À la place de $\Val_\mathcal{M}(F, e) = 1$, on notera $\mathcal{M}, e \models F$ ou bien~$\mathcal{M} \models F$.
+    On dit que $\mathcal{M}$ \textit{satisfait} $F$, que $\mathcal{M}$ est un \textit{modèle} de $F$ (dans l'environnement $e$), que $F$ est est vraie dans $\mathcal{M}$.
+  \end{nota}
+
+  \begin{lem}
+    La valeur $\Val_\mathcal{M}(F, e)$ ne dépend que de la valeur de~$e$ sur les variables libres de $F$.
+  \end{lem}
+  \begin{prv}
+    En exercice.
+  \end{prv}
+
+  \begin{crlr}
+    Si $F$ est close, alors $\Val_\mathcal{M}(F, e)$ ne dépend pas de $e$ et on note $\mathcal{M} \models F$ ou $\mathcal{M} \not\models F$.
+  \end{crlr}
+
+  \begin{rmk}
+    Dans le cas des formules closes, on doit passer un environnement à cause de $\forall $ et $\exists $.
+  \end{rmk}
+
+  \begin{nota}
+    On note $F[a_1, \ldots, a_n]$ pour $\Val_\mathcal{M}(F, e)$ avec $e(x_1) = a_1, \ldots, e(x_n) = a_n$.
+    C'est une \textit{formule à paramètres}, mais ce n'est \textit{\textbf{pas une formule}}.
+  \end{nota}
+
+
+  \begin{exm}
+    Dans $\mathcal{L} = \{S\}$ où $S$ est une relation binaire, on considère deux modèles :
+    \begin{itemize}
+      \item $\mathcal{N} : |\mathcal{N}| = \mathds{N}$ avec $S_\mathcal{N} = \{(x,y)  \mid x < y\}$,
+      \item $\mathcal{R} : |\mathcal{R}| = \mathds{R}$ avec $S_\mathcal{R} = \{(x,y)  \mid x < y\}$ ;
+    \end{itemize}
+    et deux formules
+    \begin{itemize}
+      \item $F = \forall x \: \forall y \: (S\: x \: y \to \exists z\:(S \: x \: z \land S \: z \: y))$,
+      \item $G = \exists x \: \forall y \: (x = y \lor S \: x \: y)$ ;
+    \end{itemize}
+    alors on a 
+    \[
+    \mathcal{N} \not\models F \quad \mathcal{R} \models F \quad \mathcal{N} \models G \quad \mathcal{R} \not\models G
+    .\]
+    En effet, la formule $F$ représente le fait d'être un ordre dense, et $G$ d'avoir un plus petit élément.
+  \end{exm}
+
+  \begin{defn}
+    Dans un langage $\mathcal{L}$, une formule $F$ est un \textit{théorème} (\textit{logique}) si pour toute structure $\mathcal{M}$ et tout environnement $e$, on a $\mathcal{M}, e \models F$.
+  \end{defn}
+
+  \begin{exm}
+    Quelques théorèmes simples :
+    $\forall x \: \lnot \bot$, et $\forall x \: x = x$ et même $x = x$ car on ne demande pas que la formule soit clause.
+
+    Dans $\mathcal{L}_\mathrm{g} = \{e, *, \square^{-1}\}$, on considère deux formules 
+    \begin{itemize}
+      \item $F = \forall x \: \forall y \: \forall z \: ((x * (y * z) = (x * y) * z) \land x * e = e * x = x \land \exists t \: (x * t = e \land t * x = e))$ ;
+      \item et $G = \forall e' = \forall e'\: (\forall x\: (x * e' = e' * x = x) \to  e = e')$.
+    \end{itemize}
+    Aucun des deux n'est un théorème (il n'est vrai que dans les groupes pour $F$ (c'est même la définition de groupe) et dans les monoïdes pour $G$ (unicité du neutre)), mais $F \to G$ est un théorème logique.
+  \end{exm}
+
+  \begin{defn}
+    Soient $\mathcal{L}$ et $\mathcal{L}'$ deux langages. On dit que $\mathcal{L}'$ \textit{enrichit} $\mathcal{L}$ ou que $\mathcal{L}$ est une \textit{restriction}  de $\mathcal{L}'$  si $\mathcal{L} \subseteq \mathcal{L}'$.
+
+    Dans ce cas, si $\mathcal{M}$ est une interprétation de $\mathcal{L}$, et si $\mathcal{M}'$ est une interprétation de $\mathcal{L}'$ alors on dit que $\mathcal{M}'$ est un \textit{enrichissement} de $\mathcal{M}$ ou que $\mathcal{M}$ est une \textit{restriction} de $\mathcal{M}'$ ssi $|\mathcal{M}| = |\mathcal{M}'|$ et chaque symbole de $\mathcal{L}$ a la même interprétation dans $\mathcal{M}$ et $\mathcal{M}'$, \textit{i.e.} du point de vue de $\mathcal{L}$, $\mathcal{M}$ et $\mathcal{M}'$ sont les mêmes.
+  \end{defn}
+
+  \begin{exm}
+    Avec $\mathcal{L} = \{e, *\}$ et $\mathcal{L}' = \{e, *, \square^{-1}\}$ alors $\mathcal{L}'$ est une extension de $\mathcal{L}$.
+    On considère 
+    \begin{itemize}
+      \item $\mathcal{M} : \quad |\mathcal{M}| = \mathds{Z} \quad e_\mathcal{M} = 0_\mathds{Z} \quad *_\mathcal{M} = +_\mathds{Z}$ ;
+      \item $\mathcal{M}' : \quad |\mathcal{M}'| = \mathds{Z} \quad e_\mathcal{M'} = 0_\mathds{Z} \quad *_\mathcal{M'} = +_\mathds{Z} \quad \square^{-1}_\mathcal{M'} = \mathrm{id}_\mathds{Z}$,
+    \end{itemize}
+    et alors $\mathcal{M}'$ est une extension de $\mathcal{M}$.
+  \end{exm}
+
+  \begin{prop}
+    Si $\mathcal{M}$ une interprétation de $\mathcal{L}$ est un enrichissement de $\mathcal{M}'$, une interprétation de $\mathcal{L}'$, alors pour tout environnement $e$, 
+    \begin{enumerate}
+      \item si $t$ est un terme de $\mathcal{L}$, alors $\Val_\mathcal{M}(t, e) = \Val_{\mathcal{M}'}(t, e)$ ;
+      \item si $F$ est une formule de $\mathcal{L}$ alors $\Val_\mathcal{M}(F, e) = \Val_\mathcal{M'}(F, e)$.
+    \end{enumerate}
+  \end{prop}
+  \begin{prv}
+    En exercice.
+  \end{prv}
+
+  \begin{crlr}
+    La vérité d'une formule dans une interprétation ne dépend que de la restriction de cette interprétation au langage de la formule.
+    \qed
+  \end{crlr}
+
+  \begin{defn}
+    Deux formules $F$ et $G$ sont \textit{équivalentes} si $F \leftrightarrow G$ est un théorème logique.
+  \end{defn}
+
+  \begin{prop}
+    Toute formule est équivalente à une formule n'utilisant que les connecteurs logiques $\lnot$, $\lor$ et $\exists$.
+    \qed
+  \end{prop}
+
+
+  \begin{defn}
+    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$.
+    \begin{enumerate}
+      \item Un \textit{$\mathcal{L}$-morphisme} de $\mathcal{M}$ est une fonction $\varphi : |\mathcal{M}| \to |\mathcal{N}|$ telle que 
+        \begin{itemize}
+          \item pour chaque symbole de constante $c$, on a $\varphi(c_\mathcal{M}) = c_\mathcal{N}$ ;
+          \item pour chaque symbole $f$ de fonction $n$-aire, on a 
+            \[
+            \varphi(f_\mathcal{M}(a_1, \ldots, a_n)) = f_\mathcal{N}(\varphi(a_1), \ldots, \varphi(a_n))\;
+            ;\] 
+          \item pour chaque symbole $R$ de relation $n$-aire (autre que "$=$"), on a 
+            \[
+              (a_1, \ldots, a_n) \in R_\mathcal{M} \text{ ssi } (\varphi(a_1), \ldots, \varphi(a_n)) \in R_\mathcal{N}
+            .\]
+          \item Un \textit{$\mathcal{L}$-isomorphisme} est un $\mathcal{L}$-morphisme bijectif.
+          \item Si $\mathcal{M}$ et $\mathcal{N}$ sont \textit{isomorphes} s'il existe un $\mathcal{L}$-isomorphisme de $\mathcal{M}$ à $\mathcal{N}$.
+        \end{itemize}
+    \end{enumerate}
+  \end{defn}
+
+  \begin{rmk}
+    \begin{enumerate}
+      \item On ne dit rien sur "$=$" car si on impose la même condition que pour les autres relations alors nécessairement $\varphi$ est injectif.
+      \item La notion dépend du langage $\mathcal{L}$.
+      \item Lorsqu'on a deux structures isomorphes, on les confonds, ce sont les mêmes, c'est un renommage.
+    \end{enumerate}
+  \end{rmk}
+
+  \begin{exm}
+    Avec $\mathcal{L}_\mathrm{ann} = \{0, +, \times ,-\}$ et $\mathcal{L}' = \mathcal{L}_\mathrm{ann}\cup  \{1\}$, et les deux modèles $\mathcal{M} : \mathds{Z} / 3\mathds{Z}$ et $\mathcal{N} = \mathds{Z} / 12 \mathds{Z}$, on considère la fonction définie (on néglige les cas inintéressants) par $\varphi(\bar{n}) = \overline{4n}$.
+
+    Est-ce que $\varphi$ est un morphisme de $\mathcal{M}$ dans $\mathcal{N}$ ? Oui\ldots\ et non\ldots\ Dans $\mathcal{L}$ c'est le cas, mais pas dans $\mathcal{L}'$  car $\varphi(1) = 4$.
+  \end{exm}
+
+  \begin{exm}
+    Dans $\mathcal{L} = \{c, f, R\}$ avec $f$ une fonction binaire, et $R$ une relation binaire, on considère 
+    \begin{itemize}
+      \item $\mathcal{M} : \mathds{R}, 0, +, \le$ ;
+      \item $\mathcal{N} : {]{0,+\infty}[}, 1, \times , \le$.
+    \end{itemize}
+    Existe-t-il un morphisme de $\mathcal{M}$ dans $\mathcal{N}$ ?
+    Oui, il suffit de poser le morphisme $\varphi : x \mapsto \mathrm{e}^x$.
+  \end{exm}
+
+  \begin{prop}
+    La composée de deux morphismes (\textit{resp}. isomorphisme) est un morphisme (\textit{resp}. un isomorphisme).
+    \qed
+  \end{prop}
+
+  \begin{nota}
+    Si $\varphi$ est un morphisme de $\mathcal{M}$ dans $\mathcal{N}$ et $e$ un environnement de $\mathcal{M}$,
+    alors on note $\varphi(e)$ pour  $\varphi \circ e$. C'est un environnement de $\mathcal{N}$.
+  \end{nota}
+
+  \begin{lem}
+    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un morphisme de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour tout terme $t$ et environnement $e$, on a \[
+    \varphi(\Val_\mathcal{M}(t, e)) = \Val_\mathcal{N}(t, \varphi(e))
+    .\]
+    \qed
+  \end{lem}
+
+  \begin{lem}
+    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un morphisme \textit{\textbf{injectif}} de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour toute formule atomique $F$ et environnement $e$, on a \[
+      \mathcal{M}, e \models F \text{ ssi } \mathcal{N}, \varphi(e) \models F
+    \]
+  \end{lem}
+
+  \begin{lem}
+    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un \textit{\textbf{isomorphisme}}\footnote{On utilise ici la \textit{surjectivité} pour le "$\exists $".} de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour toute formule $F$ et environnement $e$, on a \[
+      \mathcal{M}, e \models F \text{ ssi } \mathcal{N}, \varphi(e) \models F
+    \]
+  \end{lem}
+
+  \begin{crlr}
+    Deux interprétations isomorphismes satisfont les mêmes formules closes.
+  \end{crlr}
+
+  \begin{exo}
+    Les groupes $\mathds{Z} / 4 \mathds{Z}$ et $\mathds{Z} / 2 \mathds{Z} \times \mathds{Z} / 2 \mathds{Z}$ sont-ils isomorphes ?
+    Non. En effet, les deux formules 
+    \begin{itemize}
+      \item $\exists x\: (x \neq e \land x * x \neq e \land x * (x * x) \neq e \land x * (x * (x * x)) = e)$,
+      \item $\forall x \: (x*x) = e$
+    \end{itemize}
+    ne sont pas vraies dans les deux (pour la première, elle est vraie dans $\mathds{Z} / 4 \mathds{Z}$ mais pas dans $(\mathds{Z} / 2 \mathds{Z})^2$ et pour la seconde, c'est l'inverse).
+  \end{exo}
+
+  \begin{rmk}
+    La réciproque du corollaire est \textit{\textbf{fausse}} : deux interprétations qui satisfont les mêmes formules closes ne sont pas nécessairement isomorphes.
+    Par exemple, avec $\mathcal{L} = \{{\le}\}$, les interprétations $\mathds{R}$ et $\mathds{Q}$ satisfont les mêmes formules closes, mais ne sont pas isomorphes.
+  \end{rmk}
+
+  \begin{defn}
+    Soit $\mathcal{L}$ un langage, $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$.
+    On dit que $\mathcal{N}$ est une \textit{extension} de $\mathcal{M}$ (ou $\mathcal{M}$ est une \textit{sous-interprétation} de $\mathcal{N}$) si les conditions suivants sont satisfaites :
+    \begin{itemize}
+      \item $|\mathcal{M}| \subseteq |\mathcal{N}|$ ;
+      \item pour tout symbole de constante $c$, on a $c_\mathcal{M} = c_\mathcal{N}$ ;
+      \item pour tout symbole de fonction $n$-aire $f$, on a $f_\mathcal{M} = f_\mathcal{N}\big|_{|\mathcal{M}|^n}$ (donc en particulier $f_\mathcal{N}(|\mathcal{M}|^n) \subseteq |\mathcal{M}|$) ;
+      \item pour tout symbole de relation $n$-aire $R$, on a $R_\mathcal{M} = R_\mathcal{N} \cap |\mathcal{M}|^n$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{prop}
+    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$. Alors $\mathcal{M}$ est isomorphe à une sous-interprétation $\mathcal{M}'$ de $\mathcal{N}$ si et seulement si, il existe un morphisme injectif de $\mathcal{M}$ dans $\mathcal{N}$.
+  \end{prop}
+
+  \begin{exm}
+    Construction de $\mathds{Z}$ à partir de $\mathds{N}$.
+    On pose la relation $(p, q) \sim (p', q')$ si  $p + q' = p' + q$.
+    C'est une relation d'équivalence sur  $\mathds{N}^2$.
+    On pose $\mathds{Z} := \mathds{N}^2 / \sim$ (il y a un isomorphisme $\mathds{N}^2 / {\sim} \to \mathds{Z}$ par $(p,q) \mapsto p - q$).
+    Est-ce qu'on a $\mathds{N} \subseteq \mathds{N}^2 / {\sim}$ ?
+    D'un point de vue ensembliste, non.
+    Mais, généralement, l'inclusion signifie avoir un morphisme injectif de $\mathds{N}$ dans $\mathds{N}^2 / {\sim}$.
+  \end{exm}
 \end{document}
