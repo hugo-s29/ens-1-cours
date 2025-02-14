@@ -129,8 +129,9 @@
       \draw (x28a2) -- (x28a3);
       \draw (x29) -- (x29a1);
     \end{tikzpicture}
-    \caption{Structure "rideau de perles"}
+    \caption{Structure "rideau de perles"\footnote{Après le cours sur les tables de hachages, la structure "rideau de perles" est en réalité une simple table de hachage.}}
   \end{figure}
+  \showfootnote
 
   L'initialisation d'une telle structure (chaque pile étant initialement vide) se fait en $\mathrm{O}(N)$ où $N$ est la taille du tableau que l'on veut allouer.
   Pour simplifier, on supposera que le tableau est indicé à partir de $0$.
@@ -285,11 +286,12 @@
     \begin{algorithmic}[1]
       \State On exécute l'algorithme~\ref{algo:2-3}.
 
-      \State Si l'on a ajouté le $3$-cycle dans l'algorithme~\ref{algo:2-3}, et sinon on considère un $2$-cycle (le dernier produit par exemple).
-      On note le cycle considéré $C$.
+      \State On considère $C$ le premier cycle produit par l'algorithme~\ref{algo:2-3}. C'est un 2- ou un 3-cycle.
 
-      \While{il existe un $2$-cycle différent de $C$}
-      \State Soit $p_i \rightleftarrows p_j$ ce $2$-cycle.
+      \Statex
+
+      \While{il existe un $2$-cycle non considéré}
+      \State Soit $p_i \rightleftarrows p_j$ un tel $2$-cycle.
       \State On l'ajoute dans $C$ comme montré sur la figure précédente (en mettant à jour $C$ par la suite).
       \Statex \Comment{On doit donc faire la disjonction de cas avec les familles de $\mathrm{A}$, $\mathrm{B}$, $\mathrm{C}$ et $\mathrm{D}$. Mais, ça peut se faire en $\mathrm{O}(1)$ si l'on représente une personne comme un couple numéro de famille, numéro de personne dans la famille.}
       \EndWhile
@@ -304,7 +306,7 @@
   On maintient comme invariant que l'on a une attribution valide.
   Le nombre de cycles dans le graphe diminue strictement, jusqu'à atteindre $1$ : on a donc un unique cycle à la fin de l'algorithme.
   En effet, ceci est assuré car on produit toujours $N / 2$ $2$-cycles, ou un $3$-cycle et $(N-3) / 2$ $2$-cycles, avec l'algorithme~\ref{algo:2-3}.
-  On a donc moins de $N / 2$ tours de boucle, et on manipule des cycles comme des listes chaînées, donc le traitement dans la boucle se fait en $\mathrm{O}(1)$. (On suppose avoir une pile de cycles pour récupérer les cycles produits par l'algorithme~\ref{algo:2-3}.)
+  On a donc moins de $N / 2$ tours de boucle, et on manipule des cycles comme des listes chaînées, donc le traitement dans la boucle se fait en $\mathrm{O}(1)$. (On suppose avoir une file de cycles pour récupérer les cycles produits par l'algorithme~\ref{algo:2-3}.)
   D'où la complexité en $\mathrm{O}(N)$.
   \hfill $\square$
 \end{document}
