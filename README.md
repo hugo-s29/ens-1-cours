@@ -29,4 +29,4 @@ Bonne lecture !
 - **Log.** Logique ▶ [/log](/log/) (Notes de cours)
 - **Proba.** Probabilités ▶ [/proba](/proba/) (???)
 - **ProFon.** Projet Fonctionnel ▶ [/profon](/profon/) (Quelques notes de cours)
-- **EPS.** Enseignement en Programmation Sportive ▶ [/eps](/eps/) ((Tentatives de) solutions aux problèmes)
+- **EPS.** Enseignement en Programmation Sportive ▶ [/eps](/eps/) ((Tentatives de) solutions aux problèmes des semaines 1–3)
