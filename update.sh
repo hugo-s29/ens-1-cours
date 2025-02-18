@@ -11,10 +11,6 @@ cp log/chap00.pdf ../web/public/data/ens1/logique-chap00.pdf
 cp log/chap01.pdf ../web/public/data/ens1/logique-chap01.pdf
 cp log/chap02.pdf ../web/public/data/ens1/logique-chap02.pdf
 
-cp proba/main.pdf ../web/public/data/ens1/proba.pdf
-cp proba/chap00.pdf ../web/public/data/ens1/proba-chap00.pdf
-cp proba/chap01.pdf ../web/public/data/ens1/proba-chap01.pdf
-
 cp profon/main.pdf ../web/public/data/ens1/profon.pdf
 cp profon/trad.pdf ../web/public/data/ens1/profon-traduction-cps.pdf
 
