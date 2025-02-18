@@ -16,6 +16,7 @@ cp proba/chap00.pdf ../web/public/data/ens1/proba-chap00.pdf
 cp proba/chap01.pdf ../web/public/data/ens1/proba-chap01.pdf
 
 cp profon/main.pdf ../web/public/data/ens1/profon.pdf
+cp profon/trad.pdf ../web/public/data/ens1/profon-traduction-cps.pdf
 
 # ==========
 # SEMESTRE 1
