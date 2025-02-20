@@ -1,0 +1,293 @@
+\documentclass{../notes}
+
+\title{Classes de langages}
+
+\newlength\stextwidth
+\newcommand\makesamewidth[3][c]{%
+  \settowidth{\stextwidth}{#2}%
+  \makebox[\stextwidth][#1]{#3}%
+}
+
+\newcounter{questioncounter}
+\setcounter{questioncounter}{0}
+
+\newcommand\question[1]{
+  \vspace{1em}
+  \refstepcounter{questioncounter}
+  \makesamewidth[r]{\textbf{Q99.}}{\textbf{Q\thequestioncounter.}}~
+  \parbox[t]{11cm}{#1}
+  \vspace{1em}
+}
+
+\newcommand\monoit[1]{ \texttt{\textit{#1}} }
+
+\newcommand\indication[2][\relax]{
+  \textit{Indication.}
+
+  \raisebox{\depth}{\rotatebox{180}{\parbox{12.3cm}{#2}}}
+}
+
+\usepackage{leftindex}
+
+\begin{document}
+  ~
+  \vfill
+
+  \begin{slshape}
+  Dans ce sujet, on s'intéresse aux différentes classes de langages étudiées en MP2I/MPI : langages réguliers, langages non-contextuels et langages décidables.
+  Ce sujet se décompose en quatre problèmes : un problème introductif, puis un problème par classe de langages.
+
+  Le problème~\ref{pb0} traite d'une preuve alternative pour montrer qu'un langage régulier est non-contextuel.
+
+  Le problème~\ref{pb1} traite des langages réguliers, notamment sur une propriété intéressante de l'étoile de Kleene dans les langages unaires. Il est assez long.
+
+  Le problème~\ref{pb2} traite des langages décidables, toujours dans le cas des langages unaires, pour construire un langage indécidable unaire.
+
+  Le problème~\ref{pb3} traite des langages non-contextuels, où l'on montre que le langage des mots qui ne sont pas des carrés est non-contextuel.
+
+  Mon conseil est de ne pas procéder dans l'ordre mais de suivre un ordre topologique du graphe ci-dessous.
+  \[
+  \begin{tikzcd}[row sep=40]
+    &\text{Problème \ref{pb2}} \arrow{dr}\\
+    \arrow{ur}\arrow{dr}\text{Problème \ref{pb0}}&&\text{Problème \ref{pb1}}\\
+    &\text{Problème \ref{pb3}} \arrow{ur}
+  \end{tikzcd}
+  \] 
+  \end{slshape}
+
+  \vfill
+  \vfill
+
+  \clearpage
+
+  ~
+  \vfill
+  \vfill
+  
+  \tableofcontents
+
+  \vfill
+  \vfill
+  \vfill
+
+  \clearpage
+
+  \section{Introduction} \label{pb0}
+
+  Dans ce problème, on montre que les langages réguliers sont non-contextuels à l'aide d'une preuve différente de celle donnée mercredi.
+
+  Considérons $L$ un langage régulier sur l'alphabet $\Gamma$, et $\mathcal{A} = (\Gamma, Q, I, F, \delta)$ un automate fini sans $\varepsilon$-transitions reconnaissant $L$.
+
+  On se donne $|Q|$ symboles non-terminaux (\textit{i.e.} variables), que l'on notera  $(\mathsf{X}_q)_{q \in Q}$.
+
+  Pour $q \in Q$, on note $\mathcal{A}_q := (\Sigma, Q, \{q\}, F, \delta)$ l'automate identique à $\mathcal{A}$ mais ayant $q$ comme unique état initial.
+
+  \question{
+    Proposer un ensemble de règles de production $\Pi$ tel que, pour tout $q \in Q$, on ait \[
+      \mathcal{L}(\mathcal{A}_q) = \underbrace{\{u \in \Gamma^\star  \mid \mathsf{X}_q \Rightarrow^\star u \}}_{\mathcal{L}(\mathcal{G}, \mathsf{X}_q)\mathbf{}}
+    .\]
+  }
+
+  \indication{
+    On pourra procéder "à la manière" des fonctions récursives mutuelles où, ici, une fonction récursive correspond à un certain $\mathsf{X}_q$.
+  }
+
+  \question{
+    Démontrer qu'avec l'ensemble de règles $\Pi$ donné, on ait bien la propriété ci-dessus.
+  }
+
+  \indication{
+    On pourra procéder par récurrence sur $n$ afin de montrer, pour tout état $q \in Q$, l'égalité $\mathcal{L}(\mathcal{A}_q) \cap \Sigma^n = \mathcal{L}(\mathcal{G}, \mathsf{X}_q) \cap \Sigma^n$.
+  }
+
+  \question{
+    Conclure.
+  }
+
+  \indication{
+    On pourra ajouter des règles supplémentaires à $\Pi$, ou alors ajouter une hypothèse supplémentaire sur $\mathcal{A}$.
+  }
+
+
+
+
+  \section{Langages réguliers.} \label{pb1}
+
+  Dans ce problème, on se place sur l'alphabet $\Sigma = \{\monoit{a}\}$.
+  Un langage sur un tel alphabet est appelé \textit{unaire}.
+
+  \question{Donner un exemple de langage unaire $X$ qui n'est pas régulier.}
+
+  L'application 
+  \begin{align*}
+    f: \wp(\mathds{N}) &\longrightarrow \wp(\Sigma^\star) \\
+    A &\longmapsto \{\monoit{a}^n  \mid n \in \mathds{N}\} 
+  \end{align*}
+  est une bijection.
+  Ainsi, il est équivalent de s'intéresser à des parties de $\mathds{N}$ ou à des langages unaires.
+
+  Dans la suite de ce problème, on dira que $A \subseteq \mathds{N}$ est décidable, régulier, indécidable, \textit{etc} si le langage associé $f(A)$ l'est.
+
+  Pour $a, b \in \mathds{N}$ donnés, on note $L(a, b) := \{a + bn  \mid n \in \mathds{N}\}$.
+  On dit qu'un ensemble $A$ est linéaire s'il existe un couple $(a,b) \in \mathds{N}^2$ vérifiant que $A = L(a,b)$.
+
+  Un ensemble \textit{semi-linéaire} est une union finie d'ensembles linéaires.
+
+  \question{Montrer que tout ensemble linéaire est régulier. En déduire que tout ensemble semi-linéaire est aussi régulier.}
+
+  On s'intéresse maintenant à montrer la réciproque : tout langage unaire régulier correspond à un ensemble semi-linéaire.
+  On commence par une propriété plus simple.
+
+  \question{
+    Montrer qu'un ensemble $A$ est semi-linéaire si et seulement si il est \textit{ultimement périodique}.
+    C'est-à-dire qu'il existe une borne $k \in \mathds{N}$ et un entier $p \in \mathds{N} \setminus \{0\} $ tel que, pour tout entier~$n > k$, \[
+    n \in A \text{ si et seulement si } n + p \in A
+    .\]
+  }
+
+  \indication{On pourra commencer par montrer que tout ensemble linéaire est ultimement périodique, puis que l'union de deux ensembles ultimement périodiques est ultimement périodique. }
+
+  \question{
+    Montrer qu'un ensemble $A \subseteq \mathds{N}$ régulier est ultimement périodique.
+  }
+
+  \indication{ Quelles informations donne réellement le lemme de l'étoile dans le cas unaire ? Se rappeler du "dessin" de la preuve du lemme de l'étoile, et essayer de généraliser.}
+
+  Dans la suite de cette section, on se propose de montrer la propriété suivante :
+  \begin{center}
+    \color{deepblue}
+    Si $X$ est un langage unaire, alors $X^\star$ est régulier.
+  \end{center}
+
+  \question{
+    On note $g := f^{-1} : \wp(\Sigma^\star) \to \wp(\mathds{N})$.
+    Montrer que, pour tout langage unaire $X \subseteq \Sigma^\star$, on a \[
+    g(X^\star) = \{ x_1 + x_2 + \cdots + x_n  \mid n \in \mathds{N}, x_1,\ldots, x_n \in g(X)\} 
+    .\] 
+  }
+
+  \question{
+    Montrer que, pour $A \subseteq \mathds{N}$ une partie quelconque, l'ensemble \[
+    A_\star := \{a_1 + a_2 + \cdots + a_n  \mid n \in \mathds{N}, a_1, \ldots, a_n \in A\} 
+    \] est semi-linéaire.
+    Pour cela, on procèdera ainsi :
+    \begin{itemize}
+      \item traiter le cas où $A = \emptyset$ ;
+      \item puis, on choisit $a \in A$, et on décompose $A_\star$ en "classes de congruences" modulo $a$.
+    \end{itemize}
+  }
+
+  \indication{
+    On posera, par exemple, $A_r = \{x \in A_\star \mid x \equiv r \pmod a\}$.
+    Lorsque $A_r \subseteq \mathds{N}$ est non vide, il admet un minimum $a_r$.
+    On pourra exprimer $A_r$ à l'aide de $a_r$ et $a$, et conclure que $A_\star$ est semi-linéaire.
+  }
+
+  \question{
+    Conclure que $X^\star$ est régulier pour tout $X \subseteq \{\monoit{a}\}^\star$.
+  }
+
+  \section{Langages décidables.} \label{pb2}
+
+  Dans ce problème, on continue sur les langages unaires, et on va construire un langage unaire indécidable.
+
+  On rappelle que, pour un langage $L$ donné, on dit que $L$ est (\textit{in})\textit{décidable} si le problème~\hyperref[pbm:membership]{\textsc{membership}$_L$} est (\textit{in})\textit{décidable}.
+
+  \problem[membership$_L$]{pbm:membership}{
+    Un mot $w \in \Sigma^\star$
+  }{
+    Est-ce que $w$ appartient à $L$ ?
+  }
+
+  On pose $\Sigma$ un alphabet arbitraire (pas nécessairement avec une lettre).
+
+  \question{
+    Montrer que le problème~\hyperref[pbm:finite]{\textsc{finite}} est indécidable.
+  }
+
+  \problem[finite]{pbm:finite}{
+    Une machine $\mathcal{M}$
+  }{
+    Est-ce que le langage $\mathcal{L}(\mathcal{M})$ est fini ?
+  }
+
+  \question{
+    Exprimer mathématiquement le langage des "instances positives" du problème \hyperref[pbm:finite]{\textsc{finite}}, c'est-à-dire l'ensemble des entrées vérifiant la condition du problème.
+    Par la suite, on le notera~\hyperref[pbm:finite]{\textsc{finite}}$^+$.
+    Ce langage est-il décidable ?
+  }
+
+  \question{
+    Définir une fonction injective calculable $f : \Sigma^\star \to \{\monoit{a}\}^\star$.
+  }
+
+  \indication{
+    On pourra construire une fonction $g : \{\texttt{0}, \texttt{1}\}^\star \to \{\monoit{a}\}^\star$, à l'aide de la fonction donnée au début du problème~\ref{pb1}.
+  }
+
+  \question{
+    On pose $L := f(\text{\hyperref[pbm:finite]{\textsc{finite}}}^+)$.
+    Montrer que $L$ est indécidable.
+  }
+
+  \section{Langages non-contextuels.} \label{pb3}
+
+  Dans cet exercice, on pose $\Gamma := \{\monoit{a}, \monoit{b}\}$. On souhaite montrer que le langage \[
+  L := \Gamma^\star \setminus \{ u u  \mid u \in \Gamma^\star \} 
+  \]
+  est non-contextuel (\textit{i.e.} que $L$ est le langage d'une grammaire non-contextuelle).
+
+  \question{
+    Donner deux exemples de mots dans $L$, le premier de longueur~$4$, et le second de longueur~$5$.
+  }
+
+  \question{
+    Montrer que tout mot de longueur impaire est dans $L$, et que tout mot $w = w_1 \ldots w_{2n}$ de longueur paire appartient à $L$ si, et seulement si, il existe un indice $i \in \llbracket 1,n \rrbracket  $ tel que $w_i \neq w_{n+i}$.
+  } \label{q:13}
+
+  \indication{
+    Procéder par contraposée : montrer que $w \in \Gamma^\star \setminus L$ si, et seulement si, [\ldots à compléter\ldots].
+  }
+
+  On considère la grammaire $\mathcal{G} := (\Gamma, \mathcal{V}, \Pi, \mathsf{S})$ où $\mathcal{V} := \{\mathsf{S}, \mathsf{A}, \mathsf{B}\}$ où
+  \begin{align*}
+    \mathsf{S} &\to \mathsf{A}  \mid \mathsf{B}  \mid \mathsf{AB}  \mid \mathsf{BA}\\
+    \mathsf{A} &\to \monoit{a}  \mid \monoit{a}\mathsf{A}\monoit{a}  \mid  \monoit{a}\mathsf{A}\monoit{b} \mid \monoit{b}\mathsf{A}\monoit{a} \mid \monoit{b}\mathsf{A}\monoit{b} \\
+    \mathsf{B} &\to \monoit{b}  \mid \monoit{a}\mathsf{B}\monoit{a}  \mid  \monoit{a}\mathsf{B}\monoit{b} \mid \monoit{b}\mathsf{B}\monoit{a} \mid \monoit{b}\mathsf{B}\monoit{b}
+  .\end{align*}
+
+  On notera \[
+  \mathcal{L}(\mathcal{G}, \mathsf{A}) := \{w \in \Gamma^\star  \mid \mathsf{A} \Rightarrow^\star w\} 
+  .\]
+  Ainsi le langage de $\mathcal{G}$, $\mathcal{L}(\mathcal{G})$, est $\mathcal{L}(\mathcal{G}, \mathsf{S})$ où $\mathsf{S}$ est le symbole initial de $\mathcal{G}$.
+
+  \question{
+    Décrire les langages $\mathcal{L}(\mathcal{G}, \mathsf{A})$ et $\mathcal{L}(\mathcal{G}, \mathsf{B})$.
+  }
+
+  \question{
+    Montrer que tout mot $w$ de longueur impaire est dans $\mathcal{L}(\mathcal{G})$.
+  }
+
+  \indication{
+    Regarder la lettre centrale du mot considéré.
+    On pourra construire la dérivation en se basant sur cette lettre, et à l'aide de la question précédente.
+  }
+
+  \question{
+    Montrer que tout mot $w \in L$ de longueur paire est dans $\mathcal{L}(\mathcal{G})$.
+  }
+
+  \indication{
+    Utiliser la question~\ref{q:13} en découpant $w$ en deux mots.
+  }
+
+  \question{
+    Conclure que $L$ est non-contextuel.
+  }
+
+  \indication{
+    Montrer que $L = \mathcal{L}(\mathcal{G})$ par double inclusion.
+    Une des deux inclusions est déjà faite par les questions précédentes.
+  }
+\end{document}
