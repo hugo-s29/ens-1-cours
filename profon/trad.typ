@@ -41,70 +41,117 @@
 #let snd = "snd"
 #let id = "id"
 
+#let fr(x) = text(x, eastern)
+
 = _Traduction d'un programme fouine en fouine CPS_
 
-Dans la suite, on notera $lambda x: med e$ au lieu de $mmono("fun") x mmono(->) e$, pour abréger les notations...
+Dans la suite, on notera $lambda x: med e$ au lieu de $mmono("fun") x mmono(->) e$, pour abréger les notations...\
+On notera en #fr[cyan] les variables fraîches.
 
-- $[|n|] := lambda k: med (fst k) med n$
+- $[|n|] := lambda fr(k): med (fst fr(k)) med n$
 
-- $[|b|] := lambda k: med (fst k) med b$
+- $[|b|] := lambda fr(k): med (fst fr(k)) med b$
 
-- $[|mmono("()")|] := lambda k: med (fst k) med mmono("()")$
+- $[|mmono("()")|] := lambda fr(k): med (fst fr(k)) med mmono("()")$
 
-- $[|x|] := lambda k: med (fst k) med x$
+- $[|x|] := lambda fr(k): med (fst fr(k)) med x$
 
-- $[|lambda x: med e|] := lambda k: med (fst k) med (lambda x: med [|e|])$
+- $[|lambda x: med e|] := lambda fr(k): med (fst fr(k)) med (lambda x: med [|e|])$
 
-- $[|e_1 med e_2|] = lambda k: med [|e_2|] med (lambda v: med [|e_1|] med (lambda f: med f med v med k, snd k), snd k)$
+- $[|e_1 med e_2|] = lambda fr(k): med [|e_2|] med (lambda fr(v): med [|e_1|] med (lambda fr(f): med fr(f) med fr(v) med fr(k), snd fr(k)), snd fr(k))$
 
-- $[|e_1 ast.circle e_2|] := lambda k: med [|e_2|] med (lambda v_2: med [|e_1|] med (lambda v_1: med (fst k) med (v_1 ast.circle v_2), snd k), snd k)$
+- $[|e_1 ast.circle e_2|] := lambda fr(k): med [|e_2|] med (lambda fr(v_2): med [|e_1|] med (lambda fr(v_1): med (fst fr(k)) med (fr(v_1) ast.circle fr(v_2)), snd fr(k)), snd fr(k))$
 
-- $[|mmono("if") b mmono("then") e_1 mmono("else") e_2|] := lambda k: med [|b|] med (lambda v: med mmono("if") v mmono("then") [|e_1|] med k mmono("else") [|e_2|] med k, snd k)$
+- $[|mmono("if") b mmono("then") e_1 mmono("else") e_2|] := lambda fr(k): med [|b|] med (lambda fr(v): med mmono("if") fr(v) mmono("then") [|e_1|] med fr(k) mmono("else") [|e_2|] med fr(k), snd fr(k))$
 
-- $[|ast.circle e|] := lambda k: med [|e|] med (lambda v: med (fst k) med (ast.circle v), snd k)$
+- $[|ast.circle e|] := lambda fr(k): med [|e|] med (lambda fr(v): med (fst fr(k)) med (ast.circle fr(v)), snd fr(k))$
 
-- $[| e_1 mmono(";") e_2 |] := lambda k: med [|e_1|] med (lambda \_: med [|e_2|] med k, snd k)$
+- $[| e_1 mmono(";") e_2 |] := lambda fr(k): med [|e_1|] med (lambda \_: med [|e_2|] med fr(k), snd fr(k))$
 
-- $[| upright(C)(e_1, ..., e_n)  |] := lambda k: med [|e_n|] med (lambda v_n: med ... med ([|v_1|] med (lambda v_1: med (fst k) med med upright(C)(v_1, ..., v_n), snd k) ...), snd k)$
+- $[| upright(C)(e_1, ..., e_n)  |] := lambda fr(k): med [|e_n|] med (lambda fr(v_n): med ... med ([|e_1|] med (lambda fr(v_1): med (fst fr(k)) med med upright(C)(fr(v_1), ..., fr(v_n)), snd fr(k)) ...), snd fr(k))$
 
-- $[| mmono("while") b mmono("do") e |] := & mmono("let") mmono("rec") italic("boucle") k mmono("=")\
-  & quad [|b|] med (lambda v: med\
-  & quad quad mmono("if") v mmono("then") [|e|] med (lambda \_: med italic("boucle") k, snd k)\
-  & quad quad mmono("else") (fst k) med mmono("()")\
-  & mmono("in") italic("boucle")$
+- $[| mmono("while") b mmono("do") e |] := & mmono("let") mmono("rec") fr(italic("boucle")) fr(k) mmono("=")\
+  & quad [|b|] med (lambda fr(v): med\
+  & quad quad mmono("if") fr(v) mmono("then") [|e|] med (lambda \_: med fr(italic("boucle")) fr(k), snd fr(k))\
+  & quad quad mmono("else") (fst fr(k)) med mmono("()")\
+  & mmono("in") fr(italic("boucle"))$
 
-- $[|mmono("let rec") f mmono(=) e mmono("in") e'|] := lambda k: mmono("let rec") f mmono("=") [|e|] mmono("in") [|e'|] med k$
+- $[|mmono("let rec") f mmono(=) e mmono("in") e'|] := lambda fr(k): mmono("let rec") f mmono("=") [|e|] mmono("in") [|e'|] med fr(k)$
 
-- $[|mmono("for") i mmono(=) e_1 mmono("to") e_2 mmono("do") e_3 mmono("done")|] := lambda k: med [|e_1|] med &(lambda v_1: med [|e_2|] med (lambda v_2: med \
-    &mmono("let rec") italic("boucle") i med k mmono("=")\
-    & quad quad mmono("if") i <= v_2 mmono("then") [|e_3|] med (lambda \_ : italic("boucle") med (i+1) med k, snd k) \
-    & quad quad mmono("else") (fst k) med mmono("()") \
-    & mmono("in") italic("boucle") v_1
+- $[|mmono("for") i mmono(=) e_1 mmono("to") e_2 mmono("do") e_3 mmono("done")|] := lambda fr(k): med [|e_1|] med &(lambda fr(v_1): med [|e_2|] med (lambda fr(v_2): med \
+    &mmono("let rec") fr(italic("boucle")) i med fr(k) mmono("=")\
+    & quad quad mmono("if") i <= fr(v_2) mmono("then") [|e_3|] med (lambda \_ : fr(italic("boucle")) med (i+1) med fr(k), snd fr(k)) \
+    & quad quad mmono("else") (fst fr(k)) med mmono("()") \
+    & mmono("in") fr(italic("boucle")) fr(v_1) 
   ))$
 
-- $[|mmono("for") i mmono(=) e_1 mmono("downto") e_2 mmono("do") e_3 mmono("done")|] := lambda k: med [|e_1|] med &(lambda v_1: med [|e_2|] med (lambda v_2: med \
-    &mmono("let rec") italic("boucle") i med k mmono("=")\
-    & quad quad mmono("if") i >= v_1 mmono("then") [|e_3|] med (lambda \_ : italic("boucle") med (i-1) med k, snd k) \
-    & quad quad mmono("else") (fst k) med mmono("()") \
-    & mmono("in") italic("boucle") v_2
+- $[|mmono("for") i mmono(=) e_1 mmono("downto") e_2 mmono("do") e_3 mmono("done")|] := lambda fr(k): med [|e_1|] med &(lambda v_1: med [|e_2|] med (lambda v_2: med \
+    &mmono("let rec") fr(italic("boucle")) i med fr(k) mmono("=")\
+    & quad quad mmono("if") i >= fr(v_1) mmono("then") [|e_3|] med (lambda \_ : fr(italic("boucle")) med (i-1) med fr(k), snd fr(k)) \
+    & quad quad mmono("else") (fst fr(k)) med mmono("()") \
+    & mmono("in") fr(italic("boucle")) fr(v_2)
   ))$
 
-- $[|mmono("match") e mmono("with") p_1 mmono("when") e'_1 mmono(->) e_1 | dots.c | p_n mmono("when") e'_n mmono(->) e_n |] := &lambda k: med [|e|] med (lambda v:\
-  & quad mmono("match") v mmono("with")\
-  & quad | p_1 mmono("when") [|e_1'|] med (id, snd k) mmono(->) [|e_1|] med k\
-  & quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v\
-  & quad | p_n mmono("when") [|e_n'|] med (id, snd k) mmono(->) [|e_n|] med k,\
-  & snd k)$
+- $[|mmono("match") e mmono("with") p_1 mmono("when") e'_1 mmono(->) e_1 | dots.c | p_n mmono("when") e'_n mmono(->) e_n |] := &lambda fr(k): med [|e|] med
+( dots.c (lambda fr(italic("match")_"next"): med lambda fr(v):\
+  &quad mmono("match") fr(v) mmono("with")\
+  &quad | p_1 mmono(->) [|e'_1|] med (lambda fr(v'): med \
+  &quad quad quad mmono("if") fr(v') mmono("then") [|e_1|] med fr(k)\
+  &quad quad quad mmono("else") fr(italic("match")_"next") med fr(v),\
+  &quad quad snd k)\
+  &quad | \_ mmono(->) fr(italic("match")_"next") med fr(v), \
+  &quad snd fr(k))\
+  &(lambda fr(italic("match")_"next"): med lambda fr(v):\
+  &quad mmono("match") fr(v) mmono("with")\
+  &quad | p_2 mmono(->) [|e'_2|] med (lambda fr(v'): med \
+  &quad quad quad mmono("if") fr(v') mmono("then") [|e_2|] med fr(k)\
+  &quad quad quad mmono("else") fr(italic("match")_"next") med fr(v),\
+  &quad quad snd k)\
+  &quad | \_ mmono(->) fr(italic("match")_"next") med fr(v), \
+  &quad snd fr(k)
+  )\
+  & quad quad quad quad quad dots.v\
+  &(lambda fr(italic("match")_"next"): med lambda fr(v):\
+  &quad mmono("match") fr(v) mmono("with")\
+  &quad | p_n mmono(->) [|e'_n|] med (lambda fr(v'): med \
+  &quad quad quad mmono("if") fr(v') mmono("then") [|e_n|] med fr(k)\
+  &quad quad quad mmono("else") fr(italic("match")_"next") med fr(v),\
+  &quad quad snd k)\
+  &quad | \_ mmono(->) fr(italic("match")_"next") med fr(v), \
+  &quad snd fr(k))\
+  &(lambda \_: (snd fr(k)) bold("MatchError")) dots.c )
+  $
 
-- $[|mmono("try") e mmono("with") p_1 mmono("when") e'_1 mmono(->) e_1 | dots.c | p_n mmono("when") e'_n mmono(->) e_n|] := &lambda k: med [|e|] med (fst k, lambda v:\
-  & quad mmono("match") v mmono("with")\
-  & quad | p_1 mmono("when") [|e_1'|] med (id, snd k) mmono(->) [|e_1|] med k\
-  & quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v quad dots.v\
-  & quad | p_n mmono("when") [|e_n'|] med (id, snd k) mmono(->) [|e_n|] med k\
-  & quad | \_ mmono(->) (snd k) med v\
-  & )$
+- $[|mmono("try") e mmono("with") p_1 mmono("when") e'_1 mmono(->) e_1 | dots.c | p_n mmono("when") e'_n mmono(->) e_n|] := &lambda fr(k): med [|e|] med (fst fr(k), lambda v:\
+  &( dots.c (lambda fr(italic("match")_"next"): med lambda v:\
+  &quad mmono("match") fr(v) mmono("with")\
+  &quad | p_1 mmono(->) [|e'_1|] med (lambda fr(v'): med \
+  &quad quad quad mmono("if") fr(v') mmono("then") [|e_1|] med fr(k)\
+  &quad quad quad mmono("else") fr(italic("match")_"next") med fr(v),\
+  &quad quad snd k)\
+  &quad | \_ mmono(->) fr(italic("match")_"next") med fr(v), \
+  &quad snd fr(k))\
+  &(lambda fr(italic("match")_"next"): med lambda fr(v):\
+  &quad mmono("match") fr(v) mmono("with")\
+  &quad | p_2 mmono(->) [|e'_2|] med (lambda fr(v'): med \
+  &quad quad quad mmono("if") fr(v') mmono("then") [|e_2|] med fr(k)\
+  &quad quad quad mmono("else") fr(italic("match")_"next") med fr(v),\
+  &quad quad snd k)\
+  &quad | \_ mmono(->) fr(italic("match")_"next") med fr(v), \
+  &quad snd fr(k)
+  )\
+  & quad quad quad quad quad dots.v\
+  &(lambda fr(italic("match")_"next"): med lambda fr(v):\
+  &quad mmono("match") fr(v) mmono("with")\
+  &quad | p_n mmono(->) [|e'_n|] med (lambda fr(v'): med \
+  &quad quad quad mmono("if") fr(v') mmono("then") [|e_n|] med fr(k)\
+  &quad quad quad mmono("else") fr(italic("match")_"next") med fr(v),\
+  &quad quad snd k)\
+  &quad | \_ mmono(->) fr(italic("match")_"next") med fr(v), \
+  &quad snd fr(k))\
+  &(snd fr(k)) med ) dots.c )$
 
-- $[|mmono("raise") e|] := lambda k: med [|e|] med (snd k, snd k)$
+- $[|mmono("raise") e|] := lambda fr(k): med [|e|] med (snd fr(k), snd fr(k))$
 
 On définit 
 - $"id" := lambda x: x$
