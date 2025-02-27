@@ -77,22 +77,22 @@
   \end{crlr}
 
   \begin{exm}
-    %La formule $\parens{\parens{\lnot x_0 \lor x_1} \to \parens{\parens{x_0 \land x_2} \leftrightarrow x_3}}$ correspond à l'arbre 
+    La formule $((\lnot x_0 \lor x_1) \to ((x_0 \land x_2) \leftrightarrow x_3))$ correspond à l'arbre 
     \begin{figure}[H]
       \centering
       \begin{tikzpicture}
         \node {$\to$}
-        child { node {$\lor$}
-          child { node {$\lnot$} child { node {$x_0$} } }
-          child { node {$x_1$} }
+        child[sibling distance=120] { node {$\lor$}
+          child[sibling distance=60] { node {$\lnot$} child { node {$x_0$} } }
+          child[sibling distance=60] { node {$x_1$} }
         }
-        child { node {$\leftrightarrow$}
-          child {
+        child[sibling distance=120] { node {$\leftrightarrow$}
+          child[sibling distance=60] {
             node {$\land$}
             child { node {$x_0$} }
             child { node {$x_2$} }
           }
-          child { node {$x_3$} }
+          child[sibling distance=60] { node {$x_3$} }
         }
         ;
       \end{tikzpicture}
@@ -248,6 +248,7 @@
     Soit $\mathcal{E}$ un ensemble de formules finiment satisfiable, et $\mathcal{P}$ un ensemble de variables.
     On note $\mathcal{V}$ l'ensemble des valuations partielles prolongeables pour toute partie finie $\mathcal{C}$ de $\mathcal{E}$ en une valuation satisfaisant $\mathcal{C}$.
     C'est-à-dire :
+
     {
       \footnotesize
     \[

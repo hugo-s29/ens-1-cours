@@ -819,13 +819,13 @@
 
   \begin{exm}
     La théorie \[
-      T = \mathrm{Th}(\mathds{N}) := \{\text{les formules $F$ vraies dans $\mathds{N}$}\}
+      T = \mathbf{Th}(\mathds{N}) := \{\text{les formules $F$ vraies dans $\mathds{N}$}\}
     \] est complète mais pas pratique.
 
     De par le théorème d'\textit{incomplétude de Gödel} (c'est un sens différent du "complet" défini avant), on montre qu'on ne peut pas avoir de \textit{joli} ensemble d'axiomes pour $\mathds{N}$.
   \end{exm}
 
-  \begin{prop}
+  \begin{prop} \label{prop:fol-ou-ssi-ou}
     Soit $T$ une théorie complète.
     \begin{enumerate}
       \item Soit $A$ une formule close. On a $T \vdash \lnot A$ ssi $T \nvdash A$. \label{chap2-prop5-1}
@@ -876,7 +876,7 @@
   \begin{rmk}
     La version 1 se décompose en deux théorèmes :
     \begin{itemize}
-      \item le théorème de \textit{correction} (ce que l'on prouve est vrai)
+      \item le \textit{théorème de correction} (ce que l'on prouve est vrai)
         \[
         T \vdash F \implies T \models F\;
         ;\]
@@ -994,6 +994,257 @@
   \end{prv}
   Cette proposition permet de conclure la preuve du lemme précédent.
 
+  \subsection{Preuve du théorème de complétude.}
+
+  On va montrer la version 2, en \textbf{\textit{trois étapes}}.
+  Soit $T$ une théorie consistante sur le langage $\mathcal{L}$.
+  \begin{enumerate}
+    \item On enrichit le langage $\mathcal{L}$ en $\mathcal{L}'$  avec des constantes, appelées \textit{témoins de Henkin}, et qui nous donnerons les éléments de notre ensemble de base : les termes.
+    \item Pour définir complètement le modèle, on complète la théorie $T$ en une théorie $\mathrm{Th}$ sur $\mathcal{L}'$.
+    \item On quotiente pour avoir la vraie égalité dans le modèle.
+  \end{enumerate}
+
+  Cette construction est assez similaire à la définition de $\mathds{C}$ comme le quotient $\mathds{R}[X] / (X^2 + 1)$.
+
+  \begin{prop}
+    On peut étendre $\mathcal{L}$ en $\mathcal{L}'$ et $T$ en $T'$ consistante telle que, pour toute formule $F(x)$ de $\mathcal{L}'$, ayant pour seule variable libre $x$, il existe un symbole de constante $c_F$ de $\mathcal{L}'$ telle que l'on ait $T' \vdash \exists x\: F(x) \to F(c_F)$, d'où le nom de témoin.
+  \end{prop}
+
+  \begin{prv}
+    On fait la construction "par le bas" :
+    \begin{itemize}
+      \item $\mathcal{L}_0 = \mathcal{L}$ ;
+      \item $T_0 = T$ ;
+      \item $\mathcal{L}_{n+1} = \mathcal{L}_n \cup \{c_F  \mid F \text{ formule à une variable libre de } \mathcal{L}_n\} $ ;
+      \item $T_{n+1} = T_n \cup \{\exists x \: F \to F(c_F)  \mid F \text{ formule de } \mathcal{L}_n\}$ ;
+      \item et enfin $\mathcal{L}' = \bigcup_{n \in \mathds{N}} \mathcal{L}_n$ et $T' = \bigcup_{n \in \mathds{N}} T_n$.
+    \end{itemize}
+
+    On commence par montrer quelques lemmes.
+
+    \begin{lem}
+      \label{lem:fol-var-libre-un-symb}
+      Soient $\Gamma$ un ensemble de formules et $A$ une formule.
+      Soit $c$ un symbole de constante qui n'apparait ni dans~$\Gamma$ ni dans $A$.
+      Si $\Gamma \vdash  A[x := c]$ alors $\Gamma \vdash \forall x\: A$.
+    \end{lem}
+    \begin{prv}
+      Idée de la preuve. On peut supposer que $x$ n'apparait pas dans $\Gamma$, ni dans la preuve de $\Gamma \vdash A[x := c]$, sinon on renomme $x$ en $y$ dans l'énoncé du lemme.
+      Alors, de la preuve de $\Gamma \vdash A[x := c]$, on peut déduire une preuve de $\Gamma \vdash A(x)$ en replaçant $c$ par $x$. Avec la règle $\forall_\mathsf{i}$, on en conclut que $\Gamma \vdash \forall x \: A$.
+    \end{prv}
+
+    \begin{lem}
+      Pour toute formule $F$ à une variable libre $x$ sur le langage $\mathcal{L}'$,
+      \[
+        T' \vdash \exists x \: F(x) \to F(c_F)
+      .\]
+    \end{lem}
+    \begin{prv}
+      La formule $F$ a un nombre fini de constantes (car c'est un mot fini), donc $F$ est une formule sur $\mathcal{L}_n$ pour un certain $n \in \mathds{N}$, donc $(\exists x \: F(x) \to F(c_F)) \in T_{n+1} \subseteq T'$.
+    \end{prv}
+
+    Il nous reste à montrer que la théorie $T'$ est consistante.
+
+    Il suffit de montrer que tous les $T_n$ sont consistantes.
+    En effet, si $T'$ est non-consistante, il existe un ensemble fini~$T'' \subseteq T'$ et $T'' \vdash \bot$. Comme $T''$ fini, il existe un certain $n \in \mathds{N}$ tel que $T'' \subseteq T_n$ et donc $T_n \vdash \bot$.
+
+    On montre par récurrence sur $n$ que $T_n$ est consistante.
+    \begin{itemize}
+      \item On a $T_0 = T$ qui est consistante par hypothèse.
+      \item Supposons $T_n$ consistante et que $T_{n+1} \vdash \bot$.
+        Alors, il existe des formules à une variable libre $F_1, \ldots, F_k$ écrites sur $\mathcal{L}_n$ et 
+        \[
+        T_n \cup \mleft\{\,\exists x \: F_i \to F_i(c_{F_i}) \;\middle|\; 1 \le i \le k\,\mright\} \vdash \bot
+        .\]
+        Ainsi (exercice) \[
+        T_n \vdash \Big( \bigwedge_{1 \le i \le k} \big(\exists x \: F_i \to F_i(c_{F_i})\big) \Big) \to \bot
+        .\]
+        Les $c_{F_i}$ ne sont pas dans $T_n$ d'où, d'après le lemme~\ref{lem:fol-var-libre-un-symb}, que \[
+        T_n \vdash \forall y_1 \: \forall y_2 \: \ldots \forall y_n \: \Big( \bigwedge_{1 \le i \le k} \big(\exists x \: F_i \to F_i(y_i)\big) \Big) \to \bot
+        .\]
+        On peut montrer que (théorème logique)
+        \[
+          (\star) \quad\quad \vdash \forall y \: (A(y) \to \bot) \leftrightarrow (\exists y \: A(y) \to \bot)
+        ,\]
+        d'où
+        \[
+        T_n \vdash \Big(\exists y_1 \: \exists y_2 \: \ldots \exists y_n \: \bigwedge_{1 \le i \le k} \big(\exists x \: F_i \to F_i(y_i)\big) \Big) \to \bot
+        .\]
+        On a aussi \[
+          (\star\star) \quad\quad
+          \vdash \exists y_1 \: \exists y_2 \: \big( A(y_1) \land A(y_2)\big) \leftrightarrow
+          \big(\exists y_1 \: A(y_1)\big) \land \big(\exists y_2 \: A(y_2)\big)
+        ,\]
+        et pour $y$ non libre dans $A$, on a \[
+        \vdash \exists y \: (A \to B) \leftrightarrow (A \to \exists y \: B)
+        .\]
+        On a donc \[
+        T_n \vdash \Big( \bigwedge_{1 \le i \le k} (\exists x \: F_i(x) \to \exists y_i \: F_i(y_i)) \Big) \to \bot
+        .\]
+        Or, \[
+          (\star{\star}\star) \quad\quad \vdash \bigwedge_{1 \le i \le k} (\exists x \: F_i(x) \to \exists y_i \: F_i(y_i))
+        .\]
+        On a donc $T_n \vdash \bot$, ce qui contredit l'hypothèse, d'où $T_{n+1}$ consistante.
+
+        En exercice, on pourra montrer les théorèmes logiques $(\star)$,  $(\star\star)$, et  $(\star{\star}\star)$.
+    \end{itemize}
+  \end{prv}
+
+
+  Ensuite, on veut compléter $T'$ en préservant le résultat de la proposition précédente.
+  On cherche $\mathrm{Th}$ (axiome-)complète telle que $T' \subseteq \mathrm{Th}$ et pour toute formule à une variable libre $F$ de $\mathcal{L}'$, on a \[
+  \mathrm{Th} \vdash \exists x \: F \to F(c_F)
+  .\]
+
+  Faisons le cas dénombrable (sinon, lemme de Zorn) : supposons $\mathcal{L}'$ au plus dénombrable.
+  Soit $(F_n)_{n \in \mathds{N}}$ une énumération des formules closes de $\mathcal{L}'$.
+  On définit par récurrence
+  \begin{itemize}
+    \item $K_0 := T'$ ;
+    \item si $K_n$ est complète, alors $K_{n+1} := K_n$ ;
+    \item si $K_n$ n'est pas complet, alors soit le plus petit $p \in \mathds{N}$ tel que l'on ait $K_n \nvdash F_p$ et $K_n \nvdash \lnot F_p$, et on pose $K_{n+1} := K_n \cup \{F_p\}$.
+  \end{itemize}
+
+  \begin{lem}
+    On pose $\mathrm{Th} := \bigcup_{n \in \mathds{N}} T_n$.
+    La théorie $\mathrm{Th}$ a les propriétés voulues.
+  \end{lem}
+
+  \begin{prv}
+    \begin{enumerate}
+      \item On a $T' \subseteq \mathrm{Th}$.
+      \item La théorie $\mathrm{Th}$ est consistante.
+        En effet, il suffit de montrer que tous les $K_n$ le sont (par les mêmes argument que la preuve précédente).
+        Montrons le par récurrence.
+        \begin{itemize}
+          \item La théorie $K_0 = T'$ est consistante par hypothèse.
+          \item Si $K_{n+1} = K_n$ alors $K_{n+1}$ est consistante par hypothèse de récurrence.
+          \item Si $K_{n+1} = K_n \cup \{F_p\}$, et si $K_n, F_p \vdash \bot$, 
+            alors par la règle $\lnot_\mathsf{i}$, on a $K_n \vdash \lnot F_p$, ce qui est faux.
+            Ainsi $K_{n+1}$ est consistante.
+        \end{itemize}
+        On en conclut que $\mathrm{Th}$ est consistante.
+      \item La théorie $\mathrm{Th}$ est complète.
+        Sinon, à chaque étape $K_{n+1} = K_n \cup \{F_{q_n}\}$ et il existe $F_p$ telle que $\mathrm{Th} \nvdash F_p$ et $\mathrm{Th} \nvdash \lnot F_p$.
+        Ainsi, pour tout $n \in \mathds{N}$, $K_n \nvdash F_p$ et $K_n \nvdash \lnot F_p$, d'où pour tout $n \in \mathds{N}$, $p_n \le p$ avec des $p_n$ distincts.
+        C'est absurde, il n'y a qu'un nombre fini d'entiers inférieurs à un entier donné.
+    \end{enumerate}
+  \end{prv}
+
+  On construit un quotient avec "$=$" comme relation d'équivalence, puis on vérifie que les fonctions et relations sont bien définies (ne dépendent pas du représentant choisit, comme pour les groupes quotients).
+
+  Soit $\mathcal{E}$ l'ensemble des termes clos de $\mathcal{L}'$, qui n'est pas vide car il contient les termes $c_{x = x}$ (avec la définition de $c_F$ ci-avant).
+  On définit sur $\mathcal{E}$ une relation $\sim$, où $t \sim t'$ ssi $\mathrm{Th} \vdash t = t'$.
+
+  \begin{exo}
+    Montrer que $\sim$ est une relation d'équivalence.
+  \end{exo}
+
+  On pose enfin $|\mathcal{M}| := \mathcal{E} / {\sim}$.
+  On notera $\bar{t}$ la casse de $t$.
+  On définit l'interprétation des symboles de $\mathcal{L}'$ :
+  \begin{itemize}
+    \item si $c$ est une constante, alors $c_{\mathcal{M}} := \bar{c}$ ;
+    \item si $f$ est un symbole de fonctions d'arité $n$, \[
+        f_{\mathcal{M}}(\bar{t}_1, \ldots, \bar{t}_n) := \overline{f(t_1, \ldots, t_n)}
+      .\]
+  \end{itemize}
+
+  \begin{lem}
+    La définition de dépend pas des représentants choisis, c'est-à-dire 
+    si $\bar{u}_1 = \bar{t}_1, \ldots, \bar{u}_n = \bar{t}_n$ alors \[
+      \overline{f(t_1, \ldots, t_n)} = \overline{f(u_1, \ldots, u_n)}
+    .\] 
+  \end{lem}
+  \begin{prv}
+    \begin{itemize}
+      \item On a $\mathrm{Th} \vdash t_i = u_i$ pour tout $i$ par hypothèse
+      \item donc avec $=_\mathsf{i}$, on a $\mathrm{Th} \vdash f(t_1, \ldots, t_n) = f(t_1, \ldots, t_n)$
+      \item donc avec $=_\mathsf{e}$, on a $\mathrm{Th} \vdash f(u_1, \ldots, t_n) = f(t_1, \ldots, t_n)$
+      \item \ldots\textit{etc}\ldots
+      \item donc avec $=_\mathsf{e}$, on a $\mathrm{Th} \vdash f(u_1, \ldots, u_n) = f(t_1, \ldots, t_n)$
+    \end{itemize}
+  \end{prv}
+
+  [\textit{suite de la définition de l'interprétation}]
+
+  \begin{itemize}
+    \item si $R$ est un symbole de relation d'arité $n$, on définit 
+      \[
+        (\bar{t}_1, \ldots, \bar{t}_n) \in R_{\mathcal{M}} \text{ ssi }
+        \mathrm{Th} \vdash  R(t_1, \ldots, t_n)
+      .\] 
+  \end{itemize}
+
+  \begin{exo}
+    Montrer que cette définition de dépend pas des représentants choisis.
+  \end{exo}
+
+  \begin{lem}
+    Soit $F$ une formule à $n$ variables libres et $t_1 ,\ldots, t_n$ des termes clos.
+    Alors, $\mathcal{M} \models F[\bar{t}_1, \ldots, \bar{t}_n]$ ssi $\mathrm{Th} \vdash F[t_1, \ldots, t_n]$,
+    où l'on interprète la formule à paramètre dans l'environnement $e$ avec $e(y_i) = \bar{t}_i$ alors $\mathcal{M}, e \models F(y_1, \ldots, y_n)$.
+  \end{lem}
+  \begin{prv}
+    Par induction sur $F$ en supposant que $F$ n'utilise que $\lnot$, $\lor$,  $\exists$ comme connecteurs.
+    En effet, on a pour toute formule $G$, il existe $F$ qui n'utilise que $\lnot$,  $\lor$,  $\exists$ et  $\vdash F \leftrightarrow G$, ce qui permet de conclure directement pour $G$ si le résultat est vrai sur $F$.
+
+    \begin{itemize}
+      \item  Pour $F = \bot$, alors on a $\mathrm{Th} \nvdash \bot$ car $\mathrm{Th}$ consistante et $\mathcal{M} \models \bot$ par définition.
+      \item Pour $F = R(u_1, \ldots, u_m)$, où les $u_i$ sont des termes non nécessairement clos 
+        et où $u_1, \ldots, u_m$ sont des termes à $n$ variables $x_1, \ldots, x_n$.
+        On pose \[
+          F[t_1, \ldots, t_n] := R(\underbrace{u_1(t_1, \ldots, t_n)}_{v_1}, \ldots, \underbrace{u_m(t_1, \ldots, t_n)}_{v_m})
+        \] 
+        où l'on définit $v_i := u_i(t_1, \ldots, t_n)$ qui est clos car les $t_i$ sont clos.
+        On veut montrer que \[
+          \mathcal{M} \models \underbrace{F[\bar{t}_1, \ldots, \bar{t}_n]}_{R(\bar{v}_1, \ldots, \bar{v}_m)} \text{ ssi }
+          \mathrm{Th} \vdash \underbrace{F[t_1, \ldots, t_n]}_{R(v_1, \ldots, v_m)}
+        .\]
+        Or, on a l'équivalence $\mathcal{M} \models R(\bar{v}_1, \ldots, \bar{v}_m)$ ssi $(\bar{v}_1, \ldots, \bar{v}_m) \in R_{\mathcal{M}}$ ssi $\mathrm{Th} \vdash R(v_1, \ldots, v_m)$.
+      \item Pour $F = F_1 \lor F_2$, et  $t_1, \ldots, t_n$ sont des termes clos, on veut montrer que 
+        \begin{align*}
+          &\mathcal{M} \models F_1[\bar{t}_1, \ldots, \bar{t}_n] \lor  F_2[\bar{t}_1, \ldots, \bar{t}_n]\\
+          \text{ ssi }&
+          \mathrm{Th} \vdash F_1[t_1, \ldots, t_n] \lor  F_2[t_1, \ldots, t_n]
+        .\end{align*}
+        Or,
+        \begin{align*}
+          &\mathcal{M} \models F_1[\bar{t}_1, \ldots, \bar{t}_n] \lor  F_2[\bar{t}_1, \ldots, \bar{t}_n] \\
+          \text{ ssi }& \mathcal{M} \models F_1[\bar{t}_1, \ldots, \bar{t}_n] \text{ ou } \mathcal{M} \models F_2[\bar{t}_1, \ldots, \bar{t}_n]\\
+          \text{ ssi }& \mathrm{Th} \vdash F_1[t_1, \ldots, t_n] \text{ ou } \mathrm{Th} \vdash F_2[t_1, \ldots, t_n]
+        \end{align*}
+        par hypothèse.
+        Ainsi,
+        \begin{itemize}
+          \item avec $\lor_\mathsf{i}^\mathsf{g}$ et $\lor_\mathsf{i}^\mathsf{d}$, on a que $\mathrm{Th} \vdash F_1[t_1, \ldots, t_n] \lor F_2[t_1, \ldots, t_n]$ ;
+          \item réciproquement, on utilise le lemme~\ref{prop:fol-ou-ssi-ou} car $\mathrm{Th}$ est complète.
+        \end{itemize}
+      \item Pour $F = \lnot G$, en exercice.
+      \item Si  $F = \exists x \: G$ et $t_1, \ldots, t_n$ des termes clos, on a 
+        \begin{itemize}
+          \item on a $\mathcal{M} \models \exists x \: G[\bar{t}_1, \ldots, \bar{t}_n, x]$ 
+          \item ssi il existe $t \in \mathcal{E}$ tel que $\mathcal{M} \models G[\bar{t}_1, \ldots, \bar{t}_n, \bar{t}]$
+          \item ssi il existe $t \in \mathcal{E}$ tel que $\mathrm{Th} \vdash G(t_1, \ldots, t_n,t)$
+        \end{itemize}
+        et donc $\mathrm{Th} \vdash \exists x \: G(t_1, \ldots, t_n, x)$ avec $\exists_\mathsf{i}$.
+        Réciproquement, si $\mathrm{Th} \vdash \exists x \: G(t_1, \ldots, t_n, x)$ alors $\mathrm{Th} \vdash G(t_1, \ldots, t_n, c_{G(t_1, \ldots, t_n, x)})$, donc il existe un terme $t$ et $\mathrm{Th} \vdash G(t_1, \ldots, t_n, t)$.
+    \end{itemize}
+  \end{prv}
+
+
+  \begin{lem}
+    On a $\mathcal{M} \models \mathrm{Th}$ (et donc $\mathcal{M} \models T$).
+  \end{lem}
+
+  \begin{prv}
+    On montre que, pour toute formule $F$ de $\mathrm{Th}$, on a que $\mathcal{M} \models F$.
+    Pour cela, on utilise le lemme précédent : si $F$ est close, alors
+    \[
+    \mathcal{M} \models F \text{ ssi } \mathrm{Th} \vdash F
+    .\]
+  \end{prv}
+
   \subsection{Compacité.}
 
   \begin{thm}[Compacité (sémantique)]
@@ -1043,5 +1294,28 @@
     \end{array}
     \arrow{u}{}
   \end{tikzcd}
-  \] 
+  \]
+
+  Dans la suite de cette sous-section, on étudie des applications du théorème de compacité.
+
+  \begin{thm}
+    Si une théorie $T$ a des modèles finis arbitrairement grands, alors elle a un modèle infini.
+    \qed
+  \end{thm}
+
+  \begin{crlr}
+    Il n'y a pas de théorie des groupes finis \textit{i.e.} un ensemble d'axiomes dont les modèles sont exactement les groupes finis.
+  \end{crlr}
+
+  \begin{thm}[Löwenheim-Skolem]
+    Soit $T$ une théorie dans un langage $\mathcal{L}$ et $\kappa$ un cardinal et $\kappa \ge \operatorname{card} \mathcal{L}$ et $\kappa \ge \aleph_0$.\footnote{Ici, $\aleph_0$ est le cardinal de $\mathds{N}$, on dit donc que $\kappa$ est infini.}
+    Si $T$ a un modèle infini, alors $T$ a un modèle de cardinal $\kappa$.
+  \end{thm}
+
+  \begin{exm}
+    \begin{itemize}
+      \item Avec $T = \mathbf{Th}(\mathds{N})$, on a $\kappa = \operatorname{card} \mathds{R}$.
+      \item Avec $T = \mathbf{ZFC}$, on a $\kappa = \aleph_0 = \operatorname{card} \mathds{N}$.
+    \end{itemize}
+  \end{exm}
 \end{document}
