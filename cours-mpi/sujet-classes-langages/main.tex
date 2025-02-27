@@ -80,7 +80,7 @@
 
   On se donne $|Q|$ symboles non-terminaux (\textit{i.e.} variables), que l'on notera  $(\mathsf{X}_q)_{q \in Q}$.
 
-  Pour $q \in Q$, on note $\mathcal{A}_q := (\Sigma, Q, \{q\}, F, \delta)$ l'automate identique à $\mathcal{A}$ mais ayant $q$ comme unique état initial.
+  Pour $q \in Q$, on note $\mathcal{A}_q := (\Gamma, Q, \{q\}, F, \delta)$ l'automate identique à $\mathcal{A}$ mais ayant $q$ comme unique état initial.
 
   \question{
     Proposer un ensemble de règles de production $\Pi$ tel que, pour tout $q \in Q$, on ait \[
@@ -97,7 +97,7 @@
   }
 
   \indication{
-    On pourra procéder par récurrence sur $n$ afin de montrer, pour tout état $q \in Q$, l'égalité $\mathcal{L}(\mathcal{A}_q) \cap \Sigma^n = \mathcal{L}(\mathcal{G}, \mathsf{X}_q) \cap \Sigma^n$.
+    On pourra procéder par récurrence sur $n$ afin de montrer, pour tout état $q \in Q$, l'égalité $\mathcal{L}(\mathcal{A}_q) \cap \Gamma^n = \mathcal{L}(\mathcal{G}, \mathsf{X}_q) \cap \Gamma^n$.
   }
 
   \question{
