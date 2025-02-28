@@ -1,0 +1,333 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{L'arithmétique de Peano.}
+  \begin{itemize}
+    \item \textsc{Dedekind} (1988) et \textsc{Peano} (1889) formalisent l'arithmétique.
+    \item En 1900, David \textsc{Hilbert}, lors du 2ème ICM à Paris, donne un programme et dont le 2nd problème est la \textit{cohérence de l'arithmétique}.
+    \item En 1901, \textsc{Russel} donne son paradoxe concernant l'"ensemble" de tous les ensembles.
+    \item En 1930, \textsc(Hilbert) est toujours optimiste : "On doit savoir, on saura !"
+  \end{itemize}
+
+  La formalisation de l'arithmétique engendre deux questions :
+  \begin{enumerate}
+    \item est-ce que tout théorème est prouvable ? ($\triangleright$ complétude)
+    \item existe-t-il un algorithme pour décider si un théorème est prouvable ? ($\triangleright$ décidabilité)
+  \end{enumerate}
+
+  Le second point est appelé "\textit{Entscheidungsproblem}", le problème de décision, en 1928.
+
+  \begin{itemize}
+    \item En 1931, Gödel répond \textsc{non} à ces deux questions.
+  \end{itemize}
+
+  On a donné plusieurs formalisations des algorithmes :
+  \begin{itemize}
+    \item en 1930, le $\lambda$-calcul de Church ;
+    \item en 1931--34, les fonctions récursives de Herbrand et Gödel ;
+    \item en 1936, les machines de Turing.
+  \end{itemize}
+  On démontre que les trois modèles sont équivalents.
+
+  La thèse de Church--Turing nous convainc qu'il n'existe pas de modèle plus évolué "dans la vraie vie".
+
+  \section{Les axiomes.}
+
+  On définit le langage $\mathcal{L}_0 = \{\zero, \succ, \oplus, \otimes\}$ où
+  \begin{itemize}
+    \item $\zero$ est un symbole de constante ;
+    \item $\succ$ est un symbole de fonction unaire ;
+    \item $\oplus$ et $\otimes$ sont deux symboles de fonctions binaires.
+  \end{itemize}
+
+  On verra plus tard que l'on peut ajouter une relation binaire $\le$.
+
+  \begin{rmk}[Convention]
+    La structure $\mathds{N}$ représente la $\mathcal{L}_0$-structure dans laquelle on interprète les symboles de manière habituelle :
+    \begin{itemize}
+      \item pour $\zero$, c'est $0$ ;
+      \item pour $\succ$, c'est $\lambda n.  n + 1$ (\textit{i.e.} $x \mapsto x + 1$) ;
+      \item pour $\oplus$, c'est $\lambda n \: m.  n + m$ ;
+      \item pour $\otimes$, c'est $\lambda n \: m.  n \times m$.
+    \end{itemize}
+  \end{rmk}
+
+  \subsubsection{Les axiomes de Peano.}
+
+  On se place dans le cas égalitaire.
+  L'ensemble $\mathcal{P}$ est composé de $\mathcal{P}_0$ un ensemble fini d'axiomes (A1--A7) et d'un schéma d'induction (SI).
+
+  Trois axiomes pour le successeur :
+  \begin{description}
+    \item[A1.] $\forall x \: \lnot (\succ x = \zero)$
+    \item[A2.] $\forall x \: \exists y \: \big(\lnot (x = \zero) \to x = \succ y\big)$
+    \item[A3.] $\forall x \: \forall y \: (\succ x = \succ y \to x = y)$
+  \end{description}
+
+  Deux axiomes pour l'addition :
+  \begin{description}
+    \item[A4.] $\forall x \: (x \oplus \zero = x)$ 
+    \item[A5.] $\forall x \: \forall y \: (x \oplus (\succ y) = \succ(x \oplus y))$
+  \end{description}
+
+  Deux axiomes pour la multiplication :
+  \begin{description}
+    \item[A6.] $\forall x \: (x \otimes \zero = \zero)$
+    \item[A7.] $\forall x \: \forall y \: \big(x \otimes (\succ y) = (x \otimes y) \oplus x\big)$
+  \end{description}
+
+  Et le schéma d'induction :
+  \begin{description}
+    \item[SI.]
+      Pour toute formule $F$ de variables libres $x_0, \ldots, x_n$,
+  \end{description}
+  \fitbox{$\forall x_1 \: \cdots \: \forall x_n \: \Big(
+    \big(F(\zero, \ldots, x_1, \ldots, x_n) \land \forall x \: (F(x, x_1, \ldots, x_n) \to F(\succ x, x_1, \ldots, x_n))\big)
+    \to \forall x \: F(x, x_1, \ldots, x_n)
+  \Big).$}
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Le schéma est le SI avec hypothèse faible, qui permet de montrer le SI avec hypothèse forte.
+        On adopte la notation $\forall y \le x \: F(y, x_1, \ldots, x_n)$ pour \[
+        \forall y \: \big( (\exists z \:  z \oplus y = x) \to  F(y, x_1, \ldots, x_n) \big)
+        .\]
+        Le SI avec hypothèse forte est :
+    \end{itemize}
+    \fitbox{
+      $\forall x_1 \: \cdots \: \forall x_n \: \Big(
+      \big(F(\zero, \ldots, x_1, \ldots, x_n) \land \forall x \: \big((\forall y \le  x \: F(y, x_1, \ldots, x_n)) \to F(\succ x, x_1, \ldots, x_n)\big)\big)
+      \to \forall x \: F(x, x_1, \ldots, x_n)
+      \Big)$
+    }
+    \begin{itemize}
+      \item L'ensemble $\mathcal{P}$ est non-contradictoire car $\mathds{N}$ est un modèle, appelé \textit{modèle standard}.
+      \item On peur remplacer le SI par une nouvelle règle de démonstration :
+        \[
+        \begin{prooftree}
+          \hypo{\Gamma \vdash F(\zero)}
+          \hypo{\Gamma \vdash \forall y\: \big(F(y) \to F(\succ y)\big)}
+          \infer 2[\mathsf{rec}]{\Gamma \vdash \forall x \: F(x)}
+        \end{prooftree}
+        .\]
+    \end{itemize}
+  \end{rmk}
+
+  \begin{exo}
+    Montrer l'équivalence entre SI et la nouvelle règle $\mathsf{rec}$, \textit{i.e.} on peut démontrer les mêmes théorèmes.
+  \end{exo}
+
+  \begin{nota}
+    On note $\repr{n}$ le terme  $\underbrace{\succ \cdots  \succ}_{n \text{ fois}}  \zero$ pour $n \in \mathds{N}$.
+  \end{nota}
+
+  \begin{defn}
+    Dans une $\mathcal{L}_0$-structure, on dit qu'un élément est \textit{standard} s'il est l'interprétation d'un terme $\repr{n}$ avec  $n \in \mathds{N}$.
+  \end{defn}
+
+  \begin{rmk}
+    Dans $\mathds{N}$ (le modèle standard), tout élément est standard.
+  \end{rmk}
+
+  \begin{thm}
+    Il existe des modèles de $\mathcal{P}$ non isomorphes à $\mathds{N}$.
+  \end{thm}
+  \begin{prv}
+    \begin{enumerate}
+      \item Avec le théorème de Löwenheim-Skolem, il existe un modèle de $\mathcal{P}$ de cardinal $\kappa$ pour tout $\kappa \ge \aleph_0$, et $\operatorname{card} \mathds{N} = \aleph_0$.
+      \item Autre preuve, on considère un symbole de constante $c$ et on pose $\mathcal{L} := \mathcal{L}_0 \cup \{c\}$.
+        On considère la théorie \[
+          T := \mathcal{P} \cup \mleft\{\,\lnot(c = \repr{n}) \;\middle|\; n \in \mathds{N}\,\mright\}
+        .\]
+        Montrons que $T$ a un modèle.
+        Par le théorème de compacité de la logique du premier ordre, il suffit de montrer que $T$ est finiment satisfiable.
+        Soit $T' \subseteq_\mathrm{fini} T$ : par exemple, 
+        \[
+          T' \subseteq \mathcal{P} \cup \{\lnot(c = \repr{n}_1), \lnot (c = \repr{n}_2), \ldots, (c = \repr{n}_k)\} 
+        ,\] 
+        et $n_k \ge n_1, \ldots, n_{k-1}$.
+        On construit un modèle de $T'$ correspondant à $\mathds{N}$ où $c$ est interprété par $n_k + 1$.
+        Ainsi, $T'$ est satisfiable et donc $T$ aussi avec un modèle $\mathcal{M}$.
+
+        Montrons que $\mathds{N}$ et $\mathcal{M}$ ne sont pas isomorphes.
+        Par l'absurde, supposons que $\varphi : \mathcal{M} \to \mathds{N}$ soit un isomorphisme.
+        Alors $\gamma := \varphi(c_{\mathcal{M}})$ satisfait les mêmes formules que $c_{\mathcal{M}}$, par exemple, pour tout $n \in \mathds{N}$, $\mathcal{M} \models \lnot (c = \repr{n})$.
+        Or, on ne peut pas avoir $\mathds{N} \models \lnot (\repr{\gamma} = \repr{n})$ pour tout $n \in \mathds{N}$.
+        \textbf{\textit{Absurde.}}
+    \end{enumerate}
+  \end{prv}
+
+  On a montré que tous les modèles isomorphes à $\mathds{N}$ n'ont que des éléments standards.
+
+  \begin{thm}
+    Dans tout modèle $\mathcal{M}$ de $\mathcal{P}$, 
+    \begin{enumerate}
+      \item l'addition est commutative et associative ;
+      \item la multiplication aussi ;
+      \item la multiplication est distributive par rapport à l'addition ;
+      \item tout élément est \textit{régulier} pour l'addition :
+        \[
+        \mathcal{M} \models \forall x \: \forall y \: \forall z \: (x \oplus y = x \oplus z \to y = z) \;
+        ;\]
+      \item tout élément non nul est régulier pour la multiplication : 
+        \[
+        \mathcal{M} \models \forall x\: \forall y \: \forall z \: ((\lnot (x = \zero) \land x \otimes y = x \otimes z) \to y = z)
+        \;;\]
+      \item la formule suivante définie un ordre total sur $\mathcal{M}$ compatible avec $+$ et $\times$ :
+        \[
+        x \le y \text{ ssi } \exists z \: (x \oplus x = y)
+        .\]
+    \end{enumerate}
+  \end{thm}
+  \begin{prv}
+    On prouve la commutativité de $+$ en trois étapes.
+    \begin{enumerate}
+      \item On montre  $\mathcal{P} \vdash \forall x \: (\zero \oplus x = x)$.
+        On utilise le SI avec la formule $F(x) := (\zero \oplus x = x)$.
+        \begin{itemize}
+          \item On a $\mathcal{P} \vdash \zero \oplus \zero = \zero$ par A4.
+          \item On montre $\mathcal{P} \vdash \forall x \: F(x) \to F(\succ x)$, c'est à dire :
+            \[
+            \forall x \: \big((\zero \oplus x = x) \to (\zero \oplus (\succ x) = \succ x) \big)
+            .\]
+            On peut le montrer par A5.
+        \end{itemize}
+
+        \textbf{Questions/Remarques :}
+        \begin{itemize}
+          \item Pourquoi pas une récurrence normale ?
+            On n'est pas forcément dans $\mathds{N}$ !
+          \item Grâce au théorème de complétude, on peut raisonner sur les modèles, donc en maths naïves.
+        \end{itemize}
+      \item On montre $\mathcal{P} \vdash \forall x \: \forall y \: \succ(x \oplus y) = (\succ x) \oplus y$.
+        On veut utiliser le schéma d'induction avec $F(x, y) := \succ(x \oplus y) = (\succ x) \oplus y$.
+        Mais ça ne marche pas\ldots (Pourquoi ?)
+
+        La bonne formule est $F(y, x) := \succ(x \oplus y) = (\succ x) \oplus y$.
+        \begin{itemize}
+          \item On montre $\mathcal{P} \vdash F(\zero, x)$, c'est à dire 
+            \[
+            \mathcal{P} \vdash \succ(x \oplus \zero) = (\succ x) \oplus \zero.
+            \]
+            Ceci est vrai car 
+            \[
+            \succ(x \oplus \zero) \underset {\text{A4}} = \succ x \underset {\text{A4}} = (\succ x) \oplus \zero
+            .\]
+          \item On a $\mathcal{P} \vdash F(y, x) \to F(\succ y, x)$ car : si $\succ(x \oplus y) = (\succ x) \oplus y$, alors 
+        \end{itemize}
+        \[
+        \succ(x \oplus (\succ y)) \underset {\text{A5}} = \succ \succ (x \oplus y) \underset{\text{hyp}} = \succ((\succ x) \oplus y) \underset {\text{A5}} (\succ x) = \oplus (\succ y)
+        .\]
+      \item On utilise le SI avec $F(x, y) := (x \oplus y = y \oplus x)$.
+        D'une part, on a $F(\zero, y) = (\zero \oplus y = y \oplus \zero)$ par 1 et A4.
+        D'autre part, si l'on a $x \oplus y = y \oplus x$ alors  $(\succ x) \oplus y = y \oplus (\succ x)$ par A5 et 2.
+        Par le SI, on conclut.
+    \end{enumerate}
+  \end{prv}
+
+  \begin{exo}
+    Finir la preuve du théorème.
+  \end{exo}
+
+  \section{Liens entre $\mathds{N}$ et un modèle $\mathcal{M}$ de $\mathcal{P}$.}
+
+  \begin{defn}
+     Si $\mathcal{M} \models \mathcal{P}_0$ et $\mathcal{N} \models \mathcal{P}_0$ et $\mathcal{N}$ une sous-interprétation de $\mathcal{M}$, on dit que $\mathcal{N}$ est un segment initial de $\mathcal{M}$, ou que $\mathcal{M}$ est une extension finale de $\mathcal{N}$, si pour tous $a,b,c \in |\mathcal{M}|$ avec $a \in |\mathcal{N}|$ on a :
+    \begin{enumerate}
+      \item si $\mathcal{M} \models c \le a$ alors $c \in |\mathcal{N}|$ ;
+      \item si $b \not\in |\mathcal{N}|$ alors $\mathcal{M} \models a \le b$.
+    \end{enumerate}
+  \end{defn}
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \filldraw[draw=deepblue,fill=NavyBlue!5] (0, 0) rectangle (5, 1.5);
+      \node[deepblue] at (4.6, 1.2) {$\mathcal{M}$};
+      \filldraw[draw=deepgreen,fill=ForestGreen!5] (0.1, 0.1) rectangle (2.5, 1.4);
+      \node[deepgreen] at (0.5, 1.10) {$\mathcal{N}$};
+      \node[fill,deepblue,circle,inner sep=1pt] (C) at (1, 0.35) {};
+      \node[deepblue] at (1.5, 0.35) {$\le$};
+      \node[deepblue] at (2.5, 0.35) {$\le$};
+      \node[fill,deepblue,circle,inner sep=1pt] (A) at (2, 0.35) {};
+      \node[fill,deepblue,circle,inner sep=1pt] (B) at (3, 0.35) {};
+      \node[deepblue,above=3pt of A] {$a$};
+      \node[deepblue,above=3pt of B] {$b$};
+      \node[deepblue,above=3pt of C] {$c$};
+    \end{tikzpicture}
+  \end{figure}
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Les points peuvent être incomparables et dans $\mathcal{M}$.
+      \item L'ensemble $\mathcal{P}_0$ est très faible, on ne montre même pas que $\oplus$ commute ou que $\le$ est une relation d'ordre (\textit{c.f.} TD).
+    \end{itemize}
+  \end{rmk}
+
+  \begin{thm}
+    Soit $\mathcal{M} \models \mathcal{P}_0$.
+    Alors, le sous-ensemble de $\mathcal{M}$ suivant est une sous-interprétation de $\mathcal{M}$ qui est un segment initial et qui est isomorphe à $\mathds{N}$ :
+    \[
+    \mleft\{\,a \in |\mathcal{M}| \;\middle|\;
+    \begin{array}{l}
+      \text{il existe $n \in \mathds{N}$ et $a$}\\
+      \text{est l'interprétation}\\
+      \text{de $\repr{n}$ dans $\mathcal{M}$}
+    \end{array}\,\mright\} 
+    .\]
+  \end{thm}
+
+  \begin{prv}[Idée de la preuve]
+    \begin{enumerate}
+      \item Pour tout $n \in \mathds{N}$, on a $\mathcal{P}_0 \vdash \repr{n+1} = \succ \repr{n}$.
+      \item Pour tout $n, m \in \mathds{N}$, on a $\mathcal{P}_0 \vdash \repr{m} \oplus \repr{n} = \repr{m+n}$.
+      \item Pour tout $n, m \in \mathds{N}$, on a $\mathcal{P}_0 \vdash \repr{m} \otimes \repr{n} = \repr{m \times n}$.
+      \item Pour tout $n \in \mathds{N}_\star$, on a $\mathcal{P}_0 \vdash \lnot (\repr{n} = \zero)$.
+      \item Pour tout $n  \neq m$, on a $\mathcal{P}_0 \vdash \lnot (\repr{m} = \repr{n})$.
+      \item Pour tout $n \in \mathds{N}$ (admis), on a 
+        \[
+          \mathcal{P}_0 \vdash \forall x \: \big(x \le \repr{n} \to (x = \zero \lor x = \repr{1} \lor \cdots \lor x = \repr{n}) \big)
+        .\] 
+      \item Pour tout $x$, on a $\mathcal{P}_0 \vdash \forall x \: (x \le  \repr{n} \lor \repr{n} \le x)$.
+    \end{enumerate}
+  \end{prv}
+
+  \section{Les fonctions représentables.}
+
+  Cette section détaille un outil technique pour montrer le théorème d'incomplétude de Gödel vu plus tard.
+  On code tout avec des entiers !
+
+  \begin{defn}
+    Soit $f : \mathds{N}^p \to \mathds{N}$ une fonction totale et $F(x_0, \ldots, x_p)$ une formule de $\mathcal{L}_0$.
+    On dit que $F$ \textit{représente} $f$ si, pour tout $p$-uplet d'entiers $(n_1, \ldots, n_p)$ on a : \[
+      \mathcal{P}_0 \vdash \forall y \: \big(F(y, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{f(n_1, \ldots, n_p)}\big)
+    .\]
+    On dit que $f$ est \textit{représentable} s'il existe une formule qui la représente.
+
+    Un ensemble de $p$-uplets $A \subseteq \mathds{N}^p$ est \textit{représenté} par $F(x_1, \ldots, x_p)$ si pour tout $p$-uplet d'entiers $(n_1, \ldots, n_p)$, on a 
+    \begin{enumerate}
+      \item si $(n_1, \ldots, n_p) \in A$ alors $\mathcal{P}_0 \vdash F(n_1, \ldots, n_p)$ ;
+      \item si $(n_1, \ldots, n_p) \not\in A$ alors $\mathcal{P}_0 \vdash \lnot F(n_1, \ldots, n_p)$.
+    \end{enumerate}
+    On dit que $A$ est \textit{représentable} s'il existe une formule qui le représente.
+  \end{defn}
+
+  \begin{exo}
+    Montrer qu'un ensemble est représentable ssi sa fonction indicatrice l'est.
+  \end{exo}
+
+  \begin{exm}[Les briques de base des fonctions récursives]~\\[-\baselineskip]
+    \begin{itemize}
+      \item La fonction nulle $f : \mathds{N}\to \mathds{N}, x \mapsto 0$ est représentable par $F(x_0, x_1) := x_0 = \zero$.
+      \item Les fonctions constantes $f : \mathds{N}\to \mathds{N}, x \mapsto n$ sont représentables par $F(x_0, x_1) := x_0 = \repr{n}$, où $n \in \mathds{N}$.
+      \item Les projections $\pi^i_p : \mathds{N}^p \to \mathds{N}, (x_1, \ldots, x_p) \mapsto x_i$ sont représentables par $F(x_0, x_1, \ldots, x_p) := x_0 = x_i$.
+      \item La fonction successeur $f : \mathds{N}\to \mathds{N}, x \mapsto x + 1$ est représentable par $F(x_0, x_1) := x_0 = (\succ x_1)$.
+      \item L'addition $f : \mathds{N}^2 \to \mathds{N}, (x,y) \mapsto x+y$ est représentable par $F(x_0, x_1, x_2) := x_0 = x_1 \oplus x_2$.
+      \item La multiplication $f : \mathds{N}^2 \to \mathds{N}, (x,y) \mapsto x\times y$ est représentable par $F(x_0, x_1, x_2) := x_0 = x_1 \otimes x_2$.
+    \end{itemize}
+  \end{exm}
+
+  \begin{thm}
+    Toute fonction récursive totale est représentable.
+  \end{thm}
+\end{document}

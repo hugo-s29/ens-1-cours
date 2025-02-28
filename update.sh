@@ -10,9 +10,13 @@ cp log/main.pdf ../web/public/data/ens1/logique.pdf
 cp log/chap00.pdf ../web/public/data/ens1/logique-chap00.pdf
 cp log/chap01.pdf ../web/public/data/ens1/logique-chap01.pdf
 cp log/chap02.pdf ../web/public/data/ens1/logique-chap02.pdf
+cp log/chap03.pdf ../web/public/data/ens1/logique-chap03.pdf
+
+cp proba/td.pdf ../web/public/data/ens1/proba-td.pdf
 
 cp profon/main.pdf ../web/public/data/ens1/profon.pdf
-cp profon/trad.pdf ../web/public/data/ens1/profon-traduction-cps.pdf
+cp profon/small-docs/trad.pdf ../web/public/data/ens1/profon-traduction-cps.pdf
+cp profon/small-docs/opti.pdf ../web/public/data/ens1/profon-optimisation-cps.pdf
 
 # ==========
 # SEMESTRE 1
