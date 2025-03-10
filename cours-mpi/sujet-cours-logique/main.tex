@@ -1,0 +1,522 @@
+\documentclass{../notes}
+
+\title{Logique}
+
+\usepackage{multicol}
+\usepackage{lscape}
+%\usepackage{pdflscape}
+%\usepackage{cellspace}
+
+\newlength\stextwidth
+\newcommand\makesamewidth[3][c]{%
+  \settowidth{\stextwidth}{#2}%
+  \makebox[\stextwidth][#1]{#3}%
+}
+
+\newcounter{questioncounter}
+\setcounter{questioncounter}{0}
+
+\newcommand\question[1]{
+  \vspace{1em}
+  \refstepcounter{questioncounter}
+  \makesamewidth[r]{\textbf{Q99.}}{\textbf{Q\thequestioncounter.}}~
+  \parbox[t]{11cm}{#1}
+  \vspace{1em}
+}
+
+\newcommand\monoit[1]{ \texttt{\textit{#1}} }
+
+\newcommand\indication[2][\relax]{
+  \textit{Indication.}
+
+  \raisebox{\depth}{\rotatebox{180}{\parbox{12.3cm}{#2}}}
+}
+
+\newcommand\ptree[1]{
+  \begin{prooftree}
+    #1
+  \end{prooftree}
+}
+
+\begin{document}
+  \section{Introduction.}
+
+  Étant donnée une formule logique $\varphi$, comment montrer qu'elle est tautologique (\textit{i.e.} toujours vraie) ? Comment montrer $\models \varphi$ ?
+  \begin{enumerate}
+    \item On \textit{brute force} toutes les combinaisons possibles des variables, c'est-à-dire on teste les $2^{|{\operatorname{vars} \varphi}|}$ valuations et on vérifie que l'on ait $v(\varphi) = \textsc{Vrai}$ pour toute valuation $v$.
+      C'est l'équivalent de construire une table de vérité pour $\varphi$.
+    \item On calcule $v(\varphi)$ de manière symbolique et on essaie de simplifier les termes.
+      Ceci implique de savoir factoriser/développer de manière astucieuse. 
+    \item On réalise un raisonnement plus mathématique avec des "montrons", des "supposons", \textit{etc}.
+  \end{enumerate}
+
+  La déduction naturelle, et les preuves formelles, c'est ce dernier point.
+
+  Voici un exemple de raisonnement formel pour montrer \[
+    \varphi := \big((p \to q) \land (q \to r)\big) \to (p \to r)
+  .\]
+  \begin{exm}
+    \label{ex1}
+    Montrons $\big((p \to q) \land (q \to r)\big) \to (p \to r)$.
+    \begin{itemize}
+      \item[$\hookrightarrow$] Supposons $(p\to q) \land (q \to r)$, et montrons $p \to r$.
+        \begin{itemize}
+          \item[$\hookrightarrow$] Supposons $p$, et montrons $r$.
+            \begin{itemize}
+              \item[$\hookrightarrow$] Montrons $q$.
+                \begin{itemize}
+                  \item[$\hookrightarrow$] Montrons $p$. C'est vrai par hypothèse.
+                  \item[$\hookrightarrow$] Montrons $p \to q$. C'est vrai par hypothèse.
+                \end{itemize}
+              \item[$\hookrightarrow$] Montrons $q \to r$. C'est vrai par hypothèse.
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+  \end{exm}
+
+  On voit une structure arborescente de la preuve : on a des cas, des sous-cas, des sous-sous-cas, \textit{etc}.
+  Seules deux types d'informations nous intéressent : les \textit{hypothèses courantes} et l'\textit{objectif de preuve}.
+  Ces deux informations changent au cours de la preuve.
+  Localement, on a supposé $p$, mais ce n'est pas le cas dans le cas général. Les hypothèses sont donc locales.
+
+  \begin{defn}
+    Un \textit{séquent}, noté $\Gamma \vdash \varphi$, est la donnée d'un ensemble d'hypothèses $\Gamma$ et d'un objectif de preuve $\varphi$.
+
+    L'ensemble $\Gamma$ est généralement écrit sous forme de liste mais c'est bien un ensemble.
+  \end{defn}
+
+  Avec une écriture en séquent, on obtient une preuve comme celle ci-dessous.
+
+  \begin{exm}
+    $\vdash \big((p \to q) \land (q \to r)\big) \to (p \to r)$
+    \begin{itemize}
+      \item[$\hookrightarrow$] $(p\to q) \land (q \to r) \vdash p \to r$
+        \begin{itemize}
+          \item[$\hookrightarrow$] $(p\to q) \land (q \to r), p \vdash r$
+            \begin{itemize}
+              \item[$\hookrightarrow$] $(p\to q) \land (q \to r), p \vdash q$
+                \begin{itemize}
+                  \item[$\hookrightarrow$] $(p\to q) \land (q \to r), p \vdash p$, hyp.
+                  \item[$\hookrightarrow$] $(p\to q) \land (q \to r), p \vdash p \to q$, hyp.
+                \end{itemize}
+              \item[$\hookrightarrow$] $(p\to q) \land (q \to r), p \vdash q\to r$, hyp.
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+  \end{exm}
+
+  Pour faire mieux "ressortir" la structure d'arbre, on peut l'écrire comme ci-dessous.
+  L'arbre est à l'envers, avec la racine en bas (en dépit de ce que disent les biologistes).
+
+  On va d'abord définir formellement le "format" de l'arbre avant de montrer quelques exemples.
+
+  \section{Définitions formelles.}
+
+  \begin{defn}
+    Une \textit{règle (de construction) de preuves} est de la forme 
+    \[
+    \begin{prooftree}
+      \hypo{\Gamma_1 \vdash \varphi_1} 
+      \hypo{\Gamma_2 \vdash \varphi_2}
+      \hypo{\cdots} 
+      \hypo{\Gamma_n \vdash \varphi_n} 
+      \infer 4[\mathsf{nom}]{\Gamma \vdash \varphi}
+    \end{prooftree}
+    .\]
+    Ce qu'il y a au dessus de la barre est appelé \textit{prémisses}.
+    Ce qu'il y a en dessous, c'est la \textit{conclusion}.
+
+    On peut avoir $n = 0$, on l'écrira comme \[
+    \begin{prooftree}
+      \infer 0[\mathsf{nom}]{\Gamma \vdash \varphi}
+    \end{prooftree}
+    .\]
+    On appelle cela une \textit{règle de base}.
+
+    Un ensemble de règles de preuves est appelé \textit{système de preuves}.
+    La déduction naturelle est un exemple de système de preuves, mais ce n'est pas le seul, il en existe d'autre.
+  \end{defn}
+
+  Les règles de constructions, ce sont les nœuds (internes et feuilles) de notre arbre de preuve.
+  Les règles de base, ce sont les feuilles.
+
+  L'idée c'est que les $\Gamma_i \vdash \varphi_i$ sont les prémisses d'une règle, mais chaque prémisse est conclusion d'une autre règle.
+  En gros, on peut coller les règles entre-elles pour former un arbre de preuve.
+
+  \begin{defn}
+    Un \textit{arbre de preuve} est un arbre étiqueté par des séquents, et dont le lien parent-enfants est fait par une règle du système de preuve.
+
+    Si $\Gamma \vdash \varphi$ est la racine d'un arbre de preuve, alors on dit qu'il est~\textit{prouvable}.
+    (On pourra parfois le noter $\Gamma \vdash \varphi$ comme si c'était une propriété mathématique et non un coupe).
+  \end{defn}
+
+  \section{Déduction naturelle intuitionniste.}
+
+  Le système de preuves classique est appelé la \textit{déduction naturelle}. Il existe en réalité deux versions de ce système, la version \textit{intuitionniste} et la version \textit{classique} :
+  \[
+    \text{déduction naturelle intuitionniste} \subsetneq \text{déduction naturelle classique}
+  .\] 
+  L'inclusion stricte ci-dessous a deux sens :
+  \begin{itemize}
+    \item les règles intuitionnistes sont strictement inclues dans les règles classiques ;
+    \item les résultats prouvables en intuitionniste sont strictement inclus dans les résultats prouvables en classique.
+  \end{itemize}
+
+  \begin{landscape}
+    \begin{table}[hptb]
+      \centering
+      \begin{tabular}{c|c|c}
+        \hline
+        \textsc{Symbole} & \textsc{Règle(s) d'introduction} & \textsc{Règle(s) d'élimination}\\ \hline \hline 
+        ~&~&~\\[-5pt]
+        $\top$\/&$\ptree{\infer0[\top_\mathsf{i}]{\Gamma \vdash \top}}$&\\[-5pt]
+        ~&~&~\\[-5pt] \hline ~ & ~ & ~\\[-5pt]
+        $\bot$\/ &&$\ptree{\hypo{\Gamma\vdash\bot}\infer1[\bot_\mathsf{e}]{\Gamma \vdash G}}$\\[-5pt]
+        ~&~&~\\[-5pt] \hline ~ & ~ & ~\\[-5pt]
+        $\lnot$\/ &$\ptree{\hypo{\Gamma,G\vdash \bot}\infer1[\lnot_\mathsf{i}]{\Gamma\vdash\lnot G}}$&$\ptree{\hypo{\Gamma\vdash G}\hypo{\Gamma\vdash \lnot G}\infer2[\lnot_\mathsf{e}]{\Gamma\vdash \bot}}$ \\
+        ~&~&~\\[-5pt] \hline ~ & ~ & ~\\[-5pt]
+        $\to$ & $\ptree{\hypo{\Gamma,G \vdash H}\infer1[\to_\mathsf{i}]{\Gamma \vdash G \to H}}$ & $\ptree{\hypo{\Gamma \vdash H \to G}\hypo{\Gamma \vdash H}\infer2[\to_\mathsf{e}]{\Gamma \vdash G}}$\\
+        ~&~&~\\[-5pt] \hline ~ & ~ & ~\\[-5pt]
+        $\land$\/ & $\ptree{\hypo{\Gamma \vdash G}\hypo{\Gamma \vdash H}\infer2[\land_\mathsf{i}]{\Gamma \vdash G \land H}}$\/ & $\ptree{\hypo{\Gamma \vdash G \land H}\infer1[\land_\mathsf{e}^\mathsf{g}]{\Gamma \vdash G}}$ \quad\quad $\ptree{\hypo{\Gamma \vdash G \land H}\infer1[\land_\mathsf{e}^\mathsf{d}]{\Gamma \vdash H}}$ \\
+        ~&~&~\\[-5pt] \hline ~ & ~ & ~\\[-5pt]
+        $\lor$&$\ptree{\hypo{\Gamma\vdash G}\infer1[\lor_\mathsf{i}^\mathsf{g}]{\Gamma\vdash G \lor H}}$\quad\quad$\ptree{\hypo{\Gamma\vdash H}\infer1[\lor_\mathsf{i}^\mathsf{d}]{\Gamma\vdash G \lor H}}$&$\ptree{\hypo{\Gamma \vdash A \lor B}\hypo{\Gamma,A\vdash G}\hypo{\Gamma,B\vdash G}\infer3[\lor_\mathsf{e}]{\Gamma \vdash G}}$\\
+        ~&~&~\\[-5pt] \hline
+        \multicolumn{3}{c}{}\\
+        \multicolumn{3}{c}{$\ptree{\infer 0[\mathsf{ax}]{\Gamma, \varphi\vdash \varphi}} \quad \quad \ptree{\hypo{\Gamma \vdash \varphi} \infer 1[\mathsf{aff}]{\Gamma, \Gamma' \vdash \varphi}}$}\\
+        \multicolumn{3}{c}{}\\ \hline
+      \end{tabular}
+    \end{table}
+  \end{landscape}
+
+  Sur la page précédente se trouvent les règles de la déduction naturelle intuitionniste et classique.
+  Les règles sont regroupées en trois types :
+  \begin{multicols}{3}
+    \begin{enumerate}
+      \item Introduction 
+      \item Élimination
+      \item Autres
+    \end{enumerate}
+  \end{multicols}
+
+  Voici, en français, ce qu'elles veulent dire.
+  \begin{itemize}
+    \item $\top_\mathsf{i}$ On peut toujours prouver "vrai".
+    \item $\bot_\mathsf{e}$ Si l'on sait que l'on peut montrer une absurdité, alors on peut oublier l'objectif de preuve et montrer cette absurdité.
+    \item $\land_\mathsf{i}$ Pour montrer $G$ \textit{et} $H$, il suffit montrer $G$ puis montrer $H$.
+    \item  $\land_\mathsf{e}^\mathsf{g}$ Si on peut montrer $G$ \textit{et} $H$, alors on peut montrer $G$ 
+    \item  $\land_\mathsf{e}^\mathsf{d}$ Si on peut montrer $G$ \textit{et} $H$, alors on peut montrer $H$.
+    \item $\lor_\mathsf{i}^\mathsf{g}$ Si on veut montrer $G$ \textit{ou} $H$, alors il suffit de montrer $G$.
+    \item $\lor_\mathsf{i}^\mathsf{d}$ Si on veut montrer $G$ \textit{ou} $H$, alors il suffit de montrer $H$.
+    \item $\lor_\mathsf{e}$ C'est la disjonction de cas : si on veut montrer $G$, et qu'on sait qu'on a $A$ \textit{ou} $B$, alors on il suffit de montrer $G$ dans le cas~$A$ puis de montrer $G$ dans le cas $B$.
+    \item $\to_\mathsf{i}$ Si on veut montrer $G$ \textit{implique} $H$, il suffit de supposer $G$, et de montrer $H$.
+    \item $\to_\mathsf{e}$ Si on peut montrer $H$ \textit{implique} $G$ et qu'on peut montrer $H$, alors on peut montrer $G$.
+    \item $\lnot_\mathsf{i}$ Pour montrer \textit{non} $G$, il suffit de montrer qu'en supposant $G$, on a une absurdité.
+    \item $\lnot_\mathsf{e}$ Si on a montré $G$ et  \textit{non} $G$, alors on a une absurdité.
+    \item $\mathsf{ax}$ (axiome) Pour montrer $\varphi$, il suffit de l'avoir en hypothèse.
+    \item $\mathsf{aff}$ (affaiblissement) Si on peut montrer $\varphi$ avec certaines hypothèses, alors on peut le faire avec encore plus d'hypothèses, quitte à ne pas les utiliser.
+  \end{itemize}
+
+  Il est enfin temps de faire un arbre de preuve.
+  En voici un :
+  \[
+  \begin{prooftree}
+    \infer 0[\mathsf{ax}]{ p, \lnot p \vdash p }
+    \infer 0[\mathsf{ax}]{ p, \lnot p \vdash \lnot p }
+    \infer 2[\lnot_\mathsf{e}]{ p, \lnot p \vdash \bot }
+    \infer 1[\lnot_\mathsf{i}]{ p \vdash \lnot \lnot p }
+    \infer 1[\to_\mathsf{i}]{  \vdash p \to (\lnot \lnot p) }
+  \end{prooftree}
+  .\]
+
+  \question{ Re-dérouler la démonstration ci-dessus pour vérifier qu'on a bien compris. }
+
+  \question{ Construire l'arbre de preuve pour le séquent de l'exemple~\ref{ex1}. }
+
+  \question{
+    Au fur et à mesure, prouvez les séquents ci-dessous.
+    C'est en faisant que l'on apprend.
+    Si vous bloquez sur un, prévenez-moi et je vous donnerai des indications.
+  }
+
+  Quelques preuves simples pour commencer :
+  \begin{enumerate}
+    \item $\vdash p \to p$
+    \item $p, \lnot p \vdash \bot$
+    \item $p, q \vdash p \land q$
+    \item $p \land q \vdash q \land p$
+    \item $p\lor q \vdash q \lor p$
+    \item $\vdash \lnot (p \land \lnot p)$
+  \end{enumerate}
+
+  Preuves un peu plus poussées :
+  \begin{enumerate}[resume*]
+    \item $p \lor (p \land q) \vdash p$
+    \item $p \land , r \land s \vdash p \land s$
+    \item $p, q \land r \vdash p \land q$
+    \item $p\lor q \vdash q \lor p$
+    \item $\lnot \lnot \lnot p \vdash \lnot p$
+  \end{enumerate}
+
+  Les lois de De Morgan (sauf une) :
+  \begin{enumerate}[resume*]
+    \item $\lnot (p\lor q) \vdash \lnot p \land \lnot q$
+    \item $\lnot p \land \lnot q \vdash  \lnot (p \lor q)$
+    \item $\lnot p \lor \lnot q \vdash \lnot (p \land q)$
+  \end{enumerate}
+
+  Distributivité $\lor$ et $\land$ :
+  \begin{enumerate}[resume*]
+    \item $p \land (q \lor r) \vdash (p \land q) \lor (p \land r)$
+    \item $(p \land q) \lor (p \land r) \vdash  p \land (q \lor r)$
+    \item $p \lor (q \land r) \vdash (p \lor q) \land (p \lor r)$
+    \item $(p \lor q) \land (p \lor r) \vdash p \lor (q \land r)$
+  \end{enumerate}
+
+  Bonus :
+  \begin{enumerate}[resume*]
+    \item $\lnot p \vdash p \to q$
+    \item $\lnot (p \to q) \vdash q \to p$
+    \item $(p \land q) \to r \vdash p \to (q \to r)$
+    \item $p \to (q \to r) \vdash (p \land q) \to r$
+  \end{enumerate}
+
+  \section{Logique classique.}
+
+  Une fois que vous savez faire la plupart, on peut passer à la logique \textit{classique}.
+  En logique classique, on ajoute une des trois règles suivantes.
+
+  \begin{description}
+    \item[Tiers Exclu.]
+      On a toujours, soit $F$, soit \textit{non} $F$.
+
+      \[
+      \begin{prooftree}
+        \infer 0[\mathsf{te}]{\Gamma \vdash F \lor \lnot F}
+      \end{prooftree}
+      \] 
+
+    \item[Absurde.]
+      Au lieu de montrer $F$, supposons \textit{non} $F$ et trouvons une contradiction.
+      \[
+      \begin{prooftree}
+        \hypo{\Gamma, \lnot F \vdash \bot}
+        \infer 1[\mathsf{abs}]{\Gamma \vdash F}
+      \end{prooftree}
+      \]
+      On la note parfois $\mathsf{raa}$.
+    \item[Double \textit{non}.]
+      Deux \textit{non} s'annulent.
+      \[
+      \begin{prooftree}
+        \hypo{\Gamma \vdash \lnot \lnot F}
+        \infer 1[\lnot\lnot_\mathsf{e}]{\Gamma \vdash F}
+      \end{prooftree}
+      \] 
+  \end{description}
+
+  \question{
+    En utilisant ces règles, démontrer les séquents suivants :
+  }
+  \begin{enumerate}[resume*]
+    \item $\lnot p \to p \vdash p$
+    \item $p\to q \vdash \lnot p \lor q$
+    \item $\lnot p \lor q \vdash p \to q$
+    \item $p \to q \vdash \lnot q \to \lnot p$
+    \item $p \lor q, \lnot q \lor r \vdash p \lor r$
+  \end{enumerate}
+
+  \begin{defn}
+    Une règle 
+    \[
+    \begin{prooftree}
+      \hypo{\Gamma_1 \vdash \varphi_1}
+      \hypo{\Gamma_2 \vdash \varphi_2}
+      \hypo{\cdots}
+      \hypo{\Gamma_n \vdash \varphi_n}
+      \infer 4[\mathsf{r\grave{e}gle}]{\Gamma \vdash \varphi}
+    \end{prooftree}
+    \]
+    est \textit{dérivable} dans un système de preuve (la règle ci-dessus n'appartient pas au système de preuve, sinon cela ne sert à rien) si l'on peut dériver sa conclusion en supposant pouvoir dériver ses prémisses.
+
+    Deux règles $\mathsf{r}_1$ et $\mathsf{r}_2$ sont équivalentes dans un système $S$ si on peut prouver $\mathsf{r}_2$ dans $S \cup \{\mathsf{r}_1\}$ et si on peut prouver $\mathsf{r}_1$ dans $S \cup \{\mathsf{r}_2\}$.
+    On peut généraliser cette définition à l'équivalence entre $n$ règles.
+  \end{defn}
+
+  \begin{exm}
+    La règle $\mathsf{cut}$ définie par 
+    \[
+    \begin{prooftree}
+      \hypo{\Gamma, A \vdash B}
+      \hypo{\Gamma \vdash A}
+      \infer 2[\mathsf{cut}]{\Gamma \vdash B}
+    \end{prooftree}
+    \] est dérivable en logique intuitionniste :
+    \[
+    \begin{prooftree}
+      \hypo{\Gamma, A \vdash B}
+      \infer 1[\to_\mathsf{i}]{\Gamma \vdash A \to B}
+      \hypo{\Gamma \vdash A}
+      \infer 2[\to_\mathsf{e}]{\Gamma \vdash B}
+    \end{prooftree}
+    .\] 
+  \end{exm}
+
+  \question{
+    Quelle différence y a-t-il entre $\mathsf{abs}$ et $\lnot_\mathsf{i}$ ?
+  }
+
+  \question{
+    Peut-on dériver $\mathsf{aff}$ depuis la déduction naturelle intuitionniste (sans $\mathsf{aff}$ bien sûr) ?
+    Si oui, en intuitionniste aussi ?
+  }
+
+  \question{
+    Montrer que les règles $\mathsf{te}$, $\mathsf{abs}$ et $\lnot\lnot_\mathsf{e}$ sont équivalentes.
+    Par ordre de difficulté :
+    \begin{itemize}
+      \item $\lnot\lnot_\mathsf{e}$ à l'aide de $\mathsf{abs}$ 
+      \item $\mathsf{abs}$ à l'aide de $\lnot\lnot_\mathsf{e}$ 
+      \item $\mathsf{abs}$ à l'aide de $\mathsf{te}$ 
+      \item $\lnot\lnot_\mathsf{e}$ à l'aide de $\mathsf{te}$
+      \item $\mathsf{te}$ à l'aide de $\lnot\lnot_\mathsf{e}$ 
+      \item $\mathsf{te}$ à l'aide de $\mathsf{abs}$
+    \end{itemize}
+  }
+
+  Lorsqu'on a une règle dérivable dans un certain système de preuve, on peut donc l'utiliser comme si de rien n'était : en effet, il suffira de remplacer son utilisation par le morceau d'arbre donné par la dérivation de la règle.
+
+  \question{
+    Réaliser une preuve avec $\mathsf{cut}$ et remplacer l'utilisation par le morceau d'arbre donné ci-avant.
+  }
+
+  \section{Correction, complétude.}
+
+  \begin{defn}
+    On dit qu'un système de preuves est \textit{correct} si, pour toute formule $F$, si $\vdash F$ alors $\models F$.
+    On dit qu'un système de preuves est \textit{complet} si, pour toute formule $F$, si $\models F$ alors $\vdash F$.
+  \end{defn}
+
+  Pour faire simple,
+  \begin{itemize}
+    \item dans un système correct, ce qui est prouvable est vrai ;
+    \item dans un système complet, ce qui est vrai est prouvable.
+  \end{itemize}
+
+  \begin{thm}
+    \begin{itemize}
+      \item La déduction naturelle intuitionniste est incomplète mais correcte.
+      \item La déduction naturelle classique est complète et correcte. \qed
+    \end{itemize}
+  \end{thm}
+
+  On se propose de prouver le théorème ci-dessus en exercice.
+
+  \subsection{Preuve de la correction (exercice).}
+
+  On montre par induction sur l'arbre de preuve de $\Gamma\vdash F$, pour montrer que $\Gamma\models F$.
+
+  Pour le cas de $\mathsf{ax}$, si $F \in \Gamma$ alors toute valuation satisfaisant $\Gamma$ satisfait les éléments de  $\Gamma$, en particulier $F$.
+
+  Pour le cas de $\top_\mathsf{i}$, on a toujours $\Gamma\models\top$.
+
+  Pour le cas de  $\land_\mathsf{i}$, si on a une valuation satisfaisant $\Gamma$, alors d'une part, on sait que cette valuation satisfait  $H$ par hypothèse d'induction (car $\Gamma \vdash H$), et aussi, cette valuation satisfait $G$ par hypothèse d'induction.
+  Or, cette valuation satisfait $G \land H$ ssi elle satisfait $G$ et $H$ (par définition).
+  D'où $\Gamma \models G \land H$.
+
+  \question{
+    Faire de même pour quelques uns des autres cas d'introduction ($\to_\mathsf{i}$, $\lor_\mathsf{i}^\mathsf{g}$ par exemple).
+  } 
+
+  Pour l'élimination, on peut regarder la règle $\to_\mathsf{e}$.
+  Si on suppose avoir montré $\Gamma \vdash H \to G$ et $\Gamma \vdash H$, alors toute valuation satisfaisant $\Gamma$ satisfait $H \to G$ et $H$, donc elle satisfait $G$.
+
+  \question{
+    Faire de même pour quelques uns des autres cas d'introduction ($\lor_\mathsf{e}$, $\land_\mathsf{e}^\mathsf{d}$ par exemple).
+  }
+
+  En admettant que tous autres les cas se passent bien, on a montré la correction de la logique intuitionniste.
+
+  Pour ce qui est de la logique classique, il reste à traiter les cas du tiers exclu, ou de la double négation, ou du raisonnement par l'absurde.
+  Par exemple, on a toujours $\models F \lor \lnot F$ avec  $\mathsf{te}$ ou alors $\lnot \lnot F \models F$ avec  $\lnot \lnot_\mathsf{e}$.
+
+  \question{Conclure quant à la partie "correction" (intuitionniste/classique) du théorème.}
+
+  \subsection{Preuve de complétude (exercice).}
+
+  On fixe $\mathcal{V} := \{x_1, \ldots, x_n\}$  l'ensemble des variables propositionnelles.
+  Pour une valuation $v$ donnée, on construit la formule $\varphi(v)$ comme  \[
+  \ell_1 \land (\ell_2 \land (\cdots (\ell_{n-1} \land \ell_n)\cdots ))
+  ,\] 
+  où $\ell_i := x_i$ si $v(x_i) = \textsc{Vrai}$ et  $\ell_i := \lnot x_i$ sinon.
+
+  La formule $\varphi(v)$ est satisfaite par une et une seule valuation, $v$.
+
+  On définit un ordre sur l'ensemble des valuations sur $\mathcal{V}$ induit en identifiant $\mathds{B}^\mathcal{V}$ et $\{0,1\}^n$, où l'on utilise l'ordre lexicographique.
+  On note ainsi $\mathds{B}^\mathcal{V} := \{v_1, \ldots, v_{2^n}\}$ dans l'ordre induit.
+
+  On note \[
+  \Phi(\mathcal{V}) := \varphi(v_1) \lor (\varphi(v_2) \lor (\cdots ( \varphi(v_{2^n - 1}) \lor \varphi(v_{2^n}) )\cdots ))
+  .\]
+
+  On se place en logique classique.
+
+  \question{
+    Montrer que $\vdash \Phi(\mathcal{V})$.
+    On pourra procéder par récurrence sur~$|\mathcal{V}|$.
+  }
+
+  \question{
+    Démontrer que, pour tout valuation $v$ et toute formule $F$ à variables dans $\mathcal{V}$, si $v(F) = \textsc{Vrai}$, alors
+    $\varphi(v) \vdash F$, et si $v(F) = \textsc{Faux}$, alors $\varphi(v) \models \lnot F$.
+  }
+
+  \question{
+    Soit $F$ une tautologie à valeurs sur $\mathcal{V}$.
+    Montrer que $\Phi(\mathcal{V})\models F$.
+  }
+
+  \question{
+    Conclure.
+  }
+
+  \section{Équivalences de logiques (exercice).}
+
+  On note $\mathbf{FLP}$ l'ensemble des formules de la logique propositionnelle (utilisant $\top$,  $\bot$, $\lnot$,  $\to $, $\land$ et  $\lor$).
+
+  On dit que deux ensembles $A, B \subseteq \mathbf{FLP}$ sont équivalents si
+  \begin{itemize}
+    \item pour toute formule $\varphi \in A$, il existe $\psi \in B$ telle que pour tout $\Gamma$,
+      \[
+      \Gamma \models \varphi \text{ ssi } \Gamma \models \psi
+      .\] 
+    \item pour toute formule $\psi \in B$, il existe $\varphi \in A$ telle que pour tout $\Gamma$,
+      \[
+      \Gamma \models \psi \text{ ssi } \Gamma \models \varphi
+      .\] 
+  \end{itemize}
+
+  On notera $\mathbf{FLP}_{o_1, o_2, \ldots, o_n}$ où les $o_i$ sont des opérateurs de $\mathbf{FLP}$ l'ensemble des formules de la logique propositionnelle n'utilisant que ces opérateurs.
+
+  \question{
+    Montrer que $\mathbf{FLP}$ est équivalente à $\mathbf{FLP}_{\lnot,\land}$.
+  }
+
+  \question{
+    Justifier que $\mathbf{FLP}$ n'est pas équivalente à $\mathbf{FLP}_{\land,\lor,\to}$.
+  }
+
+  \indication{ Chercher un équivalent de la formule $\lnot p$. }
+
+  L'équivalence ci-avant est une équivalence \textit{sémantique} (car $\models$).
+  L'\textit{équivalence syntaxique} est comme l'équivalence sémantique mais où l'on remplace $\models$ par $\vdash$.
+
+  Ceci dépend évidemment de la "version" de la déduction naturelle choisie : intuitionniste ou classique.
+  Mais, vu ce le théorème de complétude/correction précédent pour la logique classique, il n'y a pas d'intérêt de différencier l'équivalence sémantique de l'équivalence syntaxique en logique classique.
+
+
+  \question{ La logique $\mathbf{FLP}$ est-elle syntaxiquement équivalente (en logique intuitionniste) à $\mathbf{FLP}_{\lnot,\lor}$ ? }
+  
+  \indication{
+    On pourra essayer de dériver le tiers-exclu depuis la formule équivalente à l'implication logique.
+  }
+\end{document}

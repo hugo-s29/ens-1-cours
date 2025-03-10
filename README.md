@@ -26,7 +26,7 @@ Bonne lecture !
 **_Dept. Informatique_**
 
 - **Algo2.** Algorithmique 2 ▶ [/algo2](/algo2/) (DMs)
-- **Log.** Logique ▶ [/log](/log/) (Notes de cours)
-- **Proba.** Probabilités ▶ [/proba](/proba/) (???)
-- **ProFon.** Projet Fonctionnel ▶ [/profon](/profon/) (Quelques notes de cours)
+- **Log.** Logique ▶ [/log](/log/) (Notes de cours, DMs)
+- **Proba.** Probabilités ▶ [/proba](/proba/) (Quelques notes de cours et TDs)
+- **ProFon.** Projet Fonctionnel ▶ [/profon](/profon/) (Notes de cours, et quelques documents techniques pour ***fouine***)
 - **EPS.** Enseignement en Programmation Sportive ▶ [/eps](/eps/) ((Tentatives de) solutions aux problèmes des semaines 1–3)

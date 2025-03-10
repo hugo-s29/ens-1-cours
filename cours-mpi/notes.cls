@@ -48,6 +48,7 @@
 
 \RequirePackage{array}
 \RequirePackage{ebproof}
+\ebproofset{right label template=$\inserttext$, left label template=\tiny$\inserttext$, center=false}
 \RequirePackage{BOONDOX-calo}
 
 
