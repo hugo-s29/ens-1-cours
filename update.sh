@@ -13,6 +13,7 @@ cp log/chap02.pdf ../web/public/data/ens1/logique-chap02.pdf
 cp log/chap03.pdf ../web/public/data/ens1/logique-chap03.pdf
 
 cp log/dm1.pdf ../web/public/data/ens1/logique-dm1.pdf
+cp log/td.pdf ../web/public/data/ens1/logique-td.pdf
 
 cp proba/td.pdf ../web/public/data/ens1/proba-td.pdf
 
