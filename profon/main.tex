@@ -1,9 +1,30 @@
 \documentclass{../notes}
 
 \title{Projet fonctionnel}
-\author{Basé sur le cours de Daniel \textsc{Hirschkoff}\\ Notes prises par Hugo \textsc{Salou}}
+\author{Basé sur le cours de Daniel \textsc{Hirschkoff}${}^{\,\scalebox{0.05}{\color{nicered}\heartsuit}}$\\ Notes prises par Hugo \textsc{Salou}}
 
-\usepackage{pdflscape}
+\newcommand\colorunderline[2]{
+  {\color{#1}\underline{{\color{black} #2}}}
+}
+
+\newcommand\fouine{%
+  \textsf{%
+  \textcolor{deepblue}  {f}%
+  \textcolor{deeppurple}{o}%
+  \textcolor{deepblue}  {u}%
+  \textcolor{deeppurple}{i}%
+  \textcolor{deepblue}  {n}%
+  \textcolor{deeppurple}{e}%
+  }%
+}
+
+\newcommand\pieuvre{%
+  \textsf{%
+    pieuvre%
+  }%
+}
+
+\let\rpar\rightrightarrows
 
 \begin{document}
   \maketitle
@@ -17,15 +38,389 @@
 
   Le cours se décompose en deux parties :
   \begin{itemize}
-    \item une partie \textit{pratique} ($\sim 2/3$ du cours) avec de la programmation OCaml en binôme ;
+    \item une partie \textit{pratique} ($\sim 2/3$ du cours) avec de la programmation OCaml en binôme (\fouine, puis \pieuvre) ;
     \item une partie \textit{théorique} : avec du $\lambda$-calcul, typage et lien avec la logique.
   \end{itemize}
 
-  Pour la partie pratique, on développe \textit{fouine}, un sur-ensemble du langage $\mathsf{FUN}$.
-  Le produit attendu est un interprète OCaml, c'est-à-dire :
-  \[
-    \text{fichier texte} \xrightarrow{\text{frontend}} \mathtt{expr} \xrightarrow{\text{fonction \texttt{eval}}} \text{valeur / affichage console}
+  Ce document contiendra les notes de cours pour la partie théorique.
+  D'autres documents pour la partie projet sont en ligne sur mon site (transformation CPS, et optimisations associées à la $\beta$-réduction).
+
+  \chapter{Le $\lambda$-calcul pur.}
+
+  Le $\lambda$-calcul a trois domaines proches :
+  \begin{itemize}
+    \item la \textit{calculabilité}, avec l'équivalence entre machines de Turing et $\lambda$-expression (vue en FDI) ;
+    \item la \textit{programmation fonctionnelle} (vue en ThProg avec le petit langage $\mathsf{FUN}$) ;
+    \item la \textit{théorie de la démonstration} (vue dans la suite de ce cours).
+  \end{itemize}
+
+  On se donne un ensemble infini $\mathcal{V}$ de variables notées $x, y, z,\ldots$\
+  Les \textit{termes} (du $\lambda$-calcul) ou $\lambda$-termes sont définis par la grammaire \[
+  M, N, ... ::= \lambda x.\: M  \mid M \: N  \mid x
   .\]
+  La construction $\lambda x.\: M$ s'appelle l' \textit{abstraction} ou  \textit{$\lambda$-abstraction}.
+  Elle était notée $\fun x M$ en cours de théorie de la programmation.
+
+  \begin{nota}
+    \begin{itemize}
+      \item On notera $M \: N \: P$ pour  $(M \: N) \: P$.
+      \item On notera  $\lambda x y z. \: M$ pour  $\lambda x. \: \lambda y. \: \lambda z \: M$ (il n'y a pas lieu de mettre des parenthèses ici, vu qu'il n'y a pas d'ambigüités).
+      \item On notera  $\lambda x. \: M \: N$ pour  $\lambda x. \: (M \: N)$.  \textit{\textbf{Attention}}, c'est différent de $(\lambda x.\: M) \: N$.
+    \end{itemize}
+  \end{nota}
+
+  \section{Liaison et $\alpha$-conversion.}
+
+  \begin{rmk}[Liaison]
+    Le "$\lambda$" est un lieur.
+    Dans $\lambda y. \: x \: y$, la variable  $y$ est \textit{liée} mais pas $x$ (la variable $x$ libre).
+    On note $\Vl(M)$ l'ensemble des variables libres de  $M$, définie par induction sur $M$ (il y a \textit{3} cas).
+  \end{rmk}
+
+  \begin{rmk}[$\alpha$-conversion]
+    ~\\[-1.5\baselineskip]
+
+    On note $=_\alpha$ la relation d' \textit{$\alpha$-conversion}. C'est une relation binaire sur les $\lambda$-termes fondée sur l'idée de renommage des abstractions \textcolor{nicered}{\textit{\textbf{en évitant la capture de variables libres}}} :
+    \[
+    \lambda x. \: x \: y =_\alpha \lambda t.\: x \: t \neq_\alpha \lambda x. x \: x
+    .\]
+
+    Ainsi $\lambda x. \: M =_\alpha \lambda z.\: M'$ où  $M'$ est obtenu en remplaçant $x$ par $z$ \textcolor{nicered}{\textit{\textbf{là où il apparaît libre}}} et \textcolor{nicered}{\textit{\textbf{à condition que $z \not\in  \Vl(M)$}}}.
+    Ceci, on peut le faire partout.
+  \end{rmk}
+
+  \begin{lem}
+    La relation $=_\alpha$ est une relation d'équivalence.
+    Si  $M =_\alpha N$ alors  $\Vl(M) = \Vl(N)$.
+  \end{lem}
+
+  Par convention, on peut identifier les termes modulo $=_\alpha$.
+  On pourra donc toujours dire 
+  \begin{center}
+    "considérons $\lambda x.\: M$ où $x \not\in  E$ [\ldots]"
+  \end{center}
+  avec $E$ un ensemble \textit{\textbf{fini}} de variables.
+
+  Ceci veut dire qu'on notera \[
+  M = N \text{ pour signifier que } M =_\alpha N
+  .\] 
+
+  \section{La $\beta$-réduction.}
+
+  \begin{defn}[$\beta$-réduction]
+    On définit la relation de $\beta$-réduction sur les  $\lambda$-termes, notée $\to_\beta$ ou $\to$, définie par les règles d'inférences :
+    \begin{gather*}
+      \begin{prooftree}
+        \infer 0{(\lambda x.\: M)\: N \to_\beta M[\sfrac{N}{x}]}
+      \end{prooftree}
+      \quad\quad
+      \begin{prooftree}
+        \hypo{M \to_\beta M'}
+        \infer 1{\lambda x.\: M \to_\beta \lambda x.\: M'}
+      \end{prooftree}\\
+      \begin{prooftree}
+        \hypo{M \to_\beta M'}
+        \infer 1{M \: N \to_\beta M' \: N}
+      \end{prooftree}
+      \quad\quad
+      \begin{prooftree}
+        \hypo{N \to_\beta N'}
+        \infer 1{M \: N \to_\beta M \: N'}
+      \end{prooftree}
+    \end{gather*}
+    où $M[\sfrac{N}{x}]$ est la substitution de $x$ par $N$ dans $M$ (on le défini ci-après).
+  \end{defn}
+
+  \begin{defn}
+    Un terme de la forme $(\lambda x. \: M)\: N$ est appelé un  \textit{redex} (pour \textit{reducible expression}) ou  \textit{$\beta$-redex}.
+    Un terme $M$ est une \textit{forme normale}  s'il n'existe pas de $N$ tel que $M \to_\beta N$.
+  \end{defn}
+
+  \begin{rmk}
+    La relation $\to_\beta$ n'est pas terminante :
+    \[
+      \Omega := (\lambda x.\: x \: x) \: (\lambda y.\: y \: y) \to_\beta (\lambda y.\: y \: y) \: (\lambda y.\: y \: y) =_\alpha \Omega
+    .\] 
+  \end{rmk}
+
+  \begin{exm} \label{exm:multiple-paths-beta}
+    \[
+    \begin{tikzcd}
+      \colorunderline{deepgreen}{(\lambda x.\: x \: x) \: \colorunderline{nicered}{((\lambda z.\: z) \: t)}}
+      \arrow[deepgreen]{dd}{(\star)}
+      \arrow[nicered]{r}{}
+      & \arrow[nicered]{dr}{} \colorunderline{nicered}{(\lambda x\: x \: x) \: t}\\
+      & (\colorunderline{nicered}{(\lambda z.\: z)\: t}) \: t \arrow[nicered]{r}{} & t t\\
+      (\colorunderline{deepgreen}{(\lambda z.\: z) \: t}) \: (\colorunderline{nicered}{(\lambda z.\: z) \: t}) \arrow[deepgreen]{r}{(\star\star)} \arrow[nicered]{ur}{} & t \: (\colorunderline{nicered}{(\lambda z.\: z)\: t}) \arrow[nicered]{ur}{}
+    \end{tikzcd}
+    .\]
+  \end{exm}
+
+  Un pas de $\beta$-réduction peut :
+  \begin{itemize}
+    \item dupliquer un terme (\textit{c.f.} $(\star)$) ;
+    \item laisser un redex inchangé (\textit{c.f.} $(\star\star)$) ;
+    \item faire disparaitre un redex (qui n'est pas celui que l'on contracte) :
+      \[
+        (\lambda x. \: u) ((\lambda z. \: z) \: t) \: \to_\beta u \;
+      ;\]
+    \item créer de nouveaux redex :
+      \[
+        (\lambda x. \: x \: y) \: (\lambda z. \: z) \to_\beta (\lambda z. \: z)\: y
+      .\]
+  \end{itemize}
+
+  \section{Substitutions.}
+
+  \begin{exm}
+    Le terme $\lambda xy. \: x$ c'est une "fonction fabriquant des fonctions constantes" au sens où  \[
+      (\lambda x y. \: x) M \to_\beta \lambda y.\: M
+    ,\] 
+    à condition que $y \not\in \Vl(M)$.
+    On doit cependant  $\alpha$-renommer pour éviter la capture :
+    \begin{align*}
+      (\lambda x y. x) &\: ( \lambda t. \: y) \not\to_\beta \lambda y.\: (\lambda t.\: y)\\
+                       &\vertical{=_\alpha}\\
+      (\lambda x y'. x) &\: ( \lambda t. \: y) \to_\beta \lambda y'.\: (\lambda t.\: y)
+    .\end{align*}
+  \end{exm}
+
+  \begin{defn}
+    On procède par induction, il y a trois cas :
+    \begin{itemize}
+      \item $y[\sfrac{N}{x}] := \begin{cases}
+          N &\text{si } y = x\\
+          y &\text{si } y \neq x
+      \end{cases}$
+    \item $(M_1 \: M_2)[\sfrac{N}{x}] := (M_1[\sfrac{N}{x}]) \: (M_2[\sfrac{N}{x}])$
+    \item $(\lambda y. \: M)[\sfrac{N}{x}] := \lambda y. \: (M[\sfrac{N}{x}])$  \textit{\textbf{à condition que $y \not\in \Vl(N)$ et $y \neq x$}}.
+    \end{itemize}
+  \end{defn}
+
+  \begin{lem}[Gymnastique des substitutions]
+    Pour $y \not\in \Vl(R)$, \[
+      (P[\sfrac{Q}{y}])[\sfrac{R}{x}] =
+      (P[\sfrac{R}{x}])[\sfrac{Q[\sfrac{R}{x}]}{y}]
+    .\] 
+  \end{lem}
+
+  \begin{lem}
+    Si $M \to_\beta M'$ alors $\Vl(M') \subseteq \Vl(M)$.
+  \end{lem}
+
+  \section{Comparaison $\lambda$-calcul et $\mathsf{FUN}$.}
+
+  En $\lambda$-calcul, on a une règle 
+  \[
+    \begin{prooftree}
+      \hypo{M \to_\beta M'}
+      \infer 1{\lambda x.\: M \to_\beta \lambda x.\: M'}
+    \end{prooftree}
+  .\] 
+  Cette règle n'existe pas en $\mathsf{FUN}$ (ni en \fouine) car on traite les fonctions comme des valeurs.
+  Et, en $\mathsf{FUN}$, les trois règles suivantes sont mutuellement exclusives :
+  \begin{gather*}
+    \begin{prooftree}
+      \infer 0{(\lambda x.\: M)\: N \to_\beta M[\sfrac{N}{x}]}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{M \to_\beta M'}
+      \infer 1{M \: N \to_\beta M' \: N}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{N \to_\beta N'}
+      \infer 1{M \: N \to_\beta M \: N'}
+    \end{prooftree}
+  \end{gather*}
+  car on attend que $N$ soit une \textit{\textbf{valeur}} avant de substituer.
+
+  En $\mathsf{FUN}$ (comme en \fouine), pour l'exemple~\ref{exm:multiple-paths-beta}, on se limite à n'utiliser que les flèches rouges.
+
+  La relation $\to_\beta$ est donc "plus riche" que $\to_\mathsf{FUN}$.
+  En $\mathsf{FUN}$, on a une \textit{stratégie de réduction} : on a au plus un redex qui peut être contracté.
+  On n'a pas de notion de valeur en $\lambda$-calcul pur. Le "\textit{résultat d'un calcul}" est une forme normale.
+
+  \section{Exercice : les booléens.}
+  On définit \[
+  \mathbf{T} := \lambda x y. \: x \quad\quad\quad \mathbf{F} := \lambda xy. \: y
+  .\]
+  Ainsi, pour tout $M$ (si $y \not\in \Vl(M)$), \[
+  \mathbf{T}\: M \to \lambda y.\: M \quad\quad \mathbf{F} \: M \to \lambda y. \: y =: \mathbf{I}
+  .\]
+
+  La construction $\mathtt{if}\ b\ \mathtt{then}\ M\ \mathtt{else}\ N$ se traduit en $b \: M \: N$.
+
+  Le "non" booléen peut se définir par :
+  \begin{itemize}
+    \item $\mathbf{not} := \lambda b. \: b \: \mathbf{F}\: \mathbf{T} = \lambda b.\: b\: (\lambda x y.\: y) \: (\lambda t u.\: t)$ ;
+    \item $\mathbf{not}' := \lambda b.\: \lambda x y.\: b y x$.
+  \end{itemize}
+  La première version est plus abstraite, la seconde est "plus électricien".
+  On a deux formes normales \textit{\textbf{différentes}}.
+
+  De même, on peut définir le "et" booléen :
+  \begin{itemize}
+    \item $\mathbf{and} := \lambda b_1. \: \lambda b_2. \: b_1\: (b_2\: \mathbf{T}\: \mathbf{F})\: \mathbf{F}$ ;
+    \item $\mathbf{and}' := \lambda b_1. \:\lambda b_2.\: \lambda x y. \: b_1 \: (b_2 \: x \: y) \: y$.
+  \end{itemize}
+
+  \section{Confluence de la $\beta$-réduction.}
+
+  \begin{defn}[Rappel, \textit{c.f.} cours de ThProg, Chapitre 10]
+    On dit que $\to$ est \textit{confluente} en $t \in A$ si, dès que $t \to^\star u_1$ et $t \to^\star u_2$ il existe $t'$ tel que $u_1 \to^\star t'$ et $u_2 \to^\star t'$.
+    \[
+    \begin{tikzcd}
+      & t \arrow[near end]{dr}{\star} \arrow[near end,swap]{dl}{\star}\\
+      u_1 \arrow[near end,swap,dashed]{dr}{\star} && u_2 \arrow[near end,dashed]{dl}{\star}\\
+      & t'
+    \end{tikzcd}
+    .\]
+
+    Les flèches en pointillés représentent l'existence.
+
+    On dit que $\to$ est \textit{confluente} si $\to $ est confluente en tout $a \in A$.
+
+    La propriété du diamant correspond au diagramme ci-dessous :
+    \[
+    \begin{tikzcd}
+      & t \arrow[near end]{dr}{} \arrow[near end,swap]{dl}{}\\
+      u_1 \arrow[near end,swap,dashed]{dr}{} && u_2 \arrow[near end,dashed]{dl}{}\\
+      & t'
+    \end{tikzcd}
+    ,\]
+    c'est-à-dire si $t \to u_1$ et $t\to u_2$ alors il existe $t'$ tel que $u_1 \to t'$ et $u_2 \to t'$.
+  \end{defn}
+
+  La confluence pour $\to$, c'est la propriété du diamant pour $\to^\star$.
+  On sait déjà que la $\beta$-réduction n'a pas la propriété du diamant (certains chemins de l'exécution sont plus longs), mais on va montrer qu'elle est confluente.
+
+  \begin{defn}
+    On définit la relation de \textit{réduction parallèle}, notée~$\rpar$, par les règles d'inférences suivantes :
+
+    \begin{gather*}
+      \begin{prooftree}
+        \infer 0{x \rpar x}
+      \end{prooftree}
+      \quad\quad
+      \begin{prooftree}
+        \hypo{M \rpar M'}
+        \infer 1{\lambda x.\: M \rpar \lambda x.\: M'}
+      \end{prooftree}\\
+      \begin{prooftree}
+        \hypo{M \rpar M'}
+        \hypo{N \rpar N'}
+        \infer 2{M \: N \rpar M' \: N'}
+      \end{prooftree}
+      \quad\quad
+      \begin{prooftree}
+        \hypo{M \rpar M'}
+        \hypo{N \rpar N'}
+        \infer 2{(\lambda x.\: M) \: N \rpar M'[\sfrac{N'}{x}]}
+      \end{prooftree}\\
+    \end{gather*}
+  \end{defn}
+
+  \begin{lem}
+    La relation $\rpar$ est réflexive.
+  \end{lem}
+
+  \begin{lem}
+    Si $\mathcal{R} \subseteq \mathcal{S}$ alors $\mathcal{R}^\star \subseteq \mathcal{S}^\star$.
+    De plus, $(\mathcal{R}^\star)^\star = \mathcal{R}^\star$.
+  \end{lem}
+
+  \begin{lem}
+    Les relations $\to^\star$ et $\rpar^\star$ coïncident.
+  \end{lem}
+  \begin{prv}
+    \begin{itemize}
+      \item On a ${\to^\star} \subseteq {\rpar^\star}$ car cela découle de ${\to} \subseteq {\rpar}$ par induction sur $\to$ en utilisant la réflexivité de $\rpar$.
+      \item On a ${\rpar^\star} \subseteq {\to^\star}$ car cela découle de ${\rpar} \subseteq {\to^\star}$.
+        En effet, on montre que pour tout $M, M'$ si $M \rpar M'$ alors $M \to^\star M'$, par induction sur $\rpar$. Il y a  \textit{4} cas.
+        \begin{itemize}
+          \item Pour $x \rpar x$, c'est immédiat. 
+          \item Pour l'abstraction, on suppose $M \rpar M'$ alors par induction  $M \to^\star M'$, et donc $\lambda x.\: M \to^\star \lambda x.\: M'$ par induction sur $M \to^\star M'$.
+          \item Pour l'application, c'est plus simple que pour la précédente.
+          \item Pour la substitution, supposons $M \rpar M'$ et $N \rpar N$.
+            On déduit par hypothèse d'induction $M \to^\star M'$ et $N \to^\star N'$.
+            Et, par induction sur $M \to^\star M'$, on peut montrer que $(\lambda x.\: M)\: N N \to^\star (\lambda x.\: M') \: N$.
+            Puis, par induction sur $N \to^\star N'$, on montre $(\lambda x.\: M') \: N \to^\star (\lambda x.\: M') \: N'$.
+            Enfin, par la règle de $\beta$-réduction, on a $(\lambda x.\: M') N' \to M'[\sfrac{N'}{x}]$.
+            On rassemble tout pour obtenir :
+            \[
+              (\lambda x.\: M) \: N \to^\star M'[\sfrac{N'}{x}]
+            .\] 
+        \end{itemize}
+    \end{itemize}
+  \end{prv}
+
+  On est donc ramené à montrer que $\rpar^\star$ a la propriété du diamant.
+  Or $\rpar$ a la propriété du diamant, ce que l'on va montrer en TD.
+
+  \begin{lem}
+    Si $M \rpar M'$ alors  $N \rpar N'$ implique  $M[\sfrac{N}{x}] \rpar M'[\sfrac{N'}{x}]$.
+  \end{lem}
+  \begin{prv}
+    Par induction sur $M \rpar M'$, il y a  \textit{4} cas.
+    On ne traite que le cas de la 4ème règle.
+    On suppose donc $M = (\lambda y.\: P)\: Q$ avec $y \not\in \Vl(N)$ et $y \neq x$.
+    On suppose aussi $P \rpar P'$,  $Q \rpar Q'$ et $M' = P'[\sfrac{Q'}{y}]$.
+    On suppose de plus $N \rpar N'$.
+    Par hypothèse d'induction, on a $P[\sfrac{N}{x}] \rpar P'[\sfrac{N'}{x}]$ et $Q[\sfrac{N}{x}] \rpar Q'[\sfrac{N'}{x}]$.
+    On applique la 4ème règle d'inférence définissant $\rpar$ pour déduire 
+     \[
+       \underbrace{(\lambda y. \: (P[\sfrac{N}{x}]))}_{
+         \begin{array}{c}
+           \vertical = \\
+            (\lambda y.\: P)[\sfrac{N}{x}]\\
+            \text{ car } x  \neq y
+         \end{array}
+       } (Q[\sfrac{N}{x}]) \rpar 
+       (P'[\sfrac{N'}{x}])[\sfrac{Q'[\sfrac{N'}{x}]}{y}] = (P'[\sfrac{Q'}{y}])[\sfrac{N'}{x}]
+    \]
+    par le lemme de gymnastique des substitutions et car $y \not\in  \Vl(N') \subseteq \Vl(N)$ et car $N \to^\star N'$.
+  \end{prv}
+
+  \begin{prop}
+    La relation $\rpar$ a la propriété du diamant.
+  \end{prop}
+  \begin{prv}
+    Vu en TD.
+  \end{prv}
+
+  \begin{crlr}
+    On a la confluence de $\to_\beta$.
+  \end{crlr}
+
+  \begin{defn}
+    La \textit{$\beta$-équivalence}, ou \textit{$\beta$-convertibilité} est la plus petite relation d'équivalence contenant $\to_\beta$.
+    On la note $=_\beta$.
+
+    Si l'on a \[
+    \begin{tikzcd}
+      & \arrow[near end]{dl}{\star} \arrow[swap,near end]{dr}{\star} & &  \arrow[near end]{dl}{\star} \arrow[swap,near end]{dr}{\star} & &  \arrow[near end]{dl}{\star} N \\
+      M &  & ~ & & ~ &
+    \end{tikzcd}
+    ,\] 
+    alors $M =_\beta N$.
+  \end{defn}
+
+  \begin{prop}
+    Tout $\lambda$-terme est $\beta$-équivalent à au plus une forme normale.
+  \end{prop}
+  \begin{prv}
+    Si $M =_\beta N$ et  $M,N$ sont des formes normales, alors par confluence il existe $P$ tel que $M \to^\star P$ et $N \to^\star P$.
+    On a donc que~$M = N = P$.
+  \end{prv}
+
+  \begin{rmk}[Conséquences]
+    \begin{itemize}
+      \item Deux normales distinctes (au sens de $=_\alpha$) ne sont pas $\beta$-convertibles.
+      \item Si on a un $\lambda$-terme qui diverge et qui a une forme normale, par exemple $(\lambda x.\: y) \: \Omega$, alors on peut toujours "revenir" sur la forme normale.
+    \end{itemize}
+  \end{rmk}
 
 \end{document}
 
