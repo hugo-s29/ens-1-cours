@@ -9,5 +9,5 @@ def edge_detection(image_path, output_path):
     Image.fromarray(edges_rgb).save(output_path)
     print(f"Processed image saved to {output_path}")
 
-for i in range(1, 11):
+for i in range(1, 49):
     edge_detection(f"frames/frame_{i}_done.png", f"frames/frame_{i}_edges.png")

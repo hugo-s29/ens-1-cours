@@ -4,7 +4,7 @@ import json
 
 images = [
     Image.open('frames/frame_' + str(k) + '_edges.png')\
-    for k in range(1, 11)
+    for k in range(1, 49)
 ]
 
 for img in images:
