@@ -4,6 +4,8 @@ cd /Users/hugos29/Documents/ecole/ens1/
 # SEMESTRE 2
 # ==========
 
+ipython autocompress.py
+
 cp algo2/main.pdf ../web/public/data/ens1/algo2.pdf
 
 cp log/main.pdf ../web/public/data/ens1/logique.pdf
