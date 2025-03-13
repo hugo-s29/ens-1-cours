@@ -1,5 +1,7 @@
+image: dpokidov/imagemagick
+
 compress-td-proba:
-  stage: compress-pdf
+  stage: build
   script:
     - convert -density 125 proba/td-uncompressed.pdf -quality 99 -compress Zip proba/td.pdf
   rules:
@@ -7,7 +9,7 @@ compress-td-proba:
       - proba/td-uncompressed.pdf
 
 compress-td-algo2:
-  stage: compress-pdf
+  stage: build
   script:
     - convert -density 125 algo2/td-uncompressed.pdf -quality 99 -compress Zip algo2/td.pdf
   rules:
@@ -15,7 +17,7 @@ compress-td-algo2:
       - algo2/td-uncompressed.pdf
 
 compress-td-profon:
-  stage: compress-pdf
+  stage: build
   script:
     - convert -density 125 profon/td-uncompressed.pdf -quality 99 -compress Zip profon/td.pdf
   rules:
@@ -23,7 +25,7 @@ compress-td-profon:
       - profon/td-uncompressed.pdf
 
 compress-td-log:
-  stage: compress-pdf
+  stage: build
   script:
     - convert -density 125 log/td-uncompressed.pdf -quality 99 -compress Zip log/td.pdf
   rules:
