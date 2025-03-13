@@ -33,8 +33,8 @@ for pdf in pdf_files:
         subprocess.run(["convert", "-density", "125", pdf, "-quality", "99", "-compress", "Zip", compressed_pdf], check=True)
 
         previous_hashes[pdf] = current_hash
-    else:
-        print(f"Skipping {pdf} (unchanged).")
+    #else:
+        # print(f"Skipping {pdf} (unchanged).")
 
 with open(HASH_FILE, "w") as f:
     json.dump(previous_hashes, f, indent=4)

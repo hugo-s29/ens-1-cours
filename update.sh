@@ -7,6 +7,7 @@ cd /Users/hugos29/Documents/ecole/ens1/
 ipython autocompress.py
 
 cp algo2/main.pdf ../web/public/data/ens1/algo2.pdf
+cp algo2/td.pdf ../web/public/data/ens1/algo2-td.pdf
 
 cp log/main.pdf ../web/public/data/ens1/logique.pdf
 cp log/chap00.pdf ../web/public/data/ens1/logique-chap00.pdf
@@ -18,10 +19,12 @@ cp log/dm1.pdf ../web/public/data/ens1/logique-dm1.pdf
 cp log/td.pdf ../web/public/data/ens1/logique-td.pdf
 
 cp proba/td.pdf ../web/public/data/ens1/proba-td.pdf
+cp proba/dm1.pdf ../web/public/data/ens1/proba-dm1.pdf
 
 cp profon/main.pdf ../web/public/data/ens1/profon.pdf
 cp profon/small-docs/trad.pdf ../web/public/data/ens1/profon-traduction-cps.pdf
 cp profon/small-docs/opti.pdf ../web/public/data/ens1/profon-optimisation-cps.pdf
+cp profon/td.pdf ../web/public/data/ens1/profon-td.pdf
 
 # ==========
 # SEMESTRE 1
