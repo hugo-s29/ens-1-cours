@@ -1,0 +1,290 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Le $\lambda$-calcul simplement typé.}
+
+  Dans ce chapitre, on va parler de \textit{typage}. Ceci permet de "stratifier" les $\lambda$-termes.
+  En effet, pour l'instant, tous les termes se ressemblent.
+
+  \section{Définition du système de types.}
+
+  \begin{defn}
+    On se donne un ensemble de \textit{types de base}, notés $X$, $Y$, $Z$, \ldots\
+    Les types simples sont donnés par la grammaire suivante :
+    \[
+    A, B, C ::= X  \mid A \to B
+    .\]
+  \end{defn}
+
+  Il n'y a donc que deux "types" de types : les types de base, et les types fonctions.
+  Il n'y a donc pas de type \lstinline|unit|, \lstinline|bool|, \ldots\ En effet, ceci demanderai d'ajouter des constantes \lstinline|()|, \lstinline|true|, \lstinline|false|, \textit{etc} dans la grammaire du $\lambda$-calcul (et ceci demanderai ensuite d'ajouter des règles de typage supplémentaire). On verra en TD comment typer  $\mathbf{T}$ et $\mathbf{F}$ comme défini au chapitre précédent.
+
+  Par convention, on notera $A \to B \to C$ pour $A \to (B \to C)$.
+
+  \begin{defn}
+    On définit une \textit{hypothèse de typage} comme un couple variable-type~$(x, A)$ noté $x: A$.
+  \end{defn}
+
+  \begin{defn}
+    Un \textit{environment de typage}, noté $\Gamma$, $\Gamma'$,  \textit{etc} est un dictionnaire sur~$(\mathcal{V}, \mathsf{Types})$, \textit{c.f.} cours de Théorie de la Programmation.
+    On notera~$\Gamma(x) = A$ lorsque  $\Gamma$ associe  $x$ à $A$. On définit le \textit{domaine} de $\Gamma$ comme \[
+      \operatorname{dom}(\Gamma) := \{x  \mid \exists A, \: \Gamma(x) = A\}
+    .\]
+    On note aussi $\Gamma, x : A$ l'extension de  $\Gamma$ avec $x : A$ si $x\not\in \operatorname{dom}(\Gamma)$.
+  \end{defn}
+
+  \begin{defn}
+    On définit la \textit{relation de typage}, notée $\Gamma \vdash M : A$ ("sous les hypothèses $\Gamma$, le $\lambda$-terme  $M$ a le type $A$") par les règles d'inférences suivantes :
+    \begin{gather*}
+      \begin{prooftree}
+        \infer[left label={\Gamma(x) = A}] 0{\Gamma \vdash x : A}
+      \end{prooftree}
+      \quad\quad\quad
+      \begin{prooftree}
+        \hypo{\Gamma \vdash M : A \to B}
+        \hypo{\Gamma \vdash N : A}
+        \infer 2{\Gamma \vdash M \: N : B}
+      \end{prooftree}\\
+      \begin{prooftree}
+        \hypo{\Gamma, x : A \vdash M : B}
+        \infer[left label={x \not\in \operatorname{dom}(\Gamma)}] 1{\Gamma \vdash \lambda x.\: M : A \to B}
+      \end{prooftree}
+    \end{gather*}
+    Dans cette dernière règle, on peut toujours l'appliquer modulo $\alpha$-conversion (il suffit d'$\alpha$-renommer $x$ dans $\lambda x.\: M$).
+  \end{defn}
+
+  \begin{exm}
+    On peut omettre le "$\emptyset$" avant "$\vdash$".
+
+    \fitbox{$\begin{prooftree}
+      \infer 0{f : X \to X, z : X \vdash f : X \to X}
+      \infer 0{f : X \to X, z : X \vdash f : X \to X}
+      \infer 0{f : X \to X, z : X \vdash z : X}
+      \infer 2{f : X \to X, z : X \vdash f\: z : X}
+      \infer 2{f : X \to X, z : X \vdash f \: (f\: z) : X}
+      \infer 1{f : X \to X \vdash \lambda z.\: f \: (f \: z) : X \to X}
+      \infer 1{\vdash \lambda f.\: \lambda z.\: f \: (f\: z) : (X \to X) \to  X \to X}
+    \end{prooftree}$}
+  \end{exm}
+
+  \begin{exm}
+    \[
+    \begin{prooftree}
+      \infer 0{a, X, t : X \to Y \vdash t : X \to Y}
+      \infer 0{a, X, t : X \to Y \vdash a : X}
+      \infer 2{a, X, t : X \to Y \vdash t \: a : Y}
+      \infer 1{a : X \vdash \lambda t. \: t \: a : (X \to Y) \to Y}
+    \end{prooftree}
+    .\]
+  \end{exm}
+
+  \section{Propriétés de la relation de typage.}
+
+  \begin{lem}[Lemme administratif]
+    ~\\[-1.5\baselineskip]
+
+    \begin{itemize}
+      \item Si $\Gamma \vdash M : A$ alors $\Vl(M) \subseteq \operatorname{dom}(\Gamma)$.
+      \item \textit{Renforcement} : si $\Gamma , x : B \vdash M : A$ et $x \not\in \Vl(M)$ alors $\Gamma \vdash M : A$.
+      \item \textit{Affaiblissement} : si $\Gamma \vdash M : A$ alors, pour tout $B$ et tout~$x \not\in \operatorname{dom}(\Gamma)$ alors~$\Gamma, x : B \vdash A$.
+      \item \textit{Contraction} : si $\Gamma, x : B, y : B \vdash M : A$ alors $\Gamma, x : B \vdash M[\sfrac{x}{y}] : A$ \qed
+    \end{itemize}
+  \end{lem}
+
+  \begin{prop}[Préservation du typage]
+    Si $\Gamma \vdash M : A$ et $M \to_\beta M'$ alors $\Gamma \vdash M' : A$.
+  \end{prop}
+  \begin{prv}
+    On procède comme en \thprog\ avec le lemme suivant.
+    \begin{lem}
+      Si $\Gamma, x : A \vdash M : B$ et $\Gamma \vdash N : A$ alors $\Gamma \vdash M[\sfrac{N}{x}] : B$.
+    \end{lem}
+  \end{prv}
+
+  \section{Normalisation forte.}
+
+  \begin{defn}
+    Un $\lambda$-terme $M$ est dit \textit{fortement normalisant} ou \textit{terminant} si toute suite de $\beta$-réductions issue de $M$ conduit à une forme normale. Autrement dit, il n'y a pas de divergence issue de~$M$.
+  \end{defn}
+
+  \begin{thm}
+    Si $M$ est typage (il existe $\Gamma, A$ tels que  $\Gamma \vdash M : A$) alors $M$ est fortement normalisant.
+  \end{thm}
+
+  \begin{rmk}[Quelques tentatives de preuves ratées.]
+    \begin{itemize}
+      \item Par induction sur $M$ ? Non.
+      \item Par induction sur la relation de typage $\Gamma \vdash M : A$ ? Non (le cas de l'application pose problème car deux cas de $\beta$-réductions).
+    \end{itemize}
+  \end{rmk}
+  Pour démontrer cela, on utilise une méthode historique : les \textit{candidats de réductibilité}.
+  \begin{defn}[Candidat de réductibilité]
+    Soit $A$ un type simple.
+    On associe à $A$ un ensemble de $\lambda$-termes, noté $\mathcal{R}_A$ appelé \textit{candidats de réductibilité} (ou simplement \textit{candidats}) associé à $A$, défini par induction sur $A$ de la manière suivante :
+    \begin{itemize}
+      \item $\mathcal{R}_X := \{M  \mid M \text{ est fortement normalisant}\}$ ;
+      \item $\mathcal{R}_{A \to B} := \{M  \mid \forall N \in \mathcal{R}_A, M\: N \in \mathcal{R}_B\}$.
+    \end{itemize}
+  \end{defn}
+
+  L'idée est la suivante : \[
+  \begin{array}{c}
+    M \text{ typable }\\
+    \Gamma \vdash M : A
+  \end{array} \quad\leadsto\quad M \in \mathcal{R}_A \quad\leadsto\quad M \text{ fortement normalisant}
+  .\]
+
+  \begin{rmk}[Rappel sur le PIBF, \textit{c.f.} \thprog]
+    Le principe d'induction bien fondé nous dit qu'une relation $\mathcal{R}$ est terminante ssi pour tout prédicat $\mathcal{P}$ sur $E$ vérifie que si \[
+      \forall x \in E \: \big((\forall y, x \mathrel{\mathcal{R}} y \implies \mathcal{P}(y)) \implies \mathcal{P}(x)\big)
+    \]
+    alors $\forall x \in E, \mathcal{P}(x)$.
+  \end{rmk}
+
+  \begin{prop}
+    Soit $A$ un type simple.
+    On a :
+    \begin{description}
+      \item[CR\:1.] Pour tout $M \in \mathcal{R}_A$, $M$ est fortement normalisant.
+      \item[CR\:2.] Pour tout $M \in \mathcal{R}_A$, si $M \to_\beta M'$ alors $M' \in \mathcal{R}_A$.
+      \item[CR\:3.] Pour tout $M \in \mathcal{R}_A$, si $M$ est \textit{neutre} (c-à-d, $M$ n'est pas une $\lambda$-abstraction), et si $\forall M', M \to_\beta M' \implies M' \in \mathcal{R}_A$ alors $M \in \mathcal{R}_A$.
+    \end{description}
+  \end{prop}
+  \begin{prv}
+    On montre la conjonction de \textbf{\textsf{CR\:1}}, \textbf{\textsf{CR\:2}} et \textbf{\textsf{CR\:3}} par induction sur $A$.
+    Il y a deux cas.
+
+    \begin{itemize}
+      \item Cas $X$ un type simple.
+        \begin{description}
+          \item[CR\:1.] C'est vrai par définition.
+          \item[CR\:2.] Si $M$ est fortement normalisant, et $M \to_\beta M'$ alors $M' \in \mathcal{R}_X$.
+          \item[CR\:3.] Si $M$ est neutre et si on a que "pour tout $M'$ tel que $M \to_\beta M'$ alors $M' \in \mathcal{R}_X$" alors c'est l'induction bien fondée pour $\to_\beta$ sur $\mathcal{R}_X$.
+        \end{description}
+      \item Cas $A \to B$ un type flèche.
+        \begin{description}
+          \item[CR\:1.] Soit $M \in \mathcal{R}_{A \to B}$.
+            Supposons que $M$ diverge :
+            \[
+            M\to_\beta M_1 \to_\beta  M_2 \to_\beta \cdots 
+            .\]
+            On a observé que $x \in \mathcal{R}_A$ pour une variable $x$ arbitraire (conséquence de \textbf{\textsf{CR\:3}} pour $A$).
+            Par définition de $\mathcal{R}_{A \to B}$, $M\: x \in \mathcal{R}_B$.
+            Par \textbf{\textsf{CR\:1}} pour $B$, on a que $M \: x$ est fortement normalisant.
+            Or,  $M \: x \to_\beta M_1 \: x$ car $M \to_\beta M_1$.
+            On construit ainsi une divergence dans $\mathcal{R}_B$ à partir de $M\:x$ :
+             \[
+            M\: x \to_\beta M_1 \: x \to_\beta M_2 \: x \to_\beta\cdots 
+            .\] 
+            C'est absurde car cela contredit que $M\:x$ fortement normalisant.
+          \item[CR\:2.]
+            Soit $M \in \mathcal{R}_{A \to B}$ et $M \to M'$.
+            Montrons que $M' \in \mathcal{R}_{A \to B}$, \textit{i.e.} pour tout $N \in \mathcal{R}_A$ alors $M' \: N \in \mathcal{R}_B$.
+            Soit donc $N \in \mathcal{R}_A$.
+            On sait que $M\:N \in \mathcal{R}_B$ (car $M \in \mathcal{R}_{A \to B}$).
+            Et comme $M \to_\beta M'$ alors $M \: N \to_\beta M' \: N$ et, par \textbf{\textsf{CR\:2}} pour $B$, on a $M' \: N \in \mathcal{R}_B$.
+            On a donc montré $\forall N \in \mathcal{R}_{A \to B}, M'\: N \in \mathcal{R}_B$ autrement dit, $M' \in \mathcal{R}_{A \to B}$.
+          \item[CR\:3.]
+            Soit $M$ neutre tel que $\forall M', M \to_\beta M' \implies M' \in \mathcal{R}_{A \to B}$.
+            Montrons que $M \in \mathcal{R}_{A \to B}$.
+            On sait que $\to_\beta$ est terminante sur $\mathcal{R}_A$ (par \textbf{\textsf{CR\:1}} pour $A$).
+            On peut donc montrer que $\forall  N \in \mathcal{R}_A$, $M\: N \in \mathcal{R}_B$ par induction bien fondée sur $\to_\beta$.
+            On a les hypothèses suivantes :
+            \begin{itemize}
+              \item hypothèse 1 :  pour tout $M'$ tel que $M \to_\beta M'$ alors $M' \in \mathcal{R}_{A \to B}$ ;
+              \item hypothèse d'induction bien fondée :
+                pour tout $N'$ tel que $N \to_\beta N'$ que $M\: N' \in \mathcal{R}_B$.
+            \end{itemize}
+            On veut montrer $M\: N \in \mathcal{R}_B$.
+            On s'appuie sur \textbf{\textsf{CR\:3}} pour $B$ et cela nous ramène à montrer que, pour tout $P$ tel que $M \: N \to_\beta P$ est $P \in \mathcal{R}_B$.
+            On a trois cas possibles pour $M \: N \to_\beta P$.
+            \begin{itemize}
+              \item Si $M = \lambda x. \: M_0$ et  $P = M_0[\sfrac{N}{x}]$ qui est exclu car $M$ est neutre.
+              \item Si $P = M'\: N$ alors par hypothèse 1 $M' \in \mathcal{R}_{A \to B}$ et donc $M'\: N \in \mathcal{R}_B$.
+              \item Si $P = M \: N'$ alors, par par hypothèse d'induction bien fondée, $M \: N' \in \mathcal{R}_B$.
+            \end{itemize}
+        \end{description}
+    \end{itemize}
+  \end{prv}
+
+  \begin{lem}
+    Soit $M$ tel que $\forall N \in \mathcal{R}_A, M[\sfrac{N}{x}] \in \mathcal{R}_B$. Alors $\lambda x.\: M \in \mathcal{R}_{A \to B}$.
+  \end{lem}
+  \begin{prv}
+    On procède comme pour \textbf{\textsf{CR\:3}} pour $A \to B$.
+  \end{prv}
+
+  \begin{lem}
+    Supposons $x_1 : A_1, \ldots, x_k : A_k \vdash M : A$.
+    Alors, pour tout $N_1, \ldots, N_k$ tel que $N_i \in \mathcal{R}_{A_i}$, on a \[
+      M[\sfrac{N_1 \: \cdots \: N_k}{x_1 \: \cdots \: x_k}] \in \mathcal{R}_A
+    .\]
+    
+    On note ici la \textit{substitution simultanée} des $x_i$ par des $N_i$ dans $M$.
+    C'est \textbf{\textit{n'est pas}} la composition des substitutions.
+  \end{lem}
+  \begin{prv}
+    Par induction sur la relation de typage, il y a trois cas.
+    \begin{itemize}
+      \item Si on a utilisé la règle de l'axiome, c'est que $M$ est une variable : $M = x_i$ et $A = A_i$.
+        Soit  $N_i \in \mathcal{R}_{A_i}$ alors $M[\sfrac{N_1 \: \cdots \: N_k}{x_1 \: \cdots \: x_k}] = N_i \in \mathcal{R}_A$.
+      \item Si on a utilisé la règle de l'application, c'est que $M$ est une application : $M = M_1 \: M_2$ et $M_1 : B \to A$ et $M_2 : B$.
+        On a : \[
+          M[\sfrac{N_1 \: \cdots \: N_k}{x_1 \: \cdots \: x_k}] =
+          M_1[\sfrac{N_1 \: \cdots \: N_k}{x_1 \: \cdots \: x_k}] \:
+          M_2[\sfrac{N_1 \: \cdots \: N_k}{x_1 \: \cdots \: x_k}]
+        .\]
+        On conclut en appliquant les hypothèses d'inductions : $M_1[\sfrac{N_1 \: \cdots \: N_k}{x_1 \: \cdots \: x_k}] \in \mathcal{R}_{B \to A}$ et $M_2[\sfrac{N_1 \: \cdots \: N_k}{x_1 \: \cdots \: x_k}] : \mathcal{R}_{B}$.
+      \item Si on a utilisé la règle de l'abstraction, c'est que $M = \lambda y.\: M_0$ avec $y \not\in \{x_1, \ldots, x_k\} \cup \Vl(N_1) \cup \cdots \cup \Vl(N_k)$.
+        Supposons que  $x_1 : A_1, \ldots, x_k : A_k \vdash \lambda y.\: M_0 : A \to B$.
+        Alors nécessairement $x_1 : A_1, \ldots, x_k : A_k, y : A \vdash M_0 : B$.
+        Par hypothèse d'induction, on a que 
+        pour tout $N_i \in \mathcal{R}_{A_i}$ on a
+        \[
+          M_0 [\sfrac{N_1\: \cdots\: N_k}{x_1 \: \cdots \: x_k}][\sfrac{N}{y}] = M_0 [\sfrac{N_1\: \cdots\: N_k\: N}{x_1 \: \cdots \: x_k \: y}] \in \mathcal{R}_B
+        .\]
+
+        Par le lemme précédent, on déduit que \[
+          (\lambda y. M_0) [\sfrac{N_1\: \cdots\: N_k}{x_1 \: \cdots \: x_k}] = \lambda y. (M_0 [\sfrac{N_1\: \cdots\: N_k}{x_1 \: \cdots \: x_k}]) \in \mathcal{R}_{A \to B}
+        .\]
+    \end{itemize}
+  \end{prv}
+
+  \begin{crlr}
+    Si $\Gamma \vdash M : A$ alors $M \in \mathcal{R}_A$.
+  \end{crlr}
+
+  \section{Extension : le $\lambda$-calcul typé avec $\times$ et $\mathbf{1}$.}
+  En ajoutant les couples et \textit{unit}, il faut modifier quatre points.
+  \begin{description}
+    \item[Syntaxe.] $M, N ::= \lambda x.\: M  \mid M \: N  \mid x {\color{deepblue} {}\mid \mathtt{(} M, N \mathtt{)}  \mid \mathtt{(\:)}  \mid \pi_1 \: M  \mid \pi_2 \: M}$
+    \item[$\beta$-réduction.]
+      \[
+      \begin{prooftree} \hypo{M \to_\beta M'} \infer 1{\mathtt{(} M, N \mathtt{)} \to_\beta \mathtt{(} M', N \mathtt{)}} \end{prooftree} \quad
+      \begin{prooftree} \hypo{N \to_\beta N'} \infer 1{\mathtt{(} M, N \mathtt{)} \to_\beta \mathtt{(} M, N' \mathtt{)}} \end{prooftree}\]
+    \item[Types.] $A, B ::= X  \mid A \to B  \mid A \times B  \mid \mathbf{1}$
+    \item[Typage.]
+      \[
+      \begin{prooftree}
+        \infer 0{\mathtt{(\:)} : \mathbf{1}}
+      \end{prooftree}
+      \quad\quad
+      \begin{prooftree}
+        \hypo{\Gamma \vdash M : A}
+        \hypo{\Gamma \vdash N : B}
+        \infer 2{\Gamma \vdash \mathtt{(} M, N \mathtt{)} : A \times B}
+      \end{prooftree}
+      \] 
+      \[
+      \begin{prooftree}
+        \hypo{\Gamma \vdash P : M \times N}
+        \infer 1{\Gamma \vdash \pi_1 \: P : M}
+      \end{prooftree}
+      \quad\quad
+      \begin{prooftree}
+        \hypo{\Gamma \vdash P : M \times N}
+        \infer 1{\Gamma \vdash \pi_2 \: P : N}
+      \end{prooftree}
+      .\]
+  \end{description}
+\end{document}
