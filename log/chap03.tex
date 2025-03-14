@@ -143,7 +143,7 @@
         Par le théorème de compacité de la logique du premier ordre, il suffit de montrer que $T$ est finiment satisfiable.
         Soit $T' \subseteq_\mathrm{fini} T$ : par exemple, 
         \[
-          T' \subseteq \mathcal{P} \cup \{\lnot(c = \repr{n}_1), \lnot (c = \repr{n}_2), \ldots, (c = \repr{n}_k)\} 
+          T' \subseteq \mathcal{P} \cup \{\lnot(c = \repr{n_1}), \lnot (c = \repr{n_2}), \ldots, (c = \repr{n_k})\} 
         ,\] 
         et $n_k \ge n_1, \ldots, n_{k-1}$.
         On construit un modèle de $T'$ correspondant à $\mathds{N}$ où $c$ est interprété par $n_k + 1$.
@@ -175,7 +175,7 @@
         \;;\]
       \item la formule suivante définie un ordre total sur $\mathcal{M}$ compatible avec $+$ et $\times$ :
         \[
-        x \le y \text{ ssi } \exists z \: (x \oplus x = y)
+        x \le y \text{ ssi } \exists z \: (x \oplus z = y)
         .\]
     \end{enumerate}
   \end{thm}
@@ -327,7 +327,238 @@
     \end{itemize}
   \end{exm}
 
+  On introduit trois nouvelles opérations.
+  \begin{description}
+    \item[Récurrence.]
+      Soient $g(x_1, \ldots, x_p)$ et $h(x_1, \ldots, x_{p+2})$ des fonctions partielles.
+      On définit la fonction partielle $f$ par :
+      \begin{itemize}
+        \item $f(0, x_1, \ldots, x_p) := g(x_1, \ldots, x_p)$ ;
+        \item $f(x_0 + 1, x_1, \ldots, x_p) := h(x_0, f(x_0, \ldots, x_p), x_1, \ldots, x_p)$.
+      \end{itemize}
+    \item[Composition.]
+      Soient $f_1, \ldots, f_n$ des fonctions partielles de $p$ variables et $g$ une fonction partielle de $n$ variables.
+      Alors, la fonction composée $g(f_1, \ldots, f_n)$ est définie en $(x_1, \ldots, x_p)$ ssi les fonctions $f_i$ le sont et $g$ est définie en $\big( f_1(x_1, \ldots, x_p), \ldots, f_n(x_1, \ldots, x_p)\big)$.
+    \item[Schéma $\mu$.]
+      Soit $f(x_1, \ldots x_{p+1})$ une fonction partielle.
+      Soit \[
+        g(x_1, \ldots, x_p) := \mu y.\: (f(x_1, \ldots, x_p, y) = 0)
+      .\]
+      Elle est définie en $(x_1, \ldots, x_p)$ si et seulement s'il existe $y$ tel que $f(x_1, \ldots, x_p, y) = 0$ et tous les $f(x_1, \ldots, x_p, x)$ sont définies pour $x \le y$.
+      Dans ce cas, $g(x_1, \ldots, x_p)$ est le plus petit $y$ tel que $f(x_1, \ldots, x_p, y) = 0$.
+  \end{description}
+
+  \begin{defn}
+    L'ensemble des fonctions récursives primitives (\textit{resp.} récursives) est le plus petit ensemble des fonctions contenant les briques de base et stable par composition  et récurrence (\textit{resp.} par composition, récurrence et schéma $\mu$).
+  \end{defn}
+
+  \begin{exm}
+    Les fonctions \[
+    f(x_1, x_2, y) := y^2 - (x_1+x_2) y + x_1 x_2
+    \]et\[
+    f(x_1, x_2) := \min(x_1, x_2)
+    \] sont récursives primitives.
+  \end{exm}
+
+  \begin{defn}
+    Une fonction récursive \textit{totale} est une fonction récursive définie partout.
+  \end{defn}
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Une fonction récursive primitive est totale.
+      \item Une fonction récursive primitive peut se fabriquer avec un seul schéma $\mu$ à la fin (\textit{c.f.} cours de FDI).
+      \item \textit{Rappel}.
+        Une fonction $f : \mathds{N}^p \to \mathds{N}$ totale est représentée par la formule $F(x_0, \ldots, x_p)$ de $\mathcal{L}_0$ su pour tout $p$-uplet d'entiers $(n_1, \ldots, n_p)$ on a :
+        \[
+        \mathcal{P}_0 \vdash \forall y \: \big( F(y, \repr {n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{f(n_1, \ldots, n_p)} \big)
+        .\] 
+      \item \textit{Rappel}.
+        Si $\mathcal{M} \models \mathcal{P}_0$ alors l'ensemble de $|\mathcal{M}|$ constitué de l'interprétation des termes standards est une sous-interprétation de $\mathcal{M}$ qui en est un segment initial et qui est isomorphe à $\mathds{N}$.
+      \item \textit{Rappel}.
+        Une sous-interprétation $\mathcal{N}$ est un segment initial de~$\mathcal{M}$ si 
+        \begin{itemize}
+          \item $a \in \mathcal{N}$ et $b \in \mathcal{M} \setminus \mathcal{N}$ alors $b \ge a$ ;
+          \item $a \in \mathcal{N}$ et $c \le a$ alors $c \in \mathcal{N}$.
+        \end{itemize}
+    \end{itemize}
+  \end{rmk}
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \filldraw[draw=deepblue,fill=NavyBlue!5] (0, 0) rectangle (5, 1.5);
+      \node[deepblue] at (4.6, 1.2) {$\mathcal{M}$};
+      \filldraw[draw=deepgreen,fill=ForestGreen!5] (0.1, 0.1) rectangle (2.5, 1.4);
+      \node[deepgreen] at (0.5, 1.10) {$\mathcal{N}$};
+      \node[fill,deepblue,circle,inner sep=1pt] (C) at (1, 0.35) {};
+      \node[deepblue] at (1.5, 0.35) {$\le$};
+      \node[deepblue] at (2.5, 0.35) {$\le$};
+      \node[fill,deepblue,circle,inner sep=1pt] (A) at (2, 0.35) {};
+      \node[fill,deepblue,circle,inner sep=1pt] (B) at (3, 0.35) {};
+      \node[deepblue,above=3pt of A] {$a$};
+      \node[deepblue,above=3pt of B] {$b$};
+      \node[deepblue,above=3pt of C] {$c$};
+    \end{tikzpicture}
+  \end{figure}
+
   \begin{thm}
     Toute fonction récursive totale est représentable.
+    \label{thm:rec-repr}
   \end{thm}
+  On a déjà montré que les briques de base sont représentables.
+  On montre trois lemmes qui montreront le théorème ci-dessus.
+
+  \begin{lem}
+    L'ensemble des fonctions représentables est clos par composition.
+  \end{lem}
+  \begin{prv}
+    Soient $f_1(x_1, \ldots, x_p), \ldots, f_n(x_1, \ldots, x_p)$ et $g(x_1, \ldots, x_n)$ des fonctions représentées par $F_1(x_0, \ldots, x_p), \ldots, F_n(x_0, \ldots, x_p)$ et $G(x_0, \ldots, G_n)$.
+    On va montrer que $h = g(f_1, \ldots, f_n)$ est représentée par 
+    \[
+    H(x_0, \ldots, x_o) := \exists y_0\: \cdots \: \exists y_n \: \big(
+      G(x_0, y_1, \ldots, y_n) \land \bigwedge_{1 \le i \le  n} F_i(y_i, x_1, \ldots, x_p)
+    \big)
+    .\]
+    En effet, pour tous entiers $n_1, \ldots, n_{\max(p, n)}$ :
+    \begin{itemize}
+      \item $\mathcal{P}_0 \vdash \forall y \: F_i(y_1, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{f_i(n_1, \ldots, n_p)}$ ;
+      \item $\mathcal{P}_0 \vdash \forall y \: G(y_1, \repr{n_1}, \ldots, \repr{n_n}) \leftrightarrow y = \repr{g(n_1, \ldots, n_n)}$.
+    \end{itemize}
+    Dans tout modèle $\mathcal{M}$ de $\mathcal{P}_0$, pour tout $y \in |\mathcal{M}|$, et tous $n_1, \ldots, n_p \in \mathds{N}$ on a $H(y, n_1, \ldots, n_p)$ est vraie ssi il existe $y_1, \ldots, y_n$ dans $|\mathcal{M}|$ et pour tout $i$, $F_i(y_i, x_1, \ldots, x_p)$ est vrai et $G(y, y_1, \ldots, y_n)$.
+    Donc, par les hypothèses précédents, on a $H(y, n_1, \ldots, n_p)$ ssi il existe $y_1, \ldots, y_n$ dans $|\mathcal{M}|$ et pour tout $i$, $y_i = f_i(n_1, \ldots, n_p)$ et $y = g(y_1, \ldots, y_p)$, ssi \[
+    y = g(f_1(n_1, \ldots, n_p), \ldots, f_n(n_1, \ldots, n_p))
+    \]  ssi $y = h(n_1,\ldots,n_p)$.
+    On conclut \[
+      \mathcal{P}_0 \vdash \forall y\: \big(H(y, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{h(n_1, \ldots, n_p)}\big)
+    .\]
+  \end{prv}
+
+  \begin{lem}
+    Si, à partir d'une fonction représentable totale, on obtient par schéma $\mu$ une fonction totale, alors cette fonction est représentable.
+  \end{lem}
+  \begin{prv}
+    Soit $g : \mathds{N}^{p+1} \to \mathds{N}$ une fonction représentable totale, et soit $f : \mathds{N}^p \to \mathds{N}$ définie par \[
+      f(x_1, \ldots, x_p) := \mu x_0.\:\big( g(x_0, \ldots, x_p) = 0 \big)
+    .\]
+    Montrons que si $f$ est totale alors elle est représentable.
+    Soit $G (y, x_0, \ldots, x_p)$ qui représente $g$.
+    Alors, pour tous $n_1, \ldots, n_p$ on a 
+    \[
+      \mathcal{P}_0 \vdash \forall y \: G(y, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{g(n_1, \ldots, n_p)}
+    .\]
+    Considérons la formule \[
+    F(y, n_1, \ldots, n_p) := G(0, y, x_1, \ldots, x_p)  \land \forall z < y, \lnot G(0, z, x_1, \ldots, x_p)
+    ,\]
+    où l'on note $\forall z < y \: H$ pour  $\forall z \: (\exists u \: \lnot (h = \repr{0}) \land z \oplus h = y) \to H$.
+    Montrons que $F$ représente $f$.
+    Soit $\mathcal{M}$ un modèle de $\mathcal{P}_0$.
+    Soient $ n_1, \ldots, n_p$ des entiers et $y \in |\mathcal{M}|$.
+    On a $F(y, n_1, \ldots, n_p)$ vrai ssi $G(0, y, n_1, \ldots, n_p)$ vrai et, pour tout $z < y$, $\lnot G(0, z, n_1, \ldots, n_p)$ est vrai.
+    Montrons que $b := f(n_1, \ldots, n_p)$ est le seul élément à satisfaire $F(y, n_1, \ldots, n_p)$.
+    On a bien $G(0, b, n_1, \ldots, n_p)$ par définition de $f$ et pour tout entier $z < b$, on a  $\lnot G(0, z, n_1, \ldots, n_p)$.
+    Mais, si on a $z < b$ et  $z$ n'est pas un entier ?
+    Ce cas n'existe pas car la sous-représentation isomorphe à $\mathds{N}$ est un segment initial, il n'y a donc que des entiers qui sont inférieurs à $b$ dans $|\mathcal{M}|$.
+    Ainsi, $F(b, n_1, \ldots, n_p)$.
+    Montrons que $b$ est le seul.
+    Soit $y$ tel que $F(y, n_1, \ldots, n_p)$. Montrons que $y = b$.
+    \begin{itemize}
+      \item Si $y$ est un entier, c'est vrai par définition de $b$.
+      \item Si $y$ n'est pas un entier, alors $y > b$.
+        Donc, $g(y, x_1, \ldots, x_p) = 0$ et  $b < y$ avec  $g(b, x_1, \ldots, x_p) = 0$.
+        Ainsi, $\forall  z < y \: \lnot G(0, z, x_1, \ldots, x_p)$ est fausse, et donc $F(y, n_1, \ldots, n_p)$ est fausse.
+    \end{itemize}
+ \end{prv}
+
+ \begin{lem}
+   L'ensemble des fonctions totales est stable par définition par récurrence.
+   \label{lem:repr-rec}
+ \end{lem}
+ \begin{prv}
+   Soient $f, g, h$ telles que 
+    \begin{itemize}
+     \item $f(0, x_1, \ldots, x_p) = g(x_1, \ldots, x_p)$
+     \item $f(x_0 + 1, x_1, \ldots, x_p) = h(x_0, f(x_0, \ldots, x_p), x_1, \ldots, x_p)$
+   \end{itemize}
+   Soient $G, H$ représentant $g$ et $h$.
+   On a dans $\mathds{N}$ : $y = f(x_0, \ldots, x_p)$ ssi il existe $z_0, \ldots, z_{x_0}$ tel que 
+   \begin{itemize}
+     \item $z_0 = g(x_1, \ldots, x_p)$
+     \item $z_1 = h(0, z_0, x_1, \ldots, x_p)$
+     \item $z_2 = h(1, z_1, x_1, \ldots, x_p)$
+     \item $\vdots$ 
+     \item $z_{x_0} = h(x_0-1, z_{x_0 - 1}, x_1, \ldots, x_p)$
+     \item $y = z_{x_0}$
+   \end{itemize}
+   Zut ! On ne peut pas écrire $\exists z_0 \: \cdots \: \exists z_{x_0}$ !
+   On va utiliser une fonction qui permet de coder une suite d'entiers dans un couple d'entier $(a,b)$.
+   Interruption de la preuve. 
+ \end{prv}
+
+ \begin{lem}[Fonction $\beta$ de Gödel]
+   Il existe une fonction $\beta$ à trois variables, récursive primitive et représentable, tel que pour tout  $p \in \mathds{N}$ et toute suite $(n_0, \ldots, n_p) \in \mathds{N}^{p+1}$, il existe des entiers $a$ et $b$ tels que pour tout $0 \le i \le p$, on ait $\beta(i, a, b) = n_i$.
+ \end{lem}
+ \begin{prv}
+   Soient $(a_0, \ldots, a_p)$ une suite d'entiers deux à deux premiers, et $(n_0, \ldots, n_p)$ une suite d'entiers.
+   Alors il existe $b \in \mathds{N}$ tel que, pour tout $0 \le i \le p$, $b \equiv n_i \pmod{a_i}$ (par le théorème Chinois).
+
+   Choisissons $a$ et les $a_i$ (qui induisent $b$) ?
+   On pose $a = m!$.
+   Alors, on pose $a_i := a (i+1) + 1$ pour tout $0 \le i \le p$.
+   Les $a_i$ sont bien deux à deux premiers.
+   En effet, pour $j > i$, si  $c  \mid a_i$ et $c  \mid a_j$ avec $c$ premier, alors $c  \mid (a_i - a_j)$ donc $c  \mid a (j-i)$ et donc $c \le m$, donc $c  \mid m$.
+   Ainsi, il existe bien $b$ tel que $b \equiv n_i \pmod {a_i}$.
+   On définit ainsi  $\beta(i, a, b)$ comme le reste de la division de  $b$ par $a(i+1) + 1$.
+   La fonction $\beta$ est représentée par  \[
+   B(x_0, i, a, b) := \exists x_4 \: b = x_4 \otimes \succ (a \otimes (\succ i)) \land x_4 < \succ(x \otimes \succ i)
+   .\]
+   On considère $B'(x_0, x_1, x_2, x_3) := B(x_0, x_1, x_2, x_3) \land \forall x_4 < x_0 \:\lnot B(x_4, x_1, x_2, x_3)$.
+   Cette dernière formule représente aussi $\beta$ mais aussi que $x_0$ sera un entier standard.
+ \end{prv}
+
+
+ \vspace{1cm}
+ \begin{prv}[On reprend la preuve du lemme~\ref{lem:repr-rec}]
+   Soient $f, g, h$ telles que 
+    \begin{itemize}
+     \item $f(0, x_1, \ldots, x_p) = g(x_1, \ldots, x_p)$
+     \item $f(x_0 + 1, x_1, \ldots, x_p) = h(x_0, f(x_0, \ldots, x_p), x_1, \ldots, x_p)$
+   \end{itemize}
+   Soient $G, H$ représentant $g$ et $h$.
+   On a dans $\mathds{N}$ : $y = f(x_0, \ldots, x_p)$ ssi il existe $z_0, \ldots, z_{x_0}$ tel que 
+   \begin{itemize}
+     \item $z_0 = g(x_1, \ldots, x_p)$
+     \item $z_1 = h(0, z_0, x_1, \ldots, x_p)$
+     \item $z_2 = h(1, z_1, x_1, \ldots, x_p)$
+     \item $\vdots$ 
+     \item $z_{x_0} = h(x_0-1, z_{x_0 - 1}, x_1, \ldots, x_p)$
+     \item $y = z_{x_0}$
+   \end{itemize}
+   ssi
+   \begin{align*}
+     \exists a \: \exists b \: \big[ &\\
+    & (\exists z_0 \: B'(z_0, \repr{0}, a, b) \land G(z_0, x_1, \ldots, x_p)) \\
+       {}\land & \forall i < x_0 \: \exists z \: \exists z' \: \begin{pmatrix}
+      &B'(z, i, a, b)\\
+      \land &B'(z', \succ i, a, b)\\
+      \land &H(z', i, z, x_1, \ldots, x_p)
+    \end{pmatrix} \\
+      {}\land & B'(y, x_0, a, b)\\
+              & \hspace{-1cm}\big]
+   \end{align*}
+   est vraie.
+   Montrons que $F$ représente $f$.
+
+   Soit $\mathcal{M} \models \mathcal{P}_0$, et $n_0, \ldots, n_p$ des entiers et $c \in |\mathcal{M}|$.
+   \begin{itemize}
+     \item Si $c$ interprète $\repr{f(n_0, \ldots, n_p)}$ alors en choisissant $a$ et $b$ avec le lemme précédent sur la fonction $\beta$, on a bien  $F(c, n_0, \ldots, n_p)$.
+     \item Réciproquement, si $\mathcal{M} \models F(d, \repr{n_0}, \ldots, \repr{n_p})$ alors il existe $a, b, z_0$ tels que  $B'(z_0, \repr{0}, a, b)$ et  $G(z_0, n_1, \ldots, n_p)$, et donc $z_0 = g(n_1, \ldots, n_p)$.
+       Et, pour tout $i \le  n_0$, il existe $r_i$ et  $s_i$ tels que  \[
+       B'(r_i, i, a, b) \land B'(s_i, i + 1, a , b) \land H(s_i, i, r_i, n_1, \ldots, n_p)
+       \] 
+       donc $r_i = f(i, n_1, \ldots, n_p)$ grâce aux propriétés de $B'$ et car $r_i$ est un entier naturel, et donc par récurrence $d = f(n_0, \ldots, n_p)$.
+   \end{itemize}
+ \end{prv}
+
+ Ceci conclut la preuve du théorème~\ref{thm:rec-repr}.
 \end{document}
