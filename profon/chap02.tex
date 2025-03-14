@@ -95,7 +95,7 @@
     Si $\Gamma \vdash M : A$ et $M \to_\beta M'$ alors $\Gamma \vdash M' : A$.
   \end{prop}
   \begin{prv}
-    On procède comme en \thprog\ avec le lemme suivant.
+    On procède comme en \thprog{7} avec le lemme suivant.
     \begin{lem}
       Si $\Gamma, x : A \vdash M : B$ et $\Gamma \vdash N : A$ alors $\Gamma \vdash M[\sfrac{N}{x}] : B$.
     \end{lem}
@@ -134,7 +134,7 @@
   \end{array} \quad\leadsto\quad M \in \mathcal{R}_A \quad\leadsto\quad M \text{ fortement normalisant}
   .\]
 
-  \begin{rmk}[Rappel sur le PIBF, \textit{c.f.} \thprog]
+  \begin{rmk}[Rappel sur le PIBF, \textit{c.f.} \thprog{10}]
     Le principe d'induction bien fondé nous dit qu'une relation $\mathcal{R}$ est terminante ssi pour tout prédicat $\mathcal{P}$ sur $E$ vérifie que si \[
       \forall x \in E \: \big((\forall y, x \mathrel{\mathcal{R}} y \implies \mathcal{P}(y)) \implies \mathcal{P}(x)\big)
     \]
@@ -257,25 +257,33 @@
   \section{Extension : le $\lambda$-calcul typé avec $\times$ et $\mathbf{1}$.}
   En ajoutant les couples et \textit{unit}, il faut modifier quatre points.
   \begin{description}
-    \item[Syntaxe.] $M, N ::= \lambda x.\: M  \mid M \: N  \mid x {\color{deepblue} {}\mid \mathtt{(} M, N \mathtt{)}  \mid \mathtt{(\:)}  \mid \pi_1 \: M  \mid \pi_2 \: M}$
+    \item[Syntaxe.] \hfill $M, N ::= \lambda x.\: M  \mid M \: N  \mid x {\color{deepblue} {}\mid \texttt{(} M, N \texttt{)}  \mid \texttt{(\:)}  \mid \pi_1 \: M  \mid \pi_2 \: M}$ \hfill~
     \item[$\beta$-réduction.]
       \[
-      \begin{prooftree} \hypo{M \to_\beta M'} \infer 1{\mathtt{(} M, N \mathtt{)} \to_\beta \mathtt{(} M', N \mathtt{)}} \end{prooftree} \quad
-      \begin{prooftree} \hypo{N \to_\beta N'} \infer 1{\mathtt{(} M, N \mathtt{)} \to_\beta \mathtt{(} M, N' \mathtt{)}} \end{prooftree}\]
-    \item[Types.] $A, B ::= X  \mid A \to B  \mid A \times B  \mid \mathbf{1}$
+        \color{deepblue}
+      \begin{prooftree} \hypo{M \to_\beta M'} \infer 1{\texttt{(} M, N \texttt{)} \to_\beta \texttt{(} M', N \texttt{)}} \end{prooftree} \quad
+      \begin{prooftree} \hypo{N \to_\beta N'} \infer 1{\texttt{(} M, N \texttt{)} \to_\beta \texttt{(} M, N' \texttt{)}} \end{prooftree}\]
+      \[
+        \color{deepblue}
+        \begin{prooftree} \infer 0{\pi_1 \: \texttt{(} M, N \texttt{)} \to_\beta M} \end{prooftree} \quad
+        \begin{prooftree} \infer 0{\pi_2 \: \texttt{(} M, N \texttt{)} \to_\beta N} \end{prooftree}
+      .\] 
+    \item[Types.] \hfill $A, B ::= X  \mid A \to B {\color{deepblue} {} \mid A \times B  \mid \mathbf{1}}$ \hfill~
     \item[Typage.]
       \[
+        \color{deepblue}
       \begin{prooftree}
-        \infer 0{\mathtt{(\:)} : \mathbf{1}}
+        \infer 0{\texttt{(\:)} : \mathbf{1}}
       \end{prooftree}
       \quad\quad
       \begin{prooftree}
         \hypo{\Gamma \vdash M : A}
         \hypo{\Gamma \vdash N : B}
-        \infer 2{\Gamma \vdash \mathtt{(} M, N \mathtt{)} : A \times B}
+        \infer 2{\Gamma \vdash \texttt{(} M, N \texttt{)} : A \times B}
       \end{prooftree}
       \] 
       \[
+        \color{deepblue}
       \begin{prooftree}
         \hypo{\Gamma \vdash P : M \times N}
         \infer 1{\Gamma \vdash \pi_1 \: P : M}

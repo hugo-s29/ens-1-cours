@@ -6,7 +6,7 @@
   Le $\lambda$-calcul a trois domaines proches :
   \begin{itemize}
     \item la \textit{calculabilité}, avec l'équivalence entre machines de Turing et $\lambda$-expression (vue en FDI) ;
-    \item la \textit{programmation fonctionnelle} (vue en ThProg avec le petit langage $\mathsf{FUN}$) ;
+    \item la \textit{programmation fonctionnelle} (vue en \thprog 6 avec le petit langage $\mathsf{FUN}$) ;
     \item la \textit{théorie de la démonstration} (vue dans la suite de ce cours).
   \end{itemize}
 
@@ -224,7 +224,7 @@
 
   \section{Confluence de la $\beta$-réduction.}
 
-  \begin{defn}[Rappel, \textit{c.f.} cours de ThProg, Chapitre 10]
+  \begin{defn}[Rappel, \textit{c.f.} \thprog{10}]
     On dit que $\to$ est \textit{confluente} en $t \in A$ si, dès que $t \to^\star u_1$ et $t \to^\star u_2$ il existe $t'$ tel que $u_1 \to^\star t'$ et $u_2 \to^\star t'$.
     \[
     \begin{tikzcd}

@@ -33,7 +33,10 @@
   }%
 }
 
-\newcommand\thprog{Théorie de la Programmation}
+
+\newcommand{\twodigits}[1]{\ifnum#1<10 0#1\else #1\fi}
+
+\newcommand\thprog[1]{\href{http://167.99.84.84/data/ens1/thprog-chap\twodigits{#1}.pdf}{\textbf{Théorie de la Programmation}~[Chapitre~#1]}}
 
 \let\rpar\rightrightarrows
 
