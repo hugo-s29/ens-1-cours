@@ -30,7 +30,7 @@ for pdf in pdf_files:
 
     if previous_hashes.get(pdf) != current_hash:
         print(f"Compressing {pdf} -> {compressed_pdf} ...")
-        subprocess.run(["convert", "-density", "125", pdf, "-quality", "99", "-compress", "Zip", compressed_pdf], check=True)
+        subprocess.run(["convert", "-density", "125", pdf, "-quality", "95", "-compress", "JPEG", compressed_pdf], check=True)
 
         previous_hashes[pdf] = current_hash
     #else:
