@@ -12,7 +12,7 @@
     On se donne un ensemble de \textit{types de base}, notés $X$, $Y$, $Z$, \ldots\
     Les types simples sont donnés par la grammaire suivante :
     \[
-    A, B, C ::= X  \mid A \to B
+      A, B, C ::= \boldsymbol{X}  \mid A \to B
     .\]
   \end{defn}
 
@@ -57,13 +57,13 @@
     On peut omettre le "$\emptyset$" avant "$\vdash$".
 
     \fitbox{$\begin{prooftree}
-      \infer 0{f : X \to X, z : X \vdash f : X \to X}
-      \infer 0{f : X \to X, z : X \vdash f : X \to X}
-      \infer 0{f : X \to X, z : X \vdash z : X}
-      \infer 2{f : X \to X, z : X \vdash f\: z : X}
-      \infer 2{f : X \to X, z : X \vdash f \: (f\: z) : X}
-      \infer 1{f : X \to X \vdash \lambda z.\: f \: (f \: z) : X \to X}
-      \infer 1{\vdash \lambda f.\: \lambda z.\: f \: (f\: z) : (X \to X) \to  X \to X}
+      \infer 0{f : \boldsymbol{X} \to \boldsymbol{X}, z : \boldsymbol{X} \vdash f : \boldsymbol{X} \to \boldsymbol{X}}
+      \infer 0{f : \boldsymbol{X} \to \boldsymbol{X}, z : \boldsymbol{X} \vdash f : \boldsymbol{X} \to \boldsymbol{X}}
+      \infer 0{f : \boldsymbol{X} \to \boldsymbol{X}, z : \boldsymbol{X} \vdash z : \boldsymbol{X}}
+      \infer 2{f : \boldsymbol{X} \to \boldsymbol{X}, z : \boldsymbol{X} \vdash f\: z : \boldsymbol{X}}
+      \infer 2{f : \boldsymbol{X} \to \boldsymbol{X}, z : \boldsymbol{X} \vdash f \: (f\: z) : \boldsymbol{X}}
+      \infer 1{f : \boldsymbol{X} \to \boldsymbol{X} \vdash \lambda z.\: f \: (f \: z) : \boldsymbol{X} \to \boldsymbol{X}}
+      \infer 1{\vdash \lambda f.\: \lambda z.\: f \: (f\: z) : (\boldsymbol{X} \to \boldsymbol{X}) \to \boldsymbol{X} \to \boldsymbol{X}}
     \end{prooftree}$}
   \end{exm}
 
@@ -122,7 +122,7 @@
     Soit $A$ un type simple.
     On associe à $A$ un ensemble de $\lambda$-termes, noté $\mathcal{R}_A$ appelé \textit{candidats de réductibilité} (ou simplement \textit{candidats}) associé à $A$, défini par induction sur $A$ de la manière suivante :
     \begin{itemize}
-      \item $\mathcal{R}_X := \{M  \mid M \text{ est fortement normalisant}\}$ ;
+      \item $\mathcal{R}_{\boldsymbol{X}} := \{M  \mid M \text{ est fortement normalisant}\}$ ;
       \item $\mathcal{R}_{A \to B} := \{M  \mid \forall N \in \mathcal{R}_A, M\: N \in \mathcal{R}_B\}$.
     \end{itemize}
   \end{defn}
@@ -147,7 +147,7 @@
     \begin{description}
       \item[CR\:1.] Pour tout $M \in \mathcal{R}_A$, $M$ est fortement normalisant.
       \item[CR\:2.] Pour tout $M \in \mathcal{R}_A$, si $M \to_\beta M'$ alors $M' \in \mathcal{R}_A$.
-      \item[CR\:3.] Pour tout $M \in \mathcal{R}_A$, si $M$ est \textit{neutre} (c-à-d, $M$ n'est pas une $\lambda$-abstraction), et si $\forall M', M \to_\beta M' \implies M' \in \mathcal{R}_A$ alors $M \in \mathcal{R}_A$.
+      \item[CR\:3.] Pour tout $M$ \textit{neutre} (c-à-d, $M$ n'est pas une $\lambda$-abstraction), si $\forall M', M \to_\beta M' \implies M' \in \mathcal{R}_A$ alors $M \in \mathcal{R}_A$.
     \end{description}
   \end{prop}
   \begin{prv}
@@ -155,11 +155,11 @@
     Il y a deux cas.
 
     \begin{itemize}
-      \item Cas $X$ un type simple.
+      \item Cas $\boldsymbol{X}$ un type simple.
         \begin{description}
           \item[CR\:1.] C'est vrai par définition.
-          \item[CR\:2.] Si $M$ est fortement normalisant, et $M \to_\beta M'$ alors $M' \in \mathcal{R}_X$.
-          \item[CR\:3.] Si $M$ est neutre et si on a que "pour tout $M'$ tel que $M \to_\beta M'$ alors $M' \in \mathcal{R}_X$" alors c'est l'induction bien fondée pour $\to_\beta$ sur $\mathcal{R}_X$.
+          \item[CR\:2.] Si $M$ est fortement normalisant, et $M \to_\beta M'$ alors $M' \in \mathcal{R}_{\boldsymbol{X}}$.
+          \item[CR\:3.] Si $M$ est neutre et si on a que "pour tout $M'$ tel que $M \to_\beta M'$ alors $M' \in \mathcal{R}_{\boldsymbol{X}}$" alors c'est l'induction bien fondée pour $\to_\beta$ sur $\mathcal{R}_{\boldsymbol{X}}$.
         \end{description}
       \item Cas $A \to B$ un type flèche.
         \begin{description}
@@ -257,7 +257,7 @@
   \section{Extension : le $\lambda$-calcul typé avec $\times$ et $\mathbf{1}$.}
   En ajoutant les couples et \textit{unit}, il faut modifier quatre points.
   \begin{description}
-    \item[Syntaxe.] \hfill $M, N ::= \lambda x.\: M  \mid M \: N  \mid x {\color{deepblue} {}\mid \texttt{(} M, N \texttt{)}  \mid \texttt{(\:)}  \mid \pi_1 \: M  \mid \pi_2 \: M}$ \hfill~
+    \item[Syntaxe.] \hfill $M, N ::= \lambda x.\: M  \mid M \: N  \mid x {\color{deepblue} {}\mid \texttt{(} M, N \texttt{)}  \mid \boldsymbol{\star} \mid \pi_1 \: M  \mid \pi_2 \: M}$ \hfill~
     \item[$\beta$-réduction.]
       \[
         \color{deepblue}
@@ -273,7 +273,7 @@
       \[
         \color{deepblue}
       \begin{prooftree}
-        \infer 0{\texttt{(\:)} : \mathbf{1}}
+        \infer 0{\boldsymbol{\star} : \mathbf{1}}
       \end{prooftree}
       \quad\quad
       \begin{prooftree}
