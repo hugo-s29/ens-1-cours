@@ -7,3 +7,4 @@ pad-tracker
 prog
 thprog/tp/tp3/**/_build
 all.pdf
+*.bak

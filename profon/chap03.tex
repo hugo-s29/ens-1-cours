@@ -202,11 +202,23 @@
     \item \textit{affaiblissement} : si $\Gamma \vdash B$ (implicitement "est prouvable") alors $\Gamma, A \vdash B$ ;
     \item \textit{contraction} : si $\Gamma, A, A \vdash B$ alors $\Gamma, A \vdash B$ ;
     \item \textit{renforcement} si $\Gamma, {\color{nicered} A} \vdash B$ alors $\Gamma \vdash B$ \textit{à condition qu'on n'utilise pas l'axiome avec l'hypothèse {\color{nicered} A} (celle là uniquement, les $A$ intermédiaires ne posent pas de problèmes) pour déduire $B$}.
-    \item \textit{échange} ; su $\Gamma, A, B, \Gamma' \vdash C$ alors $\Gamma, \Gamma', A, B \vdash C$.
+    \item \textit{échange} ; su $\Gamma, A, B, \Gamma' \vdash C$ alors $\Gamma, B, A, \Gamma' \vdash C$.
   \end{itemize}
   C'est analogue aux propriétés du typage en $\lambda$-calcul.
 
-  \textbf{\textit{Il manque quelque chose ici\ldots}}
+  En effet, la propriété de renforcement, très imprécise dans sa formulation logique, est simplement : si $\hat{\Gamma}, {\color{nicered} x : A} \vdash M : B$ alors $\hat{\Gamma} \vdash M : B$ \textit{à condition que $x\not\in \Vl(M)$}.
+
+  Si on veut prouver ces propriétés (au lieu d'utiliser la correspondance de Curry-Howard), on ferait une induction sur la preuve du séquent qui est donné.
+
+  La règle \[
+  \begin{prooftree}
+    \hypo{\Gamma \vdash B}
+    \infer 1[\mathsf{aff}]{\Gamma, A \vdash B}
+  \end{prooftree}
+  \] 
+  est \textit{admissible}.
+  En effet, si on sait prouver les prémisses (ici, $\Gamma \vdash B$) alors on sait prouver la conclusion (ici, $\Gamma, A \vdash B$).
+  Ceci dépend fortement de la logique que l'on utilise.
 
   \section{Curry-Howard du côté calcul : les coupures.}
 
@@ -293,7 +305,7 @@
   \end{prv}
 
   \begin{rmk}[Lien avec normalisation forte en $\lambda$-calcul simplement typé]
-    Ici, on veut la normalisation faible ("il existe une  forme normale \ldots"). On ne peut pas appliquer \textit{stricto sensus} la normalisation forte pour le $\lambda$-calcul simplement typé car le système de type contient $\bot$.
+    Ici, on veut la normalisation faible ("il existe une  forme normale \ldots"). On ne peut pas appliquer \textit{stricto sensu} la normalisation forte pour le $\lambda$-calcul simplement typé car le système de type contient $\bot$.
   \end{rmk}
 
   \begin{lem}
@@ -309,7 +321,7 @@
     \end{itemize}
   \end{prv}
 
-  \begin{crlr}[Conssitancde de la logique]
+  \begin{crlr}[Consistance de la logique]
     Il n'y a pas de preuve de $\vdash$ en logique propositionnelle intuitionniste dans le fragment avec $\Rightarrow$ et  $\bot$.
   \end{crlr}
   \begin{prv}
@@ -325,5 +337,7 @@
   ,\]
   pour démontrer le séquent.
 
-  \textbf{\textit{Il manque quelque chose ici\ldots}}
+  Le mot clé \texttt{Qed} prend le $\lambda$-terme construit par la preuve et calcule $M'$ sous forme normale tel que $M \to_\beta^\star M'$.
+  La logique de Rocq est \textit{constructive}. C'est-à-dire qu'une preuve de $A \Rightarrow B$ c'est une fonction qui transforme une preuve de $A$ en une preuve de $B$.
+  Après avoir appelé  \texttt{Qed}, il est possible d'extraire le $\lambda$-terme construit en un programme OCaml, Haskell, \textit{etc}.
 \end{document}
