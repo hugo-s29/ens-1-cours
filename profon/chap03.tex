@@ -1,0 +1,329 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Introduction à la théorie de la démonstration.}
+
+  \section{Formules et preuves.}
+
+  \begin{defn}
+    On se donne un ensemble de \textit{variables propositionnelles}, qui seront notées $X, Y, Z$, \textit{etc}.
+    L'ensemble des \textit{formules} est défini par la grammaire :
+    \[
+      A, B ::= X  \mid A \Rightarrow B
+    .\]
+    Cet ensemble de formules s'appelle le "\textit{fragment implicatif de la logique propositionnelle intuitionniste}".
+  \end{defn}
+
+  Cela peut sembler inhabituel car, généralement, on commence par introduire $\lnot$, $\lor$ et $\land$, car on a en tête les booléens.
+
+  \begin{defn}
+    Les \textit{séquents}, notés $\Gamma \vdash A$, un couple formé de $\Gamma$ une  \textit{\textbf{liste}} de formules, et $A$ une formule.
+    La liste $\Gamma$ est une \textit{liste d'hypothèses}.
+    On notera $\Gamma, A$ la notation pour l'extension de la liste.
+  \end{defn}
+
+  \begin{defn}
+    On  \textit{prouve} (\textit{dérive}) les séquents à l'aides des \textit{règles de déduction} (\textit{d'inférence}) :
+    \[
+    \begin{prooftree}
+      \infer[left label={A \in \Gamma}] 0[\mathsf{Ax}]{\Gamma \vdash A}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma, A \vdash B}
+      \infer 1[\Rightarrow_\mathsf{I}]{\Gamma \vdash A \Rightarrow B}
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{\Gamma \vdash A \Rightarrow B}
+      \hypo{\Gamma \vdash A}
+      \infer 2[\Rightarrow_\mathsf{E}]{\Gamma \vdash B}
+    \end{prooftree}
+    .\] 
+    On les appelle, dans l'ordre, règle de l'\textit{axiome}, règle de l'\textit{introduction de $\Rightarrow$} et règle de l'\textit{élimination de $\Rightarrow$}.
+    Il s'agit des \textit{règles de déduction naturelle pour le fragment implicatif de la logique propositionnelle intuitionniste}.
+  \end{defn}
+
+  \begin{defn}
+    Le séquent $\Gamma \vdash A$ est \textit{prouvable} s'il existe une \textit{preuve} (\textit{dérivation}) ayant $\Gamma \vdash A$ à la racine et des axiomes aux feuilles. La formule $A$ est \textit{prouvable} si $\vdash A$ l'est.
+  \end{defn}
+
+  \begin{exm}
+    \[
+    \begin{prooftree}
+      \infer 0[\mathsf{Ax}]{X \Rightarrow Y, X \vdash X \Rightarrow Y}
+      \infer 0[\mathsf{Ax}]{X \Rightarrow Y, X \vdash X}
+      \infer 2[\Rightarrow_\mathsf{E}]{X \Rightarrow Y, X \vdash Y}
+      \infer 1[\Rightarrow_\mathsf{I}]{X \Rightarrow Y \vdash X \Rightarrow Y}
+      \infer 1[\Rightarrow_\mathsf{I}]{\vdash (X \Rightarrow Y) \Rightarrow (X \Rightarrow Y)}
+    \end{prooftree}
+    .\] 
+  \end{exm}
+
+  On écrit généralement des "preuves génériques", en utilisant $A, B$ plutôt que $X, Y$.
+
+  \begin{exm}
+    \[
+    \begin{prooftree}
+      \infer 0[\mathsf{Ax}]{(A \Rightarrow A) \Rightarrow B \vdash (A \Rightarrow A) \Rightarrow B}
+      \infer 0[\mathsf{Ax}]{(A \Rightarrow A) \Rightarrow B, A \vdash A}
+      \infer 1[\Rightarrow_\mathsf{I}]{(A \Rightarrow A) \Rightarrow B \vdash A \Rightarrow A}
+      \infer 2[\Rightarrow_\mathsf{E}]{(A \Rightarrow A) \Rightarrow B \vdash B}
+      \infer 1[\Rightarrow_\mathsf{I}]{\vdash ((A \Rightarrow A) \Rightarrow B) \Rightarrow B}
+    \end{prooftree}
+    .\]
+  \end{exm}
+
+  \section{Et en Rocq ?}
+
+  En Rocq, un objectif de preuve 
+  \[
+    \begin{array}{c}
+      {\left.\begin{array}{rl}
+        H_1 &: A_1\\
+        H_2 &: A_2\\
+        H_3 &: A_3\\
+        &\vdots\\ \hline \hline
+      \end{array}
+    \right\} \Gamma}\\
+          A
+    \end{array}
+  \] correspond au séquent
+  \[
+  \Gamma \vdash A
+  .\] 
+
+  Chaque tactique correspond à des opérations sur l'arbre de preuve.
+  On construit "au fur et à mesure" l'arbre de preuve montrant $\Gamma \vdash A$.
+  Voici ce que quelques tactiques Rocq font.
+  \newcommand\arrowspacing{\phantom{aaaaaaaa}}
+  \begin{align*}
+    \begin{prooftree}
+      \hypo{??}
+      \infer 1{\Gamma, A, B, A \vdash A}
+    \end{prooftree}&
+    \quad \xrightarrow[\mathtt{assumption}]{\arrowspacing} \quad
+    \begin{prooftree}
+      \infer 0[\mathsf{Ax}]{\Gamma, A, B, A \vdash A}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{??}
+      \infer 1{\Gamma \vdash C}
+    \end{prooftree}&
+    \quad \xrightarrow[\mathtt{assert}\ A]{\arrowspacing} \quad
+    \begin{prooftree}
+      \hypo{??}
+      \infer 1{\Gamma, A \vdash B}
+      \infer 1{\Gamma \vdash A \Rightarrow B}
+      \hypo{??}
+      \infer 1{\Gamma \vdash A}
+      \infer 2[\Rightarrow_\mathsf{E}]{\Gamma \vdash B}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{??}
+      \infer 1{\Gamma \vdash C}
+    \end{prooftree}&
+    \quad \xrightarrow[\mathtt{cut}\ A]{\arrowspacing} \quad
+    \begin{prooftree}
+      \hypo{??}
+      \infer 1{\Gamma \vdash A \Rightarrow B}
+      \hypo{??}
+      \infer 1{\Gamma \vdash A}
+      \infer 2[\Rightarrow_\mathsf{E}]{\Gamma \vdash B}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{??}
+      \infer 1{\Gamma \vdash C}
+    \end{prooftree}&
+    \quad \xrightarrow[\mathtt{apply}\ H]{\arrowspacing} \quad
+    \begin{prooftree}
+      \infer 0[\mathsf{Ax}]{\Gamma, A \Rightarrow B \vdash A \Rightarrow B}
+      \hypo{??}
+      \infer 1{\Gamma, A \Rightarrow B \vdash A}
+      \infer 2[\Rightarrow_\mathsf{E}]{\Gamma, \underbrace{A \Rightarrow B}_H \vdash B}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{??}
+      \infer 1{\Gamma \vdash B \Rightarrow C}
+    \end{prooftree}&
+    \quad \xrightarrow[\mathtt{intro}]{\arrowspacing} \quad
+    \begin{prooftree}
+      \hypo{??}
+      \infer 1{\Gamma, B \vdash C}
+      \infer 1[\Rightarrow_\mathsf{I}]{\Gamma \vdash B \Rightarrow C}
+    \end{prooftree}
+  \end{align*}
+
+  \section{Liens avec le $\lambda$-calcul simplement typé : \textit{correspondance de Curry-Howard}.}
+
+  Les règles de typage du $\lambda$-calcul correspondent au règles d'inférences du fragment implicatif :
+  \begin{align*}
+    \begin{prooftree}
+      \infer[left label={{\color{deepblue}x : {}} A \in \Gamma}] 0{\Gamma \vdash {\color{deepblue}x : {}} A}
+    \end{prooftree} \quad \quad
+    &\xleftrightarrow{\arrowspacing\:} \quad \quad
+    \begin{prooftree}
+      \infer[left label={A \in \Gamma}] 0[\mathsf{Ax}]{\Gamma \vdash A}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{\Gamma , {\color{deepblue} x : {}} A \vdash {\color{deepblue} M : {}} B}
+      \infer 1{\Gamma \vdash {\color{deepblue} \lambda x.\: M : {}} A \to B}
+    \end{prooftree} \quad \quad
+    &\xleftrightarrow{\arrowspacing\:} \quad \quad
+    \begin{prooftree}
+      \hypo{\Gamma, A \vdash B}
+      \infer 1[\Rightarrow_\mathsf{I}]{\Gamma \vdash A \Rightarrow B}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{\Gamma \vdash {\color{deepblue} M : {}} A \to B}
+      \hypo{\Gamma \vdash {\color{deepblue} N : {}} A}
+      \infer 2{\Gamma \vdash {\color{deepblue} M\: N : {}} B}
+    \end{prooftree} \quad \quad
+    &\xleftrightarrow{\arrowspacing\:} \quad \quad
+    \begin{prooftree}
+      \hypo{\Gamma, A \vdash B}
+      \infer 1[\Rightarrow_\mathsf{I}]{\Gamma \vdash A \Rightarrow B}
+    \end{prooftree}\\
+  .\end{align*}
+  En retirant les $\lambda$-termes en bleu (incluant les "$:$"), et en changeant~$\to$ en $\Rightarrow$, on obtient exactement les mêmes règles.
+
+  Si on sait que $\Gamma \vdash {\color{deepblue} x : {}} A$ alors, en effaçant les parties en bleu, on obtient une preuve de $\tilde{\Gamma} \vdash A$.
+
+  \textit{\textbf{Inversement}}, on se donne une preuve de $\Gamma \vdash A$. On se donne des variables $x_i$ pour transformer $\Gamma = A_1, \ldots, A_k$ en $\hat{\Gamma} = {x_1 : A_1}, \ldots, {x_k : A_k}$.
+  Par induction sur $\Gamma \vdash A$, on montre qu'il existe un $\lambda$-terme tel que $\hat{\Gamma} \vdash M : A$. On a trois cas.
+  \begin{itemize}
+    \item Pour $\Rightarrow_\mathsf{I}$, par induction, si $\hat{\Gamma}, x = A \vdash M : B$, on déduit $\hat{\Gamma} \vdash \lambda x.\: M : A \to B$.
+    \item Pour $\Rightarrow_\mathsf{I}$, par induction, si $\hat{\Gamma} \vdash M : A \to B$ et $\hat{\Gamma} \vdash N : A$, on déduit $\hat{\Gamma} \vdash  M \: N : B$.
+    \item Pour $\mathsf{Ax}$, on sait $A \in \Gamma$ donc il existe $x$ tel que $x : A \in \hat{\Gamma}$, et on conclut $\hat{\Gamma} \vdash x_i : A$.
+  \end{itemize}
+
+  On a les propriétés suivantes pour la relation de déduction :
+  \begin{itemize}
+    \item \textit{affaiblissement} : si $\Gamma \vdash B$ (implicitement "est prouvable") alors $\Gamma, A \vdash B$ ;
+    \item \textit{contraction} : si $\Gamma, A, A \vdash B$ alors $\Gamma, A \vdash B$ ;
+    \item \textit{renforcement} si $\Gamma, {\color{nicered} A} \vdash B$ alors $\Gamma \vdash B$ \textit{à condition qu'on n'utilise pas l'axiome avec l'hypothèse {\color{nicered} A} (celle là uniquement, les $A$ intermédiaires ne posent pas de problèmes) pour déduire $B$}.
+    \item \textit{échange} ; su $\Gamma, A, B, \Gamma' \vdash C$ alors $\Gamma, \Gamma', A, B \vdash C$.
+  \end{itemize}
+  C'est analogue aux propriétés du typage en $\lambda$-calcul.
+
+  \textbf{\textit{Il manque quelque chose ici\ldots}}
+
+  \section{Curry-Howard du côté calcul : les coupures.}
+
+  Typons un redex :
+  \[
+  \begin{prooftree}
+    \hypo{\Gamma, x : A \vdash M : B}
+    \infer 1[\Rightarrow_\mathsf{I}]{\lambda x.\: M : A \to B}
+    \hypo{\Gamma \vdash N : A}
+    \infer 2[\Rightarrow_\mathsf{E}]{\Gamma \vdash (\lambda x.\: M) \: N : M}
+  \end{prooftree}
+  .\]
+  Oui, c'est exactement la même chose que la tactique \texttt{assert} en Rocq.
+
+  \begin{defn}
+    Une \textit{coupure} est un endroit dans la preuve où il y a un usage d'une règle d'élimination ($\Rightarrow_\mathsf{E}$) dont la prémisse principale est déduite à l'aide d'une règle d'introduction ($\Rightarrow_\mathsf{I}$) pour le même connecteur logique.
+  \end{defn}
+  \begin{rmk}
+    Ici, on n'a qu'un seul connecteur logique, $\Rightarrow$, mais cela s'étend aux autres connecteurs que l'on pourrait ajouter.
+    La \textit{prémisse principale} est, par convention, la première.
+  \end{rmk}
+
+  On peut \textit{éliminer une coupure} pour $\Rightarrow$, c'est-à-dire transformer une preuve (\textit{c.f.} contracter un $\beta$-redex) en passant de 
+  \[
+  \begin{prooftree}
+    \hypo{\color{deepgreen} \delta}
+    \infer 1{\Gamma, {\color{nicered} A} \vdash B}
+    \infer 1[\Rightarrow_\mathsf{I}]{\Gamma \vdash {\color{nicered} A} \Rightarrow B}
+    \hypo{\color{deepblue} \delta'}
+    \infer 1{\Gamma \vdash {\color{nicered} A}}
+    \infer 2[\Rightarrow_\mathsf{E}]{\Gamma \vdash B}
+  \end{prooftree}
+  \] à
+  \[
+    \begin{prooftree}
+      \hypo{{\color{deepgreen} \delta}[\sfrac{{\color{deepblue} \delta'}}{{\color{nicered} A}}]}
+      \infer 1{\Gamma \vdash B}
+    \end{prooftree}
+  \] 
+  où l'on note ${\color{deepgreen} \delta}[\sfrac{{\color{deepblue} \delta'}}{{\color{nicered} A}}]$ la preuve obtenue en remplaçant dans ${\color{deepgreen} \delta}$ chaque usage de l'axiome avec ${\color{nicered} A}$ par ${\color{deepblue} \delta'}$.
+
+  On a le même séquent en conclusion (\textit{c.f.} préservation du typage en $\lambda$-calcul simplement typé).
+
+  La correspondance de Curry-Howard c'est donc :
+  \[
+  \begin{array}{rcl}
+    \text{Types} & \longleftrightarrow & \text{Formules}\\
+    \text{Programmes} & \longleftrightarrow & \text{Preuves}\\
+    \phantom{aaaaaaaaaaaaaa}\text{$\beta$-réduction} & \longleftrightarrow & \text{Élimination d'une coupure}\\
+    \text{\textbf{\textit{Programmation}}} & \longleftrightarrow & \text{\textbf{\textit{Logique}}}\.\
+  \end{array}
+  \]
+
+  \section{Faux, négation, consistance.}
+  On modifie nos formules :
+  \[
+  A, B ::= X  \mid A \Rightarrow B  \mid \bot
+  \]
+  et on ajoute la règle d'élimination du $\bot$ (il n'y a pas de règle d'introduction) :
+  \[
+  \begin{prooftree}
+    \hypo{\Gamma \vdash \bot}
+    \infer 1[\bot_\mathsf{E}]{\Gamma \vdash A}
+  \end{prooftree}
+  .\]
+
+  La négation $\lnot A$ est une notation pour  $A \Rightarrow \bot$.
+  On peut donc prouver le séquent $\vdash A \Rightarrow \lnot \lnot A$ :
+  \[
+  \begin{prooftree}
+    \infer 0[\mathsf{Ax}]{A, \lnot A \vdash \lnot A}
+    \infer 0[\mathsf{Ax}]{A, \lnot A \vdash A}
+    \infer 2[\Rightarrow_\mathsf{E}]{A, \lnot A \vdash \bot}
+    \infer 1[\Rightarrow_\mathsf{I}]{A \vdash \lnot \lnot A}
+    \infer 1[\Rightarrow_\mathsf{I}]{\vdash A \Rightarrow \lnot \lnot A}
+  \end{prooftree}
+  .\]
+
+  \begin{thm}[Élimination des coupures]
+    Si $\Gamma \vdash A$ (est prouvable) alors il existe une preuve \textit{\textbf{sans coupure}} de $\Gamma \vdash A$.
+  \end{thm}
+  \begin{prv}
+    \textit{c.f.} TD.
+  \end{prv}
+
+  \begin{rmk}[Lien avec normalisation forte en $\lambda$-calcul simplement typé]
+    Ici, on veut la normalisation faible ("il existe une  forme normale \ldots"). On ne peut pas appliquer \textit{stricto sensus} la normalisation forte pour le $\lambda$-calcul simplement typé car le système de type contient $\bot$.
+  \end{rmk}
+
+  \begin{lem}
+    Une preuve sans coupure de $\vdash A$ en logique intuitionniste se termine (à la racine) nécessairement par une règle d'introduction.
+  \end{lem}
+  \begin{prv}
+    Par induction sur $\vdash A$. Il y a 4 cas.
+    \begin{itemize}
+      \item $\mathsf{Ax}$ : absurde car $\Gamma = \emptyset$.
+      \item $\Rightarrow_\mathsf{I}$ : OK
+      \item $\Rightarrow_\mathsf{E}$ : on récupère une preuve de $\vdash B \Rightarrow A$ qui termine (par induction) par une introduction $\Rightarrow_\mathsf{I}$. Absurde car c'est une coupure.
+      \item $\bot_\mathsf{E}$ : On récupère une preuve de $\bot$ qui termine par une règle d'induction : impossible.
+    \end{itemize}
+  \end{prv}
+
+  \begin{crlr}[Conssitancde de la logique]
+    Il n'y a pas de preuve de $\vdash$ en logique propositionnelle intuitionniste dans le fragment avec $\Rightarrow$ et  $\bot$.
+  \end{crlr}
+  \begin{prv}
+    S'il y en avait une, il y en aurait une sans coupure, qui se termine par une règle d'introduction, impossible.
+  \end{prv}
+
+  \section{Et en Rocq ? (partie 2)}
+
+  On étend les formules avec $\forall$, $\exists$, $\lnot$, $\lor$, $\land$, \textit{etc}.
+  Les preuves sont des $\lambda$-termes.
+  En effet, dans une preuve de $\vdash X \to X \to X$ on peut écrire \[
+    \mathtt{exact}\ (\fun{x\: y}{x})
+  ,\]
+  pour démontrer le séquent.
+
+  \textbf{\textit{Il manque quelque chose ici\ldots}}
+\end{document}

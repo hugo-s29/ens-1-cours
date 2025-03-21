@@ -40,6 +40,72 @@
 
 \let\rpar\rightrightarrows
 
+\usetikzlibrary{decorations.pathmorphing}
+
+\newcommand\xrsquigarrow[1]{%
+    \mathrel{%
+        \begin{tikzpicture}[%
+            baseline={(current bounding box.south)}
+            ]
+        \node[%
+            ,inner sep=.44ex
+            ,align=center
+            ] (tmp) {$\scriptstyle #1$};
+        \path[%
+            ,draw,<-
+            ,decorate,decoration={%
+                ,zigzag
+                ,amplitude=0.7pt
+                ,segment length=1.2mm,pre length=3.5pt
+                }
+            ] 
+        (tmp.south east) -- (tmp.south west);
+        \end{tikzpicture}
+        }
+    }
+\newcommand\xlsquigarrow[1]{%
+    \mathrel{%
+        \begin{tikzpicture}[%
+            baseline={(current bounding box.south)}
+            ]
+        \node[%
+            ,inner sep=.44ex
+            ,align=center
+            ] (tmp) {$\scriptstyle #1$};
+        \path[%
+            ,draw,->
+            ,decorate,decoration={%
+                ,zigzag
+                ,amplitude=0.7pt
+                ,segment length=1.2mm,pre length=3.5pt
+                }
+            ] 
+        (tmp.south east) -- (tmp.south west);
+        \end{tikzpicture}
+        }
+    }
+\newcommand\xlrsquigarrow[1]{%
+    \mathrel{%
+        \begin{tikzpicture}[%
+            baseline={(current bounding box.south)}
+            ]
+        \node[%
+            ,inner sep=.44ex
+            ,align=center
+            ] (tmp) {$\scriptstyle #1$};
+        \path[%
+            ,draw,<->
+            ,decorate,decoration={%
+                ,zigzag
+                ,amplitude=0.7pt
+                ,segment length=1.2mm,pre length=3.5pt
+                }
+            ] 
+        (tmp.south east) -- (tmp.south west);
+        \end{tikzpicture}
+        }
+    }
+
 \begin{document}
   \maketitle
 
@@ -51,5 +117,6 @@
   \subfile{chap00.tex}
   \subfile{chap01.tex}
   \subfile{chap02.tex}
+  \subfile{chap03.tex}
 \end{document}
 
