@@ -561,4 +561,382 @@
  \end{prv}
 
  Ceci conclut la preuve du théorème~\ref{thm:rec-repr}.
+
+ Maintenant que l'on a transformé les fonctions en formules, on va faire l'opposé.
+ Notre but est de montrer le théorème suivant :
+ soit $T$ une théorie consistante contenant $\mathcal{P}_0$ alors $T$ est indécidable.
+ La "partie technique" de l'indécidabilité de Gödel est la preuve par diagonalisation.
+
+ \section{Indécidabilité des théories consistantes contenant $\mathcal{P}_0$.}
+
+ On va coder :
+ \begin{enumerate}
+   \item les suites d'entiers ;
+   \item les termes ;
+   \item les formules ;
+   \item les preuves.
+ \end{enumerate}
+
+ \begin{lem}[Récursion]
+   Soient $p, n \in \mathds{N}$ et 
+   \begin{itemize}
+     \item $k_1, \ldots, k_n : \mathds{N} \to \mathds{N}$ telles que $\forall y, \forall i$, $k_i(y) < y$ ;
+     \item  $g : \mathds{N}^p \to \mathds{N}$ ;
+     \item $h : \mathds{N}^{p + n+1} \to \mathds{N}$
+   \end{itemize}
+   des fonctions récursives primitives (\textit{resp}. récursives).
+   Alors, la fonction $f : \mathds{N}^{p+1} \to \mathds{N}$ définie de la façon suivante est récursive primitive (\textit{resp}. récursive primitive) :
+   \[f(0, x_1, \ldots, x_p) := g(x_1, \ldots, x_p)\]
+   et
+   \fitbox{$f(y, x_1, \ldots, x_p) := h(y, f(k_1(y), x_1, \ldots, x_p), \ldots, f(k_n(y), x_1, \ldots, x_p), x_1, \ldots, x_p)$}.
+   \qed
+ \end{lem}
+
+ \begin{lem}[Définition par cas]
+   Soient $P_1, \ldots, P_n$ des ensembles récursifs primitifs (\textit{resp}. récursifs) disjoints de $\mathds{N}^m$ et $f_1, \ldots, f_{n+1}$ des fonctions récursives primitives (\textit{resp}. récursives) $\mathds{N}^m \to \mathds{N}$ alors la fonction suivante est récursive primitive (\textit{resp}. récursive) :
+   \[
+   f(x_1, \ldots, x_m) := \begin{cases}
+     f_1(x_1, \ldots, x_m) & \text{ si } P_1(x_1, \ldots, x_m)\\
+     f_2(x_1, \ldots, x_m) & \text{ si } P_2(x_1, \ldots, x_m)\\
+     \quad\quad\quad\vdots \quad & \quad\quad\quad\quad \vdots\\
+     f_n(x_1, \ldots, x_m) & \text{ si } P_n(x_1, \ldots, x_m)\\
+     f_{n+1}(x_1, \ldots, x_m) & \text{ sinon}
+   \end{cases}
+   \] \qed
+ \end{lem}
+
+ \begin{lem}[Définition par cas et récursion]
+   Soient $p, n, m \in \mathds{N}$, et 
+   \begin{itemize}
+     \item $g : \mathds{N}^p \to \mathds{N}$
+     \item $k_1, \ldots, k_m : \mathds{N} \to \mathds{N}$
+     \item $f_1, \ldots, f_n : \mathds{N}^{m + p + 1} \to \mathds{N}$
+     \item $f_{n+1} : \mathds{N}^p \to \mathds{N}$
+   \end{itemize}
+   des fonctions récursives primitives (\textit{resp}. récursives) et $P_1, \ldots, P_n$ des ensembles disjoints de $\mathds{N}^p$ récursifs primitifs (\textit{resp.} récursifs) alors la fonction suivante est récursive primitive :
+   \[f(0, x_1, \ldots, x_p) := g(x_1, \ldots, x_p)\]
+   et 
+
+   \fitbox{$f(y, x_1, \ldots, x_p) := \begin{cases}
+     f_1(y, f(k_1(y), x_1, \ldots, x_p), \ldots, f(k_m(y), x_1, \ldots, x_p), x_1, \ldots, x_p) & \text{ si } P_1(x_1, \ldots, x_p)\\
+     f_2(y, f(k_1(y), x_1, \ldots, x_p), \ldots, f(k_m(y), x_1, \ldots, x_p), x_1, \ldots, x_p) & \text{ si } P_2(x_1, \ldots, x_p)\\
+     \quad\quad\quad\quad \vdots\\
+     f_n(y, f(k_1(y), x_1, \ldots, x_p), \ldots, f(k_m(y), x_1, \ldots, x_p), x_1, \ldots, x_p) & \text{ si } P_n(x_1, \ldots, x_p)\\
+     f_{n+1}(x_1, \ldots, x_p)
+   \end{cases}$}
+   \qed
+ \end{lem}
+
+ \subsection{Codage des suites d'entiers.}
+
+ \begin{prop}
+   Pour tout entier non nul $p$ il existe des fonctions récursives primitives bijectives $\alpha_p : \mathds{N}^p \to \mathds{N}$ et $\beta^1_p, \ldots, \beta_p^p : \mathds{N} \to \mathds{N}$ telles que la réciproque de $\alpha_p$ est $(\beta_p^1, \ldots, \beta_p^p)$ et, de plus, si $x > 1$ et $p \ge 2$ alors $\beta_p^i(x) < x$.
+ \end{prop}
+ \begin{prv}
+   L'idée est qu'on utilise la fonction de Cantor (ou l'énumération de Peano) :
+   \[
+   \alpha_2(n, m) := \frac{(n+m)(n+m+1)}{2} + n
+   \]
+   et on pose \[
+   \alpha_{p+1}(x_1, \ldots, x_{p+1}) := \alpha_p(x_1, \ldots, x_{p-1}, \alpha_2(x_p, x_{p+1}))
+   .\]
+   Ainsi, \[
+   \alpha_p(x_1, \ldots, x_p) = \alpha_2(x_1, \alpha_2(x_2, \ldots))
+   .\] 
+ \end{prv}
+
+ \subsection{Les termes.}
+ On suppose que l'ensemble des variables est $\{x_i  \mid i \in \mathds{N}\} $.
+
+ \begin{defn}
+   Le nombre de Gödel d'un terme $t$ sur $\mathcal{L}$, noté $\sharp t$, est défini par :
+   \begin{itemize}
+     \item $t = \repr{0}$ alors  $\sharp t := \alpha_3(0, 0, 0)$ ;
+     \item $t = x_n$ alors  $\sharp t := \alpha_3(n+1, 0, 0)$ ;
+     \item $t = \succ t_1$ alors $\sharp t := \alpha_3(\sharp t_1, 0, 1)$ ;
+     \item $t = t_1 \oplus t_2$ alors $\sharp t := \alpha_3(\sharp t_1, \sharp t_2, 2)$ ;
+     \item $t = t_1 \otimes t_2$ alors $\sharp t := \alpha_3(\sharp t_1, \sharp t_2, 3)$.
+   \end{itemize}
+ \end{defn}
+
+ \begin{lem}
+   Le codage est injectif.
+ \end{lem}
+ \begin{prv}
+   Expliciter la fonction de décodage définie sur l'espace image.
+ \end{prv}
+
+ \begin{lem}
+   L'ensemble $\mathrm{Term} := \{\sharp t  \mid \text{$t$ est un terme de $\mathcal{L}_0$}\}$ est récursif primitif.
+ \end{lem}
+
+ \begin{prv}
+   Montrons que la fonction caractéristique $T$ de $\mathrm{Term}$ est récursif primitif.
+   On utilise le lemme de définition par cas et récursion donné précédemment :
+   \begin{itemize}
+     \item si $\beta_3^3(x) = 0$ et  $\beta_3^2(x) = 0$ alors  $T(x) = 1$ ($x$ est le code de $\repr{0}$ ou  $x_{\beta_3^1(x) - 1}$) ;
+     \item si $\beta_3^3(x) = 1$ et  $\beta_3^2(x) = 0$ alors  $T(x) = T(\beta_3^1(x))$ ($x$ est le code de $\succ t$) ;
+     \item si $\beta_3^3(x) = 2$ alors  $T(x) = T(\beta_3^1(x)) \cdot T(\beta_3^2(x))$ ($x$ est le code de $t \oplus t$) ;
+     \item si $\beta_3^3(x) = 3$ alors  $T(x) = T(\beta_3^1(x)) \cdot T(\beta_3^2(x))$ ($x$ est le code de $t \otimes t$) ;
+     \item sinon, $T(x) = 0$.
+   \end{itemize}
+ \end{prv}
+
+ \subsection{Les formules.}
+ \begin{defn}
+   On étend $\sharp \cdot $ aux formules :
+   \begin{itemize}
+     \item $\sharp (t_1 = t_2) := \alpha_3(\sharp t_1, \sharp t_2, 0)$
+     \item $\sharp (\lnot F) := \alpha_3(\sharp F, 0, 1)$
+     \item $\sharp (F_1 \lor F_2) := \alpha_3(\sharp F_1, \sharp F_2, 2)$
+     \item $\sharp (F_1 \land F_2) := \alpha_3(\sharp F_1, \sharp F_2, 3)$
+     \item $\sharp (F_1 \to F_2) := \alpha_3(\sharp F_1, \sharp F_2, 4)$
+     \item $\sharp (\forall x_k \: F) := \alpha_3(\sharp F, k, 5)$
+     \item $\sharp (\exists  x_k \: F) := \alpha_3(\sharp F, k, 6)$
+     \item $\sharp \bot  = \alpha_3(0, 0, 7)$.
+   \end{itemize}
+ \end{defn}
+
+ \begin{lem}
+   Le codage ci-dessus est injectif.
+   \qed
+ \end{lem}
+
+ \begin{lem}
+   L'ensemble $\mathrm{Form} := \{\sharp F  \mid F \text{ formule de } \mathcal{L}_0\} $ est récursif primitif.
+   \qed
+ \end{lem}
+
+ \subsection{Opérations sur les formules.}
+
+ \begin{lem}
+   Les ensembles suivants sont récursifs primitifs :
+   \footnotesize
+   \begin{itemize}
+     \item $\theta_0 := \{(\sharp t, n)  \mid \text{$t$ est un terme et $x_n$ n'a pas d'occurrence dans $t$}\}$
+     \item $\theta_1 := \{(\sharp t, n)  \mid \text{$t$ est un terme et $x_n$ a une occurrence dans $t$}\}$
+     \item $\phi_0 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ n'a pas d'occurrence dans $F$}\} $
+     \item $\phi_1 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ n'a pas d'occurrence libre dans $F$}\} $
+     \item $\phi_2 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ n'a pas d'occurrence liée dans $F$}\} $
+     \item $\phi_3 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ a une occurrence libre dans $F$}\} $
+     \item $\phi_4 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ a une occurrence liée dans $F$}\} $
+     \item $\phi_5 := \{\sharp F  \mid \text{ $F$ est une formule close }\} $
+   \end{itemize}
+ \end{lem}
+ \begin{prv}
+   On montre le résultat pour $\theta_0$ (le reste en exercice).
+   On définit la fonction caractéristique de $\theta_0$, notée  $g_0(x, y)$, par (en utilisant le lemme de définition par cas et récursion) :
+    \begin{itemize}
+     \item si $\beta_3^3(x) = \beta_3^2(x) = 0$ et  $\beta_3^1(x) - 1 \neq y$ alors $g_0(x, y) := 1$ ;
+     \item si $\beta_3^2(x) = 1$ et $\beta_3^2(x) = 0$ alors  $g_0(x,y) := g_0(\beta_3^2(x), y)$ ;
+     \item si  $\beta_3^3(x) = 2\text{ ou } 3$ alors $g_0(x,y) := g_0(\beta_3^1(x), y) \times g_0(\beta_3^2(x), y)$ ;
+     \item sinon, $g_0(x,y) := 0$.
+   \end{itemize}
+ \end{prv}
+
+ \begin{lem}[Substitutions]
+   Il existe des fonctions récursives primitives $\mathrm{Subst_t}$ et $\mathrm{Subst_f}$ à trois variables telles que, si $t$ t $u$ sont des termes, et si $G$ est une formule, alors pour tout entier $n$, 
+   \begin{itemize}
+     \item $\mathrm{Subst_t}(n, \sharp t, \sharp u) := \sharp (u[x_n := t])$
+     \item $\mathrm{Subst_f}(n, \sharp t, \sharp F) := \sharp (F[x_n := t])$.
+   \end{itemize}
+ \end{lem}
+ \begin{prv}
+   On définit $\mathrm{Subst_t}$ par cas/récursion. Pour $(n, y, x)$, on a  :
+   \begin{itemize}
+     \item si $\beta_3^3(x) = 0$  alors
+       \begin{itemize}
+         \item si $\beta_3^1(x) = n+1$ alors  $\mathrm{Subst_t}(n, y, x) := y$,
+         \item sinon $\mathrm{Subst_t}(n, y, x) := x$ ;
+       \end{itemize}
+     \item si $\beta_3^3(x) = 1$ alors $\mathrm{Subst_t}(n, y, x) := \alpha_3(\mathrm{Subst_t}(n, y, \beta_3^1(x)), 0, 1)$ ;
+     \item si $\beta_3^3(x) = 1$ alors\\ {\small $\mathrm{Subst_t}(n, y, x) := \alpha_3(\mathrm{Subst_t}(n, y, \beta_3^1(x)), \mathrm{Subst_t}(n, y, \beta_3^2(x)), \beta_3^3(x))$}~;
+     \item sinon $\mathrm{Subst_t}(n, y, x) := 0$.
+   \end{itemize}
+
+   Puis, on définit $\mathrm{Subst_f}$ par :
+   \tiny
+   \begin{itemize}
+     \item si $\beta_3^3(x) = 0$ alors $\mathrm{Subst_f}(n, y, x) = \alpha_3(\mathrm{Subst_t}(n, y, \beta_3^1(x))), \mathrm{Subst_t}(n, y, \beta_3^1(x), 0)$ ;
+     \item si $\beta_3^3(x) = 1$ alors $\mathrm{Subst_f}(n, y, x) = \alpha_3(\mathrm{Subst_f}(n, y, \beta_3^1(x)), 0, 1)$ ;
+     \item si $\beta_3^3(x) = 2, 3, \text{ ou } 4$ alors $\mathrm{Subst_f}(n, y, x) = \alpha_3(\mathrm{Subst_f}(n, y, \beta_3^1(x)), \mathrm{Subst_f}(n, y, \beta_3^2(x)), \beta_3^3(x))$ ;
+     \item si $\beta_3^3(x) = 5 \text{ ou } 6$ alors
+       \begin{itemize}
+         \item si $\beta_3^2(x) = n$ et $x_n$ est liée dans $F$ donc $\mathrm{Subst_f}(n, y, x) := x$ ;
+         \item sinon donc $\mathrm{Subst_f}(n, y, x) := \alpha_3(\mathrm{Subst_f}(n, y, \beta_3^1(x)), \beta_3^2(x), \beta_3^3(x))$ ;
+       \end{itemize}
+     \item si $\beta_3^3(x) = 7$ alors  $\mathrm{Subst_f}(n, x, y) := x$ ;
+     \item sinon, $\mathrm{Subst_f}(n, x, y) := 0$.
+   \end{itemize}
+ \end{prv}
+
+ \subsection{Codage des preuves.}
+
+ On code un contexte comme des suites finies, \textit{i.e.} des listes, de formules (c'est plus facile que pour les ensembles).
+ \begin{defn}
+   On définit le codage par :
+   \begin{itemize}
+     \item $\sharp \texttt{[\:]} := 0$ ;
+     \item $\sharp (F \mathop{\texttt{::}} \Gamma) := 1 + \alpha_2(\sharp \Gamma, \sharp F)$.
+   \end{itemize}
+ \end{defn}
+
+ \begin{lem} Le décodage est unique. \qed \end{lem}
+ \begin{lem}
+   La substitution d'une formule dans un contexte est récursif primitif.
+   Tester si une variable est libre (\textit{resp.} liée) dans un contexte est récursif primitif.
+   \qed
+ \end{lem}
+
+ \subsection{Codage des preuves en déduction naturelle.}
+
+ \begin{rmk}
+   Le contexte de la conclusion et des prémisses est le même sauf pour 
+   \[
+   \begin{prooftree}
+     \hypo{\Gamma \vdash A}
+     \infer 1[\mathsf{aff}]{\Gamma, B \vdash A}
+   \end{prooftree}
+   \quad
+   \begin{prooftree}
+     \hypo{\Gamma, A \vdash B}
+     \infer 1[\to_\mathsf{i}]{\Gamma \vdash A \to B}
+   \end{prooftree}
+   \quad
+   \begin{prooftree}
+     \hypo{\Gamma, A \vdash \bot}
+     \infer 1[\to_\mathsf{i}]{\Gamma \vdash \lnot A}
+   \end{prooftree}
+   \] 
+   \[
+   \begin{prooftree}
+     \hypo{\Gamma, \lnot A \vdash \bot}
+     \infer 1[\bot_\mathsf{c}]{\Gamma \vdash A}
+   \end{prooftree}
+   \quad
+   \begin{prooftree}
+     \infer 0[\mathsf{ax}]{\Gamma \vdash A}
+   \end{prooftree}
+   .\]
+
+   On peut toujours déterminer le contexte du haut à partir du bas donc donner le contexte de la racine suffit.
+   Une preuve est donc finalement un contexte et un arbre de dérivation où les nœuds sont étiquetés par une formule et un numéro de règle.
+ \end{rmk}
+
+ \begin{exm}
+   La preuve 
+
+   \fitbox{
+    $\begin{prooftree}
+     \infer 0[\mathsf{ax}]{\lnot A, A \vdash A}
+     \infer 0[\mathsf{ax}]{\lnot A, A \vdash \lnot A}
+     \infer 2[\lnot_\mathsf{e}]{\lnot A, A \vdash \bot}
+     \infer 1[\to_\mathsf{i}]{\lnot A \vdash A \to \bot}
+     \infer 1[\to_\mathsf{i}]{ \vdash \lnot A \to (A \to \bot)}
+     \infer 0[\mathsf{ax}]{A \to \bot, A \vdash A}
+     \infer 0[\mathsf{ax}]{A \to \bot, A \vdash A \to \bot}
+     \infer 2[\to_\mathsf{e}]{A \to \bot, A \vdash \bot}
+     \infer 1[\lnot_\mathsf{i}]{A \to \bot  \vdash  \lnot A}
+     \infer 1[\to_\mathsf{i}]{\vdash (A \to \bot) \to \lnot A}
+     \infer 2[\land_\mathsf{i}]{\vdash \lnot A \leftrightarrow (A \to \bot)}
+   \end{prooftree}$
+   }
+
+   peut être codée par l'arbre suivant avec le contexte $\texttt{[\:]}$ à la racine :
+   \begin{figure}[H]
+     \centering
+     \begin{tikzpicture}[sibling distance=4cm, level distance=15mm]
+       \node[rounded rectangle, draw] {$6, \lnot A \leftrightarrow (A \to \bot)$} [grow'=up]
+       child {
+        node[rounded rectangle, draw] {$4, \lnot A \to (A \to \bot)$}
+        child {
+          node[rounded rectangle, draw] {$4, A \to \bot$}
+          child[sibling distance=2cm] {
+            node[rounded rectangle, draw] { $1, \bot$ }
+            child { node[rounded rectangle, draw] {$0, A$} }
+            child { node[rounded rectangle, draw] {$0, \lnot A$} }
+          }
+        }
+       }
+       child {
+        node[rounded rectangle, draw] {$4, (A \to \bot) \to \bot A$}
+        child {
+          node[rounded rectangle, draw] {$2, \lnot A$}
+          child[sibling distance=2cm] {
+            node[rounded rectangle, draw] { $3, \bot$ }
+            child { node[rounded rectangle, draw] {$0, A$} }
+            child { node[rounded rectangle, draw] {$0, A \to \bot$} }
+          }
+        }
+       }
+       ;
+     \end{tikzpicture}
+   \end{figure}
+ \end{exm}
+
+ \begin{defn}
+   On numérote 
+   \begin{itemize}
+     \item $\sharp \mathsf{ax} := 0$
+     \item $\sharp \lnot_\mathsf{e} := 1$
+     \item $\sharp \lnot_\mathsf{i} := 2$
+     \item $\sharp \to_\mathsf{e} := 3$
+     \item $\sharp \to_\mathsf{i} := 4$
+     \item $\sharp \land_\mathsf{e} := 5$
+     \item $\sharp \land_\mathsf{i} := 6$
+     \item \textit{etc}.
+   \end{itemize}
+ \end{defn}
+
+ \begin{defn}[Nombre de Gödel des preuves]
+   \begin{itemize}
+     \item Si $D^\star$ est un arbre de preuve à un seul nœud étiqueté par la formule  $F$ et la règle $n$ alors $\sharp D^\star := \alpha_3(n, \sharp F, 0)$.
+     \item Si $D^\star$ est un arbre de preuve dont la racine est étiquetée par la formule  $F$ et la règle $n$ à $k$ prémisses avec les sous arbres $D_1^\star, \ldots, D_k^\star$ 
+       \[
+       \begin{prooftree}
+         \hypo{D_1^\star} \hypo{\cdots} \hypo{D_k^\star}
+         \infer 3[\text{règle $n$}]{F}
+       \end{prooftree}
+       \]
+       alors $\sharp D^\star := \alpha_3(n, \sharp F, \alpha_k(\sharp D_1^\star, \ldots, \sharp D_k^\star) + 1)$.
+   \end{itemize}
+
+   On pose ensuite $\sharp D := \alpha_2(\sharp D^\star, \sharp \Gamma)$ pour une preuve $D$.
+ \end{defn}
+
+ \begin{lem}
+   C'est un code injectif.
+ \end{lem}
+ \begin{lem}
+   L'ensemble $\mathrm{Preuve} := \{\sharp D  \mid D \text{ est une preuve}\}$ est récursif primitif.
+ \end{lem}
+
+ \subsection{Qu'est ce qu'une bonne théorie ?}
+
+ \begin{defn}
+   Un ensemble $A$ de formules est un ensemble d'\textit{axiomes} de la théorie $T$ si $A \vdash T$ et $T \vdash A$.
+ \end{defn}
+
+ \begin{defn}
+   Une théorie $T$ sur $\mathcal{L}_0$ a un ensemble d'axiomes $\mathrm{Ax}_T$ récursif si l'ensemble des numéros de formules de $\mathrm{Ax}_T$ est récursif.
+ \end{defn}
+ \begin{rmk}
+   Si $\mathrm{Ax}_T$ est fini, alors il est récursif (exemple : $\mathcal{P}_0$).
+ \end{rmk}
+
+ \begin{lem}
+   L'ensemble des axiomes de Peano $\mathcal{P}$ est récursif.
+ \end{lem}
+ \begin{prv}
+   Il suffit de montrer que l'ensemble des axiomes du schéma de récurrence est récursif.
+   On définit
+
+ \fitbox{$A_F := \forall x_1 \: \cdots \: \forall x_n \Big(\big(F(0, x_1, \ldots, x_n) \land \forall x_0 \: (F(x_0, \ldots, x_n) \to F(\succ x_0, x_1, \ldots, x_n))\big) \to \forall x_0 \: F(x_0, \ldots, x_n) \big)\Big)$.}
+
+  Idée pour décider si $N$ est le code d'une formule $A_F$ : 
+  \begin{enumerate}
+    \item décoder pour trouver $n$ et $F$ ;
+    \item calculer $\sharp A_F$ et vérifier si c'est $N$.
+  \end{enumerate}
+ \end{prv}
 \end{document}
