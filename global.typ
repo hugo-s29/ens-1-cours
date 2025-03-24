@@ -1,8 +1,8 @@
 #import "@preview/minitoc:0.1.0": *
-#import "@preview/cetz:0.2.2"
-#import "@preview/lemmify:0.1.5": *
+#import "@preview/cetz:0.3.4"
+#import "@preview/cetz-plot:0.1.1": plot
+#import "@preview/lemmify:0.1.8": *
 #import "@preview/numblex:0.2.0": numblex
-#import "./tools/typst-finite/finite.typ"
 #import "@preview/curryst:0.1.0"
 
 #let purple = rgb("#81559b")
@@ -12,10 +12,6 @@
 #let green = rgb("#8cd867")
 
 #let main-color = state("main-color", blue)
-
-#let automaton = finite.automaton.with(style: (
-  state: (fill: white, stroke: (paint: blue)),
-))
 
 #set block(breakable: true)
 #show figure: set block(breakable: true)

@@ -4,7 +4,7 @@
 
 #title[Algorithmique]
 
-Cours donné par Stéphane #smallcaps[Thomassé] (Bureau dans l'aile Sud--Ouest).
+Cours donné par Stephan #smallcaps[Thomassé] (Bureau dans l'aile Sud--Ouest).
 
 *Qu'est ce qu'il y aura à l'exam ?* (MCC = Modalité de Contrôle de Connaissances) :
 $ "2 devoirs" + "1 partiel" + "1 exam". $
@@ -2132,14 +2132,13 @@ Dans le cas continu, la globalité d'un minimum local est assurée par la _conve
   caption: [Globalité (ou non) d'un minimum local],
   cetz.canvas({
     import cetz.draw: *
-    import cetz.plot: *
 
     set-style(stroke: (cap: "round", join: "round"), mark: (fill: black))
 
-    plot(size: (3,3), x-tick-step: none, y-tick-step: none, axis-style: "school-book", plot-style: (stroke: (paint: blue)), name: "plot-not-conv", {
-      add(domain: (-1.5, 1), t => (t + 2, t*t*t * (1 + 2 * t) - 2 * t * t))
-      add-anchor("min-glo", (2-0.9348,-1.0373))
-      add-anchor("min-loc", (2+0.5630,-0.2545))
+    plot.plot(size: (3,3), x-tick-step: none, y-tick-step: none, axis-style: "school-book", plot-style: (stroke: (paint: blue)), name: "plot-not-conv", {
+      plot.add(domain: (-1.5, 1), t => (t + 2, t*t*t * (1 + 2 * t) - 2 * t * t))
+      plot.add-anchor("min-glo", (2-0.9348,-1.0373))
+      plot.add-anchor("min-loc", (2+0.5630,-0.2545))
     })
 
     circle("plot-not-conv.min-glo", radius: 0.07, fill: purple, stroke: none)
@@ -2152,9 +2151,9 @@ Dans le cas continu, la globalité d'un minimum local est assurée par la _conve
 
     translate((6, 0))
 
-    plot(size: (3,3), x-tick-step: none, y-tick-step: none, axis-style: "school-book", plot-style: (stroke: (paint: blue)), name: "plot-not-conv", {
-      add(domain: (-1, 0.7), t => (t + 2, t*t*t * (1 + 2 * t) + 0.5 * t))
-      add-anchor("min-glo", (2-0.5583,-0.2589))
+    plot.plot(size: (3,3), x-tick-step: none, y-tick-step: none, axis-style: "school-book", plot-style: (stroke: (paint: blue)), name: "plot-not-conv", {
+      plot.add(domain: (-1, 0.7), t => (t + 2, t*t*t * (1 + 2 * t) + 0.5 * t))
+      plot.add-anchor("min-glo", (2-0.5583,-0.2589))
     })
 
     circle("plot-not-conv.min-glo", radius: 0.07, fill: purple, stroke: none)
@@ -2301,11 +2300,11 @@ En fait, on peut même généraliser à un problème qui n'est pas ACPM.
     #h(1fr) "non-vacuité"
   + $forall X in S, forall Y subset.eq X, Y in S$ ;
     #h(1fr) "clôture"
-  + $forall X, Y in S, |Y| > |X| ==> exists y in Y without X, X union {y} in S$. #label("matroid-iii")\
+  + $forall X, Y in S, |Y| > |X| ==> exists y in Y without X, X union {y} in S$. \
     #h(1fr) "échange"
 ]
 
-Par exemple, le point #link(label("matroid-iii"), text(blue)[(3)]) est vérifié par les familles libres.
+Par exemple, le point #text(blue)[(3)] est vérifié par les familles libres.
 
 #theorem[
   L'algorithme GLOUTON sur $H$ retourne une solution optimal (quel que soit $w$) si, et seulement si, $H$ est un matroïde.
@@ -2325,7 +2324,7 @@ Un résultat qui a ce même lien est l'équivalence entre automates finis (modè
     $ S = { X subset.eq V mid(|) |X| <= k }. $
   + le _matroïde de partition_ :
     $ V  = V_1 union.dot V_2 union.dot dots.c union.dot V_ell\
-      S = { X subset.eq V mid(|) |X sect V_i| <= t_i, forall i in [| 1, ell |] }. $
+      S = { X subset.eq V mid(|) |X inter V_i| <= t_i, forall i in [| 1, ell |] }. $
 ]
 
 #remark[
@@ -2334,7 +2333,7 @@ Un résultat qui a ce même lien est l'équivalence entre automates finis (modè
     #pb-display(loose: true)[
       Deux matroïdes $S_1$ et $S_2$ sur $V$ et un poids~$w : V -> NN$
     ][
-      Un sous-ensemble $X$ tel que $X in S_1 sect S_2$ et~$w(X)$ maximal
+      Un sous-ensemble $X$ tel que $X in S_1 inter S_2$ et~$w(X)$ maximal
     ]
     est résolvable en temps polynomial.
 ]
@@ -2560,7 +2559,7 @@ machine de Turing non déterministe polynomiale.
 
 #remark[
   On remarque que $L in coNP$ si et seulement si $cal(A)^star without L in NP$.
-  Une classe intéressante est $coNP sect NP$.#footnote[Aller voir #link("https://upload.wikimedia.org/wikipedia/commons/0/0d/Jack.Edmonds.jpg")[la photo de Jack Edmonds] sur Wikipedia.]
+  Une classe intéressante est $coNP inter NP$.#footnote[Aller voir #link("https://upload.wikimedia.org/wikipedia/commons/0/0d/Jack.Edmonds.jpg")[la photo de Jack Edmonds] sur Wikipedia.]
 ]
 
 == Réductions.
@@ -2856,11 +2855,11 @@ Une autre façon de voir un couplage est la suivante.
   C'est une réduction classique depuis #pbm[3-sat].
 ]
 
-== Aparté : $NP sect coNP$.
+== Aparté : $NP inter coNP$.
 
 === Quelques exemples.
 
-Les problèmes de la classe $NP sect coNP$ sont les problèmes de décisions admettant un certificat de réponse #sc[Vrai] *et* de réponse #sc[Faux] polynomiaux à vérifier. On appelle cela les problèmes *bien caractérisés*.
+Les problèmes de la classe $NP inter coNP$ sont les problèmes de décisions admettant un certificat de réponse #sc[Vrai] *et* de réponse #sc[Faux] polynomiaux à vérifier. On appelle cela les problèmes *bien caractérisés*.
 
 ==== Le problème #pbm[premier].
 
@@ -2923,7 +2922,7 @@ C'est un problème de $coNP$, il suffit de fournir la décomposition en produit 
 
 À partir de ce problème de décision, on peut construire la décomposition d'un nombre en produit de facteurs premiers.
 
-/ Point négatif: la sécurité informatique est basée sur un problème de $NP sect coNP$ (sans parler de l'algorithmique quantique).
+/ Point négatif: la sécurité informatique est basée sur un problème de $NP inter coNP$ (sans parler de l'algorithmique quantique).
 / Point positif: il y a plein de travail en cryptographie post-quantique.
 
 === Dualité.
@@ -3507,14 +3506,14 @@ On considère le problème
 #pb-display(name: pbm[$k$-transversal])[
   $E subset.eq binom([n], k)$ un ensemble de parties de taille $k$ et $omega : [n] -> RR^+$ une fonction de poids
 ][
-  $T subset.eq [n]$ tel que $T sect e != emptyset$ pour toute arête $e in E$, et $omega(T)$ est minimal.
+  $T subset.eq [n]$ tel que $T inter e != emptyset$ pour toute arête $e in E$, et $omega(T)$ est minimal.
 ]
 
 #example[
   Pour $k=2$ et $omega : n |-> 1$, c'est le problème de #pbm[MinimumVertexCover].
 ]
 
-Aussi, pour $omega : n |-> 1$, on a un algorithme de $k$-approximation trivial : on construit (glouton) des éléments de $E$ deux à deux disjoints $e_1, ..., e_t$ tels que $forall e in E, exists i, e sect e_i != emptyset$.
+Aussi, pour $omega : n |-> 1$, on a un algorithme de $k$-approximation trivial : on construit (glouton) des éléments de $E$ deux à deux disjoints $e_1, ..., e_t$ tels que $forall e in E, exists i, e inter e_i != emptyset$.
 On retourne ensuite $union_(i=1)^n e_i =: S$.
 
 *Remarque.*
@@ -3560,7 +3559,7 @@ Un oracle est un algorithme résolvant le problème suivant :
   $T$ (un potentiel transversal)
 ][
   VRAI si $T$ est un transversal \
-  FAUX *et* $e in E$ tel que $e sect T = emptyset$.
+  FAUX *et* $e in E$ tel que $e inter T = emptyset$.
 ]
 
 On a ainsi "caché" $E$ (l'ensemble $E$ pourrait même être de taille exponentielle, du moment qu'on a un oracle).
@@ -3571,7 +3570,7 @@ On utilise un algorithme nommé _primal dual_ pour construire une $k$-approximat
   Initialiser $T = emptyset$ et $y : E -> NN$ telle que $y(dot) = 0$.
 
   #algo-while[
-    $exists e in E, e sect T = emptyset$ (*_oracle_*)
+    $exists e in E, e inter T = emptyset$ (*_oracle_*)
   ][
     Augmenter $y(e)$ jusqu'à atteindre, pour un certain $i in e$ l'égalité $sum_(f in.rev i) y(f) = omega(i)$.
 
@@ -3586,7 +3585,7 @@ Calculons à présent $omega(T)$.
 
 $
 omega(T) = sum_(i in T) omega(i) &= sum_(i in T) sum_(e in.rev i) y(e)\
-&= sum_(e in E) |e sect T| dot y(e)\
+&= sum_(e in E) |e inter T| dot y(e)\
 ""_((star)) &<= k sum_(e in E) y(e)\
 $
 car $(star)$ toute les parties ont taille $<= k$;
@@ -3594,7 +3593,7 @@ car $(star)$ toute les parties ont taille $<= k$;
 On montre maintenant que si $T_"opt"$ est la solution optimale du problème #pbm[$k$-transversal], alors $sum_(e in E) y(e) <= omega(T_"opt")$ ; on aura alors que $omega(T) <= k med omega(T_"opt")$ et par conséquent que $T$ est une $k$-approximation de #pbm[$k$-transversal].
 
 On a 
-$ omega(T_"opt") = sum_(i in T_"opt") omega(i) >= sum_(i in T_"opt") sum_(e in.rev i) y(e) = sum_(e in E) underbrace(|T_"opt" sect e|, >= 1 \ "car" T_"opt" \ "transversal") y(e) >= sum_(e in E) y(e). $
+$ omega(T_"opt") = sum_(i in T_"opt") omega(i) >= sum_(i in T_"opt") sum_(e in.rev i) y(e) = sum_(e in E) underbrace(|T_"opt" inter e|, >= 1 \ "car" T_"opt" \ "transversal") y(e) >= sum_(e in E) y(e). $
 
 L'algorithme Primal Dual est une généralisation de l'algorithme de Dijkstra.
 L'algorithme de Dijkstra est un algorithme primal dual.
@@ -3610,7 +3609,7 @@ Un chemin de $s$ à $t$ est un transversal de l'ensemble des coupes de $s$ à $t
 Et un chemin de longueur minimale est précisément un transversal de longueur minimale des coupes de $s$ à $t$.
 
 Il reste à définir l'_oracle_.
-Si on se donne un ensemble $F$ qui n'est *pas* un transversal des coupes, on retourne une coupe $C_F$ telle que $C_F sect F = emptyset$.
+Si on se donne un ensemble $F$ qui n'est *pas* un transversal des coupes, on retourne une coupe $C_F$ telle que $C_F inter F = emptyset$.
 Ainsi, on choisit $C_F$ la coupe, $S$ et $T$ avec $|S|$ minimal et où
 $ S = { y | y "atteignable depuis" s "pour un certain chemin de" F }. $
 

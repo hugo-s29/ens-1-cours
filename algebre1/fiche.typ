@@ -22,7 +22,7 @@
   C'est un sous-groupe de $G$.
 
 - Sous-groupe engendré par $X$ :
-  $  angle.l X angle.r := sect.big_(X subset.eq H prec.eq G) H. $
+  $  angle.l X angle.r := inter.big_(X subset.eq H prec.eq G) H. $
   C'est un sous-groupe de $G$ et il contient $X$.
 
 - Index de $H$ dans $G$ :
@@ -83,7 +83,7 @@
 - *Second théorème d'isomorphisme*.\
   #align(center, emph["théorème d'isomorphisme"])
   Pour $H prec.eq G$ et $N dist G$, 
-  $ H \/ (H sect N) isom H N \/ N $
+  $ H \/ (H inter N) isom H N \/ N $
 
 - *Troisième théorème d'isomorphisme.*
   #align(center, emph["quotient de quotient par quotient"])
@@ -100,7 +100,7 @@
 - Points fixes de $g in G$ : 
   $ "Fix"(g) = { x in X | g dot x = x } subset.eq X $
   et, l'ensemble des points fixes de l'action :
-  $ X^G = sect.big_(g in G) "Fix"(g) $
+  $ X^G = inter.big_(g in G) "Fix"(g) $
 
 On dit qu'une action est :
 - _fidèle_ si $ker alpha = { id }$
