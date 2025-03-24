@@ -8,3 +8,5 @@ prog
 thprog/tp/tp3/**/_build
 all.pdf
 *.bak
+.compile_hashes.json
+.compressed_hashes.json

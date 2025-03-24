@@ -4,6 +4,8 @@ cd /Users/hugos29/Documents/ecole/ens1/
 # SEMESTRE 2
 # ==========
 
+ipython tools/autocompile.py
+
 cp algo2/main.pdf ../web/public/data/ens1/algo2.pdf
 cp algo2/td.pdf ../web/public/data/ens1/algo2-td.pdf
 

@@ -27,6 +27,7 @@ for pdf in pdf_files:
     compressed_pdf = pdf.replace("-uncompressed.pdf", ".pdf")
 
     current_hash = compute_md5(pdf)
+    print(pdf)
 
     if previous_hashes.get(pdf) != current_hash:
         print(f"Compressing {pdf} -> {compressed_pdf} ...")
