@@ -518,7 +518,8 @@
 
 
  \vspace{1cm}
- \begin{prv}[On reprend la preuve du lemme~\ref{lem:repr-rec}]
+  On reprend la preuve du lemme~\ref{lem:repr-rec}.
+ \begin{prv}
    Soient $f, g, h$ telles que 
     \begin{itemize}
      \item $f(0, x_1, \ldots, x_p) = g(x_1, \ldots, x_p)$
@@ -911,7 +912,7 @@
    L'ensemble $\mathrm{Preuve} := \{\sharp D  \mid D \text{ est une preuve}\}$ est récursif primitif.
  \end{lem}
 
- \subsection{Qu'est ce qu'une bonne théorie ?}
+ \subsection{Théories (in)décidables.}
 
  \begin{defn}
    Un ensemble $A$ de formules est un ensemble d'\textit{axiomes} de la théorie $T$ si $A \vdash T$ et $T \vdash A$.
@@ -938,5 +939,276 @@
     \item décoder pour trouver $n$ et $F$ ;
     \item calculer $\sharp A_F$ et vérifier si c'est $N$.
   \end{enumerate}
+ \end{prv}
+
+ \begin{prop}
+   Si une théorie $T$ a un ensemble d'axiomes $\mathrm{Ax}_T$ alors l'ensemble \[
+   \mathrm{Dem}_T = \mleft\{\, (\sharp D, \sharp F) \;\middle|\; \text{$D$ est une preuve de $F$ dans $T$ avec $\mathrm{Ax}_T$}\,\mright\} 
+   .\] 
+ \end{prop}
+ \begin{prv}
+   L'idée de la preuve est la suivante :
+   \begin{enumerate}
+     \item décider $x$ et $y$ ;
+     \item vérifier que $x$ est une preuve et $y$ une formule ;
+     \item vérifier que $D$ est une preuve de $F$ ;
+     \item vérifier que le contexte final ne contient que des éléments de $\mathrm{Ax}_T$.
+   \end{enumerate}
+ \end{prv}
+
+ Dans la suite, on prend $\mathcal{L} \supseteq \mathcal{L}_0$.
+
+ \begin{defn}
+   Une théorie est \textit{décidable} si l'ensemble de ses théorèmes est récursif.
+ \end{defn}
+
+ \begin{rmk}[Rappel]
+   Une théorie est \textit{consistante} si elle a un modèle.
+ \end{rmk}
+
+ \begin{thm}
+   Soit $T$ une théorie consistante contenant $\mathcal{P}_0$.
+   Alors, $T$ est indécidable.
+ \end{thm}
+ \begin{prv}
+   On suppose que $T$ est décidable et on construit par diagonalisation une formule $F$ telle que $T \vdash F$ et $T \vdash \lnot F$.
+   Soit \[
+     \theta := \mleft\{\,(m,n) \;\middle|\; m = \sharp (F(n)) \text{ et } T \vdash F(\repr{n})\,\mright\} 
+   .\]
+   L'ensemble $T$ est décidable donc $T$ aussi.
+   On pose \[
+   B := \mleft\{\,n \in \mathds{N} \;\middle|\; (n,n) \not\in \theta\,\mright\}
+   ,\] 
+   qui est récursif.
+
+   D'après le théorème de représentation, il existe une formule $G(x)$ représentant $B$ :
+   \begin{itemize}
+     \item $n \in B \implies \mathcal{P}_0 \vdash G(\repr{n})$ donc $T \vdash G(\repr{n})$ ;
+     \item $n \not\in B \implies \mathcal{P}_0 \vdash \lnot G(\repr{n})$ donc $T \vdash \lnot G(\repr{n})$.
+   \end{itemize}
+
+   Soit $a = \sharp (G(x))$.
+   Est-ce que $a \in B$ ?
+   \begin{itemize}
+     \item On a $a \in B \iff (a, a) \not\in \theta \iff T \not\vdash G(\repr{a})$.
+       Or, si $a \in B$ alors, par définition de $G$, on a $T \vdash G(\repr{a})$.
+       \textit{\textbf{Absurde !}}
+     \item On a $a \not\in B \iff (a, a) \in \theta \iff T \vdash G(\repr{a})$.
+       Or, si $a \not\in B$ alors, par définition de $G$, on a $T \vdash \lnot G(\repr{a})$.
+       Donc $T$ non consistante.
+       \textit{\textbf{Absurde !}}
+   \end{itemize}
+ \end{prv}
+
+ \begin{exm}[Application du théorème]
+   La théorie $T = \mathbf{Th}(\mathds{N})$ est indécidable.
+ \end{exm}
+
+ \begin{exm}[Quelques théories décidables]
+   \begin{itemize}
+     \item Les ordres denses sans extrémités (la théorie linéaire des rationnels) est une théorie décidable.
+     \item Les corps réels clos (\textit{théorème de Tarski}) est une théorie décidable.
+     \item L'arithmétique de Presburger (la théorie linéaire des entiers) est une théorie décidable.
+     \item Pour chaque $p$, les corps algébriquement clos de caractéristique $p$ est une théorie décidable.
+   \end{itemize}
+ \end{exm}
+
+ On peut donc répondre à l'Entscheidungsproblem, le problème de décision.
+
+ \begin{thm}[Church, indécidabilité du calcul des prédicats]
+   Si $\mathcal{L} \supseteq \mathcal{L}_0$, l'ensemble $T$ des théorèmes logiques sur $\mathcal{L}$ n'est pas récursif.
+ \end{thm}
+ \begin{prv}
+   Soit $T_0$ l'ensemble des théorèmes logiques sur $\mathcal{L}_0$.
+   Soit $G$ la conjonction des axiomes de $\mathcal{P}_0$.
+   Pour toute formule $F$, on a~$\mathcal{P}_0 \vdash F$ ssi $T_0 \vdash (G \to F)$.
+   Donc, si $T_0$ est récursif alors $\mathcal{P}_0$ est décidable.
+   Donc, si $T$ est récursif, alors $T_0$ aussi.
+   Donc $\mathcal{P}_0$ est décidable, \textit{\textbf{absurde}}.
+ \end{prv}
+
+ \section{Théorèmes d'incomplétude de Gödel}
+
+ \begin{thm}[Premier théorème d'incomplétude de Gödel]
+   Soit $T$ une théorie qui a un ensemble d'axiomes récursifs, et qui est consistante, et qui contient $\mathcal{P}_0$. Alors, $T$ n'est pas axiome-complète.
+ \end{thm}
+ \begin{prv}
+   Une théorie qui a un ensemble d'axiomes récursifs et qui est complète, est décidable, ce qui est faux.
+
+   En effet, pour $F$ une formule, comment déterminer (algorithmiquement) su $T \vdash F$ ?
+   On énumère toutes les preuves jusqu'à en trouver une de $F$ ou de $\lnot F$.
+ \end{prv}
+
+ \begin{crlr}
+   La théorie $\mathcal{P}$ n'est pas complète.
+ \end{crlr}
+
+
+ \textbf{Question.} 
+ \begin{center}
+   \textit{Peut-on exhiber une formule $F$ telle que $T \not\vdash F$ et $T \not\vdash \lnot F$ ?}
+ \end{center}
+
+ On va construire $F$ qui "dit" que $T$ est consistante.
+
+ \begin{defn}
+   On pose :
+   \begin{itemize}
+     \item $\mathrm{Dem}_T := \mleft\{\,(\sharp D, \sharp F) \;\middle|\; \text{$D$ preuve de $F$ dans $T$}\,\mright\}$ ;
+     \item $\mathrm{Dem}_{\mathcal{P}_0} := \mleft\{\,(\sharp D, \sharp F) \;\middle|\; \text{$D$ preuve de $F$ dans $\mathcal{P}_0$}\,\mright\}$.
+   \end{itemize}
+ \end{defn}
+
+ \begin{prop}
+   \begin{itemize}
+     \item Ces ensembles sont récursifs donc représentés par $F_T$ et $F_{\mathcal{P}_0}$.
+     \item La fonction $\mathrm{neg} : \mathds{N} \to \mathds{N}, \sharp F \mapsto \sharp (\lnot F) = \alpha_3(\sharp F, 0, 1)$ est récursive et représentée par $F_{\mathrm{neg}}(x_0, x_1)$ :
+       \[
+         \forall n \in \mathds{N}, \quad \mathcal{P}_0 \vdash \forall x \:(F_\mathrm{neg}(x, \repr n) \leftrightarrow x = \repr{\mathrm{neg}(n)})
+       .\]
+   \end{itemize}
+   \qed
+ \end{prop}
+
+ \begin{defn}
+   On pose \[
+   \mathrm{Coh}(T) := \lnot \exists x_0 \: \cdots \: \exists x_3 \: \big( F_T(x_0, x_2) \land F_T(x_1, x_3) \land F_\mathrm{neg}(x_2, x_3) \big)
+   .\] 
+ \end{defn}
+ \begin{rmk}
+   La fonction $\mathrm{Coh}$ n'est pas complètement définie, car elle dépend du choix de $F_T$ et de $F_\mathrm{neg}$.
+ \end{rmk}
+
+ \begin{prop}
+   La théorie $T$ est consistante ssi $\mathds{N} \models \mathrm{Coh}(T)$.
+ \end{prop}
+ \begin{rmk}
+   On pourrait avoir $\mathcal{M} \models T$, avec $T$ consistante et $\mathcal{M} \models \lnot \mathrm{Coh}(T)$.
+   En effet, il suffit que $x_0, x_1, x_2, x_3$ ne soient  pas des entiers standards.
+ \end{rmk}
+
+ \begin{thm}[Second théorème d'incomplétude de Gödel]
+   Soit $T$ une théorie consistante, axiome-récursive, et contenant $\mathcal{P}_0$.
+   Alors,~$T \not\vdash \mathrm{Coh}(T)$.
+ \end{thm}
+
+
+ \begin{rmk}
+   Si $\mathds{N} \models T$, ce théorème implique le 1er théorème d'incomplétude car $\mathds{N} \not\models \lnot \mathrm{Coh}(T)$, donc $T \not\models \lnot \mathrm{Coh}(T)$ et donc $T$ incomplète.
+
+   Dans le cas général, ce n'est pas vrai : $T \cup \{\lnot \mathrm{Coh}(T)\}$ est une théorie consistante.
+   Par exemple, $\mathcal{P} \cup \{\lnot \mathrm{Coh}(\mathcal{P})\} $ est consistante mais $\mathds{N}$ n'en est pas un modèle.
+ \end{rmk}
+
+ \begin{defn}
+   L'ensemble $\Sigma$ est le plus petit ensemble de formules contenant $\mathcal{L}_0$ qui 
+   \begin{itemize}
+     \item contient les formules sans quantificateurs ;
+     \item est clos par $\land, \lor, \exists$ ;
+     \item est clos par quantification universelle bornée, \textit{i.e.} si $F \in \Sigma$  alors \[
+       \big(\forall v_0 \: (v_0 < v_1) \to F\big) \in \Sigma
+       .\]
+   \end{itemize}
+ \end{defn}
+
+ \begin{exm}
+   Les relations "$n  \mid m$" et "$m$ est premier" peuvent s'exprimer avec des formules de $\Sigma$.
+ \end{exm}
+
+ \begin{lem}[Représentation (bis)]
+   Toute fonction récursive totale est représentable par une formule de $\Sigma$.
+ \end{lem}
+ \begin{prv}
+   Les formules que l'on construit dans le lemme~\ref{lem:repr-rec} sont des formules de $\Sigma$.
+ \end{prv}
+
+ \begin{lem}
+   Il existe des formules $F_T$ et $F_{\mathcal{P}_0}$ qui satisfont :
+   \begin{enumerate}
+     \item $\vdash \forall v_0 \: \forall v_1 \: F_{\mathcal{P}_0}(v_0, v_1) \to F_T(v_0, v_1)$ ;
+     \item $F_T$ et $F_{\mathcal{P}_0}$ sont dans $\Sigma$ ;
+     \item si $F$ est une formule close de $\Sigma$ alors \[
+       \mathcal{P} \vdash (F \to \exists x \: F_{\mathcal{P}_0} (x_1, \sharp F))
+       .\]
+   \end{enumerate}
+ \end{lem}
+ \begin{prv}
+   \begin{enumerate}
+     \item Il suffit de remplacer $F_T$ par par $F_T \lor F_{\mathcal{P}_0}$.
+     \item C'est une conséquence du lemme précédent.
+     \item On va le montrer pour une théorie $\mathcal{P}_1$ contenant $\mathcal{P}_0$ et conséquence de $\mathcal{P}$ mais, \textit{a priori}, plus faible que $\mathcal{P}$.
+       Puis, on l'admet pour $\mathcal{P}$, et on admet que $\mathcal{P} \vdash \mathcal{P}_1$.
+       On a le montrer par la proposition suivante.
+   \end{enumerate}
+ \end{prv}
+
+ \begin{prop}
+   Soit $F$ une formule close sur $\mathcal{L}_0$ dans $\Sigma$.
+   Alors, \[
+     \mathds{N}\models F \to \exists x_1 \: F_{\mathcal{P}_0}(x_1, \sharp F)
+   .\] 
+ \end{prop}
+ \begin{prv}
+   \begin{itemize}
+     \item Si $F$ est fausse, c'est montré.
+     \item Si $\mathds{N} \models F$, il faut montrer que $F$ a une preuve dans $\mathcal{P}_0$, \textit{i.e.} que tout modèle $\mathcal{M} \models \mathcal{P}_0$, on a $\mathcal{M} \models F$ \textit{i.e.} que dans tout extension finale $\mathcal{M}$ de $\mathds{N}$ alors $\mathcal{M} \models F$, pour cela il suffit de montrer le lemme suivant.
+   \end{itemize}
+ \end{prv}
+
+ \begin{lem}
+   Soient $\mathcal{N}$ une $\mathcal{L}_0$-structure et $\mathcal{M}$ une extension finale de $\mathcal{N}$.
+   Soient $F(x_1, \ldots, x_p) \in \Sigma$ et $a_1, \ldots, a_p \in \mathcal{N}$.
+   Alors, $\mathcal{N} \models F(a_1, \ldots, a_p)$ implique $\mathcal{M} \models F(a_1, \ldots, a_p)$.
+ \end{lem}
+ \begin{prv}
+   Par induction sur $F(x_1, \ldots, x_p) \in \Sigma$.
+ \end{prv}
+
+ On termine la preuve du point~3.
+ \begin{prv}
+   On pose \[
+   \mathcal{P}_1 := \mathcal{P}_0 \cup \mleft\{\,F \to \exists x \: F_F(x_1, \sharp F) \;\middle|\; F \text{ formule close de } \Sigma\,\mright\}
+   .\]
+   On a montré que $\mathds{N} \models \mathcal{P}$.
+   On admet que $\mathcal{P} \vdash \mathcal{P}_1$ donc $T \vdash \mathcal{P}_1$.
+ \end{prv}
+
+ \begin{lem}[Cœur du 2nd théorème d'incomplétude]
+   Soit $T$ une théorie consistante, axiome-récursive, et contenant $\mathcal{P}_0$.
+   Alors,~$T \not\vdash \mathrm{Coh}(T)$.
+ \end{lem}
+ \begin{prv}
+   \begin{itemize}
+     \item Soit $g : \mathds{N} \to \mathds{N}$ définie par $n = \sharp F(x_0) \mapsto \sharp F(\repr{n}) = \sharp F(\repr{\sharp F(x_0)})$.
+       C'est \textit{la formule appliquée à elle-même}.
+       La fonction $g$ est primitive récursive, donc représentée par une formule $G(x,y)$ telle que \[
+         \forall n \in \mathds{N}, \quad \mathcal{P}_0\vdash \forall x \: G(x, \repr{n}) \leftrightarrow x = \repr{g(n)}
+       .\]
+     \item On considère la formule "il existe une preuve de $x_0$ appliquée à elle-même" :
+       \[
+       \varepsilon(x_0) := \exists x_1 \: \exists x_2 \: F_T(x_1, x_2) \land G(x_2, x_0)
+       .\]
+     \item On pose $a := \sharp \lnot \varepsilon(x_0)$, "il n'existe pas de preuve de $x_0$ appliquée à elle-même".
+     \item On pose $b := g(a) = \sharp \lnot \varepsilon(\repr{a})$, "il n'existe pas du preuve du fait qu'il n'existe pas de preuve de $x_0$ appliquée à elle-même".
+     \item Dans $\mathcal{P}_0$, on a $\forall x_2 \: G(x_2, \repr{a}) \leftrightarrow x_2 = \repr{b}$.
+     \item Par définition, $\varepsilon(\repr{a})$ est  $\exists x_1 \: \exists x_2 \: F_T(x_1, x_2) \land G(x_0, \repr{a})$.
+       "Il existe une preuve du fait qu'il n'existe pas de preuve de nous-même".
+       Dans $\mathcal{P}_0$, $\varepsilon(\repr{a})$ est équivalent à  $\exists x_1 \: F_T(x_1, \repr{b}) \land G(\repr{b})$, ce qui est équivalent à $\exists x_1 \: F_T(x_1, \repr{b})$ car $b = g(a)$ ($\star$).
+       Ainsi, on a "$\varepsilon(\repr{a})$ ssi il y a une preuve de  $\lnot \varepsilon(\repr{a})$"
+   \end{itemize}
+
+   Voici le paradoxe :
+   \begin{itemize}
+     \item Prouvons que $T \vdash \mathrm{Coh}(T) \to \lnot \varepsilon(\repr a)$.
+       Il suffit de montrer que $\mathcal{P}_1 \vdash \varepsilon(\repr{a}) \to \lnot \mathrm{Coh}(T)$.
+       Soit $T_1 := \mathcal{P}_1 \cup \{\varepsilon(\repr{a})\}$.
+       Alors $T_1 \vdash \exists v_1 \: F_T(v_1, \repr b)$ et $b = \sharp \lnot \varepsilon(\repr{a})$
+       On a donc une preuve de $\varepsilon(\repr{a})$ et une preuve de  $\lnot \varepsilon(\repr a)$, donc de $\lnot \mathrm{Coh}(T)$.
+     \item On va montrer que $T \vdash \lnot \varepsilon(\repr{a})$ mène à un paradoxe.
+       Si c'est vrai, soit $C$ le numéro d'une preuve de $\lnot \varepsilon(\repr{a})$ dans  $T$.
+       Alors, $\mathcal{P}_0 \vdash F_T(\repr{c}, \repr{b})$.
+       D'où, avec ($\star$), $\mathcal{P}_0 \vdash \varepsilon(\repr{a})$ impossible car $T$ consistante.
+       Donc $T \not\vdash \lnot \varepsilon(\repr{a})$ et donc $T \not\vdash \mathrm{Coh}(T)$.
+   \end{itemize}
  \end{prv}
 \end{document}
