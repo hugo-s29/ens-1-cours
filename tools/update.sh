@@ -29,6 +29,7 @@ cp profon/chap00.pdf ../web/public/data/ens1/profon-chap00.pdf
 cp profon/chap01.pdf ../web/public/data/ens1/profon-chap01.pdf
 cp profon/chap02.pdf ../web/public/data/ens1/profon-chap02.pdf
 cp profon/chap03.pdf ../web/public/data/ens1/profon-chap03.pdf
+cp profon/chap04.pdf ../web/public/data/ens1/profon-chap04.pdf
 
 # ==========
 # SEMESTRE 1

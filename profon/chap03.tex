@@ -314,9 +314,9 @@
   \begin{prv}
     Par induction sur $\vdash A$. Il y a 4 cas.
     \begin{itemize}
-      \item $\mathsf{Ax}$ : absurde car $\Gamma = \emptyset$.
+      \item $\mathsf{Ax}$ : Absurde car $\Gamma = \emptyset$.
       \item $\Rightarrow_\mathsf{I}$ : OK
-      \item $\Rightarrow_\mathsf{E}$ : on récupère une preuve de $\vdash B \Rightarrow A$ qui termine (par induction) par une introduction $\Rightarrow_\mathsf{I}$. Absurde car c'est une coupure.
+      \item $\Rightarrow_\mathsf{E}$ : On récupère une preuve de $\vdash B \Rightarrow A$ qui termine (par induction) par une introduction $\Rightarrow_\mathsf{I}$. Absurde car c'est une coupure.
       \item $\bot_\mathsf{E}$ : On récupère une preuve de $\bot$ qui termine par une règle d'induction : impossible.
     \end{itemize}
   \end{prv}
@@ -340,4 +340,122 @@
   Le mot clé \texttt{Qed} prend le $\lambda$-terme construit par la preuve et calcule $M'$ sous forme normale tel que $M \to_\beta^\star M'$.
   La logique de Rocq est \textit{constructive}. C'est-à-dire qu'une preuve de $A \Rightarrow B$ c'est une fonction qui transforme une preuve de $A$ en une preuve de $B$.
   Après avoir appelé  \texttt{Qed}, il est possible d'extraire le $\lambda$-terme construit en un programme OCaml, Haskell, \textit{etc}.
+
+  \section{Logique intuitionniste \textit{vs} logique classique.}
+
+  Dans la logique que l'on a considérée (TD), on a deux règles d'introduction pour $\lor$ :
+  \[
+  \begin{prooftree}
+    \hypo{\Gamma \vdash A}
+    \infer 1[\lor_\mathsf{I}^\mathsf{g}]{\Gamma \vdash A \lor B}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{\Gamma \vdash A}
+    \infer 1[\lor_\mathsf{I}^\mathsf{g}]{\Gamma \vdash A \lor B}
+  \end{prooftree}
+  .\] 
+  Lorsqu'on a une preuve de $A \lor B$, on a, soit une preuve de  $A$, soit une preuve de $B$.
+  Ce n'est pas une preuve "il est impossible de ne pas avoir $A$ et $B$".
+  La logique est \textit{constructive}.
+
+  On rappelle que $\lnot A := A \to \bot$, et que l'on se donne la règle d'élimination de $\bot$ :
+  \[
+  \begin{prooftree}
+    \hypo{\Gamma \vdash \bot}
+    \infer 1[\bot_\mathsf{E}]{\Gamma \vdash A}
+  \end{prooftree}
+  .\]
+
+  La \textit{logique classique} est la logique obtenue à l'aide de l'ajout d'une des règles suivantes :
+  \begin{description}
+    \item[Tiers exclu.] $ \begin{prooftree} \infer 0[\mathsf{tiers\ exclu}]{\Gamma \vdash A \lor \lnot A} \end{prooftree} $\\
+      Ce n'est pas constructif : on ne sait pas si l'on a une preuve de $\Gamma \vdash A$ ou de $\Gamma \vdash \lnot A$.
+    \item[Absurde.] $ \begin{prooftree} \infer 0[\mathsf{absurde}]{\Gamma \vdash (\lnot \lnot A) \Rightarrow A} \end{prooftree} $\\
+      C'est mieux : ici, on n'a pas de $\lor$.
+    \item[Loi de Peirce.] $ \begin{prooftree} \infer 0[\mathsf{peirce}]{\Gamma \vdash ((A \Rightarrow B) \Rightarrow A) \Rightarrow A} \end{prooftree} $ \\
+      C'est encore mieux : ici, on n'a pas de $\lor$, ni de  $\bot$, mais c'est plus subtil.
+  \end{description}
+
+  En choisissant un de ces axiomes, on a la même notion de prouvabilité.
+
+  \begin{exo}
+    Montrons que $\mathsf{absurde}$ implique $\mathsf{tiers\ exclu}$ (au sens de "on peut dériver l'un dans le système incluant l'autre").
+    \fitbox{$\begin{prooftree}
+      \infer 0[\mathsf{absurde}]{\Gamma \vdash (\lnot \lnot (A \implies \lnot A)) \Rightarrow (A \lor \lnot A)}
+      \infer 0[\mathsf{ax}]{\Gamma, \lnot (A \lor \lnot A) \vdash \lnot (A \lor \lnot A)}
+      \infer 0{\Gamma, \lnot (A \lor \lnot A), A \vdash \lnot (A \lor \lnot A)}
+      \infer 0[\mathsf{ax}]{\Gamma, \lnot (A \lor \lnot A), A \vdash A}
+      \infer 1[\lor_\mathsf{I}^\mathsf{g}]{\Gamma, \lnot (A \lor \lnot A), A \vdash A \lor \lnot A}
+      \infer 2[\Rightarrow_\mathsf{E}]{\Gamma, \lnot (A \lor \lnot A), A \vdash \bot}
+      \infer 1[\Rightarrow_\mathsf{I}]{\Gamma, \lnot (A \lor \lnot A) \vdash \lnot A}
+      \infer 1[\lor_\mathsf{I}^\mathsf{d}]{\Gamma, \lnot (A \lor \lnot A) \vdash A \lor \lnot A}
+      \infer 2[\Rightarrow_\mathsf{E}]{\Gamma, \lnot (A \lor \lnot A) \vdash A \lor \lnot A}
+      \infer 1[\Rightarrow_\mathsf{I}]{\Gamma \vdash \lnot \lnot (A \lor \lnot A)}
+      \infer 2[\Rightarrow_\mathsf{E}]{\Gamma \vdash A \lor \lnot A}
+    \end{prooftree}$}
+  \end{exo}
+
+  \begin{thm}[Glivenko]
+    Une formule $A$ est prouvable en logique classique si et seulement si $\lnot \lnot A$ est prouvable en logique intuitionniste.
+  \end{thm}
+  \begin{prv}
+    Ressemble un peu à la traduction par continuation des programmes \fouine.
+  \end{prv}
+
+  \begin{crlr}
+    La logique classique est consistante ssi la logique intuitionniste est consistante.
+  \end{crlr}
+  \begin{prv}
+    Si $\vdash \bot$ en logique intuitionniste alors $\vdash \bot$ en logique classique.
+    Si $\vdash \bot$ en logique classique, alors $\lnot \lnot \bot$ en intuitionniste, et on peut en déduire une preuve de $\vdash \bot$ en intuitionniste :
+    \[
+    \begin{prooftree}
+      \hypo{\text{par hyp.}}
+      \infer 1{\vdash (\bot \to \bot) \to \bot}
+      \infer 0[\mathsf{ax}]{\bot \vdash \bot}
+      \infer 1[\Rightarrow_\mathsf{I}]{\vdash \bot \to \bot}
+      \infer 2[\Rightarrow_\mathsf{E}]{\vdash \bot}
+    \end{prooftree}
+    .\]
+  \end{prv}
+
+
+  \section{Logique classique et Curry-Howard : intuition opérationnelle.}
+
+  On cherche à compléter la correspondance de Curry-Howard :
+  \[
+  \begin{array}{rcl}
+    \text{Types} & \longleftrightarrow & \text{Formules}\\
+    \text{Programmes} & \longleftrightarrow & \text{Preuves}\\
+    \phantom{aaaaaaaaaaaaaa}\text{$\beta$-réduction} & \longleftrightarrow & \text{Élimination d'une coupure}\\
+    \text{Principes classiques} & \longleftrightarrow & \text{\textcolor{nicered}{\textbf{???}}}\\
+    \text{\textbf{\textit{Programmation}}} & \longleftrightarrow & \text{\textbf{\textit{Logique}}}\.\
+  \end{array}
+  \]
+
+
+  Avec la preuve par l'absurde, on peut "recommencer dans un contexte différent".
+
+  \[
+  \begin{prooftree}
+    \hypo{\phantom{\frac{1}{1}}\vdots \phantom{\frac{1}{1}}}
+    \infer 1{\tikzmarknode{test2}\Gamma', \lnot A\vdash A}
+    \infer 1{\Gamma', \lnot A \vdash \bot}
+    \infer 1{\Gamma', \lnot A \vdash B}
+    \infer 1{\phantom{\frac{1}{1}} \vdots \phantom{\frac{1}{1}}}
+    \infer 1{\tikzmarknode{test1}\Gamma, \lnot A\vdash A}
+    \infer 1{\Gamma, \lnot A \vdash \bot}
+    \infer 1{\Gamma \vdash \lnot \lnot A}
+    \infer 1{\Gamma \vdash A}
+  \end{prooftree}
+  .\]
+  \begin{tikzpicture}[overlay, remember picture, shorten >= 10pt,shorten <= 10pt]
+    \node[text width=4cm, below left=0.25cm and 1.5cm of test2, align=center, deepblue] (text) {On recommence à montrer $A$ dans le contexte $\Gamma', \lnot A$ au lieu de  $\Gamma, \lnot A$.};
+    \draw[->,deepblue] (test1.west) to[bend left=40] (text.south);
+    \draw[->,deepblue] (text.north) to[bend left=40] (test2.west);
+  \end{tikzpicture}
+
+  S'autoriser les principes classiques, c'est savoir utiliser les exceptions : si ça explose, je peux le rattraper.
+  En effet, l'élimination du $\bot$ fait penser à un opérateur comme \lstinline|raise : exn -> 'a|, et la construction~\lstinline|try...with...| pour pouvoir "sauter" à des endroits du programme, et dévier le flot du programme.
 \end{document}

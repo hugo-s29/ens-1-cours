@@ -1,0 +1,274 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Le $\lambda$-calcul polymorphe.}
+
+  On étend la grammaire des types :
+  \[
+  A, B ::= X  \mid A \to B  \mid \forall X \: A
+  .\] 
+  Ici, les $X$ ne sont plus les types de base (noté $\boldsymbol{X}$ précédemment), mais ce sont des \textit{variables de types}.
+
+  Pour mieux refléter les notations de la littérature, on aura plutôt :
+  \[
+  A, B ::= \alpha  \mid A \to B  \mid \forall \alpha \: A
+  .\]
+
+  Le "$\forall \alpha \: A$" est une structure qui lie, $\forall$ est un lieur.
+  Il y a donc une notion de variables libres d'un type  $\Vl(A)$, d'$\alpha$-conversion, et de substitution.
+  Par exemple, \[
+  \Vl(\forall \alpha \: \forall \beta \: (\alpha \to  \beta \to \gamma \to \alpha)) = \{\gamma\} 
+  \] et \[
+  \forall \alpha \: \alpha \to \alpha =_\alpha \forall \beta \: \beta \to \beta
+  .\]
+
+  \section{Typage, version implicite.}
+  Aux trois règles des types simples, on ajoute les deux règles ci-dessous :
+  \[
+  \begin{prooftree}
+    \hypo{\Gamma \vdash M : A}
+    \infer[left label={\alpha \not\in \Vl(\Gamma)}] 1[\mathcal{T}_\mathsf{g}]{\Gamma \vdash M : \forall \alpha \: A}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{\Gamma \vdash M : \forall \alpha \: A}
+    \infer 1[\mathcal{T}_\mathsf{i}]{\Gamma \vdash M : A[\sfrac{B}{\alpha}]}
+  \end{prooftree}
+  .\]
+  Les règles correspondent à la \textit{généralisation} et à l'\textit{instantiation}.
+
+  Et, \textit{\textbf{on ne change pas les $\lambda$-termes}}.
+
+  \section{Typage, version explicite.}
+
+  On change les $\lambda$-termes :
+  \[
+  M, N ::= x  \mid M \: N  \mid \lambda x: A. \: M  \mid \Lambda \alpha. \: M \mid M \: A
+  .\]
+  La construction $\Lambda \alpha. \: M$ est une  \textit{abstraction de types}, et la construction $M\: A$ est l'\textit{application d'un terme à un type}.
+  On note \textit{\textbf{explicitement}} le type "d'entrée" de l'abstraction.
+
+  On change les règles de $\beta$-réduction :
+  \[
+  \begin{prooftree}
+    \infer 0{(\Lambda \alpha. \: M) \: A \to_\beta M[\sfrac{A}{\alpha}]}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{M \to_\beta M'}
+    \infer 1{\Lambda \alpha. \: M \to_\beta \Lambda \alpha. \: M'}
+  \end{prooftree}
+  \]\[
+  \begin{prooftree}
+    \hypo{M \to_\beta M'}
+    \infer 1{M \: A \to_\beta M' \: A}
+  \end{prooftree}
+  .\]
+
+  On change également les règles de typage :
+  \begin{gather*}
+    \begin{prooftree}
+      \infer[left label={\Gamma(x) = A}] 0{\Gamma \vdash x : A}
+    \end{prooftree}
+    \quad\quad\quad
+    \begin{prooftree}
+      \hypo{\Gamma \vdash M : A \to B}
+      \hypo{\Gamma \vdash N : A}
+      \infer 2{\Gamma \vdash M \: N : B}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{\Gamma, x : A \vdash M : B}
+      \infer[left label={x \not\in \operatorname{dom}(\Gamma)}] 1{\Gamma \vdash \lambda x : A.\: M : A \to B}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{\Gamma \vdash M : A}
+      \infer[left label={\alpha \not\in \Vl(\Gamma)}] 1{\Gamma \vdash \Lambda \alpha.\: M : \forall \alpha \: A}
+    \end{prooftree}
+    \begin{prooftree}
+      \hypo{\Gamma \vdash M : \forall \alpha\: A}
+      \infer 1{\Gamma \vdash M \: B : A[\sfrac{B}{\alpha}]}
+    \end{prooftree}
+  \end{gather*}
+
+
+  \begin{lem}
+    On a $\Gamma \vdash M : A$ dans le système explicite ssi il existe $M'$ dans le système explicite avec $\Gamma \vdash M' : A$ (explicite) et $M$ est "l'effacement" de $M'$.
+  \end{lem}
+
+  \begin{itemize}
+    \item La représentation implicite est plus utilisée dans les langages comme OCaml, où l'on doit inférer les types.
+    \item La représentation explicite correspond plus aux langages comme Rocq, avec un lien plus naturel avec la logique.
+  \end{itemize}
+
+  \begin{exm}
+    Soit le $\lambda$-terme non typé $\underline{2} := \lambda f. \: \lambda z.\: f \: (f \: z)$.
+    Comment le typer en version explicite ?
+
+    \begin{enumerate}
+      \item \[
+          \begin{prooftree}
+            \hypo{\vdots}
+            \infer 1{f : \alpha \to \alpha, z : \alpha \vdash f \: (f \: z) : \alpha}
+            \infer 1{f : \alpha \to \alpha \vdash \lambda z : \alpha.\: f \: (f \: z) : \alpha \to \alpha}
+            \infer 1{\emptyset \vdash \lambda f : \alpha \to \alpha. \: \lambda z : \alpha.\: f \: (f \: z) : (\alpha \to \alpha) \to \alpha \to \alpha}
+            \infer 1{\emptyset \vdash \Lambda \alpha.\: \lambda f : \alpha \to \alpha. \: \lambda z : \alpha.\: f \: (f \: z) : \forall \alpha \: (\alpha \to \alpha) \to \alpha \to \alpha}
+          \end{prooftree}
+      .\] 
+      \item \[
+          \begin{prooftree}
+            \hypo{\vdots}
+            \infer 1{f : \forall  \alpha \: \alpha \to \alpha, z : \beta \vdash f \: \beta \: (f \: \beta\: z) : \beta}
+            \infer 1{f : \forall  \alpha \: \alpha \to \alpha \vdash \lambda z : \beta.\: f \: \beta \: (f \: \beta\: z) : \beta \to \beta}
+            \infer 1{\emptyset \vdash \lambda f : \forall \alpha \: \alpha \to \alpha. \: \lambda z : \beta. \: f \: \beta (f\: \beta \: z) : (\forall \alpha \: \alpha \to \alpha) \to \beta \to \beta}
+          \end{prooftree}
+      .\]
+    \end{enumerate}
+  \end{exm}
+
+  \begin{exm}
+    On suppose que l'on a les couples.
+    Comment compléter le séquent \[
+    y : \beta, z : \gamma \vdash \lambda f : \redQuestionBox. \: (f \: y, f \: z) : \redQuestionBox
+    .\]
+    \begin{itemize}
+      \item Pour les types simples, on ne peut pas si $\beta \neq \gamma$.
+      \item Mais, avec polymorphisme, on a : \[
+        y : \beta, z : \gamma \vdash \lambda f : \forall  \alpha \: \alpha \to \delta. \: (f \: y, f \: z) : (\forall  \alpha \: \alpha \to \delta) \to \delta \times \delta
+      .\]
+    \end{itemize}
+  \end{exm}
+
+  \begin{exm}
+    \[
+    \begin{prooftree}
+      \infer 0{x : \alpha \vdash x : \alpha}
+      \infer 1{\emptyset \vdash \lambda x. \:x  : \alpha \to \alpha}
+      \infer 1{\emptyset \vdash \lambda x. \:x : \forall  \alpha \: \alpha \to \alpha}
+      \infer 1{\emptyset \vdash \lambda x. \: x : (\forall \beta \: \beta) \to (\forall \delta \: \delta)}
+    \end{prooftree}
+    .\]
+    En effet,  $(\forall \beta \: \beta) \to (\forall \beta \: \beta) =_\alpha (\forall \beta \: \beta) \to (\forall \delta \: \delta)$.
+  \end{exm}
+
+  \begin{exm}[Ouch !]
+    \[
+    \begin{prooftree}
+      \infer 0{x : \alpha \vdash x : \alpha}
+      \infer[left label={\text{NON ! On a $\alpha \in \Vl(x : \alpha)$ !}}] 1{ x : \alpha \vdash x : \forall \alpha \: \alpha}
+      \rewrite{\color{red}\box\treebox}
+      \infer 1{x : \alpha \vdash x : \beta}
+      \infer 1{\emptyset \vdash \lambda x.\: x : \alpha \to \beta}
+      \infer 1{\emptyset \vdash \lambda x. \: x : \forall \alpha \: \forall \beta \: \alpha \to \beta}
+    \end{prooftree}
+    .\] 
+  \end{exm}
+
+  \section{Point de vue logique sur le polymorphisme, système F.}
+
+  On se place du point de vue Curry-Howard. On ajoute deux règles de déduction supplémentaire :
+  \[
+  \begin{prooftree}
+    \hypo{\Gamma \vdash A}
+    \infer[left label={\alpha \not\in \Vl(\Gamma)}] 1[\forall_\mathsf{I}]{\Gamma \vdash \forall \alpha \: A}
+  \end{prooftree}
+  \quad\quad
+  \begin{prooftree}
+    \hypo{\Gamma \vdash \forall \alpha \: A}
+    \infer 1[\forall_\mathsf{E}]{\Gamma \vdash A[\sfrac{B}{\alpha}]}
+  \end{prooftree}
+  .\]
+
+  On a, encore, un possibilité d'éliminer les coupures : si $\alpha \not\in \Vl(\Gamma)$,
+
+  \[
+  \begin{prooftree}
+    \hypo{\color{deepblue} \delta}
+    \infer 1{\Gamma \vdash A}
+    \infer 1[\forall_\mathsf{I}]{\Gamma \vdash \forall \alpha \: A}
+    \infer 1[\forall_\mathsf{E}]{\Gamma \vdash A[\sfrac{{\color{nicered} B}}{\alpha}]}
+  \end{prooftree}
+  \quad\quad
+  \leadsto
+  \quad\quad
+  \begin{prooftree}
+    \hypo{{\color{deepgreen} \delta}[\sfrac{{\color{nicered} B}}{\alpha}]}
+    \infer 1{\Gamma \vdash A[\sfrac{{\color{nicered} B}}{\alpha}]}
+  \end{prooftree}
+  \] 
+
+  Ceci correspond, par correspondance de Curry-Howard, a une $\beta$-réduction :
+  \[
+    (\Lambda \alpha \: M) \: {\color{nicered} B} \to_\beta M[\sfrac{{\color{nicered} B}}{\alpha}]
+  .\]
+
+  On a aussi un théorème de normalisation forte.
+  \begin{thm}
+    Si $\Gamma \vdash M : A$ en $\lambda$-calcul polymorphe, alors $M$ est fortement normalisant.
+  \end{thm}
+
+  Pour démontrer ce théorème, on utilise encore les candidats de réductibilité (il ne faut définir que $\mathcal{R}_{\forall \alpha \: A}$), mais la preuve est bien plus complexe. En effet, les types polymorphes ont un grand pouvoir expressif (\textit{c.f.} la section suivante).
+
+  Le système que l'on a s'appelle \textit{système F}.\footnote{À ne pas confondre avec \href{https://fr.wikipedia.org/wiki/Station_F}{\textit{Station F}}.}\showfootnote\ C'est de la logique du second ordre : on peut quantifier sur les variables propositionnelles.
+  On quantifie donc sur des ensembles de valeurs au lieu de se limiter uniquement à quantifier sur les valeurs.
+
+  \section{Représentation des connecteurs logiques.}
+
+  On peut représenter les connecteurs logiques différemment, sans les ajouter explicitement, mais uniquement avec le fragment contenant $\to$ et $\forall$.
+
+  \begin{itemize}
+    \item On peut représenter $\bot  := \forall \alpha \: \alpha$. En effet, on a la correspondance suivante :
+      \[
+        \begin{prooftree}
+          \hypo{\Gamma \vdash \forall \alpha \: \alpha}
+          \infer 1[\forall_\mathsf{I}]{\Gamma \vdash A}
+        \end{prooftree}
+        \quad\leadsto\quad
+        \begin{prooftree}
+          \hypo{\Gamma \vdash \bot}
+          \infer 1[\bot_\mathsf{E}]{\Gamma \vdash A}
+        \end{prooftree}
+      .\]
+    \item On peut représenter $\top := \forall \alpha \: \alpha \to \alpha$.
+    \item On peut représenter $A \land B := \forall \alpha \: (A \to B \to \alpha) \to \alpha$ :
+
+      \fitbox{$ \hspace{-2cm}\begin{prooftree}
+        \infer 0{\Gamma, c : A \to B \to \alpha \vdash c :A \to B \to \alpha}
+        \hypo{\Gamma \vdash M  : A}
+        \infer 1{\Gamma, c : A \to B \to \alpha \vdash M : A}
+        \infer 2{\Gamma, c : A \to B \to \alpha \vdash c\: M : B \to \alpha}
+        \hypo{\Gamma\vdash N  : B}
+        \infer 1{\Gamma, c : A \to B \to \alpha \vdash M : A}
+        \infer 2{\Gamma, c : A \to B \to \alpha \vdash c\: M \: N \: \alpha}
+        \infer 1{\Gamma \vdash \lambda c. \: c \: M \: N : (A \to B \to \alpha) \to \alpha}
+        \infer 1{\Gamma \vdash \lambda c. \: c \: M \: N : \forall  \alpha \: (A \to B \to \alpha) \to \alpha}
+      \end{prooftree}$}
+
+      d'où l'introduction du $\land$.
+      Pour l'élimination, si \[\Gamma \vdash M : \forall \alpha \: (A \to B \to \alpha) \to \alpha,\] alors $\Gamma \vdash M \: (\lambda x. \: \lambda y.\: x) : A$ et $\Gamma \vdash M \: (\lambda x. \: \lambda y.\: y) : B$.
+  \end{itemize}
+
+
+  \section{Le $\lambda$-calcul polymorphe, côté programmation.}
+
+  \begin{description}
+    \item["Généricité".]
+      On peut avoir plusieurs types en même temps.
+      Par exemple, une fonction de tri a un type \[
+      \forall \alpha \: (\alpha \to \alpha \to \mathtt{bool}) \to \mathtt{list}\ \alpha \to \mathtt{list} \ \alpha
+      .\] 
+    \item["Paramétricité".]
+      Lorsque l'on a une fonction $f : (\forall \alpha : \alpha) \to A$, la fonction n'inspecte pas son argument.
+      Elle ne fait que le dupliquer, le passer à d'autres fonctions, le rejeter, mais elle ne peut pas voir les données sous-jacentes.
+      (On exclue ici les fonctions types \lstinline|Obj.magic|).
+  \end{description}
+
+  Quelques conséquences sur les formes normales :
+  \begin{itemize}
+    \item Il n'y a qu'une seule forme normale ayant un type $\forall \alpha \: \alpha \to \alpha$.
+    \item Il n'y a que deux formes normales ayant un type $\forall \alpha \: \alpha \to \alpha \to \alpha$ : $\lambda u.\: \lambda v.\: u$ et $\lambda u.\: \lambda v.\: v$.
+  \end{itemize}
+  On a aussi quelques "théorèmes gratuits", comme par exemple : si~$\mathtt{f} : \alpha \to \beta$ est croissante vis à vis de $\mathtt{ordre}_\alpha : \alpha \to \alpha \to \mathtt{bool}$ et~$\mathtt{ordre}_\beta : \beta \to \beta \to \mathtt{bool}$, alors 
+  \[
+  \mathtt{map} \ \mathtt{f} \ (\mathtt{sort}\ \mathtt{ordre}_\alpha\ \mathtt{l}) = \mathtt{sort} \ \mathtt{ordre}_\beta \ (\mathtt{map}\ \mathtt{f}\ \mathtt{l})
+  .\] 
+\end{document}
