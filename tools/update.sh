@@ -26,6 +26,7 @@ cp profon/main.pdf ../web/public/data/ens1/profon.pdf
 cp profon/small-docs/trad.pdf ../web/public/data/ens1/profon-traduction-cps.pdf
 cp profon/small-docs/opti.pdf ../web/public/data/ens1/profon-optimisation-cps.pdf
 cp profon/td.pdf ../web/public/data/ens1/profon-td.pdf
+cp profon/cic.pdf ../web/public/data/ens1/profon-cic.pdf
 cp profon/chap00.pdf ../web/public/data/ens1/profon-chap00.pdf
 cp profon/chap01.pdf ../web/public/data/ens1/profon-chap01.pdf
 cp profon/chap02.pdf ../web/public/data/ens1/profon-chap02.pdf
