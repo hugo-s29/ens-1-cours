@@ -20,6 +20,7 @@ cp log/td.pdf ../web/public/data/ens1/logique-td.pdf
 
 cp proba/td.pdf ../web/public/data/ens1/proba-td.pdf
 cp proba/dm1.pdf ../web/public/data/ens1/proba-dm1.pdf
+cp proba/revisions.pdf ../web/public/data/ens1/proba-revisions.pdf
 
 cp profon/main.pdf ../web/public/data/ens1/profon.pdf
 cp profon/small-docs/trad.pdf ../web/public/data/ens1/profon-traduction-cps.pdf
