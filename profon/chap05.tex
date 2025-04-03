@@ -1,0 +1,188 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Types linéaires.}
+
+  Le but des types linéaires est de \textit{\textbf{contrôler l'usage des ressources}}.
+  Avec un tel système de typage, on pourrait :
+  \begin{itemize}
+    \item désallouer une zone mémoire, fermer un canal/un fichier ; on se limite à un seul usage : les deux termes suivants ne sont pas typables
+      \begin{itemize}
+        \item $(\mathtt{free}\ x, \mathtt{free}\ x)$
+        \item $(\lambda y. \: \lambda z. \: (\mathtt{free}\ y, \mathtt{free}\ z)) \: x \: x$
+      \end{itemize}
+    \item l'initialisation d'une zone mémoire ; au moins un usage 
+    \item si on sait au plus un usage, alors on peut désallouer après un usage.
+  \end{itemize}
+
+  On se donne la syntaxe suivante.
+  \begin{itemize}
+    \item Les booléens sont :
+      \[
+      b ::= \mathtt{true}  \mid \mathtt{false}
+      .\]
+    \item Les termes sont :
+      \begin{align*}
+        M, N ::&= \eta b  \mid \eta (M, N)  \mid \eta \lambda x. \: M\\
+               &{}\mid  \ifte b M N  \mid \letin {(x, y)} M N  \mid M \: N\\
+               &{} \mid x  \mid \letin x M N
+      .\end{align*}
+    \item Les usages sont :
+      \[
+      \eta ::= \mathsf{lin}  \mid  \mathsf{un}
+      .\]
+  \end{itemize}
+
+  Les \textit{usages} représentent une utilisation \textit{linéaire} ($\mathsf{lin}$) ou non restrictive ($\mathsf{un}$\textit{restricted}).
+  Un usage $\mathsf{lin}$ est utilisé exactement \textit{\textbf{une}} fois.
+
+  On s'autorise le filtrage sur les couples au lieu de $\mathtt{fst} \: M$ et $\mathtt{snd}\: M$ car, dans le cas linéaire, on ne pourrait utiliser qu'une des deux composantes\ldots\ zut !
+
+  On accepte, par exemple, $\mathsf{lin}(\mathsf{lin}\: \mathtt{true}, \mathsf{lin}\: \mathtt{false})$ ou $\mathsf{un}(\mathsf{lin}\: \mathtt{true}, \mathsf{un}\: \mathtt{false})$.
+
+  Les types sont définis par la grammaire \[
+  T, U ::= \mathtt{bool}  \mid A \to B  \mid A * B\quad\quad A, B ::= \eta \: T
+  .\] 
+  Les $T, U$ sont des \textit{prétypes}, les $A,B$ sont les \textit{types}.
+
+  La séparation dans la grammaire permet de rejeter une expression comme $\mathsf{un}(\mathsf{lin} \: \mathtt{bool} * \mathsf{un} \: \mathtt{bool})$.
+
+  On se donne les règles de typages pour cette version linéaire du $\lambda$-calcul.
+
+  \subsubsection{Première tentative.}
+
+  On propose la règle pour les couples linéaires :
+  \[
+  \begin{prooftree}
+    \hypo{\Gamma \vdash M : A}
+    \hypo{\Gamma \vdash N : B}
+    \infer 2{\Gamma \vdash (M, N) : \mathsf{lin}(A * B)}
+  \end{prooftree}
+  .\]
+  Cependant, on ne mets  pas de restrictions sur $A$ : on peut avoir $A = \mathsf{lin} T$ ou $A = \mathsf{un} T$\ldots\ Zut !
+
+  \subsubsection{Seconde tentative.}
+
+  On propose un règle pour les couples 
+  \[
+  \begin{prooftree}
+    \hypo{\Gamma \vdash M : A}
+    \hypo{\Gamma \vdash N : B}
+    \hypo{\eta(A)}
+    \hypo{\eta(B)}
+    \infer 4{\Gamma \vdash (M, N) : \eta (A * B)}
+  \end{prooftree}
+  ,\] 
+  où l'on définit le prédicat $\eta(A)$ par :
+   \begin{itemize}
+    \item si $\eta = \mathsf{un}$ alors $A$ ne peut pas être $\mathsf{lin} T$ ;
+    \item si $\eta = \mathsf{lin}$ alors $A$ peut être quelconque.
+  \end{itemize}
+
+  Puis, on se donne une règle pour le filtrage \[
+    \begin{prooftree}
+      \hypo{\Gamma \vdash M : \eta (A_1 * A_2)}
+      \hypo{\Gamma, x : A_1, y : A_2 \vdash N : B}
+      \infer 2{\Gamma \vdash \letin {(x,y)} M N : B}
+    \end{prooftree}
+  .\] 
+  Ici, $\eta$ n'a pas d'importance.
+  On peut donc typer \[
+    \letin {(x,y)} {\mathsf{un}(\mathsf{lin} \mathtt{true}, \mathsf{un}\mathtt{false})} \mathsf{lin}(x,x)
+  ,\] 
+  mais on ne veut pas pouvoir le faire !
+
+  \subsubsection{Tentative finale.}
+
+  \begin{defn}
+    On définit $\Gamma_1 \circ \Gamma_2$ est défini comme "$\Gamma_1 \cup \Gamma_2$" à ceci près que :
+    \begin{itemize}
+      \item si $\Gamma_1(x) = \mathsf{lin} T$ alors $x \not\in \operatorname{dom}(\Gamma_2)$ ;
+      \item si $\Gamma_2(x) = \mathsf{lin} T$ alors $x \not\in \operatorname{dom}(\Gamma_1)$ ;
+      \item si $x \in \operatorname{dom}(\Gamma_1) \cap \operatorname{dom}(\Gamma_2)$ alors il existe $T$ tel que $\Gamma_1(x) = \Gamma_2(x) = \mathsf{un} T$.
+    \end{itemize}
+  \end{defn}
+
+  Les vraies règles de typage sont :
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{\Gamma_1 \vdash M : A}
+      \hypo{\Gamma_2 \vdash N : B}
+      \hypo{\eta(A)}
+      \hypo{\eta(B)}
+      \infer 4{\Gamma_1 \circ \Gamma_2 \vdash (M, N) : \eta (A * B)}
+    \end{prooftree}\\[\baselineskip]
+    \begin{prooftree}
+      \hypo{\Gamma_1 \vdash M : \eta (A * B)}
+      \hypo{\Gamma_2, x : A, y : B \vdash N : C}
+      \infer 2{\Gamma_1 \circ \Gamma_2 \vdash \letin {(x,y)} M N : C}
+    \end{prooftree}\\[\baselineskip]
+    \begin{prooftree}
+      \hypo{\mathsf{un}(\Gamma)}
+      \infer 1{\Gamma, x : A \vdash x : A}
+    \end{prooftree} \quad\quad
+    \begin{prooftree}
+      \hypo{\mathsf{un}(\Gamma)}
+      \infer 1{\Gamma \vdash \eta b : \eta \mathtt{bool}}
+    \end{prooftree}\\[\baselineskip]
+    \begin{prooftree}
+      \hypo{\Gamma_1 \vdash M : \eta \mathtt{bool}}
+      \hypo{\Gamma_2 \vdash N_1 : A}
+      \hypo{\Gamma_2 \vdash N_2 : A}
+      \infer 3{\Gamma_1 \circ \Gamma_2 \vdash \ifte M {N_1} {N_2} : A}
+    \end{prooftree}
+  \end{gather*}
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{\Gamma, x : A \vdash M : B}
+      \hypo{\eta(\Gamma)}
+      \infer 2{\Gamma \vdash \eta \lambda x. \: M : \eta(A \to B)}
+    \end{prooftree}\\[\baselineskip]
+    \begin{prooftree}
+      \hypo{\Gamma_1 \vdash M : \eta (A \to B)}
+      \hypo{\Gamma_2 \vdash N : A}
+      \infer 2{\Gamma_1 \circ \Gamma_2 \vdash M \: N : B}
+    \end{prooftree}
+  \end{gather*}
+
+  On note ici $\mathsf{un}(\Gamma)$ (et éventuellement $\eta(\Gamma)$) le prédicat disant que $\Gamma$ le contient des types que de la forme $\mathsf{un} T$.
+
+  Dans le cas de l'axiome, on assure que l'on n'a pas de variables inutilisées.
+  Dans le cas de l'abstraction, on contrôle l'usage des variables qui se retrouvent dans la clôture associée à $\lambda x. \: M$.
+
+  \begin{exo}
+    Peut-on trouver un terme ayant pour type 
+    \begin{enumerate}
+      \item $\mathsf{un}(\mathsf{un} \mathtt{bool} \to \mathsf{lin} \mathtt{bool})$ ?
+      \item $\mathsf{un}(\mathsf{lin} \mathtt{bool} \to \mathsf{un} \mathtt{bool})$ ?
+    \end{enumerate}
+
+    On ne peut pas proposer :
+    \begin{enumerate}
+      \item $\mathsf{un}(\lambda x. \: x)$ car on n'a pas de $\mathsf{lin}$
+      \item $\mathsf{un}(\lambda x. \: \mathsf{un} \mathtt{false})$ car on n'utilise pas le $x$.
+    \end{enumerate}
+
+    Oui, on peut :
+    \begin{enumerate}
+      \item $\mathsf{un}(\lambda x. \: \mathsf{lin} \mathtt{false})$ 
+      \item $\mathsf{un}(\lambda x. \: \ifte x {\mathsf{un} \mathtt{false}}{{\mathsf{un} \mathtt{true}}})$ 
+    \end{enumerate}
+  \end{exo}
+
+  \begin{rmk}[Obligation de linéarité]
+    On a des règles de "bonne formation" : $\eta(A)$ et  $\eta(\Gamma)$.
+    La décomposition  $\Gamma_1 \circ \Gamma_2$ correspond à un aiguillage.
+
+    Les types linéaires correspondent à des \textit{types substructurels}.
+    Ceci est relié à la \textit{logique linéaire}.
+  \end{rmk}
+
+  \begin{lem}
+    \begin{itemize}
+      \item \textit{Affaiblissement}. Si $\Gamma \vdash M : A$ alors pour $x \not\in \operatorname{dom}(\Gamma)$ on a $\Gamma, x : \mathsf{un}T \vdash M : A$.
+      \item \textit{Contraction}. Si $\Gamma, x : \mathsf{un}T, y : \mathsf{un}T \vdash M : B$ alors on a $\Gamma, x : \mathsf{un}T \vdash M[\sfrac{x}{y}] : B$.
+        Ceci n'est pas vrai avec $\mathsf{lin}$.
+    \end{itemize}
+  \end{lem}
+\end{document}

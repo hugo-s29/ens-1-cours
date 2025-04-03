@@ -271,4 +271,93 @@
   \[
   \mathtt{map} \ \mathtt{f} \ (\mathtt{sort}\ \mathtt{ordre}_\alpha\ \mathtt{l}) = \mathtt{sort} \ \mathtt{ordre}_\beta \ (\mathtt{map}\ \mathtt{f}\ \mathtt{l})
   .\] 
+
+
+  \section{Polymorphisme et inférence de types.}
+
+  Pour l'inférence de types, on se place dans la représentation implicite du typage polymorphique.
+  On s'intéresse à la question suivante : pour $M$ un $\lambda$-terme donné, existe-t-il $\Gamma$ et $A$ tels que $\Gamma \vdash M : A$ ?
+
+  Cependant, il y a un problème :
+  \begin{thm}[\~1992]
+    L'inférence de types pour le typage polymorphique implicite est \textit{\textbf{indécidable}}.
+  \end{thm}
+
+  Ceci conclut l'étude du Système F. On va maintenant s'intéresser à une variant de système F développée en 1978, le \textit{$\lambda$-calcul avec schéma de types}.
+  On note $\rho$ le schéma de types définis par :
+  \[
+  A ::= \alpha  \mid A \to B \quad\quad\quad \rho ::= A  \mid \forall \alpha \: \rho
+  .\]
+
+  \begin{rmk}
+    Il n'y a pas de types de la forme $(\forall \alpha \: \alpha \to \alpha) \to (\forall \beta \: A)$.
+    La quantification est \textit{\textbf{prénexe}}.
+  \end{rmk}
+
+  Les termes sont donnés par la grammaire :
+  \[
+  M ::= x  \mid \lambda x. \: M  \mid M \: N  \mid \letin x M N
+  .\]
+
+  Pour le système de types, on considère $\Gamma$ un dictionnaire sur (variables du $\lambda$-calcul $x$, schémas de types $\rho$).
+  La relation de typage est notée~${\Gamma \vdash M : A}$ où $A$ est un type \textit{\textbf{simple}}.
+  On la définit par induction à l'aide des règles :
+  \begin{gather*}
+    \begin{prooftree}
+      \hypo{\Gamma \vdash M : A \to B}
+      \hypo{\Gamma \vdash N : A}
+      \infer 2{\Gamma \vdash M \: N : B}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \hypo{\Gamma, x : A \vdash M : B}
+      \infer 1{\Gamma \vdash \lambda x.\: M : A \to B}
+    \end{prooftree}\\
+    \begin{prooftree}
+      \hypo{\Gamma \vdash M : A}
+      \hypo{\Gamma, x : \forall \vec{\alpha}\: A \vdash N : B}
+      \infer[left label={\vec{\alpha}\cap \Vl(\Gamma) = \emptyset}] 2{\Gamma \vdash \letin x M N : B}
+    \end{prooftree}
+    \quad\quad
+    \begin{prooftree}
+      \infer[left label={\Gamma(x) = \forall \vec{\alpha} \: A}] 0{\Gamma \vdash x : A[\sfrac{\vec{B}}{\vec{\alpha}}]}
+    \end{prooftree}
+  \end{gather*}
+
+  Ici, on note $\forall \vec{\alpha} \: A$ pour  $\forall \alpha_1\: \cdots\: \forall \alpha_n \: A$ avec possiblement aucun $\forall$. De même, la substitution $A[\sfrac{\vec{B}}{\vec{\alpha}}]$ se fait simultanément.
+
+  La règle d'\textit{\textbf{instantiation}} de système F se retrouve partiellement dans la règle de l'axiome.
+  La règle d'\textit{\textbf{généralisation}} de système F se retrouve uniquement dans la règle du $\letin \ldots \ldots \ldots$, et uniquement après le $\mathtt{in}$.
+
+
+  \begin{exm}
+    Le terme \[
+      \letin f {\lambda x. \: x} f
+    \] a pour type $\beta \to \beta$, sans généralisation !
+
+    \[
+    \begin{prooftree}
+      \infer 0{x : \alpha \vdash x : \alpha}
+      \infer 1{\emptyset \vdash \lambda x. \: x : \alpha \to \alpha}
+      \infer 0{f : \forall \alpha \: \alpha \to \alpha \vdash f : \beta \to \beta}
+      \infer 2{\emptyset\vdash \letin f {\lambda x. \: x} f : \beta \to \beta}
+    \end{prooftree}
+    .\] 
+  \end{exm}
+
+
+  En OCaml, lorsqu'on essaie de typer
+  \begin{center}
+    \lstinline|(fun z -> z) (fun x -> x)|
+  \end{center}
+  on se rend compte que l'on n'a pas un type \lstinline|'a -> 'a|, mais
+  \begin{center}
+    \lstinline|'_weak1 -> '_weak1|.
+  \end{center}
+
+  \begin{thm}
+    Il existe un algorithme correct et complet pour l'inférence de types pour les schémas de types.
+  \end{thm}
+  
+  Pour ce faire, on fait comme en \thprog 7, où l'on part de $M$, on génère des contraintes, et à l'aide de l'algorithme d'unification, on trouve le type "le plus général".
 \end{document}
