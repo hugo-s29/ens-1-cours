@@ -36,8 +36,6 @@ tex_files = [ str(tex) for tex in Path(".").rglob("*.tex") ]
 tex_ignore = [ 'category-theory/l01.tex', 'category-theory/l02.tex', 'category-theory/l03.tex' ]
 tex_ignore += [ fn for fn in tex_files if fn.startswith('cours-mpi') ]
 
-tex_files = sorted([ f for f in tex_files if f not in tex_ignore ])
-
 def get_tex_to_recompile(filename):
     reg = r"(chap\d\d/chap\d\d\.tex)|(chap\d\d.tex)|(td\d\d\.tex)"
     res, n = re.subn(reg, "main.tex", filename)
@@ -47,7 +45,7 @@ def get_tex_to_recompile(filename):
 
 tex_to_recompile = set()
 
-for tex in tex_files:
+for tex in sorted(tex_files):
     current_hash = compute_md5(tex)
 
     if previous_hashes.get(tex) != current_hash:
@@ -55,6 +53,8 @@ for tex in tex_files:
         previous_hashes[tex] = current_hash
 
 for tex in tex_to_recompile:
+    if tex in tex_ignore: continue
+
     path = Path(tex)
     subprocess.run(["cluttex", "-e", "lualatex", path.name], check=True, cwd=path.parent)
 
@@ -70,15 +70,13 @@ for tex in tex_to_recompile:
 
 
 typ_files = [ str(typ) for typ in Path(".").rglob("*.typ") ]
-typ_ignore = [ 'global.typ', 'pad-tracker/diff.typ', 'fdi/main.typ' ]
+typ_ignore = [ 'global.typ', 'pad-tracker/diff.typ', 'fdi/main.typ', 'log/revisions.typ' ]
 typ_ignore += [ fn for fn in typ_files if fn.startswith('cours-mpi') ]
 
-typ_files = sorted([ f for f in typ_files if f not in typ_ignore ])
-
-for typ in typ_files:
+for typ in sorted(typ_files):
     current_hash = compute_md5(typ)
 
-    if previous_hashes.get(typ) != current_hash:
+    if previous_hashes.get(typ) != current_hash and typ not in typ_ignore:
         path = Path(typ)
         subprocess.run(["typst", "compile", "--root", os.getcwd(), path.name], check=True, cwd=path.parent)
 

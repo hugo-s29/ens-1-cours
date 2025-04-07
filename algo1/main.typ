@@ -2304,7 +2304,7 @@ En fait, on peut même généraliser à un problème qui n'est pas ACPM.
     #h(1fr) "échange"
 ]
 
-Par exemple, le point #text(blue)[(3)] est vérifié par les familles libres.
+Par exemple, le point #text(blue)[(3)]) est vérifié par les familles libres.
 
 #theorem[
   L'algorithme GLOUTON sur $H$ retourne une solution optimal (quel que soit $w$) si, et seulement si, $H$ est un matroïde.

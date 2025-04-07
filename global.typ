@@ -3,7 +3,7 @@
 #import "@preview/cetz-plot:0.1.1": plot
 #import "@preview/lemmify:0.1.8": *
 #import "@preview/numblex:0.2.0": numblex
-#import "@preview/curryst:0.1.0"
+#import "@preview/curryst:0.5.0"
 
 #let purple = rgb("#81559b")
 #let blue = rgb("#5aa9e6")
