@@ -12,7 +12,7 @@ Bonne lecture !
 
 - **Algo1.** Algorithmique 1 ▶ [/algo1](/algo1/) (Notes de cours uniquement)
 - **FDI.** Fondements de l'informatique ▶ [/fdi](/fdi/) (Quelques notes de cours, et DMs)
-- **Prog.** Programmation ▶ [/prog](https://gitlab.aliens-lyon.fr/hsalou/l3prog-tp1) (TPs uniquement)
+- **Prog.** Programmation ▶ [/prog](https://gitlab.aliens-lyon.fr/hsalou/l3prog-tp1) (TPs uniquement / sur Git séparé)
 - **ThProg.** Théorie de la Programmation ▶ [/thprog](/thprog/) (Notes de cours uniquement)
 
 **_Dept. Mathématiques_**
@@ -25,8 +25,8 @@ Bonne lecture !
 
 **_Dept. Informatique_**
 
-- **Algo2.** Algorithmique 2 ▶ [/algo2](/algo2/) (DMs)
-- **Log.** Logique ▶ [/log](/log/) (Notes de cours, DMs)
-- **Proba.** Probabilités ▶ [/proba](/proba/) (Quelques notes de cours et TDs)
-- **ProFon.** Projet Fonctionnel ▶ [/profon](/profon/) (Notes de cours, et quelques documents techniques pour ***fouine***)
+- **Algo2.** Algorithmique 2 ▶ [/algo2](/algo2/) (DMs et TDs)
+- **Log.** Logique ▶ [/log](/log/) (Notes de cours, DMs, TDs)
+- **Proba.** Probabilités ▶ [/proba](/proba/) (DMs et TDs)
+- **ProFon.** Projet Fonctionnel ▶ [/profon](/profon/) (Notes de cours, quelques documents techniques pour ***fouine*** et ***pieuvre***, et TDs) [[GIT fouine](https://gitlab.aliens-lyon.fr/hsalou/l3-profon)]
 - **EPS.** Enseignement en Programmation Sportive ▶ [/eps](/eps/) ((Tentatives de) solutions aux problèmes des semaines 1–3)

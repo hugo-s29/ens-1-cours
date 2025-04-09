@@ -295,6 +295,8 @@
     citecolor=black,
     filecolor=black,
     linkcolor=deepblue,
+    pdfencoding=auto,
+    psdextra,
     urlcolor=blue
 }
 
