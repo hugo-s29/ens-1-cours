@@ -1,10 +1,15 @@
-cd /Users/hugos29/Documents/ecole/ens1/
+if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
+	cd /home/hugo/cours-l3/
+	python3 tools/autocompress.py
+else
+	cd /Users/hugos29/Documents/ecole/ens1/
+	ipython tools/autocompile.py
+fi
 
 # ==========
 # SEMESTRE 2
 # ==========
 
-ipython tools/autocompile.py
 
 cp algo2/main.pdf ../web/public/data/ens1/algo2.pdf
 cp algo2/td.pdf ../web/public/data/ens1/algo2-td.pdf
