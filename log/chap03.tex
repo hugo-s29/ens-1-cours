@@ -1188,8 +1188,8 @@
        \[
        \varepsilon(x_0) := \exists x_1 \: \exists x_2 \: F_T(x_1, x_2) \land G(x_2, x_0)
        .\]
-     \item On pose $a := \sharp \lnot \varepsilon(x_0)$, "il n'existe pas de preuve de $x_0$ appliquée à elle-même".
-     \item On pose $b := g(a) = \sharp \lnot \varepsilon(\repr{a})$, "il n'existe pas du preuve du fait qu'il n'existe pas de preuve de $x_0$ appliquée à elle-même".
+     \item On pose $a := \sharp(\lnot \varepsilon(x_0))$, "il n'existe pas de preuve de $x_0$ appliquée à elle-même".
+     \item On pose $b := g(a) = \sharp (\lnot \varepsilon(\repr{a}))$, "il n'existe pas du preuve du fait qu'il n'existe pas de preuve de $x_0$ appliquée à elle-même".
      \item Dans $\mathcal{P}_0$, on a $\forall x_2 \: G(x_2, \repr{a}) \leftrightarrow x_2 = \repr{b}$.
      \item Par définition, $\varepsilon(\repr{a})$ est  $\exists x_1 \: \exists x_2 \: F_T(x_1, x_2) \land G(x_0, \repr{a})$.
        "Il existe une preuve du fait qu'il n'existe pas de preuve de nous-même".
@@ -1202,7 +1202,7 @@
      \item Prouvons que $T \vdash \mathrm{Coh}(T) \to \lnot \varepsilon(\repr a)$.
        Il suffit de montrer que $\mathcal{P}_1 \vdash \varepsilon(\repr{a}) \to \lnot \mathrm{Coh}(T)$.
        Soit $T_1 := \mathcal{P}_1 \cup \{\varepsilon(\repr{a})\}$.
-       Alors $T_1 \vdash \exists v_1 \: F_T(v_1, \repr b)$ et $b = \sharp \lnot \varepsilon(\repr{a})$
+       Alors $T_1 \vdash \exists v_1 \: F_T(v_1, \repr b)$ et $b = \sharp (\lnot \varepsilon(\repr{a}))$
        On a donc une preuve de $\varepsilon(\repr{a})$ et une preuve de  $\lnot \varepsilon(\repr a)$, donc de $\lnot \mathrm{Coh}(T)$.
      \item On va montrer que $T \vdash \lnot \varepsilon(\repr{a})$ mène à un paradoxe.
        Si c'est vrai, soit $C$ le numéro d'une preuve de $\lnot \varepsilon(\repr{a})$ dans  $T$.

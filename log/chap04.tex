@@ -1,0 +1,289 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{La théorie des ensembles.}
+
+  On se place dans la logique du 1er ordre avec $\mathcal{L} = \{{\in}, {=}\}$.
+  On se place dans un univers $\mathcal{U}$ non vide, le modèle, dont les éléments sont appelés des \textit{ensembles}.
+
+  Il faudra faire la différence entre les ensembles "naïfs" (les ensembles habituels), et les ensembles "formels" (les éléments de $\mathcal{U}$).
+
+  On a le paradoxe de Russel. On peut l'écrire 
+  \begin{quote}
+    "On a un barbier qui rase tous les hommes qui ne se rasent pas eux-mêmes. Qui rase le barbier ?".
+  \end{quote}
+  Si $\mathcal{U}$ est l'ensemble de tous les ensembles, alors \[
+  a := \mleft\{\,x \in \mathcal{U} \;\middle|\; x \not\in x\,\mright\}
+  \]
+  vérifie $a \in a \iff a \not\in a$, \textit{\textbf{paradoxe}}.
+  Pour éviter ce paradoxe, on choisit donc de ne pas faire $\mathcal{U}$ un ensemble.
+
+  \section{Les axiomes de la théorie de Zermelo-Fraenkel.}
+
+  \begin{description}
+    \item[ZF\,1.] \label{ZF1}\textit{Axiome d'extensionnalité} : deux ensembles sont égaux ssi ils ont les mêmes éléments \[
+      \forall x \: \forall y \: \big(\forall z \: (z \in x \leftrightarrow z \in y) \leftrightarrow x = y\big)
+      .\]
+    \item[\bullet] \label{pair-axiom} \textit{Axiome de la paire}\footnote{On verra plus tard que cet axiome est une conséquence des autres (de \zf 3 et \zf 4).}\showfootnote :
+      il existe une paire $\{x,y\}$ pour tout élément $x$ et $y$
+      \[
+      \forall x \: \forall y \: \exists  z\: \forall t \big(t \in z \leftrightarrow (t = x \lor t = y)\big)
+      .\]
+  \end{description}
+
+  [\textit{continué plus tard\,\ldots}]
+
+  \begin{rmk}
+    Cela nous donne l'existence du \textit{singleton} $\{x\}$ si $x$ est un ensemble. En effet, il suffit de faire la paire $\{x,x\}$ avec l'\pairaxiom.
+  \end{rmk}
+
+  \begin{defn}
+    Si $a$ et $b$ sont des ensembles, alors $(a,b)$ est l'ensemble  $\{\{a\} , \{a,b\}\}$.
+    Ainsi, $(a, a)$ est l'ensemble $\{\{a\} \} $.
+  \end{defn}
+
+  \begin{lem}
+    Pour tous ensembles $a,b,a', b'$, on a  $(a,b) = (a', b')$ ssi  $a = a'$ et $b = b'$.
+  \end{lem}
+  \begin{prv}
+    En exercice.
+  \end{prv}
+
+  \begin{defn}
+    On peut construire des $3$-uplets $(a_1, a_2, a_3)$ avec $(a_1, (a_2, a_3))$, et ainsi de suite pour les $n$-uplets.
+  \end{defn}
+
+  \begin{nota}
+    On utilise les raccourcis 
+    \begin{itemize}
+      \item $t = \{a\}$ pour $\forall x \: (x \in t \leftrightarrow x = a)$ ;
+      \item $t = \{a,b\}$ pour $\forall x \: (x \in t \leftrightarrow (x = a \lor x = b))$ ;
+      \item $t \subseteq a$ pour $\forall x \: (z \in t \to z \in a)$.
+    \end{itemize}
+  \end{nota}
+
+  \begin{description}
+    \item[ZF\,3.] \label{ZF3}
+      \textit{Axiome des parties} : l'ensemble des parties $\wp(a)$ existe pour tout ensemble $a$
+      \[
+      \forall a \: \exists b \: \forall t \: (t \in b \leftrightarrow t \subseteq a)
+      .\]
+    \item[ZF\,2.] \label{ZF2} \textit{Axiome de la réunion} : l'ensemble $y = \bigcup_{z \in x} z$ existe 
+      \[
+      \forall x \: \exists y \: \forall t (t \in y \leftrightarrow\exists z (t \in z \land z \in x))
+      .\]
+  \end{description}
+
+  \begin{rmk}
+    Comment faire $a \cup b$ ?
+    La paire $x = \{a,b\}$ existe par l'\pairaxiom, et $\bigcup_{z \in x} z = a \cup b$ est un ensemble par~\zf 2.
+  \end{rmk}
+
+  \begin{description}
+    \item[ZF\,4'.]
+      \label{ZF4'}
+      \textit{Schéma de compréhension} :
+      pour toute formule $\varphi(y, v_1, \ldots, v_n)$, on a l'ensemble $x = \mleft\{\,y \in v_{n+1} \;\middle|\; \varphi(y, v_1, \ldots, v_n)\,\mright\}$
+      \[
+      \forall v_1\: \ldots\: \forall v_n \: \exists x \: \forall y \: \big(y \in x \leftrightarrow (y \in v_{n+1} \land \varphi(y, v_1, \ldots, v_n))\big)
+      .\] 
+
+  \end{description}
+
+  \begin{rmk}
+    Peut-on faire le paradoxe de Russel ?
+    On ne peut pas faire $a := \{z \in \mathcal{U}  \mid z \not\in z \}$ car $\mathcal{U}$ n'est pas un ensemble !
+    Et, on ne peut pas avoir de paradoxe avec $b := \{z \in E  \mid z \not\in z\}$, car on a l'ajout de la condition $b \in E$.
+  \end{rmk}
+
+  \begin{defn}
+    Une \textit{relation fonctionnelle} en $w_0$ est une formule $\varphi(w_1, w_2, a_1, \ldots, w_n)$ \textit{à paramètres} (où les $a_i$ sont dans $\mathcal{U}$) telle que
+
+    \fitbox{$\mathcal{U} \models \forall w_0 \: \forall w_1 \: \forall w_2 \: \big(\varphi(w_0, w_1, a_1, \ldots, a_n) \land \varphi(w_0, w_2, a_1, \ldots, w_n)\to w_1 = w_2\big)$.}
+  \end{defn}
+
+  En termes naïfs, c'est une fonction partielle. On garde le terme \textit{fonction} quand le domaine et la collection d'arrivée sont des \textit{ensembles}, autrement dit, des éléments de $\mathcal{U}$.
+
+  \begin{description}
+    \item[ZF\,4.] \label{ZF4}
+      \textit{Schéma de substitution/de remplacement} :
+      "la collection des images par une relation fonctionnelle des éléments d'un ensemble est aussi un ensemble".
+      Pour tout $n$-uplet $\bar{a}$, si la formule à paramètres $\varphi(w_0, w_1, \bar{a})$ définit une relation fonctionnelle $f_{\bar{a}}$ en $w_0$ et si $a_0$ est un ensemble alors la collection des images par $f_{\bar{a}}$ des éléments de $a_0$ est un ensemble nommé $a_{n+1}$
+  \end{description}
+
+  \begin{gather*}
+    \forall a_0 \: \cdots \: \forall a_n \\
+\big(
+      \forall w_0 \: \forall w_1 \: \forall w_2 
+        (\varphi(w_0, w_1, a_1, \ldots, a_n) \land \varphi(w_0, w_2, a_1, \ldots, a_n)) \to w_1 = w_2
+      \big)\\
+      \vertical\to\\
+      \exists a_{n+1} \: \forall a_{n+2} (a_{n+2} \in a_{n+1} \leftrightarrow \exists w_0 \: w_0 \in a_0 \land \varphi(w_0, a_{n+2}, v_1, \ldots, v_n))
+  .\end{gather*}
+
+  \begin{thm}
+    Si \zf 1, \zf 2, \zf 3 et \zf 4 sont vrais dans  $\mathcal{U}$, il existe (dans $\mathcal{U}$) un et un seul ensemble sans élément, que l'on notera $\emptyset$.
+  \end{thm}
+  \begin{prv}
+    \begin{itemize}
+      \item \textit{Unicité} par \zf 1.
+      \item  \textit{Existence}.
+        On procède par compréhension : l'univers $\mathcal{U}$ est non vide, donc a un élément $x$.
+        On considère la formule $\varphi(w_0, w_1) := \bot$ qui est une relation fonctionnelle.
+        Par \zf 4 (avec la formule $\varphi$ et l'ensemble  $a_0 := x$) un ensemble $a_{n+1}$ qui est vide.
+    \end{itemize}
+  \end{prv}
+
+  \begin{prop}
+    Si \zf 1, \zf 2, \zf 3 et \zf 4 sont vrais dans  $\mathcal{U}$, alors l'\pairaxiom\ est vrai dans $\mathcal{U}$.
+  \end{prop}
+  \begin{prv}
+    On a $\emptyset$ dans $\mathcal{U}$ et également $\wp(\emptyset) = \{\emptyset\}$ et $\wp(\wp(\emptyset)) = \{\emptyset, \{\emptyset\}\}$ par \zf 3.
+
+    Étant donné deux ensemble $a$ et $b$, on veut montrer que $\{a,b\}$ est un ensemble avec \zf 4 \[
+    \varphi(w_0, w_1, a, b) := (w_0 = \emptyset \land w_1 = a) \lor (w_0 = \{\emptyset\} \land w_1 = b)
+    ,\]
+    où 
+    \begin{itemize}
+      \item $w_0 = \emptyset$ est un raccourci pour $\forall z \: (z \not\in w_0)$ ;
+      \item $w_0 = \{\emptyset\} $ est un raccourci pour $\forall z \: (z \in w_0 \leftrightarrow (\forall t \: t \not\in z))$.
+    \end{itemize}
+    Ces notations sont compatibles avec celles données précédemment.
+
+    Comme  $\varphi$ est bien une relation fonctionnelle et $\{a,b\}$  est l'image de $ \{\emptyset, \{\emptyset\}\}$.
+  \end{prv}
+
+  \begin{prop}
+    Si \zf 1, \zf 2, \zf 3 et \zf 4 sont vrais dans  $\mathcal{U}$, alors \zf{4'} est vrai dans $\mathcal{U}$.
+  \end{prop}
+  \begin{prv}
+    On a la formule $\varphi(y, v_1, \ldots, v_n)$ et on veut montrer que 
+    \[
+    \mathcal{U} \models \forall v_1 \: \cdots \: \forall v_{n+1} \: \exists x \: \forall y \: \big(
+      y \in x \leftrightarrow (y \in v_{n+1} \land \varphi(y, v_1, v_n))
+    \big)
+    .\]
+    On considère la formule $\psi(w_0, w_1, \bar{v}) := w_0 = w_1 \land \varphi(w_0, \bar{v})$, qui est bien une relation fonctionnelle en $w_0$.
+    La collection \[
+    \mleft\{\,x \in v_{n+1} \;\middle|\; \varphi(y, v_1, \ldots, v_n)\,\mright\}
+    \] est l'image de $v_{n+1}$ par $\psi$ par \zf 4.
+  \end{prv}
+
+  \begin{rmk}
+    La réciproque du théorème précédent est fausse ! Les axiomes \zf 4 et \zf{4'} ne sont pas équivalents. On le verra en TD (probablement).
+  \end{rmk}
+
+  \begin{prop}
+    Le produit ensembliste de deux ensembles est un ensemble.
+  \end{prop}
+
+  \begin{prv}
+    Soient $v_1$ et $v_2$ deux ensembles.
+    On considère \[
+    X := v_1 \times v_2 = \mleft\{\,(x,y) \;\middle|\; x \in v_1 \text{ et } y \in v_2 \,\mright\} \text{ (en naïf) }
+    .\] 
+    La notation $(x,y)$ correspond à l'ensemble $\{\{x\} , \{x,y\}\} \in \wp(\wp(v_1 \cup v_2))$.
+
+    On applique \zf{4'} dans l'ensemble ambiant  $\wp(\wp(v_1 \cup v_2))$, on définit le produit comme la compréhension à l'aide de la formule 
+    \[
+    \varphi(z, v_1, v_2) := \exists x \: \exists y \: \big(z = \{\{x\} , \{x,y\} \}  \land x \in v_1 \land y \in v_2\big)
+    .\]
+    C'est bien un élément de $\mathcal{U}$.
+  \end{prv}
+
+  \begin{defn}
+    Une \textit{fonction} (sous-entendu \textit{totale}) d'un ensemble $a$ dans un ensemble $b$ est un sous-ensemble de $a \times b$ qui vérifie la propriété
+    \[
+    \varphi(f, a, b) := 
+    \begin{pmatrix} 
+      f \subseteq a \times b\\
+      \land\\
+      \forall x \: \forall  y \: \forall y' \: (x, y )\in f \land (x, y') \in f  \to y = y'\\
+      \land\\
+      \forall x \: x \in a \to \exists y \: y \in b \land (x,y) \in f
+    \end{pmatrix}
+    .\]
+    On identifie ainsi $f$ et son graphe.
+
+
+    Une \textit{fonction} \textit{partielle} d'un ensemble $a$ dans un ensemble $b$ est un sous-ensemble de $a \times b$ qui vérifie la propriété
+    \[
+    \varphi(f, a, b) := 
+    \begin{pmatrix} 
+      f \subseteq a \times b\\
+      \land\\
+      \forall x \: \forall  y \: \forall y' \: (x, y )\in f \land (x, y') \in f  \to y = y'\\
+    \end{pmatrix}
+    .\]
+
+    On note $b^a$ la collection des fonctions partielles de $a$ dans $b$.
+  \end{defn}
+
+  \begin{prop}
+    La collection $b^a$ est un ensemble, \textit{i.e.} si $a$ et $b$ sont dans $\mathcal{U}$ alors $b^a$ aussi.
+  \end{prop}
+  \begin{prv}
+    En exercice.
+  \end{prv}
+
+  \begin{rmk}[Réunion indexée]
+    Soit $a$ une famille d'ensemble indexée par l'ensemble $I$, \textit{i.e.} $a$ est une fonction de domaine $I$.
+    Si $i \in I$, on note $a_i$ pour $a(i)$.
+  \end{rmk}
+  \begin{prop}
+    Si $I$ est un ensemble et $a$ est une fonction de domaine $I$, alors $\bigcup_{i \in  I} a_i$ est un ensemble.
+    Autrement dit, si dans $\mathcal{U}$, \zf 1, \zf 2, \zf 3, \zf 4 sont vraies, et que $I$ et $a$ sont dans $\mathcal{U}$, et $a$ est une fonction, alors la collection définie naïvement par $\bigcup_{i \in  I} a_i$ appartient à $\mathcal{U}$.
+  \end{prop}
+  \begin{prv}
+    On pose $b := \{a_i  \mid i \in I\}$. C'est bien un ensemble car $b$ est l'ensemble des images des éléments de $I$ par $a$. On peut écrire $a$ comme relation fonctionnelle :
+    \[
+    \varphi(w_0, w_1, a) := (w_0, w_1) \in a
+    .\]
+    On a donc que $b$ est un ensemble avec \zf 4.
+
+    Et, $\bigcup_{i \in  I} a_i = \bigcup_{z \in b} z$ donc on conclut par \zf 2.
+  \end{prv}
+
+  \begin{prop}[Propriété d'intersection]
+    Si $I$ est un ensemble non vide et $a$ est une fonction de domaine $I$ alors $\bigcap_{i \in  I} a_i$ est un ensemble.
+  \end{prop}
+  \begin{prv}
+    On pose $c := \bigcup_{i \in  I} a_i$ qui est un ensemble par \zf 2.
+    On considère \[
+    \varphi(x, a, I) := \forall i \: i \in I \to x \in a_i
+    .\]
+    Par compréhension (\zf{4'}) on construit l'ensemble \[
+    \bigcap_{i \in  I} a_i := \{x \in c  \mid \varphi(x, a, I)\} 
+    .\]
+  \end{prv}
+
+  \begin{prop}
+    Si $I$ est un ensemble et $a$ une fonction de domaine $i$ alors $\prod_{i \in I} a_i $ est un ensemble.
+  \end{prop}
+  \begin{prv}
+    La collection $\prod_{i \in I} a_i$ est l'ensemble des fonctions de $I$ dans $\bigcup_{i \in  I} a_i$ telles que $f(i) \in a_i$ pour tout $i$.
+  \end{prv}
+
+  \begin{description}
+    \item[ZF\,5] \label{zf5}\textit{Axiome de l'infini} : il existe un ensemble ayant une infinité d'élément
+      \[
+      \exists x \: (\emptyset \in x \land \forall y \: (y \in x \to y \cup \{y\} \in x ))
+      .\]
+  \end{description}
+
+  On encode les entiers avec des ensembles :
+  \begin{itemize}
+    \item $0 \leadsto \emptyset$
+    \item $1 \leadsto \{\emptyset\} $
+    \item $2 \leadsto \{\emptyset, \{\emptyset\}\}  $
+    \item \quad \quad $\vdots$
+    \item $n+1 \leadsto n \cup \{n\}$
+    \item \quad \quad $\vdots$
+  \end{itemize}
+
+  Ainsi, on a bien $n  =\{0, 1, \ldots, n-1\}$.
+
+  \begin{rmk}
+    Les français sont les seuls à considérer que l'axiome de bonne fondation ne fait pas partie de la théorie de ZF.
+  \end{rmk}
+\end{document}

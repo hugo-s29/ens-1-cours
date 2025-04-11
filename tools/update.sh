@@ -19,6 +19,7 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
   cp log/chap01.pdf ../web/public/data/ens1/logique-chap01.pdf
   cp log/chap02.pdf ../web/public/data/ens1/logique-chap02.pdf
   cp log/chap03.pdf ../web/public/data/ens1/logique-chap03.pdf
+  cp log/chap04.pdf ../web/public/data/ens1/logique-chap04.pdf
 
   cp log/dm1.pdf ../web/public/data/ens1/logique-dm1.pdf
   cp log/td.pdf ../web/public/data/ens1/logique-td.pdf
