@@ -165,7 +165,7 @@
     .\]
     On considère la formule $\psi(w_0, w_1, \bar{v}) := w_0 = w_1 \land \varphi(w_0, \bar{v})$, qui est bien une relation fonctionnelle en $w_0$.
     La collection \[
-    \mleft\{\,x \in v_{n+1} \;\middle|\; \varphi(y, v_1, \ldots, v_n)\,\mright\}
+    \mleft\{\,y \in v_{n+1} \;\middle|\; \varphi(y, v_1, \ldots, v_n)\,\mright\}
     \] est l'image de $v_{n+1}$ par $\psi$ par \zf 4.
   \end{prv}
 
@@ -457,14 +457,14 @@
   \begin{prop}
     Soit $\lambda$ un ordinal non vide. On a :
     \[
-      \overbrace{\lambda \text{ est limite}}^{(1)} \quad \iff \quad \overbrace{\lambda = \bigcup_{\alpha \in \lambda} \lambda}^{(2)}
+      \overbrace{\lambda \text{ est limite}}^{(1)} \quad \iff \quad \overbrace{\lambda = \bigcup_{\alpha \in \lambda} \alpha}^{(2)}
     .\] 
   \end{prop}
   \begin{prv}
     \begin{enumerate}
       \item Par contraposée, si $\lambda$ n'est pas limite, c'est donc un successeur d'un certain ordinal $\beta$ et donc $\lambda = \beta \cup \{\beta\}$.
         On a \[
-        \bigcup_{\alpha \in \lambda} \alpha = \beta \cup \bigcup_{\alpha \in \beta} = \beta \neq \lambda
+        \bigcup_{\alpha \in \lambda} \alpha = \beta \cup \bigcup_{\alpha \in \beta} \alpha = \beta \neq \lambda
         .\] 
       \item Soit $\lambda$ limite.
         Montrons qu'il n'a pas de plus grand élément~$\beta$.
@@ -489,7 +489,7 @@
   \begin{prv}
     Par l'absurde, soit $\alpha$ ne satisfaisant pas $\mathcal{P}$.
     Soit $\beta$ le plus petit ordinal de $\alpha \cup \{\alpha\}$ ne satisfaisant pas $\mathcal{P}$.
-    Tous les ordinaux plus petit que $\beta$ satisfont $\mathcal{P}$, d'où $\mathcal{P}(\alpha)$, \textit{\textbf{absurde}}.
+    Tous les ordinaux plus petit que $\beta$ satisfont $\mathcal{P}$, d'où $\mathcal{P}(\beta)$, \textit{\textbf{absurde}}.
     On en conclut que $\alpha$ n'existe pas.
   \end{prv}
 
@@ -528,7 +528,7 @@
       \item Si $f$ est un isomorphisme alors $f^{-1}$ est strictement croissante.
         On applique le point précédent à $f^{-1}$, d'où $\alpha = \alpha'$.
       \item Montrons que $f$ est l'identité.
-        On sait que, pour tout $\beta \in \alpha$, on a $f_{|\beta}$ strictement croissante de $\beta$ dans $f(\beta)$, d'où $\beta = f(\beta)$ par le point précédent.
+        On sait que, pour tout $\beta \in \alpha$, on a $f_{|\beta}$ strictement croissante de $\beta$ dans $f(\beta)$ et bijective, d'où $\beta = f(\beta)$ par le point précédent.
         D'où $f$ est l'identité.
     \end{itemize}
   \end{prv}
@@ -739,7 +739,7 @@
   .\] 
   Montrons que l'ensemble $(X, \subsetneq)$ est inductif.
 
-  Si $y \subseteq X$ est totalement ordonné. Montrons que $Y$ a un majorant dans $X$.
+  Soit $Y \subseteq X$ est totalement ordonné. Montrons que $Y$ a un majorant dans $X$.
   On pose $z = \bigcup_{y \in Y} y$ qui majore $Y$. On a bien $z \in X$ (on ne duplique pas les éléments).
   On en conclut que $X$ est inductif.
   Soit $d$ un élément maximal de $X$ (il existe par \zorn).

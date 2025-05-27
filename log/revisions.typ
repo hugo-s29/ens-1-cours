@@ -516,3 +516,305 @@ On utilise pour cela la définition par cas et récursion.
 - Si $beta_3^3(x) = 1$ et $beta_3^2(x) = 0$ alors $g_0(x,y) := g_0(beta_3^2(x), y)$.
 - Si $beta_3^3(x) = 2$ ou 3 alors $g_0(x,y) := g_0(beta_3^1(x), y) times g_0(beta_3^2(x), y)$.
 - Sinon, $g_0(x,y) := 0$.
+
+= Cours IX.
+
+#question[
+  Montrer qu'une théorie $T$ cohérente qui contient $cal(P)_0$ est indécidable.
+]
+
+Par l'absurde, on procède par diagonalisation.
+Considérons l'ensemble $ theta := { (m,n) | m = sharp F(n) " et " T tack F(underline(n)) }. $
+Comme $T$ décidable alors $theta$ aussi. On pose l'ensemble récursif 
+$ B := { n in NN | (n, n) in.not theta }. $
+
+D'après le théorème de représentation, il existe une formule $G(x)$ représentant $B$ :
+- si $n in B$ alors $cal(P)_0 tack G(underline(n))$ et donc $T tack G(underline(n))$ ;
+- si $n in.not B$ alors $cal(P)_0 tack not G(underline(n))$ et donc $T tack not G(underline(n))$.
+
+Soit $a = sharp G(x)$. A-t-on $a in B$ ?
+
+- D'une part, si $a in B$ alors $(a,a) in.not theta$ et donc $T tack.not G(underline(a))$.
+  Mais si $a in B$ alors, par définition de $G$, on a $T tack G(underline(a))$. *_Absurde !_*
+- D'autre part, si $a in.not B$ alors $(a,a) in theta$ et donc $T tack G(underline(a))$.
+  Mais si $a in.not B$ alors, par définition de $G$, on a $T tack not G(underline(a))$, d'où $T$ est non consistante. *_Absurde !_*
+
+On en conclut que $T$ est indécidable.
+
+#question[
+  Quel que soit un langage $cal(L)$ contenant au moins deux constantes, un symbole de fonction unaire et deux symboles de fonctions binaires, l'ensemble des théorèmes logiques $T$ sur $cal(L)$ n'est pas récursif.
+]
+
+Quitte à renommer les symboles, considérons $cal(L) supset.eq cal(L)_0$.
+Soit $G$ la conjonction des axiomes de Peano $cal(P)_0$.
+Pour toute formule $F$, on a $cal(P)_0 tack F$ ssi $T_0 tack (G -> F)$ où $T_0 subset.eq T$ est l'ensemble des théorèmes logiques sur $cal(L)_0$.
+Si $T_0$ est récursif alors $cal(P)_0$ est décidable. Et, si $T$ est récursif alors $T_0$ l'est aussi.
+D'où on aurait que $cal(P)_0$ décidable, _*absurde*_ (par question précédente).
+
+#question[
+  Énoncer et montrer le 1er théorème d'incomplétude de Gödel. En déduire que $cal(P)$ n'est pas complète.
+]
+
+/ Énoncé.:
+  Soit $T$ une théorie consistante contenant $cal(P)_0$ et avec un ensemble d'axiomes récursifs.
+  Alors $T$ n'est pas complète.
+
+/ Preuve.:
+  Une théorie avec un ensemble d'axiomes récursif et qui est complète, est décidable.
+  Et c'est faux pour $T$ par le théorème précédent.
+
+  En effet,  pour $F$ donné, il suffit d'énumérer les preuves jusqu'à avoir $T tack F$ ou $T tack not F$.
+
+/ Corollaire.:
+  La théorie $cal(P)$ est consistante, contient $cal(P)_0$ et a un ensemble d'axiomes récursif, elle n'est donc pas complète.
+
+
+= Cours X.
+
+#question[
+  Montrer que dans tout modèle de ZF1--4, il existe un unique ensemble sans éléments.
+]
+
+Par ZF1, on a l'unicité de cet ensemble (les deux n'ont aucun éléments, ils sont donc égaux).
+Pour montrer l'existence, on considère un ensemble $x in cal(U)$ où $cal(U)$ est le modèle que l'on considère (qui est nécessairement non vide par définition de modèle).
+On considère la formule $phi(w_0, w_1) := bot$ qui est une relation fonctionnelle. Par ZF4 (avec $phi$ et $x$) on obtient un ensemble qui est vide.
+
+#question[
+  Montrer que ZF1, 3 et 4 impliquent l'axiome de la paire.
+]
+
+On a $emptyset$ et $wp(emptyset)$ sont dans $cal(U)$ par la preuve précédente (et ZF3).
+
+On considère deux ensembles $a$ et $b$ et on veut construire ${a,b}$.
+On utilise la formule $ phi(w_0, w_1, a, b) := (w_0 = emptyset and w_1 = a) or (w_0 = {emptyset} and w_2 = b). $
+Comme $phi$ est bien une relation fonctionnelle, alors ${a,b}$ est l'image de ${emptyset, {emptyset}} = wp({emptyset})$.
+
+#question[
+  Montrer que ZF4 implique ZF4'.
+]
+
+On a une formule $phi(y, macron(v))$ et on veut montrer :
+$ cal(U) models forall macron(v) forall u exists x forall y med (y in x <-> (y in u and phi(y, macron(v)))). $
+On considère la formule $psi(w_0, w_1, macron(v)) := w_0 = w_1 and phi(w_0, macron(v))$ qui est bien une relation fonctionnelle en $w_0$.
+On applique ZF4 à l'ensemble ambiant $u$ et la formule $psi$.
+
+
+#question[
+  Dans tout modèle de ZF, le produit ensembliste de deux ensembles est un ensemble.
+]
+
+Avec ZF4, on considère 
+$ phi(z, v_1, v_2) := exists x exists y med (z = {{x}, {x,y}} and x in v_1 and y in v_2) $
+que l'on construit dans l'ensemble ambiant $wp(wp(v_1 union v_2))$.
+
+En effet, on code $(x, y)$ comme l'ensemble ${{x}, {x,y}}$.
+
+#question[
+  Montrer que dans tout modèle de ZF, si $a$ et $b$ sont des ensembles alors la collection $b^a$ des fonctions de $a$ dans $b$ est un ensemble.
+]
+
+Avec quelques abus de notations, on utilise ZF4 avec la formule 
+$ phi(f, a, b) := mat(f subset.eq a times b; and; forall x forall y forall y' med (x, y) in f and (x, y') in f -> y = y'; and; forall x med x in a -> exists y med y in b and (x,y) in f) $
+dans l'ensemble ambiant $a times b$.
+
+#question[
+  Montrer que dans tout modèle de ZF, si $a$ est une famille d’ensembles indexée par l’ensemble $I$, alors l’union (_resp_. l’intersection, le produit des $a_i$ pour $i in I$ est un ensemble.
+]
+
+/ Union.:
+  On pose $b := { a_i | i in I }$ qui est bien un ensemble car on peut écrire $b$ avec ZF4, avec la relation fonctionnelle : $ phi(w_0, w_1, a) := (w_0, w_1) in a. $
+  Puis, par ZF2, on a $union.big_(i in I) a_i = union.big_(z in b) z$ qui est bien un ensemble.
+
+/ Intersection.:
+  On pose $c := union.big_(i in I) a_i$ qui est un ensemble par la propriété précédente.
+  On considère, par ZF4', la formule $ phi(x, a, I) := forall i med i in I -> x in a_i $
+  dans l'ensemble ambiant $c$ pour construit $inter.big_(i in I) a_i$.
+
+/ Produit.:
+  La collection $product_(i in I) a_i$ est l'ensemble des fonctions de $I$ dans $union.big_(i in I) a_i$ telles que $f(i) in a_i$ pour tout $i$.
+  On peut l'exprimer avec ZF4 : $ phi(f, a, I) := f "est une relation fonctionnelle"  and forall i med f(i) in a_i $
+  dans l'ensemble ambiant $I times union.big_(i in I) a_i$.
+
+
+= Cours XI.
+
+#question[
+  Montrer que $RR$ et $wp(NN)$ ne sont pas équipotents.
+]
+
+Avec la fonction $arctan$ (et modulo une transformation affine), on a que $(0,1)$ et $RR$ sont équipotents.
+Ensuite, on a que $(0,1)$ est en bijection avec les mots binaires infinis sur l'alphabet ${mono(0), mono(1)}$ (par écriture binaire, on peut négliger les cas des écritures binaires non-uniques car on n'en a qu'un nombre dénombrable).
+Et ce dernier ensemble est équipotent à $wp(N)$ (on regarde les indices des $mono(1)$ pour construire une partie, et réciproquement).
+
+#question[
+  Montrer qu'un ordinal $lambda$ est limite ssi $lambda = union.big_(alpha < lambda) alpha$.
+]
+
+/ "$<==$".: Par contraposée, si $lambda$ n'est pas limite, c'est le successeur d'un certain ordinal $beta$.
+    D'où $lambda = beta union { beta }$ et donc 
+    $ union.big_(alpha in lambda) alpha = beta union union.big_(alpha in beta) alpha = beta != lambda. $
+
+/ "$==>$".: Soit $lambda$. Montrons qu'il n'a pas de plus grand élément $beta$. Sinon, on aurait $lambda = beta union { beta }$.
+    Ainsi, pour tout $alpha in lambda$, il existe $gamma in lambda$ tel que $alpha < gamma$, d'où $lambda = union.big_(gamma in lambda) gamma$.
+
+
+#question[
+  Montrer le théorème d'induction transfinie.
+]
+
+Si, par l'absurde, $cal(P)$ n'était pas vraie pour un certain $alpha$, soit $beta$ le plus petit ordinal de $alpha union { alpha }$ qui ne satisfait pas $cal(P)$.
+Tous les ordinaux plus petits satisfont $cal(P)$, d'où $cal(P)(beta)$.
+On en conclut qu'un tel $alpha$ n'existe pas.
+
+#question[
+  Montrer que $omega$ est l'ensemble des ordinaux finis et que c'est le plus petit ordinal limite.
+]
+
+1. Les éléments de $omega$ sont finis (par récurrence normale).
+  Réciproquement, tout ordinal fini est soit $emptyset$ soit successeur d'un ordinal fini.
+  Par récurrence (normale), on a que les ordinaux finis sont des entiers.
+  On en conclut que $omega$ est l'ensemble des ordinaux finis.
+
+2. Si $omega$ n'était pas limite, ce serait un ordinal fini (car tous ses éléments sont finis).
+  D'où $omega in omega$, qui est impossible.
+
+3. Tout élément plus petit appartient à $omega$ et les éléments de $omega$ sont les successeurs de finis et $emptyset$.
+  Il n'y a donc pas d'ordinal limite plus petit que $omega$.
+
+#question[
+  Montrer que si $f$ est strictement croissante entre $alpha$ et $alpha'$ alors
+  1. pour tout $beta in alpha$, on a $f(beta) >= beta$ ;
+  2. $alpha' >= alpha$ ;
+  3. si $f$ est un isomorphisme alors $alpha = alpha'$ et $f$ est l'identité.
+]
+
+1. Soit $beta$ le plus petit ordinal tel que $f(beta) < beta$.
+   Alors, on a $f(f(beta)) < f(beta) < beta$ ce qui est absurde car $beta$ est choisi comme plus petit.
+
+2. Soit $beta in alpha$. On a $f(beta) in alpha'$ et $beta <= f(beta)$ implique que $beta in alpha'$, d'où $alpha subset.eq alpha'$ et donc $alpha <= alpha'$.
+
+3. On procède en deux temps.
+  - La réciproque $f^(-1) : alpha' -> alpha$ est strictement croissante d'où, par le point précédent, $alpha = alpha'$.
+  - Pour tout $beta in alpha$ on a que $f_(|beta)$ est strictement croissante et bijective de $beta$ dans $f(beta)$ d'où $beta = f(beta)$ par le point précédent.
+
+
+= Cours XII.
+
+#question[ Montrer que AC1 implique AC2. ]
+
+Soit $a$ non vide. On considère $product_(emptyset != x subset.eq a) x$ qui est non vide par AC1.
+Soit $f$ un de ces éléments, on a bien une fonction de choix. En effet, pour tout sous-ensemble $x$ non vide de $a$, on a $f(x) in x$.
+
+#question[ Montrer que AC2 implique AC3. ]
+
+Soit $a$ un ensemble dont les éléments sont non vides et deux à deux disjoints.
+On considère $b = union.big_(x in a) x$ qui est un ensemble. Par AC2, on a une fonction de choix $f$ sur $wp(b)$.
+On prend $c = { f(x) | x in a }$ et on a bien la propriété recherchée (car les $x$ sont disjoints).
+
+#question[ Montrer que AC3 implique AC1. ]
+
+Soit $X = product_(i in I) a_i$ un produit d'ensembles non vides.
+On considère l'ensemble~$A := { {i} times a_i | i in I }$. Par AC3, il existe $c$ tel que, pour tout élément~$x in A$, $x inter c$ a un seul élément.
+Ainsi, 
+$ c =: { (i, d_i) | i in I "et" d_i "fixé" in a_i }. $
+On a donc $c in product_(i in I) a_i$ (c'est le graphe d'une fonction) et donc cet ensemble est non vide.
+
+#question[ Montrer que AC2 implique Zermelo. ]
+
+Soit $a$ un ensemble non vide. Soit $f : wp(a) -> a$ la fonction de choix.
+Considérons $theta in.not a$.
+
+On définit par induction transfinie,
+$ F(alpha) := cases( f(a without {F(beta) | beta < alpha}) & " si " a without { F(beta) | beta < alpha } != emptyset,
+                      theta & " sinon".
+                    ) $
+Il existe un ordinal $alpha$ tel que $F(alpha) = theta$ (car sinon $F$ est une injection de $cal(O)$ dans $a$, _*absurde*_).
+Le sous-ensemble ${ beta in alpha | F(beta) = theta }$ est non vide donc a un plus petit sous ensemble $beta$.
+Montrons que $F_(|beta) : beta -> alpha$ est une bijection.
+1. D'une part, c'est une injection par construction.
+2. D'autre part, on a $F(beta) = theta$  donc ${ F(gamma) | gamma < beta } = a$ et ainsi $F_(|beta)$ est une surjection.
+
+On conclut en définissant le bon ordre $x prec y$ ssi $F^(-1)(x) < F^(-1)(y)$.
+
+#question[
+  Montrer que Zermelo implique AC2.
+]
+
+Soit $a$ non vide. Il admet un bon ordre. On choisit $f(x) := min x$ pour le bon ordre donné, c'est bien une fonction de choix.
+
+#question[
+  Montrer que AC2 implique Zorn.
+]
+
+Soit $a$ un ensemble inductif.
+Soit $f : wp(a) -> a$ une fonction de choix donnée par AC2.
+On définit $C := { x subset.eq a | x "a un majorant strict dans" a }$, qui est non vide car $emptyset in C$.
+On définit $m(x) := f({ y in a | y "est un majorant strict de" x "dans" a })$ sur $C$.
+
+Soit $theta in.not a$.
+
+Puis, par induction transfinie, on définit :
+$ F(alpha) := cases(
+  m({ F(beta) | beta < alpha }) & "si" { F(beta) | beta < alpha } in C ,
+  theta & "sinon".
+) $
+Ce n'est pas une injection de $cal(O)$ dans $a$ donc il existe un ordinal $alpha$ tel que $F(alpha) = theta$.
+Comme $alpha+1$ est un ordinal, l'ensemble ${ beta in alpha union { alpha } | F(beta) = theta }$ a un plus petit élément $alpha_0$.
+D'où l'ensemble ${ F(beta) | beta < alpha_0 }$ n'a pas de majorant strict mais a un majorant $M$ car $a$ est inductif.
+Et, $a$ n'a pas d'éléments plus grand que $a$, donc $M$ est maximal dans $a$.
+
+#question[
+  Montrer que Zorn implique AC3.
+]
+
+Soit $a$ un ensemble dont les éléments sont dijsoints et non vides.
+On pose $b := union.big_(x in a) x$ et $X := { c subset.eq b | forall x in a, |c inter x| <= 1 }$.
+
+Montrons que l'ensemble $(X, subset.neq)$ est inductif.
+Soit $Y subset.eq X$ est totalement ordonné. Montrons que $Y$ a un majorant dans $X$. On pose l'ensemble $z = union.big_(y in Y) y$ qui majore $Y$.
+On a bien $z in X$ (on en duplique pas d'éléments).
+
+Comme $X$ est bien inductif, il existe $d$ un élément maximal de $X$ (par Zorn).
+
+S'il existe $x in a$ tel que $x inter d = emptyset$ alors prenons $u in x$ et posons ainsi~$d_1 := d union {u}$ d'où $d_1 in X$ et $d subset.neq d_1$ qui implique $d$ non maximal, *_absurde_*.
+
+D'où, pour tout $x in a$, on a $|d inter x| = 1$, ce qui montre bien AC3.
+
+
+= Cours XIII.
+
+#question[
+  Montrer qu'une théorie $T$ élimine les quantificateurs ssi pour toute formule $phi(x, macron(y))$ sans quantificateur, il existe $psi(macron(y))$ sans quantificateur telle que 
+  $ T tack forall macron(y) med (exists x med phi(x, macron(y)) <-> psi(macron(y))). $
+]
+
+L'implication directe est un cas particulier.
+La réciproque, on montre que que c'est vrai pour une formule sous forme prénexe.
+- On peut éliminer un "$exists$" le plus à l'intérieur.
+- On peut éliminer un "$forall$" le plus à l'intérieur également car $ forall macron(y) med (forall x phi(x, macron(y)) <-> not (exists x not phi(x, macron(y))). $
+
+En itérant "du plus intérieur au plus extérieur", on élimine les quantificateurs petit à petit, jusqu'à obtenir $psi(macron(y))$ sans quantificateurs.
+
+
+= Cours XIV.
+
+#question[
+  Montrer que si $phi$ admet comme modèle un corps algébriquement clos de caractéristique arbitrairement grande, alors $phi$ admet comme modèle un corps de caractéristique nulle.
+]
+
+On rappelle que :
+$ "ACF"_0 := "Axiomes corps" union { "Clos"_n | n in NN } union lr({ underbrace(1 + dots.c + 1, n) != 0 | n in NN }, size: #50%). $
+
+
+Soit $T := "ACF"_0 union { phi }$. Montrons que $T$ a un modèle.
+Pour cela, on montre que $T$ est finement satisfiable.
+
+Soit $T' scripts(subset.eq)_"finie" T$ et soit $n$ le plus grand entier tel que $ lr((underbrace(1 + dots.c + 1, n) != 0), size: #50%) in T'. $
+Soit $p > n$ un nombre premier tel que $phi$ admet comme modèle un corps algébrique clos $bb(k)$ de caractéristique $p$ (qui existe par hypothèse).
+Ainsi, on a : $bb(k) models phi$ et $bb(k) models "ACF"_p$.
+D'où $bb(k) models T'$.
+
+Ainsi $T$ est finiment satisfiable donc satisfiable.
+On en déduit que $phi$ admet un modèle de caractéristique $0$.
+
+
