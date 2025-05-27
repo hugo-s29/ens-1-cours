@@ -13,6 +13,8 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
 
   cp algo2/main.pdf ../web/public/data/ens1/algo2.pdf
   cp algo2/td.pdf ../web/public/data/ens1/algo2-td.pdf
+  cp algo2/dm1/main.pdf ../web/public/data/ens1/algo2-dm1.pdf
+  cp algo2/dm2.pdf ../web/public/data/ens1/algo2-dm2.pdf
 
   cp log/main.pdf ../web/public/data/ens1/logique.pdf
   cp log/chap00.pdf ../web/public/data/ens1/logique-chap00.pdf
@@ -20,8 +22,10 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
   cp log/chap02.pdf ../web/public/data/ens1/logique-chap02.pdf
   cp log/chap03.pdf ../web/public/data/ens1/logique-chap03.pdf
   cp log/chap04.pdf ../web/public/data/ens1/logique-chap04.pdf
+  cp log/chap05.pdf ../web/public/data/ens1/logique-chap05.pdf
 
   cp log/dm1.pdf ../web/public/data/ens1/logique-dm1.pdf
+  cp log/dm2.pdf ../web/public/data/ens1/logique-dm2.pdf
   cp log/td.pdf ../web/public/data/ens1/logique-td.pdf
   cp log/revisions-a4.pdf ../web/public/data/ens1/logique-revisions-a4.pdf
   cp log/revisions-long.pdf ../web/public/data/ens1/logique-revisions-long.pdf
