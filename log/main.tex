@@ -4,6 +4,7 @@
 \author{Basé sur le cours de Natacha \textsc{Portier}\\ Notes prises par Hugo \textsc{Salou}}
 
 \usepackage{subfiles}
+\usepackage{polynom}
 
 \ifSubfilesClassLoaded{%
   \renewcommand\thesection{\arabic{section}}
@@ -40,8 +41,12 @@
 \renewcommand\succ{\mathop{\repr{\boldsymbol{\mathsf{S}}}}}
 \newcommand\zero{\mathop{\repr{0}}}
 
+\newcommand\peano[1]{\hyperref[peano-#1]{\textsf{#1}}}
 \newcommand\zf[1]{\hyperref[ZF#1]{\textsf{ZF\,#1}}}
+\newcommand\ac[1]{\hyperref[AC#1]{\textsf{AC\,#1}}}
 \newcommand\pairaxiom{\hyperref[pair-axiom]{Axiome de la paire}}
+\newcommand\zorn{\hyperref[zorn]{Zorn}}
+\newcommand\zermelo{\hyperref[zermelo]{Zermelo}}
 
 \begin{document}
   \maketitle
@@ -56,5 +61,6 @@
   \subfile{chap02.tex}
   \subfile{chap03.tex}
   \subfile{chap04.tex}
+  \subfile{chap05.tex}
 \end{document}
 

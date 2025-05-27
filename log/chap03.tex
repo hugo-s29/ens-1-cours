@@ -59,26 +59,26 @@
 
   Trois axiomes pour le successeur :
   \begin{description}
-    \item[A1.] $\forall x \: \lnot (\succ x = \zero)$
-    \item[A2.] $\forall x \: \exists y \: \big(\lnot (x = \zero) \to x = \succ y\big)$
-    \item[A3.] $\forall x \: \forall y \: (\succ x = \succ y \to x = y)$
+    \item[A1.] \label{peano-A1} $\forall x \: \lnot (\succ x = \zero)$
+    \item[A2.] \label{peano-A2} $\forall x \: \exists y \: \big(\lnot (x = \zero) \to x = \succ y\big)$
+    \item[A3.] \label{peano-A3} $\forall x \: \forall y \: (\succ x = \succ y \to x = y)$
   \end{description}
 
   Deux axiomes pour l'addition :
   \begin{description}
-    \item[A4.] $\forall x \: (x \oplus \zero = x)$ 
-    \item[A5.] $\forall x \: \forall y \: (x \oplus (\succ y) = \succ(x \oplus y))$
+    \item[A4.] \label{peano-A4} $\forall x \: (x \oplus \zero = x)$ 
+    \item[A5.] \label{peano-A5} $\forall x \: \forall y \: (x \oplus (\succ y) = \succ(x \oplus y))$
   \end{description}
 
   Deux axiomes pour la multiplication :
   \begin{description}
-    \item[A6.] $\forall x \: (x \otimes \zero = \zero)$
-    \item[A7.] $\forall x \: \forall y \: \big(x \otimes (\succ y) = (x \otimes y) \oplus x\big)$
+    \item[A6.] \label{peano-A6} $\forall x \: (x \otimes \zero = \zero)$
+    \item[A7.] \label{peano-A7} $\forall x \: \forall y \: \big(x \otimes (\succ y) = (x \otimes y) \oplus x\big)$
   \end{description}
 
   Et le schéma d'induction :
   \begin{description}
-    \item[SI.]
+    \item[SI.] \label{peano-SI}
       Pour toute formule $F$ de variables libres $x_0, \ldots, x_n$,
   \end{description}
   \fitbox{$\forall x_1 \: \cdots \: \forall x_n \: \Big(

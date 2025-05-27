@@ -23,8 +23,11 @@
 \RequirePackage{mleftright} % scale sets like { BIG THING HERE |  }
 \RequirePackage{mathtools}
 \RequirePackage{tikz}
-\usetikzlibrary{automata, positioning, arrows, tikzmark, shapes.geometric, hobby, patterns, shapes.multipart, decorations.pathmorphing}
+\RequirePackage{tikz-network}
+\usetikzlibrary{automata, positioning, arrows, arrows.meta, tikzmark, shapes.geometric, hobby, patterns, shapes.multipart, decorations.pathmorphing, graphdrawing, graphs}
+\usegdlibrary{force}
 \RequirePackage{svg}
+\RequirePackage{multirow}
 \RequirePackage{subcaption}
 \RequirePackage{soulutf8}
 \RequirePackage{adjustbox}
@@ -32,6 +35,7 @@
 \RequirePackage{lmodern}
 \RequirePackage{xfrac}
 \RequirePackage{tabularx}
+\RequirePackage{luacode}
 \RequirePackage{annotate-equations}
 \RequirePackage{colortbl}
 \RequirePackage{nicematrix}
@@ -62,7 +66,9 @@
 \newcommand\ubar[1]{\underaccent{\bar}{#1}}
 
 
-\RequirePackage{dsfont}
+\newfontface\dsfont{dsrom10}
+\newcommand{\mathds}[1]{\ensuremath{\text{\dsfont #1}}}
+
 \RequirePackage{algorithm}
 \RequirePackage[rightComments=false,beginComment=$\qquad\triangleright$~]{algpseudocodex}
 \floatname{algorithm}{Algorithme}
@@ -274,6 +280,10 @@
   \rotatebox[origin=c]{270}{\ensuremath{#1}}
 }
 
+\newcommand\verticalO[1]{
+  \rotatebox[origin=c]{90}{\ensuremath{#1}}
+}
+
 \RequirePackage[makeroom, thicklines]{cancel}
 \renewcommand{\CancelColor}{\color{nicered}}
 
@@ -289,7 +299,6 @@
 \AtBeginDocument{\renewcommand\ldots{\ensuremath{\mathinner{\ldotp\ldotp\ldotp}}}}
 
 \RequirePackage{lastpage}
-\RequirePackage{hyperref}
 \hypersetup{
     colorlinks,
     citecolor=black,

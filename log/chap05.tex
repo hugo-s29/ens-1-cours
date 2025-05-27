@@ -1,0 +1,529 @@
+\documentclass[./main]{subfiles}
+
+\begin{document}
+  \chapter{Exemple de théories décidables.}
+
+  Dans ce chapitre, on traite de l'élimination des quantificateurs dans les corps réels clos (et les corps algébriquement clos).
+
+  \section{De quoi on parle ?}
+  \subsection{L'élimination des quantificateurs.}
+
+
+
+  \begin{defn}
+    Une théorie $T$ (de la logique du 1er ordre) admet \textit{l'élimination des quantificateurs} si pour toute formule $\varphi(\bar{y})$, il existe une formule sans quantificateurs $\psi(\bar{y})$ telle que $T \vdash \forall \bar{y} \: (\varphi(\bar{y}) \leftrightarrow \psi(\bar{y}))$.
+  \end{defn}
+
+  \begin{lem}
+    Une théorie $T$ élimine les quantificateurs si pour toute formule $\varphi(x, \bar{y})$ sans quantificateurs, il existe une formule $\psi(\bar{y})$ sans quantificateurs et $T \vdash \forall \bar{y}\: (\exists x \: \varphi(x, \bar{y}) \leftrightarrow \psi(\bar{y})))$.
+  \end{lem}
+  \begin{prv}
+    Idée de la preuve :
+    \begin{itemize}
+      \item "$\implies$". C'est un cas particulier.
+      \item "$\impliedby$".
+        Toute formule est équivalente à une formule prénexe, c'est-à-dire une formule où les quantificateurs sont à la racine :
+        \[
+        \mathsf{Q}_1 x_1 \: \mathsf{Q}_2 x_2 \:\ldots \: \mathsf{Q}_n x_n \: \varphi(x_1, \ldots, x_n)
+        ,\] 
+        où $\varphi(\cdots)$ est sans quantificateurs.
+        Pour démontrer que toute formule est équivalente à une formule prénexe, on procède par induction sur la formule, et on doit potentiellement procéder à des cas d'$\alpha$-renommage au besoin.
+
+
+        Pour toute formule sous forme prénexe, le lemme est vrai.
+    \end{itemize}
+  \end{prv}
+
+  \begin{exm}
+    La théorie des booléens est la théorie \[
+    T_\mathrm{bool} := \{\forall x \: x = 0 \lor x = 1 , 0 \neq 1\} 
+    ,\] 
+    sur le langage $\mathcal{L} = \{0,1\}$.
+    Cette théorie admet l'élimination des quantificateurs. En effet, par exemple, une formule \[
+    F := \exists x_1 \: \cdots  \: \exists x_n \: (x_1 = 1 \lor x_2 = 0 \lor x_4 = 1) \land \cdots)
+    ,\] est équivalente à $\top$ ou $\bot$.
+  \end{exm}
+
+  \begin{exm}
+    Sur le langage $\mathcal{L}_\mathrm{co} = \{0, 1, +, \times, \le\}$, la théorie $T := \mathbf{Th}(\mathds{R})$ admet l'élimination des quantificateurs.
+    En effet, par exemple, la formule \[
+    \varphi(a, b,c ) := \exists x \: (a \times x \times x + b \times x + c = 0)
+    \] est équivalente à la formule sans quantificateurs 
+
+    \fitbox{
+    $\psi(a,b,c) := (a \neq 0 \land b^2 - 4 a c \ge 0) \lor (a = 0 \land b \neq 0) \lor (a = 0 \land b = 0 \land c = 0)$
+    }.
+  \end{exm}
+
+  \subsection{Les corps réels clos et le théorème de Tarski.}
+
+  \begin{defn}
+    Un \textit{corps réel clos} est un corps commutatif ordonné dans lequel on a le théorème des valeurs intermédiaires pour les polynômes à $1$ variable.
+
+    La théorie $T_\mathrm{CRC}$ est la théorie du 1er ordre et ses axiomes sont :
+    \begin{itemize}
+      \item axiomes de corps commutatifs ;
+      \item axiomes de relation d'ordre total ;
+      \item $1 > 0$ ;
+      \item axiomes de corps ordonné (compatibilité de $+$ et $\times$ avec~$\le$) :
+        \[
+        \forall x \: \forall y \: \forall z \: 
+        \begin{pmatrix}
+          x \le  y \to  x + z \le  y + z\\
+          \land\\
+          (z \ge 0 \land x \le y) \to x \times y \le  y \times z\\
+          \land \\
+          (z \le 0 \land x \le y) \to x \times y \ge y \times z
+        \end{pmatrix}  \;
+        ;\]
+      \item schéma d'axiomes pour le théorème des valeurs intermédiaires : pour $n \in \mathds{N}$, 
+        \begin{gather*}
+        \forall a_0 \ldots a_n \: \forall x \: \forall y\\
+        a_0 + a_1 x + \cdots + a_n x^n \ge 0 \land a_0 + a_1 y + \cdots + a_n y^n \le 0\\
+        \vertical\to\\
+        \exists z \: (x \le z \le y \lor y \le z \le x) \land a_0 + a_1 z + \cdots + a_n z^n = 0
+        .\end{gather*}
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Exemples de corps réels clos : $\mathds{R}$ les réels, $\bar{\mathds{Q}} \cap \mathds{R}$ les nombres réels algébriquement clos.
+
+    Qu'en est-il de $\mathds{C}$ ?
+    Si on a $i \ge 0$ et on a $1 \le 2$ donc $i \le 2 i$ et par multiplication par $i$ on a $-1 \le -2$, absurde !
+    Le même procédé fonctionne si l'on suppose $i\le 0$.
+    Il n'y a pas de manière d'ordonner $\mathds{C}$ de telle sorte à ce qu'il soit un corps réel clos.
+  \end{exm}
+
+  \begin{prop}
+    \begin{enumerate}
+      \item Un corps réel clos est de caractéristique $0$.
+      \item Dans un corps réel clos, on a le théorème de Rolle (entre deux racines d'un polynôme, la dérivée s'annule).
+    \end{enumerate}
+  \end{prop}
+  \begin{prv}
+    Idée de la preuve :
+    \begin{enumerate}
+      \item On a $1 > 0$ donc  $2 > 1 > 0$ donc $3 > 0$,  \textit{etc}. On montre, par récurrence, pour tout $n$ que  $n > 0$ et donc $n \neq 0$.
+      \item On montre que si la dérivée est de signe constant alors le polynôme est monotone d'où le théorème de Rolle.
+    \end{enumerate}
+  \end{prv}
+
+  À quoi ressemblent les formules dans $\mathcal{L}_\mathrm{co}$ ?
+
+  \begin{itemize}
+    \item Les termes représentent des polynômes à plusieurs variables et à coefficients dans $\mathds{N}$.
+    \item Les formules atomiques représentent des équations et inéquations entre polynômes :
+      \[
+      P(X) \le  Q(X) \text{ ou } P(X) = Q(X)
+      ,\]
+      et même $P(X) \ge 0$ ou $P(X) = 0$ avec  $P$ à coefficient dans $\mathds{Z}$.
+    \item Les formules sans quantificateur sont équivalentes à des formules de la forme \[
+        \bigvee_i \bigwedge_j (P_{i,j} \mathrel{\Delta_{i,j}} 0) 
+      ,\] où $\Delta_{i,j} \in \{<, >, =\}$.
+    \item Les formules sont équivalentes à des formules sous forme prénexe de la forme 
+      \[
+      \mathsf{Q}_1 x_1 \ldots \mathsf{Q}_n x_n \: \bigvee_i \bigwedge_j (P_{i,j} \mathrel{\Delta_{i,j}} 0) 
+      ,\] 
+      avec $\mathsf{Q}_i \in \{\forall, \exists\}$.
+  \end{itemize}
+
+  \begin{thm}[Tarski]
+    La théorie des corps réels clos admet l'élimination des quantificateurs.
+    Elle est axiome-complète et décidable.
+  \end{thm}
+  \begin{prv}
+    En supposant que $T_\mathrm{CRC}$ admet l'élimination des quantificateurs, alors on a une théorie axiome-récursive \st{qui contient les entiers donc indécidable par Gödel}. Non ! On ne contient pas $\mathcal{P}_0$ !
+    En effet, l'axiome \peano{A1} n'est pas vérifié : on n'a pas  $\succ x \neq 0$ !
+  
+    Soit $F$ une formule close de $\mathcal{L}_\mathrm{co}$.
+    Montrer que $T_\mathrm{CRC} \vdash F$ ou $T_\mathrm{CRC} \vdash \lnot F$.
+    Il existe une formule sans quantificateurs $G$ et $T_\mathrm{CRC} \vdash F \leftrightarrow G$ et $G$ n'a pas de variable.
+    Ainsi $G$ est équivalent à une conjonction de disjonction de formules équivalentes à 
+    \[
+    \repr n > \repr m \text{ ou } \repr n = \repr m
+    .\]
+    La valeur de vérité ne dépend pas du modèle, d'où $T_\mathrm{CRC} \vdash G$ ou $T_\mathrm{CRC} \vdash \lnot G$, donc $T_\mathrm{CRC} \vdash F$ ou $T_\mathrm{CRC} \vdash \lnot F$, et donc $T_\mathrm{CRC}$ est axiome-complète.
+
+    Comme $T_\mathrm{CRC}$ est axiome-récursive, pour décider si $T_\mathrm{CRC} \vdash F$, il suffit d'énumérer toutes les preuves jusqu'à en trouver une de $F$ ou de $\lnot F$.
+  \end{prv}
+
+  \section{La méthode d'élimination.}
+
+  \subsection{Rappels et exemples.}
+
+   Il suffit de montrer le lemme ci-dessous.
+
+  \begin{lem}
+    Si pour toute formule $F$ de la forme $\exists x \: \bigvee_i \bigwedge_k P_{i,j} \mathrel{\Delta_{i,j} 0}$ avec $P_{i,j}$ des polynômes et $\Delta_{i,j} \in \{<,>,=\} $, il existe une formule sans quantificateurs $G$ telle que \[
+    T_\mathrm{CRC} \vdash \forall \bar{y} \: G(\bar{y}) \leftrightarrow F(\bar{y})
+    \]
+    alors $T_\mathrm{CRC}$ admet l'élimination des quantificateurs.
+  \end{lem}
+
+  Idée de la méthode :
+  \begin{itemize}
+    \item On part d'un polynôme, par exemple $a x^2 + b x + 1$.
+    \item On calcule des "quantités importantes" (des polynômes de degré $0$ en $x$), ici $a$ et $a^2 - 4a$.
+    \item On trouve des "conditions de signe" qui permettent de satisfaire la formule, ici $a \neq 0 \land a^2 - 4a \ge 0$.
+  \end{itemize}
+
+  \begin{defn}
+    Avec $P \in \mathds{Z}[\bar{Y}][X] = \mathds{Z}[Y_1, \ldots, Y_n][X]$, les polynômes s'écrivent comme \[
+      P(X) = a_n X^n + \cdots + a_0 \text{ où } n \ge 1, \; a_n \neq 0 \text{ et } a_i  \in \mathds{Z}[\bar{Y}]
+    ,\]
+    et on définit les opérations :
+    \begin{itemize}
+      \item \textit{dérivée} $\mathrm{D}(P) := \frac{\partial P(X)}{\partial X}$ ;
+      \item \textit{extraction du coefficient dominant} $\mathrm{E}(P) := a_n$ ;
+      \item \textit{omission du terme dominant} $\mathrm{O}(P) := a_{n-1} X^{n-1} + \cdots + a_0$ ;
+      \item \textit{reste modifié} $\mathrm{MR}(P, Q)$ :\\
+        si $P = a_n X^n + \cdots + a_0$ et $Q = b_n X^n + \cdots + b_0$ où
+        \[ n = \deg P \ge m = \deg Q \ge 1\]
+        et $P \neq Q$ alors $\mathrm{MR}(P, Q)$ est l'unique polynôme de $\mathds{Z}[\bar{Y}][X]$ de degré $r < m$ tel qu'il existe $L \in \mathds{Z}[\bar{Y}][X]$ et 
+        \[
+          (b_n)^{n m + 1} \times P = Q \times L + R
+        .\]
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Si $P = X^4$ et $Q = 3X^2 + X + 1$ alors 
+    \begin{center}
+      \polylongdiv[style=D]{X^4}{3X^2 + X + 1}
+    \end{center}
+    et le reste modifié est $\mathrm{MR}(P, Q) = 3^3(\frac{5}{27} X + \frac{2}{27}) = 5X + 2$.
+  \end{exm}
+
+  \subsection{Énoncé comme lemme clé.}
+
+  \begin{lem}[Informel]
+    À partir d'un ensemble de polynômes $S$, on obtient en temps fini un ensemble fini de polynômes $\mathrm{BC}S$ de degré $0$ en appliquant les quatre opérations $\mathrm{D}$, $\mathrm{E}$, $\mathrm{O}$ et $\mathrm{MR}$.
+    \footnote{I {\color{nicered}$\heartsuit$} le lemme de König.}
+  \end{lem}
+
+  \begin{exm}
+    À partir de $\smash{S = \{\overbrace{aX^2 + bX + 1}^{p_0}\}}$, on a 
+    \begin{itemize}
+      \item on commence par ajouter $p_0$ ;
+      \item d'abord les dérivées, omissions et extractions : on ajoute les polynômes $2a X + a$, $a$ et $aX + 1$, $2a$, $1$ et $0$ ;
+      \item ensuite on calcule le reste modifié \[
+        \mathrm{MR}(aX^2 + a X + 1, 2 a X + a) = 4a^2 - a^3
+        ,\] et on l'ajoute ;
+      \item on calcule le reste modifié \[
+        \mathrm{MR}(a X^2 + aX + 1, a X + 1) =  a
+        ,\] et on l'ajoute (il y est déjà) ;
+      \item on calcule le reste modifié \[
+        \mathrm{MR}(3a X + a , a X + 1) = a^2 - 2 a
+        ,\] et on l'ajoute ;
+      \item on ne conserve que les polynômes de degré $0$.
+    \end{itemize}
+    Dans l'exemple on obtient (après suppression des termes inutiles pour les comparaisons à $0$), \[
+    \mathrm{BC}S  = \{a, 4a^2 - a^3, a^2 - 2a\}
+    .\]
+
+    On a, en théorie, $27$ conditions de signe possibles ($3^{|\mathrm{BC}S|}$) :
+    \begin{itemize}
+      \item $a > 0$ et $4a^2 - a^3 > 0$ et $A^2 - 2a < 0$,
+      \item $a> 0$ et $4a^2 - a^3 < 0$ et $a^2 - 2a < 0$,
+      \item $a = 0$ et $a^2 - a^3 > 0$ et $a^2 - 2a > 0$,
+      \item \textit{etc} pour les $24$ autre cas.
+    \end{itemize}
+
+    On traite deux cas : $a > 0$ et $4a^2 - a^3$ et $a^2 - 2a$.
+    \[
+    \begin{array}{|l|cc|c|c|c|cc|}
+      \hline
+      X & -\infty & & \gamma_2 & & \gamma_1 & & +\infty\\ \hline \hline
+      a &   & > & > & > & > & > &   \\ \hline
+      4a^2 - a^3 &   & > & > & > & > & > &   \\ \hline
+      a^2 - 2a &   & < & < & < & < & < &   \\ \hline \hline
+      aX + 1 & -\infty & < & < & < & 0 & > & +\infty \\ \hline
+      2aX + a & -\infty & < & 0 & > & > & > & +\infty \\ \hline
+      a X^2 + a X + 1 & +\infty & > & > & > & > & > & +\infty \\ \hline
+    \end{array}
+    .\] 
+  \end{exm}
+
+  \section{Corps algébriquement clos.}
+
+  \begin{defn}
+    Un \textit{corps algébriquement clos} est un corps commutatif dans lequel tout polynôme a une racine.
+  \end{defn}
+
+  \begin{exm}
+    Le corps $\mathds{C}$ est algébriquement clos. En effet, il s'agit du \textit{théorème fondamental de l'algèbre}, \textit{i.e.} un polynôme de degré $n$ a $n$ racines comptées avec multiplicité.
+
+    Tout polynôme est ainsi un produit de polynômes de degré 1.
+  \end{exm}
+
+  \begin{defn}
+    La \textit{théorie des corps algébriquement clos} est la théorie formée des :
+    \begin{itemize}
+      \item axiomes de corps ;
+      \item du schémas d'axiomes, noté $\mathrm{Clos}_n$, pour tout $n \in \mathds{N}$, 
+        \[
+          \hspace{-2.5em} \forall a_0 \ldots \forall a_n \: (a_1 \neq 0 \lor \cdots \lor a_n \neq 0 \to \exists b \: a_0 + a_1 b + \cdots + a_n b^n = 0)
+        .\] 
+    \end{itemize}
+  \end{defn}
+
+  \begin{defn}
+    Un corps est de \textit{caractéristique} $p \in \mathds{N}^\star$ s'il est modèle de l'ensemble $\mathrm{Car}_p$ définie par 
+    \[
+      \{(1 \neq 0) \land (1 + 1 \neq 0) \land \cdots \land (\underbrace{1 + \cdots +1}_{p-1} \neq 0) \land (\underbrace{1 + \cdots +1}_{p} = 0)\} 
+    .\]
+
+    Un corps est de \textit{caractéristique} $0$ s'il est modèle de l'ensemble $\mathrm{Car}_0$ définie par
+    \[
+      \{1 \neq  0, 1 + 1 \neq 0, 1 + 1 + 1 \neq 0, \ldots\} 
+    .\]
+
+    La \textit{théorie des corps algébriquement clos de caractéristique $p \in \mathds{N}$} est :
+    \[
+      \mathrm{ACF}_p := \{\text{Axiomes des corps}\}  \cup \mleft\{\,\mathrm{Clos}_n \;\middle|\; n \in \mathds{N}\,\mright\} \cup \mathrm{Car}_p
+    .\]
+  \end{defn}
+
+  \begin{exm}
+    Les corps $\mathds{C}$ et $\bar{\mathds{Q}}$ sont modèles de cette théorie.
+    \textit{\textbf{Attention}}, $\mathds{F}_p$ ne l'est pas (et $\mathds{F}_{p^n}$ non plus), il faut prendre sa clôture algébrique $\bar{\mathds{F}}_p$ et $\bar{\mathds{F}}_{p^n}$.
+  \end{exm}
+
+  \begin{rmk}
+    \begin{itemize}
+      \item Tous les corps finis sont de la forme $\mathds{F}_{p^n}$ avec $p$ premier.
+      \item Un élément $a$ est dit \textit{algébrique} sur le corps $\mathds{k}$ si c'est la racine  d'un polynôme à coefficient dans $\mathds{k}$.
+        On dit que $a$ est \textit{algébrique de degré $q$} si le polynôme minimal dont $a$ est racine est de degré $q$.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{exm}
+    \begin{itemize}
+      \item Le nombre $\sqrt{3}$ est algébrique sur $\mathds{Q}$ de degré~$2$.
+      \item Le nombre $\mathrm{i}$ est algébrique sur $\mathds{Q}$ de degré $2$.
+      \item Le nombre $\sqrt[3]{2} $ est algébrique sur $\mathds{Q}$ de degré $3$.
+      \item Le nombre $\pi$ n'est pas algébrique sur $\mathds{Q}$.
+    \end{itemize}
+  \end{exm}
+
+  \begin{rmk}
+    Si $a$ est algébrique de degré $q$ sur $\mathds{k}$ alors $\mathds{k}(a)$ est le corps engendré par $\mathds{k}$ et $a$.
+    C'est l'ensemble des polynômes de degré $\le q-1$ sur $\mathds{k}$, et on définie le produit modulo un polynôme minimal de $a$.
+  \end{rmk}
+
+  \begin{exm}
+    On a $\mathds{R}(i) = \mathds{R}[X] / (X^2 - 1) \cong \mathds{C}$.
+    Le produit est :
+    \begin{align*}
+      (aX + b)(c X + d)
+      &= ac X^2 + X(ad + bc) + bd \\
+      &= (ad + bc) X + bd - ac
+    .\end{align*}
+
+    En particulier, si $a$ est de degré $q$ sur $\mathds{F}_{p^n}$ alors $\mathds{F}_{p^n}(a) = \mathds{F}_{p^{qn}}$.
+  \end{exm}
+
+  \begin{thm}[Tarski--bis]
+    Pour tout $p$, la théorie des corps algébriquement clos de caractéristique $p$ admet l'élimination des quantificateurs. Elle est complète et décidable.
+  \end{thm}
+  \begin{prv}
+    Comme la dernière fois, il suffit de montrer pour toute formule de la forme \[
+      \exists x \: (P_1(x) = 0 \land \cdots \land P_n(x) = 0 \land Q(x) \neq 0)
+    ,\]
+    il existe une formule sans quantificateurs équivalente dans $\mathrm{ACF}_p$.
+    On continue la preuve sur un exemple.
+  \end{prv}
+
+  \begin{exm}
+    On élimine les quantificateurs sur \[
+    \exists x \: (a x^2 + ax + 1 = 0 \land ax + 1 \neq 0)
+    ,\]
+    avec la caractéristique $p = 0$.
+    On a les polynômes suivants :
+    \begin{itemize}
+      \item $p_0(X) = aX^2 + aX + 1$
+      \item $p_1(X) = \mathrm{D}p_0(X) = 2aX + a$
+      \item $p_2(X) = \mathrm{E}p_0 = a$ 
+      \item $p_3(X) = aX +  1$
+      \item $p_4(X) = \mathrm{MR}(p_0, p_1) = 4a^2 - a^3$
+      \item $p_2(X) = \mathrm{MR}(p_0, p_3) = a$
+      \item $p_5(X) = \mathrm{MR}(p_1, p_3) = a^2 - 2a$.
+    \end{itemize}
+
+    Les "conditions de signe" sont $= 0$ ou $\neq 0$ (notés $0$ et $\neq$).
+
+    On se place dans un cas exemple :
+    \[
+    \begin{array}{|r|c|c|c|c|c|}
+      \hline
+      & \text{ autres } & \gamma_1 & \gamma_2 & \gamma_3 & \gamma_4\\ \hline
+      a & \neq & \neq & \neq & \neq & \neq \\ \hline
+      4a^2 + a^3 & \neq & \neq & \neq & \neq & \neq \\ \hline
+      a^2 - 2a & \neq & \neq & \neq & \neq & \neq \\ \hline
+      aX + 1 & \neq & 0 & \neq & \neq & \neq \\ \hline
+      2aX + a & \neq & \neq & 0 & \neq & \neq \\ \hline
+      aX^2 + aX + 1 & \neq & \neq & \neq & 0 & 0 \\ \hline
+    \end{array}
+    .\]
+
+    Ainsi, pour $a\neq 0$, $4a^2-a^3 \neq 0$, $a^2 - 2a \neq 0$ alors on a \[
+      \exists x \: (ax^2 + ax + 1 = 0 \land ax + 1 \neq 0)
+    .\]
+
+    Avec les autres cas, on peut en déduire que \[
+    \exists x \: (ax^2 + a x + 1 = 0 \land ax + 1 \neq 0)
+    \]
+    est équivalente à \[
+      \bigvee_{\substack{\text{tableau de la condition de signe}\\ \text{a une colonne qui convient}}}
+      (\text{conditions de signe})
+    .\] 
+  \end{exm}
+
+  \begin{exo}
+    En déduire que $\mathrm{ACF}_p$ est complète et décidable.
+  \end{exo}
+
+  \begin{rmk}
+    En 2010, une preuve \st{\textsf{Coq}} \textsf{Rocq} de l'élimination des quantificateurs de cette théorie a été publiée par Cyril Cohen et Assia Mahboubi.
+  \end{rmk}
+
+  \subsection{Applications aux mathématiques.}
+
+  \subsubsection{Théorème d'Ax--Grothendieck.}
+
+  \begin{thm}[Ax--Grothendieck]
+    Si $P$ est un polynôme de $\mathds{C}^n$ dans $\mathds{C}^n$ injectif alors il est bijectif (et son inverse est un polynôme !).
+  \end{thm}
+
+  On va prouver ce théorème en trois lemmes.
+
+  \begin{lem}
+    Si $\varphi$ est une formule qui admet comme modèle un corps algébriquement clos de caractéristique arbitrairement grande, alors $\varphi$ admet comme modèle un corps algébriquement clos de caractéristique $0$.
+  \end{lem}
+  \begin{prv}
+    On utilise le théorème de compacité de la logique du 1er ordre.
+    Soit $T := \mathrm{ACF}_0 \cup \{\varphi\}$.
+    Montrons que $T$ a un modèle.
+    Pour cela, on montre que $T$ est finiment satisfiable.
+    Soit $T' \subseteq_\mathrm{fini} T$.
+    Soit $n$ le plus grand entier tel que
+    \[
+      (\underbrace{1 + 1 + \cdots + 1}_n \neq 0) \in T'
+    .\]
+    Soit $p > n$ un nombre premier tel que $\varphi$ admet comme modèle un corps algébriquement clos $\mathds{k}$ de caractéristique $p$ (qui existe par hypothèse).
+    D'où $\mathds{k} \models \varphi$,  et
+    \[
+    \mathds{k} \models \{\text{Axiomes des corps}\} \cup \mleft\{\,\mathrm{Clos}_n \;\middle|\; n \in \mathds{N}\,\mright\}   
+    .\]
+    D'où, $\mathds{k} \models \mathrm{ACF}_p$, et donc $\mathds{k} \models T'$.
+    Ainsi $T$ finiment satisfiable donc $T$ satisfiable.
+    On en déduit que $\varphi$ admet un modèle de caractéristique $0$.
+  \end{prv}
+
+  \begin{lem}
+    Soit $\mathds{k}$ un corps fini et soient $n \in \mathds{N}^\star$ et $P : \mathds{k}^n \to \mathds{k}^n$ un polynôme injectif.
+    Alors $P$ est bijectif.
+  \end{lem}
+  \begin{prv}
+    Comme $\mathds{k}^n$ est fini alors $P$ est bijectif.
+  \end{prv}
+
+  \begin{lem}
+    Soit $\mathds{k}$ un corps fini et soient $n \in \mathds{N}^\star$ et $\bar{\mathds{k}}$ la clôture algébrique de $\mathds{k}$.
+    Soit $P : \bar{\mathds{k}}^n \to \bar{\mathds{k}}^n$ un polynôme injectif.
+    Alors $P$ est bijectif.
+  \end{lem}
+  \begin{prv}
+    On suppose $P$ non surjectif, il existe donc $\bar{b} = (b_1, \ldots, b_n) \in \bar{\mathds{k}}^n \setminus P(\bar{\mathds{k}}^n)$ des nombres algébriques dans $\mathds{k}$.
+    Ils sont raciles de polynômes minimaux à coefficients dans $\mathds{k}$.
+    Soient $\bar{a} = (a_1, \ldots, a_m)$ les coefficients de ces polynômes, ce sont des éléments de $\bar{\mathds{k}}$.
+    Soient $\bar{c}$ les coefficients de $P$.
+
+    Soit $\mathds{k}' := \mathds{k}(\bar{a}, \bar{b}, \bar{c})$, c'est un corps fini.
+    On a $P : \mathds{k}^{\prime n} \to \mathds{k}^{\prime n}$ injectif pas surjectif, qui est impossible d'après le lemme précédent.
+  \end{prv}
+
+  On peut donc montrer le théorème d'Ax--Grothendieck.
+
+  Pour un degré $d$ fini et un entier $n$ fixé, on va construire la formule $\phi_{n,d}$ qui exprime qu'un polynôme de degré $\le d$ de $\mathds{k}^n$ dans $\mathds{k}^n$ qui est injectif et surjectif.
+  Soit $M(n, d)$ l'ensemble fini des monômes unitaires de degré $\le d$ avec $n$ variables $x_1, \ldots, x_n$ :
+  \[
+  M(n, d) := \{1, x_1, x_2, x_1 x_2, \ldots, x_1^d, x_1^{d-1} x_2, \ldots\} 
+  .\]
+
+  On pose la formule, notée $\varphi_{n,d}$.
+  \begin{gather*}
+  \forall (a_{m,i})_{m \in M(n,d), i \in \llbracket 1,n\rrbracket} \\
+  \fitbox{$\displaystyle\left(\forall x_1 \ldots x_n \forall y_1 \ldots y_n  \: \bigwedge_{i=1}^n \sum_{m \in M(n,d)} a_{m,i} m(x_i) = \sum_{m \in M(n,d)} a_{m,i} m(y_i) \to \bigwedge_{i=1}^n x_i = y_i \right)$}\\
+  \vertical\to\\
+  \forall y_1 \ldots y_n \exists x_1 \ldots x_n \: \bigwedge_{i=1}^n y_i = \sum_{m \in M(n,d)} a_{m, i} m(x_i).
+  \end{gather*}
+
+  Par le troisième lemme, pour tout corps fini $\mathds{k}$, on a $\bar{\mathds{k}} \models \varphi_{n,d}$ donc pour tout $p$ premier, on a $\bar{\mathds{F}}_p \models \varphi_{n,d}$.
+  Par le premier lemme, il existe donc $\mathds{k}$ de caractéristique $0$ telle que $\mathds{k} \models \varphi_{n,d}$.
+  Par la complétude de la théorie des corps algébriquement clos, on a que $\mathds{C} \models \varphi_{n,d}$.
+
+  \subsubsection{Conjecture de la Jacobienne (1939).}
+
+  C'est une question encore ouverte.
+  On reçoit plein de preuves fausses.
+
+  \begin{defn}
+    Soit $P : \mathds{C}^n \to \mathds{C}^n$ un polynôme.
+    Son \textit{jacobien} est le déterminant de la matrice jacobienne \[
+      \operatorname{Jac} P = \left| \left(\frac{\partial P_i}{\partial x_j}\right)_{1 \le i \le n, 1 \le j \le n} \right|
+    .\]
+    C'est un polynôme.
+  \end{defn}
+
+  \begin{prop}
+    Si $P$ est injectif sur $\mathds{C}^n$ alors $P$ est localement injectif.
+    Et donc, pour tout $x$ (théorème des fonctions implicites), $\operatorname{Jac}(P)$ n'est jamais nul, d'où $\operatorname{Jac} P$ est un polynôme constant non nul.
+  \end{prop}
+
+  \begin{rmk}[Conjecture (problème 16 de la liste de Steve Smale)]
+    En caractéristique $0$, on a $\operatorname{Jac} P$ non nul implique  $P$ injectif.
+  \end{rmk}
+
+  \begin{rmk}
+    En caractéristique $p$, c'est faux : $P(x) := x - x^p$ est non-inversible et  $P'(x) = 1 - px = 1$.
+  \end{rmk}
+
+  \begin{exm}
+    \begin{itemize}
+      \item Avec $n = 1$ et $d = 1$, on considère
+        \begin{align*}
+          P: \mathds{C} &\longrightarrow \mathds{C} \\
+          x &\longmapsto P(x) := ax + b
+        .\end{align*}
+        On a $\operatorname{Jac} P = a$ et,  $a \neq 0$ implique $P$ injectif.
+      \item Avec $n = 1$ et $d = 2$, on considère
+        \begin{align*}
+          P: \mathds{C} &\longrightarrow \mathds{C} \\
+          x &\longmapsto P(x) := ax^2 + bx + c
+        .\end{align*}
+        On a, si $\operatorname{Jac} P = 2ax + b$ non nul, alors $a = 0$ et $b \neq 0$.
+        C'est le cas précédent !
+      \item Avec $n = 2$ et $d = 1$, on considère
+        \begin{align*}
+          P: \mathds{C}^2 &\longrightarrow \mathds{C}^2 \\
+          x &\longmapsto P(x,y) := (ax + by +c, dx + ey + f)
+        .\end{align*}
+        On a $\operatorname{Jac} P = \begin{vmatrix} a & b \\ d & e \end{vmatrix} = ae - bd$.
+        On a $\operatorname{Jac} P$ non nul implique  $ae - bd \neq 0$ ce qui implique que le système 
+        \[
+        \begin{cases}
+          ax + bj + c = 0\\
+          dx + ej + f = 0\\
+        \end{cases}
+        \] est inversible, donc la conjecture est vrai.
+    \end{itemize}
+  \end{exm}
+
+  On a montré quelques résultats partiels :
+  \begin{itemize}
+    \item pour $d \le 2$ en 1980 ;
+    \item pour $d \le 3$ dans le cas général.
+  \end{itemize}
+\end{document}

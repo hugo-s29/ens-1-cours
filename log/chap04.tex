@@ -265,7 +265,7 @@
   \end{prv}
 
   \begin{description}
-    \item[ZF\,5] \label{zf5}\textit{Axiome de l'infini} : il existe un ensemble ayant une infinité d'élément
+    \item[ZF\,5] \label{ZF5}\textit{Axiome de l'infini} : il existe un ensemble ayant une infinité d'élément
       \[
       \exists x \: (\emptyset \in x \land \forall y \: (y \in x \to y \cup \{y\} \in x ))
       .\]
@@ -284,6 +284,528 @@
   Ainsi, on a bien $n  =\{0, 1, \ldots, n-1\}$.
 
   \begin{rmk}
+    Si on retire $\emptyset \in x$, on peut avoir $x = \emptyset$ qui satisfait la version modifiée de \zf 5.
+
+    Cependant, sans retirer $\emptyset \in x$, on peut quand même avoir un ensemble fini s'il existe un ensemble fini $y$ tel que $y \in y$.
+    Ceci est impossible avec l'axiome de bonne fondation.
+  \end{rmk}
+
+  \begin{rmk}
     Les français sont les seuls à considérer que l'axiome de bonne fondation ne fait pas partie de la théorie de ZF.
   \end{rmk}
+
+  \section{Ordinaux et induction transfinie.}
+
+
+  \begin{thm}[Cantor]
+    \begin{enumerate}
+      \item Soient $A$ et $B$ deux ensembles et supposons qu'il existe des injections $A \to B$ et $B \to A$ alors il existe une bijection $A \to B$.
+      \item Il n'existe pas de surjection de $A \to \wp(A)$.
+    \end{enumerate}
+  \end{thm}
+  \begin{prv}
+    En TD.
+  \end{prv}
+
+  \begin{defn}
+    Deux ensembles sont \textit{équipotents} s'il existe une bijection entre-eux.
+  \end{defn}
+
+  \begin{defn}
+    Soit $A$ un ensemble.
+    Un \textit{ordre} (\textit{partiel}, \textit{strict}) sur $A$ est une relation binaire $<$ (donnée par un sous-ensemble de $A \times A$) telle que 
+    \begin{enumerate}
+      \item \textit{transitivité} : $\forall x \: \forall y \: \forall z \: x < y \to y < z \to x < z$ ;
+      \item \textit{anti-réflexif} : $\forall x, x \not< x$.
+    \end{enumerate}
+  \end{defn}
+
+  \begin{nota}
+    On note $x \le y$ pour $x < y$ ou $x = y$.
+  \end{nota}
+
+  \begin{exm}
+    L'ordre $\subsetneq$ sur $\wp(\mathds{N})$ est partiel.
+    Les ordres $<_\mathds{N}$, $<_\mathds{R}$, $<_\mathds{Z}$ sur $\mathds{N}, \mathds{R}, \mathds{Z}$ sont totaux.
+  \end{exm}
+
+  \begin{defn}
+    Soit $(A, <)$ ordonné. Soient  $a, a' \in A$ et $B \subseteq A$.
+    On dit que 
+    \begin{itemize}
+      \item $a$ est un plus petit élément de $B$ si $a \in B$ et pour tout $b \in B$ et si $b \neq a$ alors $b > a$ ;
+      \item $a$ est un élément minimal de $B$ si $a \in B$  et pour tout $b \in B$, $b \not< a$ ;
+      \item $a$ est un minorant de $B$ si pour tout $b \in B$, $a \le b$ ;
+      \item de la même manière, on définit plus grand élément, élément maximal, majorant ;
+      \item $a$ est une borne inférieure de $B$ si $a$ est un plus grand élément de l'exemple des minorants de $B$ ;
+      \item $a$ et $a'$ sont incomparables si $a \neq a'$ et $a \not< a'$ et $a' \not< a$ ;
+      \item un ordre est bien fondé si toute partie non vide de  $A$ a un élément minimal ;
+      \item un bon ordre est un ordre total bien fondé.
+    \end{itemize}
+  \end{defn}
+
+  \begin{prop}
+    Un ordre total est bien fondé ssi il n'existe pas de suite infinie décroissante.
+  \end{prop}
+  \begin{prv}
+    En exercice.
+  \end{prv}
+
+  \begin{exm}
+    \begin{itemize}
+      \item L'ordre $<$ sur $\mathds{N}$ est bien fondé.
+      \item L'ordre $<$ sur $\mathds{Z}$ n'est pas bien fondé.
+      \item L'ordre $\subsetneq $ sur $\wp_\mathrm{finies}(\mathds{N})$ est bien fondé.
+      \item L'ordre $\subsetneq $ sur $\wp(\mathds{N})$ n'est pas bien fondé.
+    \end{itemize}
+  \end{exm}
+
+  \begin{defn}
+    \begin{itemize}
+      \item Deux ensembles ordonnés sont \textit{isomorphes} s'il existe une bijection préservant l'ordre de l'un vers l'autre.
+        On note $A \simeq B$.
+      \item Soit $X$ totalement ordonné. Un sous-ensemble $J \subseteq X$ est un \textit{segment initial} si pour tous $a,b \in X$ avec $a < b$ alors $b \in J$ implique $a \in J$.
+      \item Un ensemble $X$ est \textit{transitif} si pour tout $x \in X$ et $y \in x$ alors $y \in X$.
+      \item Un ensemble $X$ est un \textit{ordinal} s'il est transitif  et que $\in$ défini un bon ordre sur $X$.
+      \item On note $\mathcal{O}$ la \textit{classe des ordinaux}, et on note indifféremment les relations $\in$ et $<$.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Les entiers de Von Neumann sont des ordinaux.
+  \end{exm}
+
+  \begin{prop}
+    Soient $\alpha$  et $\beta$ des ordinaux. On a les propriétés suivantes :
+    \begin{enumerate}
+      \item $\emptyset$ est un ordinal ;
+      \item si $\alpha \neq \emptyset$ alors $\emptyset \in \alpha$ ;
+      \item $\alpha \not \in \alpha$ ;
+      \item si $x \in \alpha$ alors $x = \{y \in \alpha  \mid y < x\}$.
+      \item si $x \in \alpha$ alors $x$ est un ordinal (on a l'abus de notation $x \in \mathcal{O}$) ;
+      \item $\beta \le \alpha$ ssi $\beta = \alpha$ ou  $\beta \in \alpha$ ;
+      \item $x = \alpha \cup \{\alpha\}$ est un ordinal noté $\alpha + 1$.
+    \end{enumerate}
+  \end{prop}
+
+  \begin{prv}
+    \begin{enumerate}
+      \item C'est vrai.
+      \item La relation $\in$ est un bon-ordre sur $\alpha$, soit $\beta$ le plus petit élément.
+        Si $\beta \neq \emptyset$ alors il contient au moins un élément $\gamma$ d'où $\gamma < \beta$ et $\gamma \in \alpha$ (par transitivité), \textit{absurde} car $\beta$ minimal.
+      \item Le reste sera vu en TD ou en exercice.
+    \end{enumerate}
+  \end{prv}
+
+  \begin{prop}
+    \begin{itemize}
+      \item Si $\alpha$ et $\beta$ sont des ordinaux et que l'on a~$\alpha \le \beta \le \alpha + 1$ alors $\beta = \alpha$ ou  $\beta = \alpha + 1$.
+      \item Si $X$ est un ensemble non vide d'ordinaux alors $\bigcap_{\alpha \in X} \alpha$ est le plus petit élément de $X$.
+    \end{itemize}
+    \qed
+  \end{prop}
+
+  \begin{defn}
+    Soit $\beta$ un ordinal.
+    \begin{itemize}
+      \item S'il existe $\alpha$ tel que $\beta = \alpha + 1$ alors on dit que $\beta$ est un ordinal successeur ;
+      \item Sinon, c'est un ordinal limite.
+    \end{itemize}
+  \end{defn}
+
+  \begin{exm}
+    Quelques ordinaux limites : 
+    \begin{gather*}
+      \omega\quad\quad\omega \cdot 2\quad\quad\omega \cdot 3 \quad\quad \omega \cdot \omega \\
+      \omega^2 + \omega\quad\quad\omega^\omega\quad\quad\omega^{\omega^{\omega^{\iddots^{\omega}}}}.
+    \end{gather*}
+  \end{exm}
+
+  \begin{lem}
+    Soit $X$ un ensemble d'ordinaux.
+    Le plus petit élément de $X$ est $\bigcap_{\alpha \in X} \alpha$.
+  \end{lem}
+
+  \begin{thm}
+    Si $\alpha$ et $\beta$ sont des ordinaux alors une et une seule de ces propriétés est vérifiée :
+    \[
+      \alpha = \beta
+      \quad\quad \quad\quad
+      \alpha \in \beta
+      \quad\quad \quad\quad
+      \alpha \ni \beta
+    .\] 
+  \end{thm}
+  \begin{prv}
+    Soit $X = \{\alpha, \beta\}$, on sait que $\alpha \cap \beta$ est le plus petit élément de $X$.
+    \begin{itemize}
+      \item Si $\alpha \cap \beta = \alpha$ alors $a \subseteq \beta$ donc $\alpha = \beta$ ou $\alpha \in \beta$.
+      \item Si $\alpha \cap \beta = \beta$ alors $a \supseteq \beta$ donc $\alpha = \beta$ ou $\alpha \ni \beta$.
+    \end{itemize}
+  \end{prv}
+
+  \begin{prop}
+    Soit $X$ un ensemble d'ordinaux.
+    Alors l'ensemble~$b := \bigcup_{\alpha \in X} \alpha$ est un ordinal.
+    On le note $b = \sup_{\alpha \in X} \alpha$.
+    De plus si $\gamma \in b$ alors il existe un certain $\alpha \in X$ tel que $\gamma \in \alpha$.
+  \end{prop}
+  \begin{prv}
+    En exercice.
+  \end{prv}
+
+  \begin{prop}
+    Soit $\lambda$ un ordinal non vide. On a :
+    \[
+      \overbrace{\lambda \text{ est limite}}^{(1)} \quad \iff \quad \overbrace{\lambda = \bigcup_{\alpha \in \lambda} \lambda}^{(2)}
+    .\] 
+  \end{prop}
+  \begin{prv}
+    \begin{enumerate}
+      \item Par contraposée, si $\lambda$ n'est pas limite, c'est donc un successeur d'un certain ordinal $\beta$ et donc $\lambda = \beta \cup \{\beta\}$.
+        On a \[
+        \bigcup_{\alpha \in \lambda} \alpha = \beta \cup \bigcup_{\alpha \in \beta} = \beta \neq \lambda
+        .\] 
+      \item Soit $\lambda$ limite.
+        Montrons qu'il n'a pas de plus grand élément~$\beta$.
+        Sinon, $\lambda = \beta \cup \{\beta\}$.
+        Donc, pour tout $\alpha \in \lambda$ il existe un certain $\gamma \in \lambda$ tel que $\alpha < \gamma$,  \textit{i.e.} $\alpha \in \gamma$.
+        On en conclut que $\lambda = \bigcup_{\gamma \in \lambda} \gamma$.
+    \end{enumerate}
+  \end{prv}
+
+  \begin{thm}[Induction transfinie]
+    Soit $\mathcal{P}$ une propriété sur les ordinaux.
+    On suppose que :
+    \begin{itemize}
+      \item $\emptyset$ satisfait $\mathcal{P}$ ;
+      \item pour tout ordinal $\alpha$ tel que, pour tout $\beta < \alpha$ satisfait $\mathcal{P}$, alors $\alpha$ satisfait $\mathcal{P}$ :
+        \[
+        \forall \alpha, \: (\forall \beta < \alpha, \: \mathcal{P}(\beta)) \implies \mathcal{P}(\alpha) \;
+        ;\] 
+    \end{itemize}
+    alors tous les ordinaux satisfont $\mathcal{P}$.
+  \end{thm}
+  \begin{prv}
+    Par l'absurde, soit $\alpha$ ne satisfaisant pas $\mathcal{P}$.
+    Soit $\beta$ le plus petit ordinal de $\alpha \cup \{\alpha\}$ ne satisfaisant pas $\mathcal{P}$.
+    Tous les ordinaux plus petit que $\beta$ satisfont $\mathcal{P}$, d'où $\mathcal{P}(\alpha)$, \textit{\textbf{absurde}}.
+    On en conclut que $\alpha$ n'existe pas.
+  \end{prv}
+
+  \begin{rmk}
+    En pratique on décompose :
+    \begin{itemize}
+      \item on montre pour $\emptyset$ ;
+      \item on montre pour $\alpha$ successeur ;
+      \item on montre pour $\alpha$ limite.
+    \end{itemize}
+  \end{rmk}
+
+  \begin{defn}
+    Un ordinal $\alpha$ est \textit{fini} si $\alpha = \emptyset$ ou si $\alpha$ et sous ses éléments sont des successeurs.
+  \end{defn}
+
+  \begin{prop}
+    L'ensemble des ordinaux finis $\omega$ est un ordinal. C'est le plus petit ordinal limite.
+  \end{prop}
+  \begin{prv}
+    En exercice.
+  \end{prv}
+
+  \begin{lem}
+    Soit $f : \alpha \to \alpha'$ une fonction strictement croissante entre deux ordinaux $\alpha$ et $\alpha'$.
+    Alors $f(\beta) \ge \beta$ pour tout $\beta \in \alpha$.
+    De plus, on a $\alpha' \ge \alpha$.
+    Aussi si $f$ est un isomorphisme alors $\alpha = \alpha'$ et  $f$ est l'identité.
+  \end{lem}
+
+  \begin{prv}
+    \begin{itemize}
+      \item Soit $\beta_0$ le plus petit élément tel que $f(\beta_0) < \beta_0$.
+        Comme $f$ strictement croissante, on a $f(f(\beta_0)) < f(\beta_0) < \beta_0$ absurde car $\beta_0$ est le plus petit.
+      \item Soit $\beta \in \alpha$. On a $f(\beta) \in \alpha'$ et $\beta \le f(\beta)$ donc $\beta \in \alpha'$, donc $\beta \in \alpha'$, d'où $\alpha \subseteq \alpha'$ et donc $\alpha \le \alpha'$.
+      \item Si $f$ est un isomorphisme alors $f^{-1}$ est strictement croissante.
+        On applique le point précédent à $f^{-1}$, d'où $\alpha = \alpha'$.
+      \item Montrons que $f$ est l'identité.
+        On sait que, pour tout $\beta \in \alpha$, on a $f_{|\beta}$ strictement croissante de $\beta$ dans $f(\beta)$, d'où $\beta = f(\beta)$ par le point précédent.
+        D'où $f$ est l'identité.
+    \end{itemize}
+  \end{prv}
+
+  \begin{thm}
+    Tout ensemble bien ordonné est isomorphe à un ordinal. Cet ordinal ainsi que l'isomorphisme sont uniques.
+  \end{thm}
+  \begin{prv}
+    Cette preuve ressemble à une induction sans en être une.
+    On aura le droit d'en faire quand on aura le théorème.
+
+    Si l'isomorphisme existe, il est unique grâce au lemme précédent.
+    En effet, s'il y en a deux $f$ et $g$ alors $f \circ g^{-1}$ est un isomorphisme entre deux ordinaux égaux, donc c'est l'identité.
+
+    Notons $\mathcal{P}(x)$ la propriété "il existe un ordinal $\alpha_x$ et un isomorphisme $f_x : S_{\le x} \to \alpha_x$" où $S_{\le x} := \{y \in X \mid y \le x\}$.
+    Pour montrer $\mathcal{P}(x)$ pour tout $x \in X$, on pose  
+    \[
+    Y := \{x \in X  \mid \mathcal{P}(x) \text{ est vraie}\}
+    .\] 
+    et on montre $Y = X$.
+
+    Supposons $Y \neq X$ et soit $a = \min (X \setminus Y)$.
+    \begin{itemize}
+      \item Si $Y$ a un plus grand élément $b$, alors il existe un isomorphisme $f_b : S_{\le b} \to \alpha_b$ (car $\mathcal{P}(b)$).
+        Or, $S_{\le a} = S_{\le b} \cup \{a\}$ (il faudrait montrer que $Y$ est un segment initial de $X$).
+        Et, on construit $f_a : S_{\le a} \to \alpha_b \cup \{\alpha\}_b$ qui est un isomorphisme, donc $a \in Y$, \textit{\textbf{absurde}}.
+      \item Si $Y$ n'a pas de plus grand élément, on considère $\alpha := \bigcup_{x \in Y} \alpha_x$ un ordinal.
+        Pour tout $x < \alpha$ il existe un isomorphisme de $S_{\le x}$ dans $\alpha_x$.
+        Si on prend $x < y < \alpha$ alors  $(f_y)_{|S_{\le x}}$ est un isomorphisme et, par unicité, on a donc que $f_y$ prolonge $f_x$.
+        On peut définir un isomorphisme $f_{\le \alpha}$ comme limite des $f_{x}$ pour $x < \alpha$.
+        C'est un isomorphisme de $S_{< a}$ dans $\beta := \bigcup_{x < \alpha} \alpha_x$.
+        On peut prolonger $f$ en $f_X : S_{\le \alpha} \to \beta + 1$ où $\alpha \mapsto \beta$, d'où $\alpha \le Y$, \textit{\textbf{absurde}}.
+    \end{itemize}
+  \end{prv}
+
+  \begin{lem}[Définition récursive transfinie des fonctions]
+    Soient
+    \begin{itemize}
+      \item $\alpha$ un ordinal ;
+      \item $S$ une collection ;
+      \item $\mathcal{F}$ la collection des applications définies sur les ordinaux~$\beta \le \alpha$ et prenant leur valeurs dans $S$ ;
+      \item $F$ une relation fonctionnelle de domaine $\mathcal{F}$ à valeur dans $S$.
+    \end{itemize}
+    Alors il existe une fonction $f$ dans $\mathcal{F}$ (et une unique définie sur~$\alpha$) telle que :
+    \[
+      (\star) \quad\quad \text{ pour tout } \beta < \alpha \quad\quad f(\beta) = F(f_{|\beta})
+    .\] 
+  \end{lem}
+
+  \begin{prv}
+    \begin{description}
+      \item[Unicité.]
+        Soient $f$ et $g$ satisfaisant $(\star)$.
+        Montrons $\mathcal{P}(\beta)$ : "si $\beta < \alpha$ alors $f(\beta) = g(\beta)$" par induction transfinie.
+        \begin{itemize}
+          \item On a directement $\mathcal{P}(\emptyset)$ car il y a une unique fonction de $\emptyset \to \emptyset$.
+          \item Supposons que $f(\gamma) = g(\gamma)$ pour tout $\gamma < \beta$.
+            Alors $f_{|\beta} = g_{|\beta}$ et donc par $(\star)$ on a  $f(\beta) = g(\beta)$.
+        \end{itemize}
+      \item[Existence.]
+        Soit $\tau$ l'ensemble des ordinaux $\gamma \in \alpha$ tels qu'il existe $f_\gamma \in \mathcal{F}$ définie sur $\gamma$ et vérifiant $(\star)$.
+        Alors $\tau$ est un segment initial de $\alpha$ donc un ordinal.
+        Par unicité si $\gamma < \gamma'$ alors $f_{\gamma'}$ prolonge $f_\gamma$.
+        On définit  $f_\tau$ par  $f_\tau(\gamma) := F(f_\gamma)$ si  $\gamma < \tau$.
+         \begin{itemize}
+          \item Si $\tau \in \alpha$ alors $f_\tau$ prolonge tous les $f_\gamma$ et donc $\tau \in \tau$, \textit{\textbf{impossible}}.
+          \item D'où $\tau = \alpha$.
+        \end{itemize}
+    \end{description}
+  \end{prv}
+
+  \begin{exo}
+    Généraliser la preuve ci-dessus en replaçant $\alpha$ par la classe de tous les ordinaux $\mathcal{O}$ (et remplacer $\mathcal{F}$ par autre chose).
+  \end{exo}
+
+  \begin{prop}
+    \begin{enumerate}
+      \item La classe $\mathcal{O}$ n'est pas un ensemble.
+      \item Il n'existe pas de relation fonctionnelle bijective entre $\mathcal{O}$ et un ensemble $a$.
+    \end{enumerate}
+  \end{prop}
+  \begin{prv}
+    \begin{enumerate}
+      \item En effet, supposons $\mathcal{O}$ un ensemble. On a que $\mathcal{O}$ est transitif et $\in$ y définit un ordre total, donc $\mathcal{O}$ est un ordinal. D'où $\mathcal{O} \in \mathcal{O}$ ce qui est impossible pour un ordinal.
+      \item Sinon $\mathcal{O}$ serait un ensemble.
+    \end{enumerate}
+  \end{prv}
+
+  \section{Axiome de choix et variantes équivalentes.}
+
+  Les axiomes du choix sont exprimable au premier ordre !
+
+  \begin{description}
+    \item[AC\,1.] \label{AC1}
+      Le produit d'une famille d'ensembles non vides est non vide.
+  \end{description}
+
+  \begin{description}
+    \item[AC\,2.] \label{AC2}
+      Pour tout ensemble $a$ non vide, il existe une fonction de $\mathcal{P}(a)$ dans $a$ tel que si $x \subseteq a$ est non vide alors $f(x) \in x$.
+      (C'est une fonction de choix.)
+  \end{description}
+
+  \begin{description}
+    \item[AC\,3.] \label{AC3}
+      Si $a$ est un ensemble dont tous les éléments sont non vides et deux à deux disjoints alors il existe un ensemble $c$ tel que, pour tout $x \in a$, $x \cap c$ a exactement un élément.
+  \end{description}
+
+  \begin{description}
+    \item[{\footnotesize(Lemme de)} Zorn.] \label{zorn}
+      Tout ensemble non vide partiellement ordonné et inductif admet un élément maximal.
+  \end{description}
+
+  On rappelle qu'un ensemble partiellement ordonné $X$ est inductif si~$X \neq \emptyset$ et si tout sous-ensemble $Y \subseteq X$ totalement ordonné admet un majorant dans $X$.
+
+  \begin{description}
+    \item[{\footnotesize(Lemme de)} Zermelo.] \label{zermelo}
+      Tout ensemble non vide peut être mini d'un bon ordre (\textit{i.e.} un ordre total où toute partie non vide a un plus petit élément).
+  \end{description}
+
+  En supposant les axiomes $\text{\zf1}, \ldots, \text{\zf5}$, on va montrer les implications suivantes :
+  \[
+  \begin{tikzcd}
+    \text{\ac 3} \arrow[Rightarrow]{rr}{\ref{subsect:ac3-ac1}} & & \text{\ac 1} \arrow[Rightarrow]{dl}{\ref{subsect:ac1-ac2}} \\
+                                                               & \text{\ac 2} \arrow[Rightarrow]{ul}{\ref{subsect:ac2-ac3}} \arrow[bend left,Rightarrow]{dr}{\ref{subsect:ac2-zermelo}} \arrow[Rightarrow]{dl}{\ref{subsect:ac2-zorn}}\\
+    \text{\zorn} \arrow[Rightarrow]{uu}{\ref{subsect:zorn-ac3}} && \text{\zermelo} \arrow[bend left,Rightarrow]{ul}{\ref{subsect:zermelo-ac2}}
+  \end{tikzcd}
+  \]
+
+  \subsection{\ac 1 implique \ac 2.} \label{subsect:ac1-ac2}
+
+  On rappelle que l'ensemble $\prod_{i \in I} a_i$ est l'ensemble de fonctions $f$ de la forme $f : I \to  \bigcup_{i \in I} a_i$ tel que $f(i) \in a_i$ pour tout $i$.
+
+  Soit $a$ non vide. On considère $\prod_{\emptyset \neq x \subseteq a}x $ qui est non vide par \ac1.
+  Soit~$f$ un de ces éléments.
+  On a, pour tout $\emptyset \neq  x \subseteq a$, que $f(x) \in x$ donc~$f$ est une fonction de choix.
+
+  \subsection{\ac 2 implique \ac 3.}  \label{subsect:ac2-ac3}
+  Soit $a$ un ensemble dont les éléments sont non vides et deux à deux disjoints.
+  On considère $b = \bigcup_{x \in a} x$ qui est un ensemble.
+  Par \ac 2, on a une fonction de choix $f$ sur $\wp(b)$.
+  On prend $c = \{f(x)  \mid x \in a\} $. Comme les $x$ sont disjoints, on obtient la propriété recherchée.
+
+  \subsection{\ac 3 implique \ac 1.} \label{subsect:ac3-ac1}
+  Soit $X = \prod_{i \in I} a_i$ un produit d'ensemble non vides.
+  On considère $A := \mleft\{\,\{i\} \times a_i \;\middle|\; i \in I\,\mright\}$.
+  Par \ac 3, il existe $c$ tel que, pour tout $x \in A$, $x \cap c$ a exactement un élément.
+  D'où, $c$ peut s'écrire
+  \[
+  c = \{(i, d_i)  \mid i \in I \text{ et } d_i \in a_i\}
+  .\]
+  On a donc $c \in \prod_{i \in I} a_i$ (c'est le graphe d'une fonction) et donc $\prod_{i \in I} a_i \neq \emptyset$.
+
+  \subsection{\ac2 implique \zermelo.} \label{subsect:ac2-zermelo}
+
+  Soit $a$ un ensemble non vide.
+
+  \begin{rmk}[Idée]
+    L'idée est qu'on utilise $f : \mathcal{P}(a) \to a$ une fonction de choix pour définir l'ordre.
+    On peut imaginer définir $x \le y$ ssi $f(\{x,y\}) = x$ (on traite donc $f$ comme la fonction minimum), mais on n'a pas la transitivité.
+    Il faut être plus futé.
+
+    On va construire en partant du plus petit une bijection entre $a$ et un ordinal.
+    \begin{itemize}
+      \item $h(0) := f(a)$ 
+      \item $h(1) := f(a \setminus \{h(0)\} )$ 
+      \item $h(2) := f(a \setminus \{h(0), h(1)\})$
+      \item $\quad\vdots$
+      \item $h(\omega) = f(a \setminus \{h(0), h(1), \ldots\} )$ 
+      \item $\quad\vdots$
+    \end{itemize}
+    On s'arrête quand $a \setminus \{h(0), h(1), \ldots\}$ est vide.
+  \end{rmk}
+
+  Soit $\theta \not\in a$ (pour "détecter" quand l'ensemble $a \setminus \{h(0), \ldots\}$ est vide).
+  Il existe car $a$ est un ensemble donc pas l'univers tout entier.
+
+  On définit \[
+  F(\alpha) := \begin{cases}
+    f(a \setminus \{F(\beta)  \mid \beta < \alpha\} ) & \text{ si } a \setminus \{F(\beta)  \mid \beta < \alpha\}  \neq \emptyset\\
+    \theta & \text{ sinon}
+  \end{cases}
+  .\]
+  D'après le dernier lemme de la section précédente, on peut construire l'application $F$ ainsi et elle est unique.
+
+  S'il n'existe pas d'ordinal $\alpha$ tel que $F(\alpha) = \theta$ alors  $F$ est une injection de $\mathcal{O}$ dans $a$. \textbf{\textit{Absurde}}.
+  Il existe donc $\alpha$ tel que $F(\alpha) = \theta$.
+
+  Le sous-ensemble $\{\beta \in \alpha  \mid F(\beta) = \theta\} $ a un plus petit élément $\beta$.
+  Montrons que $F_{|\beta}$ est une bijection de $\beta$ dans $\alpha$.
+  \begin{itemize}
+    \item D'une part, on sait que c'est une injection.
+    \item D'autre part, $F(\beta) = \theta$ implique  $\{F(\gamma)  \mid \gamma < \beta\} = a$ donc $F_{|\beta}$ est une surjection.
+  \end{itemize}
+  On définit le bon ordre $x \prec y$ ssi  $F^{-1}(x) < F^{-1}(y)$.
+
+  \subsection{\zermelo\ implique \ac2.} \label{subsect:zermelo-ac2}
+
+  Soit $a$ non vide.
+  Il existe un bon-ordre $<$ sur $a$.
+  Soit $\emptyset \neq x \subseteq a$. On définit $f(x) = \min x$, c'est bien une fonction de choix. 
+
+  \subsection{\zorn\ implique \ac3.}  \label{subsect:zorn-ac3}
+  Soit $a$ un ensemble dont les éléments sont disjoints et non vides.
+  On pose :
+  \[
+  b := \bigcup_{x \in a} x \quad \text{ et } \quad X := \{c \subseteq b  \mid \forall x \in a, \: |c \cap x| \le 1\} 
+  .\] 
+  Montrons que l'ensemble $(X, \subsetneq)$ est inductif.
+
+  Si $y \subseteq X$ est totalement ordonné. Montrons que $Y$ a un majorant dans $X$.
+  On pose $z = \bigcup_{y \in Y} y$ qui majore $Y$. On a bien $z \in X$ (on ne duplique pas les éléments).
+  On en conclut que $X$ est inductif.
+  Soit $d$ un élément maximal de $X$ (il existe par \zorn).
+
+  \begin{itemize}
+    \item S'il existe $x \in a$ tel que $x \cap d = \emptyset$ alors prenons $u \in x$ et posons $d_1 := d \cup \{u\}$.
+      D'où $d_1 \in X$ et $d \subsetneq d_1$ donc $d$ non maximal, \textit{\textbf{absurde}}.
+    \item Pour tout $x \in a$, on a $|d \cap x| = 1$, d'où $d$ est l'ensemble recherché (appelé $c$ dans \ac 3).
+  \end{itemize}
+
+  \subsection{\ac 2 implique \zorn.} \label{subsect:ac2-zorn}
+
+  Soit $a$ un ensemble inductif.
+
+  \begin{rmk}[Idée]
+    On construit une chaîne dans $a$ (\textit{i.e.} un ensemble totalement ordonné) de taille maximale (c'est ici qu'on utilise la fonction de choix de \ac 2).
+    Elle a un majorant car $a$ est inductif.
+    Ce majorant va être l'élément maximal.
+  \end{rmk}
+
+  Soit $f : \wp(a) \to a$ une fonction de choix donnée par \ac 2.
+  Si $x \subseteq a$ on appelle majorant strict de $x$ un $y \in a$ tel que $z < y$ pour tout~$y \in x$.
+
+  \begin{rmk}[Idée -- suite]
+    \begin{itemize}
+      \item On part de $\emptyset$ : tout élément de $a$ a un majorant strict de $\emptyset$ en choisissant $a_1 = f(a)$.
+      \item Soit $X_1$ l'ensemble des majorants de $\{a_1\}$. On pose $a_2 := f(X_1)$.
+      \item Soit $X_2$ l'ensemble des majorants de $\{a_1,a_2\}$. On pose $a_3 := f(X_2)$.
+    \end{itemize}
+  \end{rmk}
+
+  Formellement, soit $C := \{x \subseteq a  \mid x \text{ a un majorant strict dans } a \} $.
+  On a $\emptyset \in C$. On définit 
+  \begin{align*}
+   m : C &\longrightarrow a \\
+    x &\longmapsto f(\{y \in a  \mid y \text{ est un majorant strict de $x$ dans } a\} )
+  .\end{align*}
+
+  On définit par induction la chaîne maximale (dernier lemme de la section précédente).
+  Soit $\theta \not\in a$.
+  On définit :
+  \[
+  F(\alpha) := \begin{cases}
+    m(\{F(\beta)  \mid \beta < \alpha\} ) & \text{ si } \{F(\beta)  \mid \beta < \alpha\} \in C\\
+    \theta & \text{ sinon}
+  \end{cases}
+  .\] 
+
+  La fonction $F$ n'est pas une injection de $\mathcal{O}$ dans $a$ donc il existe un ordinal $\alpha$ tel que $F(\alpha) = \theta$.
+  Comme $\alpha + 1$ est un ordinal, l'ensemble~$\{\beta \in \alpha + 1  \mid F(\beta) = \theta\}$ a un plus petit élément $\alpha_0$.
+  D'où l'ensemble $\{F(\beta)  \mid \beta < \alpha_0\}$ n'a pas de majorant strict mais a un majorant $M$ car $a$ inductif.
+  Et, $a$ n'a pas d'élément plus grand que $a$.
+  Ainsi $M$ est maximal dans $a$.
+
+  \subsection{Indépendance de ZF et de l'axiome du choix.}
+
+  On a les deux théorèmes suivants (que l'on admet).
+
+  \begin{thm}[Gödel, 1938]
+    S'il est cohérent, ZF ne réfute pas l'axiome du choix.
+  \end{thm}
+
+  \begin{thm}[Cohen, 1963]
+    S'il est cohérent, ZF ne montre pas l'axiome du choix.
+  \end{thm}
+
+  Ainsi l'axiome du choix est indépendant de ZF.
+  Cependant, il existe des versions plus faibles : axiome du choix dépendant (\textsf{ACD}), axiome du choix dénombrable (\textsf{AC}${}_\omega$).
 \end{document}
