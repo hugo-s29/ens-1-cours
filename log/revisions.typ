@@ -479,7 +479,7 @@ Autrement dit : l'ensemble des fonctions représentables contient les projection
 ]
 
 Soient $F_i (x_0, x_1, ..., x_n)$ représentant $f_i$ pour tout $i$ et soit la formule $G(x_0, ..., x_p)$ représentant $g$.
-On pose $ H(x_0, ..., x_n) := exists y_0 med dots.c med exists y_n med G(x_0, y_1, ..., y_n) and and.big_(1 <= i <= n) F_i (y_1, x_1, ..., x_n). $
+On pose $ H(x_0, ..., x_n) := exists y_0 med dots.c med exists y_p med G(x_0, y_1, ..., y_p) and and.big_(1 <= i <= p) F_i (y_i, x_1, ..., x_n). $
 
 
 = Cours VIII.
@@ -639,7 +639,7 @@ dans l'ensemble ambiant $a times b$.
 = Cours XI.
 
 #question[
-  Montrer que $RR$ et $wp(NN)$ ne sont pas équipotents.
+  Montrer que $RR$ et $wp(NN)$ sont équipotents.
 ]
 
 Avec la fonction $arctan$ (et modulo une transformation affine), on a que $(0,1)$ et $RR$ sont équipotents.
