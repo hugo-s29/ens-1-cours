@@ -632,7 +632,7 @@ dans l'ensemble ambiant $a times b$.
 
 / Produit.:
   La collection $product_(i in I) a_i$ est l'ensemble des fonctions de $I$ dans $union.big_(i in I) a_i$ telles que $f(i) in a_i$ pour tout $i$.
-  On peut l'exprimer avec ZF4 : $ phi(f, a, I) := f "est une relation fonctionnelle"  and forall i med f(i) in a_i $
+  On peut l'exprimer avec ZF4' : $ phi(f, a, I) := f "est une relation fonctionnelle"  and forall i med f(i) in a_i $
   dans l'ensemble ambiant $I times union.big_(i in I) a_i$.
 
 
@@ -644,7 +644,7 @@ dans l'ensemble ambiant $a times b$.
 
 Avec la fonction $arctan$ (et modulo une transformation affine), on a que $(0,1)$ et $RR$ sont équipotents.
 Ensuite, on a que $(0,1)$ est en bijection avec les mots binaires infinis sur l'alphabet ${mono(0), mono(1)}$ (par écriture binaire, on peut négliger les cas des écritures binaires non-uniques car on n'en a qu'un nombre dénombrable).
-Et ce dernier ensemble est équipotent à $wp(N)$ (on regarde les indices des $mono(1)$ pour construire une partie, et réciproquement).
+Et ce dernier ensemble est équipotent à $wp(NN)$ (on regarde les indices des $mono(1)$ pour construire une partie, et réciproquement).
 
 #question[
   Montrer qu'un ordinal $lambda$ est limite ssi $lambda = union.big_(alpha < lambda) alpha$.
