@@ -614,7 +614,7 @@ En effet, on code $(x, y)$ comme l'ensemble ${{x}, {x,y}}$.
 ]
 
 Avec quelques abus de notations, on utilise ZF4 avec la formule 
-$ phi(f, a, b) := mat(f subset.eq a times b; and; forall x forall y forall y' med (x, y) in f and (x, y') in f -> y = y'; and; forall x med x in a -> exists y med y in b and (x,y) in f) $
+$ phi(f, a, b) := mat(f subset.eq a times b; and; forall x forall y forall y' med (x, y) in f and (x, y') in f -> y = y') $
 dans l'ensemble ambiant $a times b$.
 
 #question[
