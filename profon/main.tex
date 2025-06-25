@@ -29,7 +29,13 @@
 
 \newcommand\pieuvre{%
   \textsf{%
-    pieuvre%
+  \textcolor{deepblue}  {p}%
+  \textcolor{deeppurple}{i}%
+  \textcolor{deepblue}  {e}%
+  \textcolor{deeppurple}{u}%
+  \textcolor{deepblue}  {v}%
+  \textcolor{deeppurple}{r}%
+  \textcolor{deepblue}  {e}%
   }%
 }
 
@@ -40,72 +46,6 @@
 
 \let\rpar\rightrightarrows
 \newcommand\ifte[3]{\ensuremath{\mathtt{if}\ #1\ \mathtt{then}\ #2\ \mathtt{else}\ #3}}
-
-\usetikzlibrary{decorations.pathmorphing}
-
-\newcommand\xrsquigarrow[1]{%
-    \mathrel{%
-        \begin{tikzpicture}[%
-            baseline={(current bounding box.south)}
-            ]
-        \node[%
-            ,inner sep=.44ex
-            ,align=center
-            ] (tmp) {$\scriptstyle #1$};
-        \path[%
-            ,draw,<-
-            ,decorate,decoration={%
-                ,zigzag
-                ,amplitude=0.7pt
-                ,segment length=1.2mm,pre length=3.5pt
-                }
-            ] 
-        (tmp.south east) -- (tmp.south west);
-        \end{tikzpicture}
-        }
-    }
-\newcommand\xlsquigarrow[1]{%
-    \mathrel{%
-        \begin{tikzpicture}[%
-            baseline={(current bounding box.south)}
-            ]
-        \node[%
-            ,inner sep=.44ex
-            ,align=center
-            ] (tmp) {$\scriptstyle #1$};
-        \path[%
-            ,draw,->
-            ,decorate,decoration={%
-                ,zigzag
-                ,amplitude=0.7pt
-                ,segment length=1.2mm,pre length=3.5pt
-                }
-            ] 
-        (tmp.south east) -- (tmp.south west);
-        \end{tikzpicture}
-        }
-    }
-\newcommand\xlrsquigarrow[1]{%
-    \mathrel{%
-        \begin{tikzpicture}[%
-            baseline={(current bounding box.south)}
-            ]
-        \node[%
-            ,inner sep=.44ex
-            ,align=center
-            ] (tmp) {$\scriptstyle #1$};
-        \path[%
-            ,draw,<->
-            ,decorate,decoration={%
-                ,zigzag
-                ,amplitude=0.7pt
-                ,segment length=1.2mm,pre length=3.5pt
-                }
-            ] 
-        (tmp.south east) -- (tmp.south west);
-        \end{tikzpicture}
-        }
-    }
 
 \begin{document}
   \maketitle

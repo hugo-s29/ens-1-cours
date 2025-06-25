@@ -35,8 +35,8 @@ def f(img):
 
             n = int(''.join([ '1' if filter(b) else '0' for b in pixels ]), 2)
             res += chr(0x2800 + n)
-        res += "\\n"
+        res += "\\\\\n"
     return res
 
 for img in images:
-    print('"' + f(img) + '"')
+    print('' + f(img) + '')

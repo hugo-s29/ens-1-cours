@@ -1,0 +1,156 @@
+\documentclass{notes}
+
+\usepackage{subfiles}
+\usepackage{polynom}
+\usepackage{pdflscape}
+
+\ifSubfilesClassLoaded{%
+  \renewcommand\thesection{\arabic{section}}
+  \renewcommand\thepart{\Roman{part}}
+  \renewcommand\thechapter{\phantom}
+  \renewcommand\theequation{\arabic{section}.\arabic{equation}}
+}{}
+
+\title{Notes de cours de L3}
+\author{Prises par Hugo \textsc{Salou}}
+
+\newcommand\colorunderline[2]{
+  {\color{#1}\underline{{\color{black} #2}}}
+}
+
+\DeclareFontFamilySubstitution{OT2}{cmr}{wncyr}
+\newcommand{\textcyr}[1]{%
+  \begin{hyphenrules}{nohyphenation}%
+    \fontencoding{OT2}\selectfont #1%
+  \end{hyphenrules}%
+}
+
+%%%%%%%%%%%%%%%% THPROG
+
+\newcommand\qeq{\ensuremath{\mathrel{\overset ? =}}} % Question Equal =^?
+\newcommand\fresh{\textcyr{I}}
+
+\newcommand\ifte[3]{\ensuremath{\mathtt{if}\ #1\ \mathtt{then}\ #2\ \mathtt{else}\ #3}}
+\newcommand\ceq{\ensuremath{\mathrel{\texttt{:=}}}}
+\newcommand\col{\ensuremath{\mathrel{\texttt{;}}}}
+\newcommand\while[2]{\ensuremath{\mathtt{while}\ #1\ \mathtt{do}\ #2}}
+\newcommand\ptr[1]{\ensuremath{\text{\texttt{[$#1$]}}}}
+
+%%%%%%%%%%%%%%%% LOGIQUE
+\newcommand{\parens}[1]{\verb|(|\ensuremath{#1}\verb|)|}
+\newcommand{\Val}{\ensuremath{\mathcal{V}\hspace{-3.5pt}a\hspace{-0.5pt}\ell}}
+
+\newcommand\repr[1]{\tikz[baseline=-2.5pt] \node[draw, rounded rectangle, inner xsep=0pt, inner ysep=2pt, line width=0.08mm] {\ensuremath{#1}};}
+
+\renewcommand\succ{\mathop{\repr{\boldsymbol{\mathsf{S}}}}}
+\newcommand\zero{\mathop{\repr{0}}}
+
+\newcommand\peano[1]{\hyperref[peano-#1]{\textsf{#1}}}
+\newcommand\zf[1]{\hyperref[ZF#1]{\textsf{ZF\,#1}}}
+\newcommand\ac[1]{\hyperref[AC#1]{\textsf{AC\,#1}}}
+\newcommand\pairaxiom{\hyperref[pair-axiom]{Axiome de la paire}}
+\newcommand\zorn{\hyperref[zorn]{Zorn}}
+\newcommand\zermelo{\hyperref[zermelo]{Zermelo}}
+
+
+%%%%%%%%%%%%%%%% PROFON
+\newcommand\fouine{%
+  \textsf{%
+  \textcolor{deepblue}  {f}%
+  \textcolor{deeppurple}{o}%
+  \textcolor{deepblue}  {u}%
+  \textcolor{deeppurple}{i}%
+  \textcolor{deepblue}  {n}%
+  \textcolor{deeppurple}{e}%
+  }%
+}
+
+\newcommand\pieuvre{%
+  \textsf{%
+  \textcolor{deepblue}  {p}%
+  \textcolor{deeppurple}{i}%
+  \textcolor{deepblue}  {e}%
+  \textcolor{deeppurple}{u}%
+  \textcolor{deepblue}  {v}%
+  \textcolor{deeppurple}{r}%
+  \textcolor{deepblue}  {e}%
+  }%
+}
+
+
+\newcommand{\twodigits}[1]{\ifnum#1<10 0#1\else #1\fi}
+
+\newcommand\thprog[1]{\hyperref[thprog-chap\twodigits{#1}]{\textbf{THPROG}~[Chapitre~#1]}}
+
+\let\rpar\rightrightarrows
+
+\renewcommand\mathtt[1]{\ensuremath{\texttt{#1}}}
+
+\begin{document}
+  \maketitle
+
+  \dominitoc
+  \pagebreak
+  \addstarredchapter{Table des matières.}
+  \tableofcontents
+
+  \chapter*{Préface.} \addstarredchapter{Préface.}
+
+  Dans ce document, vous trouverez les notes de cours que j'ai pu prendre en \LaTeX\ durant cette année de L3.
+  Ce document rassemble donc les notes des cours suivants :
+  \begin{itemize}
+    \item \textit{Théorie de la Programmation} (THPROG), Daniel \textsc{Hirschkoff} ;
+    \item \textit{Logique} (LOG), Natacha \textsc{Portier} ;
+    \item \textit{Projet fonctionnel} (PROFON), Daniel \textsc{Hirschkoff}.
+  \end{itemize}
+
+  Sur mon site (\url{http://167.99.84.84/}\footnote{Accès direct à la page web pour l'année "L3 ENS" : \url{http://167.99.84.84/ens1/}}\showfootnote), il y a plusieurs documents :
+  \begin{itemize}
+    \item les notes des cours ci-dessus en PDF individuel (et même en PDF "par chapitre") ;
+    \item les notes de cours d'\textit{Algorithmique 1} (écrites avec \textit{Typst}, donc pas inclue dans ce document) ;
+    \item les notes de cours de \textit{Mesure et intégration} (écrites à la main et scannées, donc pas inclue dans ce document) ;
+    \item les TDs (Algorithmique 2, Projet fonctionnel, Probabilités, Logique, Algèbre 1, et Théorie des catégories) ;
+    \item les DMs (Algorithmique 2, Probabilités, Logique, Algèbre 1, et Fondements de l'informatique).
+  \end{itemize}
+
+  Si vous voyez des erreurs dans les notes de cours (formatage, orthographe, grammaire, \textit{etc}), prévenez-moi !
+  Ces notes sont disponibles sur \href{https://gitlab.aliens-lyon.fr/hsalou/cours-l3}{GitLab} et sur \href{https://github.com/hugo-s29/ens-1-cours}{GitHub} si vous voulez corriger directement.
+  Sinon, prévenez-moi via Discord (\texttt{hugos29}) ou par email (\href{mailto:y.hugo.s29@gmail.com}{\texttt{y.hugo.s29@gmail.com}}).
+
+  Amusez-vous bien avec ce document de \pageref*{LastPage} pages !
+
+  \hfill Hugo \textsc{Salou}
+
+  \part{Théorie de la programmation.}
+
+  \subfile{thprog/chap00/chap00.tex}
+  \subfile{thprog/chap01/chap01.tex}
+  \subfile{thprog/chap02/chap02.tex}
+  \subfile{thprog/chap03/chap03.tex}
+  \subfile{thprog/chap04/chap04.tex}
+  \subfile{thprog/chap05/chap05.tex}
+  \subfile{thprog/chap06/chap06.tex}
+  \subfile{thprog/chap07/chap07.tex}
+  \subfile{thprog/chap08/chap08.tex}
+  \subfile{thprog/chap09/chap09.tex}
+  \subfile{thprog/chap10/chap10.tex}
+
+  \part{Logique.}
+
+  \subfile{log/chap00.tex}
+  \subfile{log/chap01.tex}
+  \subfile{log/chap02.tex}
+  \subfile{log/chap03.tex}
+  \subfile{log/chap04.tex}
+  \subfile{log/chap05.tex}
+
+  \part{Projet fonctionnel.}
+
+  \subfile{profon/chap00.tex}
+  \subfile{profon/chap01.tex}
+  \subfile{profon/chap02.tex}
+  \subfile{profon/chap03.tex}
+  \subfile{profon/chap04.tex}
+  \subfile{profon/chap05.tex}
+\end{document}
+

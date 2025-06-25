@@ -15,7 +15,7 @@ def remove_color(image_path, target_color1, target_color2, tolerance=30, output_
             new_data.append(pixel)
 
     image.putdata(new_data)
-    image = image.resize((64*4, 100*4), Image.Resampling.LANCZOS)
+    image = image.resize((64*1, 100*1), Image.Resampling.LANCZOS)
     image.save(output_path, "PNG")
     print(f"Processed image saved to {output_path}")
 
