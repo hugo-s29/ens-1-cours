@@ -50,8 +50,8 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
   cp profon/chap03.pdf ../web/public/data/ens1/profon-chap03.pdf
   cp profon/chap04.pdf ../web/public/data/ens1/profon-chap04.pdf
   cp profon/chap05.pdf ../web/public/data/ens1/profon-chap05.pdf
-  cp profon/pieuvre/docs/presentation.pdf ../web/public/data/ens1/profon-presentation.pdf
-  cp profon/pieuvre/docs/report.pdf ../web/public/data/ens1/profon-report.pdf
+  cp profon/pieuvre-presentation.pdf ../web/public/data/ens1/profon-presentation.pdf
+  cp profon/pieuvre-report.pdf ../web/public/data/ens1/profon-report.pdf
 
   # ==========
   # SEMESTRE 1
