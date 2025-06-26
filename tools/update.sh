@@ -7,6 +7,8 @@ else
 fi
 
 if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
+  cp all-l3.pdf ../web/public/data/ens1/all.pdf
+
   # ==========
   # SEMESTRE 2
   # ==========
@@ -45,6 +47,8 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
   cp profon/chap03.pdf ../web/public/data/ens1/profon-chap03.pdf
   cp profon/chap04.pdf ../web/public/data/ens1/profon-chap04.pdf
   cp profon/chap05.pdf ../web/public/data/ens1/profon-chap05.pdf
+  cp profon/pieuvre/docs/report.pdf ../web/public/data/ens1/profon-report.pdf
+  cp profon/pieuvre/docs/presentation.pdf ../web/public/data/ens1/profon-presentation.pdf
 
   # ==========
   # SEMESTRE 1
@@ -67,6 +71,7 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
   cp thprog/chap10/chap10.pdf ../web/public/data/ens1/thprog-chap10.pdf
 
   cp integration/main.pdf ../web/public/data/ens1/integ.pdf
+  cp integration/dm2/main.pdf ../web/public/data/ens1/integ-dm2.pdf
 
   cp category-theory/dm1/main.pdf ../web/public/data/ens1/categ-dm1.pdf
   cp category-theory/dm2/main.pdf ../web/public/data/ens1/categ-dm2.pdf
