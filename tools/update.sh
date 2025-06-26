@@ -4,6 +4,9 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
 else
 	cd /Users/hugos29/Documents/ecole/ens1/
 	ipython tools/autocompile.py
+
+  cp profon/pieuvre/docs/presentation.pdf profon/pieuvre-presentation.pdf
+  cp profon/pieuvre/docs/report.pdf profon/pieuvre-report.pdf
 fi
 
 if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
@@ -47,8 +50,8 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
   cp profon/chap03.pdf ../web/public/data/ens1/profon-chap03.pdf
   cp profon/chap04.pdf ../web/public/data/ens1/profon-chap04.pdf
   cp profon/chap05.pdf ../web/public/data/ens1/profon-chap05.pdf
-  cp profon/pieuvre/docs/report.pdf ../web/public/data/ens1/profon-report.pdf
   cp profon/pieuvre/docs/presentation.pdf ../web/public/data/ens1/profon-presentation.pdf
+  cp profon/pieuvre/docs/report.pdf ../web/public/data/ens1/profon-report.pdf
 
   # ==========
   # SEMESTRE 1
