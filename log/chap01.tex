@@ -26,7 +26,7 @@
     \end{itemize}
 
 
-    Les formules logiques sont des mots. On les fabriques avec des briques de base (les variables) et des opérations de construction : si $F_1$ et $F_2$ sont deux formules, alors $\lnot F$,  $\verb|(| F_1 \lor F_2 \verb|)|$, $\verb|(| F_1 \land F_2 \verb|)|$, $\verb|(| F_1 \to F_2 \verb|)|$ et $\verb|(| F_1 \leftrightarrow F_2 \verb|)|$ aussi.
+    Les formules logiques sont des mots. On les fabrique avec des briques de base (les variables) et des opérations de construction : si $F_1$ et $F_2$ sont deux formules, alors $\lnot F$,  $\verb|(| F_1 \lor F_2 \verb|)|$, $\verb|(| F_1 \land F_2 \verb|)|$, $\verb|(| F_1 \to F_2 \verb|)|$ et $\verb|(| F_1 \leftrightarrow F_2 \verb|)|$ aussi.
   \end{defn}
 
   \begin{defn}["par le haut", "mathématique"]
@@ -34,7 +34,7 @@
   \end{defn}
 
   \begin{defn}["par le bas", "informatique"]
-    L'ensemble $\mathcal{F}$ des formules logique du calcul propositionnel sur $\mathcal{P}$ est défini par 
+    L'ensemble $\mathcal{F}$ des formules logiques du calcul propositionnel sur $\mathcal{P}$ est défini par 
     \begin{itemize}
       \item $\mathcal{F}_0 = \mathcal{P}$ ;
       \item $\mathcal{F}_{n+1} = \mathcal{F}_n \cup \mleft\{\, 
@@ -45,7 +45,7 @@
             \verb|(| F_1 \to F_2 \verb|)|\\
             \verb|(| F_1 \leftrightarrow F_2 \verb|)|
           \end{array}
-        \;\middle|\; F_1, F_2 \in \mathcal{F} \,\mright\}  $
+        \;\middle|\; F_1, F_2 \in \mathcal{F}_n \,\mright\}  $
     \end{itemize}
     puis on pose $\mathcal{F} = \bigcup_{n \in \mathds{N}} \mathcal{F}_n$.
   \end{defn}
@@ -70,7 +70,7 @@
   \begin{crlr}
     Il y a une bijection entre les formules et les arbres dont
     \begin{itemize}
-      \item les feuilles sont étiquetés par des variables ;
+      \item les feuilles sont étiquetées par des variables ;
       \item les nœuds internes sont étiquetés par des connecteurs ;
       \item ceux étiquetés par $\lnot$ ont un fils, les autres deux.
     \end{itemize}
@@ -102,7 +102,7 @@
   \section{Sémantique.}
   
   \begin{lem}
-    Soit $\nu$ une fonction de $\mathcal{P}$ dans $\{0,1\}$ appelé \textit{valuation}.
+    Soit $\nu$ une fonction de $\mathcal{P}$ dans $\{0,1\}$ appelée \textit{valuation}.
     Alors $\nu$ s'étend de manière unique en une fonction $\bar{\nu}$ de $\mathcal{F}$ dans $\{0,1\}$ telle que 
     \begin{itemize}
       \item sur $\mathcal{P}$, $\nu = \bar{\nu}$ ;
@@ -130,7 +130,7 @@
             \end{itemize}
         \end{itemize}
       \item[Unicité.]
-        On montre que si $\lambda = \nu$ sur $\mathcal{P}$ alors $\bar{\lambda} = \bar{\nu}$ si $\bar{\lambda}$ et $\nu$ vérifient les égalités précédents.
+        On montre que si $\lambda = \nu$ sur $\mathcal{P}$ alors $\bar{\lambda} = \bar{\nu}$ si $\bar{\lambda}$ et $\bar{\nu}$ vérifient les égalités précédents.
     \end{description}
   \end{prv}
 
@@ -154,7 +154,7 @@
       \item Une \textit{tautologie} est une formule satisfaite pour toutes les valuations.
       \item Un ensemble $\mathcal{E}$ de formules est \textit{satisfiable} s'il existe une valuation qui satisfait toutes les formules de $\mathcal{E}$.
       \item Un ensemble $\mathcal{E}$ de formules est \textit{finiment satisfiable} si tout sous-ensemble fini de $\mathcal{E}$ est satisfiable.
-      \item Une formule $F est \mathit{conséquence sémantique}$ d'un ensemble de formules $\mathcal{E}$ si toute valuation qui satisfait $\mathcal{E}$ satisfait $F$.
+      \item Une formule $F$ est \textit{conséquence sémantique} d'un ensemble de formules $\mathcal{E}$ si toute valuation qui satisfait $\mathcal{E}$ satisfait $F$.
       \item Un ensemble de formules $\mathcal{E}$ est \textit{contradictoire} s'il n'est pas satisfiable.
       \item Un ensemble de formules $\mathcal{E}$ est \textit{finiment contradictoire} s'il existe un sous-ensemble fini contradictoire de $\mathcal{E}$.
     \end{itemize}
@@ -162,7 +162,7 @@
 
   \begin{thm}[compacité du calcul propositionnel]
     \label{chap1-comp}
-    On donne trois énoncés équivalents (équivalence des trois énoncés laissé en exercice) du théorème de compacité du calcul propositionnel.
+    On donne trois énoncés équivalents (équivalence des trois énoncés laissée en exercice) du théorème de compacité du calcul propositionnel.
 
     \begin{description}
       \item[Version 1.] Un ensemble de formules $\mathcal{E}$ est satisfiable si et seulement s'il est finiment satisfiable.
@@ -254,7 +254,7 @@
     \[
     \mathcal{V} := \mleft\{\,\varphi \in \bigcup_{X \subseteq \mathcal{P}} \{0,1\}^X \;\middle|\; \forall \mathcal{C} \in \wp_\mathrm{f}(\mathcal{E}), \exists \delta \in \{0,1\}^\mathcal{P}, 
       \begin{array}{l}
-        \delta_{|\mathrm{dom}(\varphi)} = \varphi\\
+        \delta_{|\operatorname{dom}\varphi} = \varphi\\
         \forall F \in \mathcal{C}, \delta(F) = 1
       \end{array}
     \,\mright\} 
@@ -262,7 +262,7 @@
     }
 
     L'ensemble $\mathcal{V}$ est non-vide car contient l'application vide de $\{0,1\}^\emptyset$ car $\mathcal{E}$ est finiment satisfiable.
-    On défini la relation d'ordre~$\preceq$ sur  $\mathcal{V}$ par : \[
+    On définit la relation d'ordre~$\preceq$ sur  $\mathcal{V}$ par : \[
       \varphi \preceq \psi \quad \text{ ssi } \quad \psi \text{ prolonge } \varphi
     .\]
     Montrons que $(\mathcal{V}, \preceq)$ est inductif.
@@ -278,7 +278,7 @@
     L'ensemble de formules $B$ est fini, donc utilise un ensemble fini de variables, dont un sous-ensemble fini $\{x_{i_1}, \ldots, x_{i_n}\} \subseteq \operatorname{dom}(\lambda)$.
     Il existe $\varphi_1, \ldots, \varphi_n$ dans $\mathcal{C}$ telle que $x_{i_1} \in \operatorname{dom} \varphi_1, \ldots, x_{i_n} \in \operatorname{dom} \varphi_n$.
     Comme $\mathcal{C}$ est une chaîne, donc soit $\varphi_0 = \max_{i \in \llbracket 1,n\rrbracket} \varphi_i$ et on a $\varphi_0 \in \mathcal{C}$.
-    On a, de plus, $x_{i_1}, \ldots, x_{i_n} \in \operatorname{dom}(\varphi_0)$.
+    On a, de plus, $x_{i_1}, \ldots, x_{i_n} \in \operatorname{dom}\varphi_0$.
     Soit $\varphi_0 \in \mathcal{V}$ prolongeable en $\psi_0$ qui satisfait $B$.
     On définit :
     \begin{align*}
@@ -290,6 +290,21 @@
 
     On vérifie que la définition est cohérente sur l'intersection car $\lambda$ et $\psi_0$ prolongent tous les deux $\varphi_0$ et donc  $\lambda \in \mathcal{V}$ d'où $\mathcal{V}$ est inductif.
 
-    Suite la preuve plus tard.
+    Soit $\gamma$ un élément maximal de $\mathcal{V}$. Pour montrer le théorème, il suffit de montrer que $\operatorname{dom} \gamma = \mathcal{P}$.
+    Si $\operatorname{dom} \gamma \neq \mathcal{P}$, soit $x \not\in \operatorname{dom} \gamma$.
+    Montrons que $\gamma$ n'est pas maximal en définissant $\gamma' \in \mathcal{V}$ qui vérifie $\gamma \prec \gamma'$.
+    On prend $\operatorname{dom}\gamma' = \operatorname{dom} \gamma \cup \{x\}$.
+    \begin{itemize}
+      \item Si, pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\delta$ qui prolonge $\gamma$ et qui satisfait $B$ telle que $\delta(x) = 0$, alors on pose $\gamma'(x) = 0$.
+      \item Sinon, on pose $\gamma'(x) = 1$.
+    \end{itemize}
+    Montrons que $\gamma' \in \mathcal{V}$.
+    Soit $B$ un ensemble fini de formules de $\mathcal{E}$.
+    \begin{itemize}
+      \item Si $\gamma'(x) = 0$ alors il existe une valuation $\delta$ prolongeant $\gamma$ et satisfaisant $B$ telle que $\delta(x) = 0$, et donc  $\delta$ prolonge $\gamma'$.
+      \item Si $\gamma'(x) = 1$ alors il existe une partie finie $B_0$ de $\mathcal{E}$ telle que toute valuation $\delta$ prolongeant $\gamma$ et satisfaisant $B_0$ vérifie que $\delta(x) = 1$.
+        On choisit une valuation qui prolonge $\gamma$ et satisfait $B \cup B_0$ ; elle prolonge $\gamma'$.
+    \end{itemize}
+    On a donc une contradiction avec la maximalité de $\gamma$. On en conclut que $\operatorname{dom} \gamma = \mathcal{P}$, ce qui termine la preuve du théorème.
   \end{prv}
 \end{document}

@@ -36,6 +36,7 @@
 \RequirePackage{xfrac}
 \RequirePackage{tabularx}
 \RequirePackage{luacode}
+\RequirePackage{pgfplots}
 \RequirePackage{annotate-equations}
 \RequirePackage{colortbl}
 \RequirePackage{nicematrix}

@@ -34,7 +34,7 @@ def compute_md5(file_path):
 
 tex_files = [ str(tex) for tex in Path(".").rglob("*.tex") ]
 tex_ignore = [ 'category-theory/l01.tex', 'category-theory/l02.tex', 'category-theory/l03.tex', 'profon/docs-pieuvre/coq.tex', 'profon/pieuvre/docs/coq.tex' ]
-tex_ignore += [ fn for fn in tex_files if fn.startswith('cours-mpi') or fn.startswith('sujets-oraux') or fn.startswith('stage/.ignored') ]
+tex_ignore += [ fn for fn in tex_files if fn.startswith('cours-mpi') or fn.startswith('sujets-oraux') or fn.startswith('stage/') ]
 
 def get_tex_to_recompile(filename):
     reg = r"(chap\d\d/chap\d\d\.tex)|(chap\d\d.tex)|(td\d\d\.tex)"

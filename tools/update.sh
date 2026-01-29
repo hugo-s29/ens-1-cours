@@ -35,6 +35,9 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
   cp log/revisions-a4.pdf ../web/public/data/ens1/logique-revisions-a4.pdf
   cp log/revisions-long.pdf ../web/public/data/ens1/logique-revisions-long.pdf
 
+  cp stage/rapport/main.pdf ../web/public/data/ens1/stage-report.pdf
+  cp stage/presentation/main.pdf ../web/public/data/ens1/stage-presentation.pdf
+
   cp proba/td.pdf ../web/public/data/ens1/proba-td.pdf
   cp proba/dm1.pdf ../web/public/data/ens1/proba-dm1.pdf
   cp proba/revisions.pdf ../web/public/data/ens1/proba-revisions.pdf
