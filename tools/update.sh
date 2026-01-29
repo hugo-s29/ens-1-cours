@@ -1,6 +1,6 @@
 if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
 	cd /home/hugo/cours-l3/
-	python3 tools/autocompress.py
+	#python3 tools/autocompress.py
 else
 	cd /Users/hugos29/Documents/ecole/ens1/
 	ipython tools/autocompile.py
@@ -35,8 +35,8 @@ if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
   cp log/revisions-a4.pdf ../web/public/data/ens1/logique-revisions-a4.pdf
   cp log/revisions-long.pdf ../web/public/data/ens1/logique-revisions-long.pdf
 
-  cp stage/rapport/main.pdf ../web/public/data/ens1/stage-report.pdf
-  cp stage/presentation/main.pdf ../web/public/data/ens1/stage-presentation.pdf
+  # cp stage/rapport/main.pdf ../web/public/data/ens1/stage-report.pdf
+  # cp stage/presentation/main.pdf ../web/public/data/ens1/stage-presentation.pdf
 
   cp proba/td.pdf ../web/public/data/ens1/proba-td.pdf
   cp proba/dm1.pdf ../web/public/data/ens1/proba-dm1.pdf
