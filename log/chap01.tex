@@ -4,6 +4,7 @@
   \chapter{Le calcul propositionnel.}
 
   Le \textit{calcul propositionnel}, c'est la "grammaire" de la logique.
+  %Je trouve ce commentaire un peu bizarre, la grammaire n'est pas complète puisqu'il n'y a pas les quantificateurs et il y a une composante sémantique au calcul propositionnel, alors que la grammaire est une notion purement syntaxique.
   Dans ce chapitre, on s'intéressera à
   \begin{enumerate}
     \item la construction des formules ($\triangleright$ la syntaxe) ;
@@ -13,8 +14,8 @@
   \section{Syntaxe.}
 
   \begin{defn}
-    Le \textit{langage}, ou \textit{alphabet}, est un ensemble d'éléments fini ou pas.
-    Les éléments sont les \textit{lettres}, et les suites finies sont les \textit{mots}.
+    Un \textit{langage}, ou \textit{alphabet}, est un ensemble d'éléments (fini ou pas).
+    Ses éléments sont appelés \textit{lettres}, et les suites finies de lettres sont appelées \textit{mots}.
   \end{defn}
 
   \begin{rmk}
@@ -65,9 +66,114 @@
     et ces sous-formules sont uniques.
   \end{thm}
   \begin{prv}
-    En exercice.
+    Montrons l'existence. 
+    Posons \[\mathcal{G} = \mathcal{P} \cup \mleft\{\, 
+          \begin{array}{c}
+            \lnot F_1\\
+            \verb|(| F_1 \lor F_2 \verb|)|\\
+            \verb|(| F_1 \land F_2 \verb|)|\\
+            \verb|(| F_1 \to F_2 \verb|)|\\
+            \verb|(| F_1 \leftrightarrow F_2 \verb|)|
+          \end{array}
+        \;\middle|\; F_1, F_2 \in \mathcal{F} \,\mright\}\]
+    Comme $\mathcal{F}$ est stable par les opérations de construction des formules, on a $\mathcal{G} \subseteq \mathcal{F}$.
+    Montrons alors que $\mathcal{G}$ est stable par ces mêmes opérations. On a déjà $\mathcal{P} \subset \mathcal{G}$.
+    Par ailleurs, pour tout $F \in \mathcal{G}$, on a $F \in \mathcal{F}$, d'où $\lnot F \in \mathcal{G}$.
+    Soient ensuite $F_1, F_2 \in \mathcal{G}$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$.
+    Comme $F_1$ et $F_2$ sont des formules, on obtient $\verb|(| F_1\ \sigma\ F_2 \verb|)| \in \mathcal{G}$.
+    En conclusion, $\mathcal{G}$ est stable par les opérations de construction des formules, donc contient $\mathcal{F}$.
+    
+    La partie difficile de la preuve d'unicité est le cas des opérateurs binaires.
+    Il faut par exemple montrer que pour toutes formules $F_1, F_2, G_1$ et $G_2$, les formules $\verb|(| F_1 \lor F_2 \verb|)|$ et $\verb|(| G_1 \land G_2 \verb |)|$ sont différentes.
+    Pour cela, on montre qu'un préfixe propre d'une formule n'est pas une formule.
+    On commence par obtenir des contraintes sur les parenthèses qu'un préfixe d'une formule peut avoir.
+    Montrons déjà que toute formule contient autant de parenthèses ouvrantes que de parenthèses fermantes.
+    Notons pour tout $F \in \mathcal{F}$, $o(F)$ le nombre de parenthèses ouvrantes de $F$ et $f(F)$ son nombre de parenthèses fermantes et montrons par récurrence simple, pour tout $n \in \mathds{N}$, la propriété $$\mathcal{P}(n) = \forall F \in \mathcal{F}_n, o(F) = f(F).$$
+    \begin{itemize}
+      \item Les éléments de $\mathcal{F}_0 = \mathcal{P}$ ne contiennent ni parenthèse ouvrante ni parenthèse fermante, d'où $\mathcal{P}(0)$.
+      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vraie.
+        Soit $F \in \mathcal{F}_{n+1}$.
+        \begin{itemize}
+          \item Si $F \in \mathcal{F}_n$, alors $o(F) = f(F)$ d'après $\mathcal{P}(n)$.
+          \item Supposons qu'on dispose de $G \in \mathcal{F}_n$ tel que $F = \lnot G$.
+            Alors $\mathcal{P}(n)$ donne l'égalité $o(G) = f(G)$, d'où l'on tire $o(F) = o(G) = f(G) = f(F)$.
+          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
+            $\mathcal{P}(n)$ s'écrit, pour $F_1$ et $F_2$, $o(F_1) = f(F_1)$ et $o(F_2) = f(F_2)$.
+            Dès lors, on calcule $o(F) = o(F_1) + o(F_2) + 2 = f(F_1) + f(F_2) + 2 = f(F)$.
+        \end{itemize}
+        Dans tous les cas, on a $o(F) = f(F)$, d'où $\mathcal{P}(n+1)$.
+    \end{itemize}
+
+    Discutons maintenant des préfixes d'une formule.
+    Notons, pour deux mots $u$ et $v$, $u < v$ lorsque $u$ est un préfixe propre de $v$ et montrons par récurrence simple, pour tout $n \in \mathds{N}$, la propriété $$\mathcal{P}(n) = \forall F \in \mathcal{F}_n, \forall G < F, o(G) = f(G) = 0 \lor f(G) < o(G).$$
+    \begin{itemize}
+      \item Les éléments de $\mathcal{F}_0 = \mathcal{P}$ n'ont pas de préfixe propre, d'où $\mathcal{P}(0)$.
+      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vrai.
+        Soient $F \in \mathcal{F}_{n+1}$ et $G$ un préfixe propre de $F$.
+        \begin{itemize}
+          \item Si $F \in \mathcal{F}_n$, alors $o(G) = f(G) = 0$ ou $f(G) < o(G)$ d'après $\mathcal{P}(n)$
+          \item Supposons qu'on ait $F_1 \in \mathcal{F}_n$ tel que $F = \lnot F_1$.
+            Si $G$ est vide, alors $o(G) = f(G) = 0$.
+            Sinon, $G$ s'écrit $\lnot G_1$ avec $G_1$ un préfixe strict de $F_1$.
+            L'hypothèse $\mathcal{P}(n)$ donne $o(G_1) = f(G_1) = 0$ ou $f(G_1) < o(G_1)$.
+            Or, on a $o(G) = o(G_1)$ et $f(G) = f(G_1)$, d'où $o(G) = f(G) = 0$ ou $f(G) < o(G)$.
+          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
+            On distingue les cas selon la longueur de $G$.
+            \begin{itemize}
+              \item Si $G$ est le mot vide, alors $o(G) = f(G) = 0$
+              \item Supposons que $G = \verb|(| G_1$ avec $G_1$ un préfixe strict de $F_1$.
+                L'hypothèse $\mathcal{P}(n)$ appliquée à $F_1$ et $G_1$ donne $o(G_1) = f(G_1) = 0$ ou $f(G_1) < o(G_1)$.
+                Dans les deux cas, on a $f(G_1) \le o(G_1)$, d'où $f(G) = f(G_1) < o(G_1) + 1 = o(G)$.
+              \item Supposons que $G = \verb|(| F_1$. Alors $o(F_1) = f(F_1)$, donc $f(G) = f(F_1) = o(G_1) < o(G_1) + 1 = o(G)$.
+              \item Supposons que $G = \verb|(| F_1 \sigma G_2$ avec $G_2$ un préfixe strict de $F_2$.
+                $\mathcal{P}(n)$ donne $o(G_2) = f(G_2) = 0$ ou $f(G_2) < o(G_2)$.
+                Dans les deux cas, on obtient $f(G_2) \le o(G_2)$.
+                De plus, on a $o(F_1) = f(F_1)$, donc
+                \[\begin{array}{rcl}
+                  f(G)&=&f(F_1) + f(G_2)\\
+                  &\le&o(F_1) + o(G_2)\\
+                  &<&o(F_1) + o(G_2) + 1\\
+                &=&o(G).\end{array}\]
+            \end{itemize}
+        \end{itemize}
+        Dans tous les cas, on conclut bien $o(G) = f(G) = 0$ ou $f(G) < o(G)$.
+        D'où $\mathcal{P}(n+1)$.
+    \end{itemize}
+
+    Montrons maintenant par récurrence simple, pour tout $n \in \mathds{N}$, la propriété $$\mathcal{P}(n) = \forall F \in \mathcal{F}_n, \forall G < F, G \notin \mathcal{F}.$$
+    \begin{itemize}
+      \item Une formule de $\mathcal{F}_0 = \mathcal{P}$ n'a pas de préfixe propre, d'où $\mathcal{P}(0)$.
+      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vrai.
+        Soient $F \in \mathcal{F}_{n+1}$ et $G$ un préfixe propre de $F$.
+        \begin{itemize}
+          \item Si $F \in \mathcal{F}_n$, alors $G$ n'est pas une formule d'après $\mathcal{P}(n)$
+          \item Supposons qu'on dispose de $F_1 \in \mathcal{F}_n$ tel que $F = \lnot F_1$.
+            Supposons que $G$ est une formule.
+            Comme une formule n'est pas vide, $G$ s'écrit $\lnot G_1$ avec $G_1$ un préfixe strict de $F_1$.
+            Avec l'existence dans le théorème de lecture unique vue plus haut, $G_1$ est une formule, ce qui contredit $\mathcal{P}(n)$ pour $F_1$ et $G_1$.
+          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
+            Supposons que $G$ est une formule.
+            Comme une formule n'est pas vide, $G$ commence par une parenthèse ouvrante.
+            En particulier, $o(G) \ne 0$.
+            Or, $G$ est un préfixe propre de $F$, donc $f(G) < o(G)$.
+            Ceci est impossible puisque, $G$ étant une formule, on a aussi $f(G) = o(G)$.
+        \end{itemize}
+        Dans tous les cas, $G$ n'est pas une formule, d'où $\mathcal{P}(n+1)$.
+    \end{itemize}
+
+    Nous sommes prêts à montrer que les propriétés du théorème de lecture unique sont mutuellement exclusives.
+    Les deux premières le sont et excluent les autres en considérant la première lettre des formules qu'elles décrivent.
+    Plus précisément, les formules satisfaisant la première propriété commencent par une variable, celles satisfaisant la deuxième commencent par une négation et les autres commencent par une parenthèse.
+    Pour les autres cas, considérons $F_1, F_2, G_1, G_2 \in \mathcal{F}$ et $\sigma, \sigma' \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| G_1\ \sigma'\ G_2 \verb|)|$.
+    Il s'agit de montrer que $\sigma = \sigma'$.
+    Quitte à échanger les rôles de $F_1$ et $G_1$, de $F_2$ et $G_2$ et de $\sigma$ et $\sigma'$, on peut supposer que $\verb|(| F_1$ est un préfixe de $\verb|(| G_1$.
+    Alors $F_1$ est un préfixe de $G_1$.
+    Or $F_1$ et $G_1$ sont des formules, donc $F_1$ n'est pas un préfixe propre de $G_1$, ou encore $F_1 = G_1$.
+    Par conséquent, $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| F_1\ \sigma'\ G_2 \verb|)|$, d'où $\sigma = \sigma'$.
+    On conclut bien l'unicité.
   \end{prv}
 
+  % Le théorème précédent n'est pas suffisant pour dire que ceci est un corollaire, il faudrait aussi que dans chaque règle, les sous-formules obtenues soient uniques, mais c'est insupportable à écrire proprement.
   \begin{crlr}
     Il y a une bijection entre les formules et les arbres dont
     \begin{itemize}
@@ -180,6 +286,7 @@
         Si $\nu$ satisfait toute formule de $\mathcal{E}$, alors tout sous-ensemble fini de $\mathcal{E}$ est satisfiable en utilisant la valuation $\nu$.
       \item["$\impliedby$".]
         Supposons $\mathcal{E}$ finiment satisfiable. Comme $\mathcal{P}$ est supposé dénombrable, notons $\mathcal{P} = \{x_1, x_2, \ldots\}$.
+        % Ah ! Espèce de mathématicien qui compte à partir de 1 !
         On cherche une valuation $\nu$ qui satisfait toute formule de $\mathcal{E}$, et on va définir la suite des $\varepsilon_n = \nu(x_n)$ par récurrence.
     \end{description}
 
@@ -196,7 +303,7 @@
             \end{quote}
             est vraie car $\mathcal{E}$ est supposé finiment satisfiable.
           \item Soit $n \in \mathds{N}$. Supposons que $\varepsilon_1,\ldots,\varepsilon_n$ soient construits et qu'ils satisfont $\mathcal{R}_n$.
-            On a la disjonction de cas suivants :
+            On a la disjonction de cas suivante :
             \begin{itemize}
               \item Si pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ telle que $\forall i \in \llbracket 1, n\rrbracket$, $\lambda(x_i) = \varepsilon_i$ et que  $\lambda(x_{i+1}) = 0$, alors posons $\varepsilon_{n+1} := 0$ et on a immédiatement $\mathcal{R}_{n+1}$.
               \item S'il existe une partie $A$ de $\mathcal{E}$, telle que $(\star)$ toute valuation $\lambda$ satisfaisant $A$ et telle que $\lambda(x_i) = \varepsilon_i$ pour tout  $i \in \llbracket 1,n\rrbracket$ vérifie $\lambda(x_{n+1}) = 1$.
@@ -211,24 +318,15 @@
         \end{itemize}
 
       \item Posons $\nu : x_i \mapsto \varepsilon_i$.
-        On va montrer que $\nu$ satisfait $\mathcal{E}$ en utilisant les deux lemmes suivants.
+        Montrons que $\nu$ satisfait $\mathcal{E}$.
+        Soit $F \in \mathcal{E}$.
+        On sait que $F$ est un mot (fini), donc contient un ensemble fini de variables.
+        Soit $n$ maximal tel que $x_n$ est une variable de $F$, de sorte que l'ensemble des variables de $F$ soit inclus dans $\{x_0, \ldots, x_n\}$.
+        D'après $\mathcal{R}_n$, il existe une valuation $\eta$ qui satisfait $F$ et telle que $\eta(x_0) = \varepsilon_0, \ldots, \eta(x_n) = \varepsilon_n$.
+        En particulier, $\nu$ et $\eta$ coïncident sur les variables de $F$.
+        Donc (lemme simple), elles coïncident sur toutes les formules qui n'utilisent que ces variables.
+        Donc, $\eta(F) = 1$, et on en conclut que $\eta$ satisfait $\mathcal{E}$.
     \end{enumerate}
-
-    \begin{lem}
-      Pour toute formule $F$, il existe un entier $k_F \in \mathds{N}$ tel que $\operatorname{vars} F \subseteq \{x_1, \ldots, x_{k_F}\}$.
-    \end{lem}
-
-    \begin{lem}
-      Si $\lambda$ et $\nu$ coïncident sur $\operatorname{vars} F$ alors $\lambda(F) = \nu(F)$.
-    \end{lem}
-    \begin{enumerate}
-      \item[]
-        Considérons $F \in \mathcal{E}$.
-        Par $\mathcal{R}_{k_F}$ avec $\{F\}$ sous-ensemble fini de $\mathcal{E}$, il existe une valuation $\lambda$ satisfaisant $F$ et telle que pour tout $i \in \llbracket 1, k_F\rrbracket$, on ait $\lambda(x_i) = \varepsilon_i$.
-        Autrement dit, $\lambda$ coïncide avec $\nu$ sur les $k_F$ premières variables, donc sur les variables de $F$.
-        On en conclut que $\lambda(F) = \nu(F) = 1$.
-    \end{enumerate}
-
   \end{prv}
 
   Dans le cas non-dénombrable, on utilise le \textit{lemme de Zorn}, un équivalent de l'\textit{axiome du choix}.
@@ -243,13 +341,13 @@
 
   \begin{exm}
     \begin{enumerate}
-      \item Dans le cas $(\mathcal{P}(X), \subseteq )$, le majorant est l'union des parties de la chaîne, il est donc inductif.
-      \item Dans le cas $(\mathds{R}, \le)$, il n'est pas inductif car $\mathds{R}$ n'a pas de majorant dans $\mathds{R}$.
+      \item $(\mathcal{P}(X), \subseteq )$ est inductif, le majorant d'une chaîne étant l'union des parties de la chaîne.
+      \item $(\mathds{R}, \le)$ n'est pas inductif car $\mathds{R}$ n'a pas de majorant dans $\mathds{R}$.
     \end{enumerate}
   \end{exm}
 
   \begin{lem}[Lemme de Zorn]
-    Si $(X, \mathcal{R})$ est un ensemble ordonné inductif non-vide, il admet au moins un élément maximal.
+    Tout ensemble ordonné inductif non-vide admet un élément maximal.
   \end{lem}
 
   \begin{rmk}
@@ -275,26 +373,25 @@
     .\] 
     }
 
-    L'ensemble $\mathcal{V}$ est non-vide car contient l'application vide de $\{0,1\}^\emptyset$ car $\mathcal{E}$ est finiment satisfiable.
-    On définit la relation d'ordre~$\preceq$ sur  $\mathcal{V}$ par : \[
+    L'ensemble $\mathcal{V}$ est non-vide car il contient l'application vide de $\{0,1\}^\emptyset$ car $\mathcal{E}$ est finiment satisfiable.
+    On définit une relation d'ordre~$\preceq$ sur $\mathcal{V}$ par : \[
       \varphi \preceq \psi \quad \text{ ssi } \quad \psi \text{ prolonge } \varphi
     .\]
     Montrons que $(\mathcal{V}, \preceq)$ est inductif.
-    Soit $\mathcal{C}$ une chaîne de $\mathcal{V}$et construisons un majorant de $\mathcal{C}$.
+    Soit $\mathcal{C}$ une chaîne de $\mathcal{V}$, construisons un majorant de $\mathcal{C}$.
     Soit $\lambda$ la valuation partielle définie sur $\operatorname{dom}\lambda = \bigcup_{\varphi \in \mathcal{C}} \operatorname{dom} \varphi$, par : 
     si $x_i \in \operatorname{dom} \lambda$ alors il existe $\varphi \in \mathcal{C}$ tel que $x_i \in \operatorname{dom} \varphi$ et on pose $\lambda(x_i) = \varphi(x_i)$.
 
     La valuation $\lambda$ est définie de manière unique,  \textit{i.e.} ne dépend pas du choix de $\varphi$. En effet, si $\varphi \in \mathcal{C}$ et $\psi \in \mathcal{C}$, avec $x_i \in \operatorname{dom} \varphi \cap \operatorname{dom} \psi$, alors on a $\varphi \preceq \psi$ ou $\psi \preceq \varphi$, donc $\varphi(x_i) = \psi(x_i)$.
 
-    Autrement dit, $\lambda$ est un majorant de $\mathcal{C}$.
-
+    Notons que $\lambda$ est un majorant de $\mathcal{C}$.
     Montrons que $\lambda \in \mathcal{V}$.
     Soit $B$ une partie finie de $\mathcal{E}$. On cherche $\mu$ qui prolonge $\lambda$ et satisfait $B$.
-    L'ensemble de formules $B$ est fini, donc utilise un ensemble fini de variables, dont un sous-ensemble fini $\{x_{i_1}, \ldots, x_{i_n}\} \subseteq \operatorname{dom}(\lambda)$.
+    L'ensemble de formules $B$ est fini, donc utilise un ensemble fini de variables, dont l'intersection avec $\operatorname{dom}(\lambda)$ est un sous-ensemble fini $\{x_{i_1}, \ldots, x_{i_n}\}$.
     Il existe $\varphi_1, \ldots, \varphi_n$ dans $\mathcal{C}$ telle que $x_{i_1} \in \operatorname{dom} \varphi_1, \ldots, x_{i_n} \in \operatorname{dom} \varphi_n$.
-    Comme $\mathcal{C}$ est une chaîne, donc soit $\varphi_0 = \max_{i \in \llbracket 1,n\rrbracket} \varphi_i$ et on a $\varphi_0 \in \mathcal{C}$.
-    On a, de plus, $x_{i_1}, \ldots, x_{i_n} \in \operatorname{dom}\varphi_0$.
-    Soit $\varphi_0 \in \mathcal{V}$ prolongeable en $\psi_0$ qui satisfait $B$.
+    Comme $\mathcal{C}$ est une chaîne, $\varphi_0 = \max_{i \in \llbracket 1,n\rrbracket} \varphi_i$ est bien défini et on a $\varphi_0 \in \mathcal{C}$.
+    Dès lors, $\varphi_0 \in \mathcal{V}$ est prolongeable en $\psi_0$ qui satisfait $B$.
+    On a de plus $x_{i_1}, \ldots, x_{i_n} \in \operatorname{dom}\varphi_0$.
     On définit :
     \begin{align*}
       \mu: \mathcal{P} &\longrightarrow \{0,1\}  \\
@@ -303,9 +400,13 @@
       \text{sinon} &\longmapsto 0
     .\end{align*}
 
-    On vérifie que la définition est cohérente sur l'intersection car $\lambda$ et $\psi_0$ prolongent tous les deux $\varphi_0$ et donc  $\lambda \in \mathcal{V}$ d'où $\mathcal{V}$ est inductif.
+    Comme $\lambda$ et $\psi_0$ coïncident sur $\operatorname{dom} \lambda \cap \operatorname{var} B$, $\mu$ est bien définie.
+    De plus, comme $\mu$ et $\psi_0$ coïncident sur $\operatorname{var} B$, $\mu$ satisfait $B$.
+    Donc $\lambda \in \mathcal{V}$ d'où l'on tire que $\mathcal{V}$ est inductif.
 
-    Soit $\gamma$ un élément maximal de $\mathcal{V}$. Pour montrer le théorème, il suffit de montrer que $\operatorname{dom} \gamma = \mathcal{P}$.
+    D'après le lemme de Zorn, $\mathcal{V}$ admet un élément maximal $\varphi$.
+    Pour montrer le théorème, il suffit de montrer que $\operatorname{dom} \gamma = \mathcal{P}$.
+    % Techniquement non, mais il ne reste plus qu'à pousser les cartes un fois qu'on a ça.
     Si $\operatorname{dom} \gamma \neq \mathcal{P}$, soit $x \not\in \operatorname{dom} \gamma$.
     Montrons que $\gamma$ n'est pas maximal en définissant $\gamma' \in \mathcal{V}$ qui vérifie $\gamma \prec \gamma'$.
     On prend $\operatorname{dom}\gamma' = \operatorname{dom} \gamma \cup \{x\}$.
