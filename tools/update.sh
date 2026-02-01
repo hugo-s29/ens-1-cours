@@ -1,9 +1,9 @@
 if [ "$HOSTNAME" = "s-1vcpu-1gb-lon1-01" ]; then
 	cd /home/hugo/cours-l3/
-	python3 tools/autocompress.py
+	# python3 tools/autocompress.py
 else
 	cd /Users/hugos29/Documents/ecole/ens1/
-	ipython tools/autocompile.py
+	# ipython tools/autocompile.py
 
   cp profon/pieuvre/docs/presentation.pdf profon/pieuvre-presentation.pdf
   cp profon/pieuvre/docs/report.pdf profon/pieuvre-report.pdf

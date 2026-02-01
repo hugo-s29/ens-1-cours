@@ -17,7 +17,7 @@
     Les éléments sont les \textit{lettres}, et les suites finies sont les \textit{mots}.
   \end{defn}
 
-  \begin{defn}
+  \begin{rmk}
     On choisit l'alphabet :
     \begin{itemize}
       \item $\mathcal{P} = \{x_0, x_1, \ldots\}$ des variables propositionnelles ;
@@ -27,7 +27,9 @@
 
 
     Les formules logiques sont des mots. On les fabrique avec des briques de base (les variables) et des opérations de construction : si $F_1$ et $F_2$ sont deux formules, alors $\lnot F$,  $\verb|(| F_1 \lor F_2 \verb|)|$, $\verb|(| F_1 \land F_2 \verb|)|$, $\verb|(| F_1 \to F_2 \verb|)|$ et $\verb|(| F_1 \leftrightarrow F_2 \verb|)|$ aussi.
-  \end{defn}
+  \end{rmk}
+
+  On donne deux définitions des formules et on pourra montrer qu'elles sont équivalentes.
 
   \begin{defn}["par le haut", "mathématique"]
     L'ensemble~$\mathcal{F}$ des formules du calcul propositionnel construit sur $\mathcal{P}$ est le plus petit ensemble contenant $\mathcal{P}$ et stable par les opérations de construction.
@@ -50,8 +52,6 @@
     puis on pose $\mathcal{F} = \bigcup_{n \in \mathds{N}} \mathcal{F}_n$.
   \end{defn}
 
-  On peut montrer l'équivalence des deux définitions.
-
   \begin{thm}[Lecture unique]
     Toute formule $G \in \mathcal{F}$ vérifie une et une seule de ces propriétés :
     \begin{itemize}
@@ -60,8 +60,9 @@
       \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \lor F_2 \verb|)|$ ;
       \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \land F_2 \verb|)|$ ;
       \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \to F_2 \verb|)|$ ;
-      \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \leftrightarrow F_2 \verb|)|$.
+      \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \leftrightarrow F_2 \verb|)|$ ;
     \end{itemize}
+    et ces sous-formules sont uniques.
   \end{thm}
   \begin{prv}
     En exercice.
@@ -109,9 +110,9 @@
       \item si $F, G \in \mathcal{F}$ sont des formules alors 
         \begin{itemize}
           \item $\bar{\nu}(\lnot F) = 1 - \bar{\nu}(F)$ ;
-          \item $\bar{\nu}(F \lor G) = 1$ ssi $\bar{\nu}(F) = 1$ ou\footnote{C'est un "ou" inclusif : on peut avoir les deux (ce qui est très différent du "ou" exclusif dans la langue française).} $\bar{\nu}(G) = 1$ ;
+          \item $\bar{\nu}(F \lor G) = \max(\bar{\nu}(F), \bar{\nu}(G))$ ;
           \item $\bar{\nu}(F \land G) = \bar{\nu}(F) \times \bar{\nu}(G)$ ;
-          \item $\bar{\nu}(F \to G) = 1$ ssi $\bar{\nu}(G) = 1$ ou $\bar{\nu}(F) = 0$ ;
+          \item $\bar{\nu}(F \to G) = 1$ ssi $\bar{\nu}(F) \le \bar{\nu}(G)$ ;
           \item $\bar{\nu}(F \leftrightarrow G) = 1$ ssi $\bar{\nu}(F) = \bar{\nu}(G)$.
         \end{itemize}
     \end{itemize}
@@ -130,7 +131,7 @@
             \end{itemize}
         \end{itemize}
       \item[Unicité.]
-        On montre que si $\lambda = \nu$ sur $\mathcal{P}$ alors $\bar{\lambda} = \bar{\nu}$ si $\bar{\lambda}$ et $\bar{\nu}$ vérifient les égalités précédents.
+        On peut montrer que si $\bar{\nu}$ et $\bar{\nu}'$ sont deux extensions de $\nu$, alors $\bar{\nu}$ et $\bar{\nu}'$ coïncident sur $\mathcal{F}_n$, pour tout $n \in \mathds{N}$, ce que l'on prouve par récurrence sur $n$.
     \end{description}
   \end{prv}
 
@@ -161,7 +162,6 @@
   \end{defn}
 
   \begin{thm}[compacité du calcul propositionnel]
-    \label{chap1-comp}
     On donne trois énoncés équivalents (équivalence des trois énoncés laissée en exercice) du théorème de compacité du calcul propositionnel.
 
     \begin{description}
@@ -169,52 +169,66 @@
       \item[Version 2.] Un ensemble de formules $\mathcal{E}$ est contradictoire si et seulement s'il est finiment contradictoire.
       \item[Version 3.] Pour tout ensemble $\mathcal{E}$ de formules du calcul propositionnel, et toute formule $F$, $F$ est conséquence sémantique de $\mathcal{E}$ si et seulement si $F$ est conséquence sémantique d'un sous-ensemble fini de $\mathcal{E}$.
     \end{description}
+
+    \label{chap1-comp}
   \end{thm}
   \begin{prv}
-    Dans le cas où $\mathcal{P} = \{x_0, x_1, \ldots\} $ est au plus dénombrable (le cas non dénombrable sera traité après).
-    On démontre le cas "difficile" de la version 1 (\textit{i.e.} finiment satisfiable implique satisfiable).
-    Soit $\mathcal{E}$ un ensemble de formules finiment satisfiable.
-    On construit par récurrence une valuation $\nu$ qui satisfasse  $\mathcal{E}$ par récurrence : on construit $\varepsilon_0, \ldots, \varepsilon_n, \ldots$ tels que $\nu(x_0) = \varepsilon_0, \ldots, \nu(x_n) = \varepsilon_n, \ldots$
-    \begin{itemize}
-      \item Cas de base.
-        On définit la valeur de $\varepsilon_n$ pour $x_0 \in \mathcal{P}$.
-        \begin{enumerate}
-          \item soit, pour tout sous-ensemble fini $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ qui satisfait $B$ avec $\lambda(x_0) = 0$ ; \label{chap1-comp-cas1}
-          \item soit, il existe un sous-ensemble fini $B_0$ de $\mathcal{E}$, pour toute valuation $\lambda$ qui satisfait $B_0$, on a $\lambda(x_0) = 1$.  \label{chap1-comp-cas2}
-        \end{enumerate}
+    Supposons que $\mathcal{P}$ soit dénombrable. Le cas non-dénombrable sera traité après.
 
-        Si on est dans le cas~\ref{chap1-comp-cas1}, on pose $\varepsilon_0 = 0$, et sinon (cas~\ref{chap1-comp-cas2}) on pose $\varepsilon_0 = 1$.
-      \item Cas de récurrence.
-        On montre, par récurrence sur $n$, la propriété suivante :
+    \begin{description}
+      \item["$\implies$".]
+        Si $\nu$ satisfait toute formule de $\mathcal{E}$, alors tout sous-ensemble fini de $\mathcal{E}$ est satisfiable en utilisant la valuation $\nu$.
+      \item["$\impliedby$".]
+        Supposons $\mathcal{E}$ finiment satisfiable. Comme $\mathcal{P}$ est supposé dénombrable, notons $\mathcal{P} = \{x_1, x_2, \ldots\}$.
+        On cherche une valuation $\nu$ qui satisfait toute formule de $\mathcal{E}$, et on va définir la suite des $\varepsilon_n = \nu(x_n)$ par récurrence.
+    \end{description}
+
+    \begin{enumerate}
+      \item On construit par récurrence une suite $(\varepsilon_n)_{n \ge 1}$ qui satisfait, pour tout $n \in \mathds{N}$,
         \begin{quote}
-          il existe une suite $\varepsilon_0, \ldots, \varepsilon_n$ (que l'on étend, la suite ne change pas en fonction de $n$) de booléens telle que, pour tout sous-ensemble fini $B$ de $\mathcal{E}$, il existe une valuation $\nu$ satisfaisant  $B$ et telle que $\nu(x_0) = \varepsilon_0$, \ldots, et $\nu(x_n) = \varepsilon_n$.
+          "pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ satisfaisant  $B$ et telle que pour tout~$i \in \llbracket 1, n\rrbracket$, $\lambda(x_i) = \varepsilon_i$".
         \end{quote}
+        On note cette propriété $\mathcal{R}_n$.
         \begin{itemize}
-          \item Pour $n = 0$, soit on est dans le cas~\ref{chap1-comp-cas1}, et on prend $\varepsilon_0 = 0$ et on a la propriété ; soit on est dans le cas~\ref{chap1-comp-cas2};, et on prend $B$ un sous-ensemble fini de $\mathcal{E}$, alors $B \cup B_0$ est un ensemble fini donc satisfiable par une valuation $\nu$. La valuation satisfait  $B_0$ donc  $\nu(x_0) = 1$ et $\nu$ satisfait $B$.
-            On a donc la propriété au rang $0$.
-          \item Hérédité.
-            Par hypothèse de récurrence, on a une suite $\varepsilon_0, \ldots, \varepsilon_n$.
-            \begin{enumerate}
-              \item Soit, pour tout sous-ensemble fini $B$ de $\mathcal{E}$, il existe $\nu$ qui satisfait $B$ et telle que $\nu(x_0) = \varepsilon_0$,  \ldots, $\nu(x_n) = \varepsilon_n$, et  $\nu(x_{n+1}) = 0$. On pose $\varepsilon_{n+1} = 0$.
-              \item Soit il existe $B_{n+1}$ un sous-ensemble fini de $\mathcal{E}$ tel que, pour toute valuation $\nu$ telle que $\nu$ satisfait $B_{n+1}$ et $\nu(x_0) = \varepsilon_0, \ldots, \nu(x_n) = \varepsilon_n$, on a $\nu(x_{n+1}) = 1$ et on pose $\varepsilon_{n+1} = 1$.
-            \end{enumerate}
-            Montrons l'hérédité :
-            \begin{enumerate}
-              \item vrai par définition ;
-              \item soit $B$ un sous-ensemble fini de $\mathcal{E}$. On considère $B \cup B_{n+1}$, soit $\nu$ telle que  $\nu(x_0) = \varepsilon_0$, \ldots, $\nu(x_n) = \varepsilon_n$.
-                On a que $\nu$ satisfait $B_{n+1}$ donc $\nu(x_{n+1}) = 1 = \varepsilon_{n+1}$ et $\nu$ satisfait $B$.
-            \end{enumerate}
+          \item Pour $n = 0$, la propriété $\mathcal{R}_0$
+            \begin{quote}
+              "pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ satisfaisant  $B$",
+            \end{quote}
+            est vraie car $\mathcal{E}$ est supposé finiment satisfiable.
+          \item Soit $n \in \mathds{N}$. Supposons que $\varepsilon_1,\ldots,\varepsilon_n$ soient construits et qu'ils satisfont $\mathcal{R}_n$.
+            On a la disjonction de cas suivants :
+            \begin{itemize}
+              \item Si pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ telle que $\forall i \in \llbracket 1, n\rrbracket$, $\lambda(x_i) = \varepsilon_i$ et que  $\lambda(x_{i+1}) = 0$, alors posons $\varepsilon_{n+1} := 0$ et on a immédiatement $\mathcal{R}_{n+1}$.
+              \item S'il existe une partie $A$ de $\mathcal{E}$, telle que $(\star)$ toute valuation $\lambda$ satisfaisant $A$ et telle que $\lambda(x_i) = \varepsilon_i$ pour tout  $i \in \llbracket 1,n\rrbracket$ vérifie $\lambda(x_{n+1}) = 1$.
+                On pose donc $\varepsilon_{n+1} := 1$.
+
+                Montrons la propriété $\mathcal{R}_{n+1}$.
+                Considérons une partie finie $B$ de $\mathcal{E}$.
+                Par $\mathcal{R}_n$, il existe une valuation $\eta$ qui satisfait $A \cup B$, sous-ensemble fini de $\mathcal{E}$, et qui vérifie $\forall i \in \llbracket 1,n\rrbracket$, $\eta(x_i) = \varepsilon_i$.
+                En particulier $\eta$ satisfait $A$, ce qui implique par $(\star)$, que $\eta(x_{n+1}) = 1 = \varepsilon_{n+1}$.
+                Et comme $\eta$ satisfait $B$, on vérifie bien $\mathcal{R}_{n+1}$.
+            \end{itemize}
         \end{itemize}
-        On a donc la propriété pour tout $n$.
-    \end{itemize}
-    Finalement, soit $\delta$ une valuation telle que, pour tout $i$, $\delta(x_i) = \varepsilon_i$.
-    Montrons que  $\delta$ satisfait  $\mathcal{E}$.
-    Soit $F \in \mathcal{E}$.
-    On sait que $F$ est un mot (fini), donc contient un ensemble fini de variables inclus dans $\{x_0, \ldots, x_n\}$.
-    D'après la propriété par récurrence au rang $n$, il existe une valuation $\nu$
-    qui satisfait  $F$ et telle que $\nu(x_0) = \varepsilon_0, \ldots, \nu(x_n) = \varepsilon_n$, et donc  $\nu$ et $\delta$ coïncident sur les variables de $F$.
-    Donc (lemme simple), elles coïncident sur toutes les formules qui n'utilisent que ces variables.
-    Donc, $\delta(F) = 1$, et on en conclut que  $\delta$ satisfait $\mathcal{E}$.
+
+      \item Posons $\nu : x_i \mapsto \varepsilon_i$.
+        On va montrer que $\nu$ satisfait $\mathcal{E}$ en utilisant les deux lemmes suivants.
+    \end{enumerate}
+
+    \begin{lem}
+      Pour toute formule $F$, il existe un entier $k_F \in \mathds{N}$ tel que $\operatorname{vars} F \subseteq \{x_1, \ldots, x_{k_F}\}$.
+    \end{lem}
+
+    \begin{lem}
+      Si $\lambda$ et $\nu$ coïncident sur $\operatorname{vars} F$ alors $\lambda(F) = \nu(F)$.
+    \end{lem}
+    \begin{enumerate}
+      \item[]
+        Considérons $F \in \mathcal{E}$.
+        Par $\mathcal{R}_{k_F}$ avec $\{F\}$ sous-ensemble fini de $\mathcal{E}$, il existe une valuation $\lambda$ satisfaisant $F$ et telle que pour tout $i \in \llbracket 1, k_F\rrbracket$, on ait $\lambda(x_i) = \varepsilon_i$.
+        Autrement dit, $\lambda$ coïncide avec $\nu$ sur les $k_F$ premières variables, donc sur les variables de $F$.
+        On en conclut que $\lambda(F) = \nu(F) = 1$.
+    \end{enumerate}
+
   \end{prv}
 
   Dans le cas non-dénombrable, on utilise le \textit{lemme de Zorn}, un équivalent de l'\textit{axiome du choix}.
@@ -244,7 +258,7 @@
 
   \vspace{1.5em}
 
-  \begin{prv}[Cas non-dénombrable pour le théorème~\ref{chap01-comp}]
+  \begin{prv}[Cas non-dénombrable pour le théorème~\ref{chap1-comp}]
     Soit $\mathcal{E}$ un ensemble de formules finiment satisfiable, et $\mathcal{P}$ un ensemble de variables.
     On note $\mathcal{V}$ l'ensemble des valuations partielles prolongeables pour toute partie finie $\mathcal{C}$ de $\mathcal{E}$ en une valuation satisfaisant $\mathcal{C}$.
     C'est-à-dire :
@@ -272,7 +286,8 @@
 
     La valuation $\lambda$ est définie de manière unique,  \textit{i.e.} ne dépend pas du choix de $\varphi$. En effet, si $\varphi \in \mathcal{C}$ et $\psi \in \mathcal{C}$, avec $x_i \in \operatorname{dom} \varphi \cap \operatorname{dom} \psi$, alors on a $\varphi \preceq \psi$ ou $\psi \preceq \varphi$, donc $\varphi(x_i) = \psi(x_i)$.
 
-    Autrement dit, $\lambda$ est la limite de $\mathcal{C}$.
+    Autrement dit, $\lambda$ est un majorant de $\mathcal{C}$.
+
     Montrons que $\lambda \in \mathcal{V}$.
     Soit $B$ une partie finie de $\mathcal{E}$. On cherche $\mu$ qui prolonge $\lambda$ et satisfait $B$.
     L'ensemble de formules $B$ est fini, donc utilise un ensemble fini de variables, dont un sous-ensemble fini $\{x_{i_1}, \ldots, x_{i_n}\} \subseteq \operatorname{dom}(\lambda)$.
