@@ -3,8 +3,6 @@
 \begin{document}
   \chapter{Le calcul propositionnel.}
 
-  Le \textit{calcul propositionnel}, c'est la "grammaire" de la logique.
-  %Je trouve ce commentaire un peu bizarre, la grammaire n'est pas complète puisqu'il n'y a pas les quantificateurs et il y a une composante sémantique au calcul propositionnel, alors que la grammaire est une notion purement syntaxique.
   Dans ce chapitre, on s'intéressera à
   \begin{enumerate}
     \item la construction des formules ($\triangleright$ la syntaxe) ;
@@ -64,116 +62,14 @@
       \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \leftrightarrow F_2 \verb|)|$ ;
     \end{itemize}
     et ces sous-formules sont uniques.
+    \label{lem:lecture-unique}
   \end{thm}
   \begin{prv}
-    Montrons l'existence. 
-    Posons \[\mathcal{G} = \mathcal{P} \cup \mleft\{\, 
-          \begin{array}{c}
-            \lnot F_1\\
-            \verb|(| F_1 \lor F_2 \verb|)|\\
-            \verb|(| F_1 \land F_2 \verb|)|\\
-            \verb|(| F_1 \to F_2 \verb|)|\\
-            \verb|(| F_1 \leftrightarrow F_2 \verb|)|
-          \end{array}
-        \;\middle|\; F_1, F_2 \in \mathcal{F} \,\mright\}\]
-    Comme $\mathcal{F}$ est stable par les opérations de construction des formules, on a $\mathcal{G} \subseteq \mathcal{F}$.
-    Montrons alors que $\mathcal{G}$ est stable par ces mêmes opérations. On a déjà $\mathcal{P} \subset \mathcal{G}$.
-    Par ailleurs, pour tout $F \in \mathcal{G}$, on a $F \in \mathcal{F}$, d'où $\lnot F \in \mathcal{G}$.
-    Soient ensuite $F_1, F_2 \in \mathcal{G}$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$.
-    Comme $F_1$ et $F_2$ sont des formules, on obtient $\verb|(| F_1\ \sigma\ F_2 \verb|)| \in \mathcal{G}$.
-    En conclusion, $\mathcal{G}$ est stable par les opérations de construction des formules, donc contient $\mathcal{F}$.
-    
-    La partie difficile de la preuve d'unicité est le cas des opérateurs binaires.
-    Il faut par exemple montrer que pour toutes formules $F_1, F_2, G_1$ et $G_2$, les formules $\verb|(| F_1 \lor F_2 \verb|)|$ et $\verb|(| G_1 \land G_2 \verb |)|$ sont différentes.
-    Pour cela, on montre qu'un préfixe propre d'une formule n'est pas une formule.
-    On commence par obtenir des contraintes sur les parenthèses qu'un préfixe d'une formule peut avoir.
-    Montrons déjà que toute formule contient autant de parenthèses ouvrantes que de parenthèses fermantes.
-    Notons pour tout $F \in \mathcal{F}$, $o(F)$ le nombre de parenthèses ouvrantes de $F$ et $f(F)$ son nombre de parenthèses fermantes et montrons par récurrence simple, pour tout $n \in \mathds{N}$, la propriété $$\mathcal{P}(n) = \forall F \in \mathcal{F}_n, o(F) = f(F).$$
-    \begin{itemize}
-      \item Les éléments de $\mathcal{F}_0 = \mathcal{P}$ ne contiennent ni parenthèse ouvrante ni parenthèse fermante, d'où $\mathcal{P}(0)$.
-      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vraie.
-        Soit $F \in \mathcal{F}_{n+1}$.
-        \begin{itemize}
-          \item Si $F \in \mathcal{F}_n$, alors $o(F) = f(F)$ d'après $\mathcal{P}(n)$.
-          \item Supposons qu'on dispose de $G \in \mathcal{F}_n$ tel que $F = \lnot G$.
-            Alors $\mathcal{P}(n)$ donne l'égalité $o(G) = f(G)$, d'où l'on tire $o(F) = o(G) = f(G) = f(F)$.
-          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
-            $\mathcal{P}(n)$ s'écrit, pour $F_1$ et $F_2$, $o(F_1) = f(F_1)$ et $o(F_2) = f(F_2)$.
-            Dès lors, on calcule $o(F) = o(F_1) + o(F_2) + 2 = f(F_1) + f(F_2) + 2 = f(F)$.
-        \end{itemize}
-        Dans tous les cas, on a $o(F) = f(F)$, d'où $\mathcal{P}(n+1)$.
-    \end{itemize}
+    En exercice.
 
-    Discutons maintenant des préfixes d'une formule.
-    Notons, pour deux mots $u$ et $v$, $u < v$ lorsque $u$ est un préfixe propre de $v$ et montrons par récurrence simple, pour tout $n \in \mathds{N}$, la propriété $$\mathcal{P}(n) = \forall F \in \mathcal{F}_n, \forall G < F, o(G) = f(G) = 0 \lor f(G) < o(G).$$
-    \begin{itemize}
-      \item Les éléments de $\mathcal{F}_0 = \mathcal{P}$ n'ont pas de préfixe propre, d'où $\mathcal{P}(0)$.
-      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vrai.
-        Soient $F \in \mathcal{F}_{n+1}$ et $G$ un préfixe propre de $F$.
-        \begin{itemize}
-          \item Si $F \in \mathcal{F}_n$, alors $o(G) = f(G) = 0$ ou $f(G) < o(G)$ d'après $\mathcal{P}(n)$
-          \item Supposons qu'on ait $F_1 \in \mathcal{F}_n$ tel que $F = \lnot F_1$.
-            Si $G$ est vide, alors $o(G) = f(G) = 0$.
-            Sinon, $G$ s'écrit $\lnot G_1$ avec $G_1$ un préfixe strict de $F_1$.
-            L'hypothèse $\mathcal{P}(n)$ donne $o(G_1) = f(G_1) = 0$ ou $f(G_1) < o(G_1)$.
-            Or, on a $o(G) = o(G_1)$ et $f(G) = f(G_1)$, d'où $o(G) = f(G) = 0$ ou $f(G) < o(G)$.
-          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
-            On distingue les cas selon la longueur de $G$.
-            \begin{itemize}
-              \item Si $G$ est le mot vide, alors $o(G) = f(G) = 0$
-              \item Supposons que $G = \verb|(| G_1$ avec $G_1$ un préfixe strict de $F_1$.
-                L'hypothèse $\mathcal{P}(n)$ appliquée à $F_1$ et $G_1$ donne $o(G_1) = f(G_1) = 0$ ou $f(G_1) < o(G_1)$.
-                Dans les deux cas, on a $f(G_1) \le o(G_1)$, d'où $f(G) = f(G_1) < o(G_1) + 1 = o(G)$.
-              \item Supposons que $G = \verb|(| F_1$. Alors $o(F_1) = f(F_1)$, donc $f(G) = f(F_1) = o(G_1) < o(G_1) + 1 = o(G)$.
-              \item Supposons que $G = \verb|(| F_1 \sigma G_2$ avec $G_2$ un préfixe strict de $F_2$.
-                $\mathcal{P}(n)$ donne $o(G_2) = f(G_2) = 0$ ou $f(G_2) < o(G_2)$.
-                Dans les deux cas, on obtient $f(G_2) \le o(G_2)$.
-                De plus, on a $o(F_1) = f(F_1)$, donc
-                \[\begin{array}{rcl}
-                  f(G)&=&f(F_1) + f(G_2)\\
-                  &\le&o(F_1) + o(G_2)\\
-                  &<&o(F_1) + o(G_2) + 1\\
-                &=&o(G).\end{array}\]
-            \end{itemize}
-        \end{itemize}
-        Dans tous les cas, on conclut bien $o(G) = f(G) = 0$ ou $f(G) < o(G)$.
-        D'où $\mathcal{P}(n+1)$.
-    \end{itemize}
-
-    Montrons maintenant par récurrence simple, pour tout $n \in \mathds{N}$, la propriété $$\mathcal{P}(n) = \forall F \in \mathcal{F}_n, \forall G < F, G \notin \mathcal{F}.$$
-    \begin{itemize}
-      \item Une formule de $\mathcal{F}_0 = \mathcal{P}$ n'a pas de préfixe propre, d'où $\mathcal{P}(0)$.
-      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vrai.
-        Soient $F \in \mathcal{F}_{n+1}$ et $G$ un préfixe propre de $F$.
-        \begin{itemize}
-          \item Si $F \in \mathcal{F}_n$, alors $G$ n'est pas une formule d'après $\mathcal{P}(n)$
-          \item Supposons qu'on dispose de $F_1 \in \mathcal{F}_n$ tel que $F = \lnot F_1$.
-            Supposons que $G$ est une formule.
-            Comme une formule n'est pas vide, $G$ s'écrit $\lnot G_1$ avec $G_1$ un préfixe strict de $F_1$.
-            Avec l'existence dans le théorème de lecture unique vue plus haut, $G_1$ est une formule, ce qui contredit $\mathcal{P}(n)$ pour $F_1$ et $G_1$.
-          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
-            Supposons que $G$ est une formule.
-            Comme une formule n'est pas vide, $G$ commence par une parenthèse ouvrante.
-            En particulier, $o(G) \ne 0$.
-            Or, $G$ est un préfixe propre de $F$, donc $f(G) < o(G)$.
-            Ceci est impossible puisque, $G$ étant une formule, on a aussi $f(G) = o(G)$.
-        \end{itemize}
-        Dans tous les cas, $G$ n'est pas une formule, d'où $\mathcal{P}(n+1)$.
-    \end{itemize}
-
-    Nous sommes prêts à montrer que les propriétés du théorème de lecture unique sont mutuellement exclusives.
-    Les deux premières le sont et excluent les autres en considérant la première lettre des formules qu'elles décrivent.
-    Plus précisément, les formules satisfaisant la première propriété commencent par une variable, celles satisfaisant la deuxième commencent par une négation et les autres commencent par une parenthèse.
-    Pour les autres cas, considérons $F_1, F_2, G_1, G_2 \in \mathcal{F}$ et $\sigma, \sigma' \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| G_1\ \sigma'\ G_2 \verb|)|$.
-    Il s'agit de montrer que $\sigma = \sigma'$.
-    Quitte à échanger les rôles de $F_1$ et $G_1$, de $F_2$ et $G_2$ et de $\sigma$ et $\sigma'$, on peut supposer que $\verb|(| F_1$ est un préfixe de $\verb|(| G_1$.
-    Alors $F_1$ est un préfixe de $G_1$.
-    Or $F_1$ et $G_1$ sont des formules, donc $F_1$ n'est pas un préfixe propre de $G_1$, ou encore $F_1 = G_1$.
-    Par conséquent, $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| F_1\ \sigma'\ G_2 \verb|)|$, d'où $\sigma = \sigma'$.
-    On conclut bien l'unicité.
+    Une preuve (très, et même probablement trop) détaillée est donnée en annexe, page \pageref{sect:annexe-lem-lecture-unique}.
   \end{prv}
 
-  % Le théorème précédent n'est pas suffisant pour dire que ceci est un corollaire, il faudrait aussi que dans chaque règle, les sous-formules obtenues soient uniques, mais c'est insupportable à écrire proprement.
   \begin{crlr}
     Il y a une bijection entre les formules et les arbres dont
     \begin{itemize}
@@ -286,7 +182,6 @@
         Si $\nu$ satisfait toute formule de $\mathcal{E}$, alors tout sous-ensemble fini de $\mathcal{E}$ est satisfiable en utilisant la valuation $\nu$.
       \item["$\impliedby$".]
         Supposons $\mathcal{E}$ finiment satisfiable. Comme $\mathcal{P}$ est supposé dénombrable, notons $\mathcal{P} = \{x_1, x_2, \ldots\}$.
-        % Ah ! Espèce de mathématicien qui compte à partir de 1 !
         On cherche une valuation $\nu$ qui satisfait toute formule de $\mathcal{E}$, et on va définir la suite des $\varepsilon_n = \nu(x_n)$ par récurrence.
     \end{description}
 
@@ -406,7 +301,6 @@
 
     D'après le lemme de Zorn, $\mathcal{V}$ admet un élément maximal $\varphi$.
     Pour montrer le théorème, il suffit de montrer que $\operatorname{dom} \gamma = \mathcal{P}$.
-    % Techniquement non, mais il ne reste plus qu'à pousser les cartes un fois qu'on a ça.
     Si $\operatorname{dom} \gamma \neq \mathcal{P}$, soit $x \not\in \operatorname{dom} \gamma$.
     Montrons que $\gamma$ n'est pas maximal en définissant $\gamma' \in \mathcal{V}$ qui vérifie $\gamma \prec \gamma'$.
     On prend $\operatorname{dom}\gamma' = \operatorname{dom} \gamma \cup \{x\}$.
@@ -422,5 +316,141 @@
         On choisit une valuation qui prolonge $\gamma$ et satisfait $B \cup B_0$ ; elle prolonge $\gamma'$.
     \end{itemize}
     On a donc une contradiction avec la maximalité de $\gamma$. On en conclut que $\operatorname{dom} \gamma = \mathcal{P}$, ce qui termine la preuve du théorème.
+  \end{prv}
+
+  \clearpage
+
+  \section{\textit{Annexe} : preuve détaillée du lemme de lecture unique.}
+  \label{sect:annexe-lem-lecture-unique}
+
+  Ce qui suit est une preuve (très, et probablement trop) détaillée du lemme de lecture unique.
+  Merci à Quentin Vermande pour cette preuve !
+
+  \begingroup
+  \def\thethm{\ref{lem:lecture-unique}}
+  \begin{thm}[Lecture unique]
+    Toute formule $G \in \mathcal{F}$ vérifie une et une seule de ces propriétés :
+    \begin{itemize}
+      \item $G \in \mathcal{P}$ ;
+      \item il existe $F \in \mathcal{F}$ telle que $G = \lnot F$ ;
+      \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \lor F_2 \verb|)|$ ;
+      \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \land F_2 \verb|)|$ ;
+      \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \to F_2 \verb|)|$ ;
+      \item il existe $F_1, F_2 \in \mathcal{F}$ telle que $G = \verb|(| F_1 \leftrightarrow F_2 \verb|)|$ ;
+    \end{itemize}
+    et ces sous-formules sont uniques.
+  \end{thm}
+  \addtocounter{thm}{-1}
+  \endgroup
+
+  \begin{prv}
+    Montrons l'existence. 
+    Posons \[\mathcal{G} = \mathcal{P} \cup \mleft\{\, 
+          \begin{array}{c}
+            \lnot F_1\\
+            \verb|(| F_1 \lor F_2 \verb|)|\\
+            \verb|(| F_1 \land F_2 \verb|)|\\
+            \verb|(| F_1 \to F_2 \verb|)|\\
+            \verb|(| F_1 \leftrightarrow F_2 \verb|)|
+          \end{array}
+        \;\middle|\; F_1, F_2 \in \mathcal{F} \,\mright\}\]
+    Comme $\mathcal{F}$ est stable par les opérations de construction des formules, on a $\mathcal{G} \subseteq \mathcal{F}$.
+    Montrons alors que $\mathcal{G}$ est stable par ces mêmes opérations. On a déjà $\mathcal{P} \subseteq \mathcal{G}$.
+    Par ailleurs, pour tout $F \in \mathcal{G}$, on a $F \in \mathcal{F}$, d'où $\lnot F \in \mathcal{G}$.
+    Soient ensuite $F_1, F_2 \in \mathcal{G}$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$.
+    Comme $F_1$ et $F_2$ sont des formules, on obtient $\verb|(| F_1\ \sigma\ F_2 \verb|)| \in \mathcal{G}$.
+    En conclusion, $\mathcal{G}$ est stable par les opérations de construction des formules, donc contient $\mathcal{F}$.
+    
+    La partie difficile de la preuve d'unicité est le cas des opérateurs binaires.
+    Il faut par exemple montrer que pour toutes formules~$F_1$, $F_2$, $G_1$ et $G_2$, les formules ${\verb|(| F_1 \lor F_2 \verb|)|}$ et ${\verb|(| G_1 \land G_2 \verb |)|}$ sont différentes.
+    Pour cela, on montre qu'un préfixe propre d'une formule n'est pas une formule.
+    On commence par obtenir des contraintes sur les parenthèses qu'un préfixe d'une formule peut avoir.
+    Montrons déjà que toute formule contient autant de parenthèses ouvrantes que de parenthèses fermantes.
+    Notons pour toute formule~$F \in \mathcal{F}$, $o(F)$ le nombre de parenthèses ouvrantes de $F$ et $f(F)$ son nombre de parenthèses fermantes et montrons par récurrence simple, pour tout $n \in \mathds{N}$, la propriété 
+    \[\mathcal{P}(n) : \quad \forall F \in \mathcal{F}_n, o(F) = f(F).\]
+    \begin{itemize}
+      \item Les éléments de $\mathcal{F}_0 = \mathcal{P}$ ne contiennent ni parenthèse ouvrante ni parenthèse fermante, d'où $\mathcal{P}(0)$.
+      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vraie.
+        Soit $F \in \mathcal{F}_{n+1}$.
+        \begin{itemize}
+          \item Si $F \in \mathcal{F}_n$, alors $o(F) = f(F)$ d'après $\mathcal{P}(n)$.
+          \item Supposons qu'on dispose de $G \in \mathcal{F}_n$ tel que $F = \lnot G$.
+            Alors $\mathcal{P}(n)$ donne l'égalité $o(G) = f(G)$, d'où l'on tire $o(F) = o(G) = f(G) = f(F)$.
+          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
+            $\mathcal{P}(n)$ s'écrit, pour $F_1$ et $F_2$, $o(F_1) = f(F_1)$ et $o(F_2) = f(F_2)$.
+            Dès lors, on calcule $o(F) = o(F_1) + o(F_2) + 2 = f(F_1) + f(F_2) + 2 = f(F)$.
+        \end{itemize}
+        Dans tous les cas, on a $o(F) = f(F)$, d'où $\mathcal{P}(n+1)$.
+    \end{itemize}
+
+    Discutons maintenant des préfixes d'une formule.
+    Notons, pour deux mots $u$ et $v$, $u < v$ lorsque $u$ est un préfixe propre de $v$ et montrons par récurrence simple, pour tout $n \in \mathds{N}$, la propriété
+    \[\mathcal{P}(n) : \quad \forall F \in \mathcal{F}_n, \forall G < F, o(G) = f(G) = 0 \lor f(G) < o(G).\]
+    \begin{itemize}
+      \item Les éléments de $\mathcal{F}_0 = \mathcal{P}$ n'ont pas de préfixe propre, d'où $\mathcal{P}(0)$.
+      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vrai.
+        Soient $F \in \mathcal{F}_{n+1}$ et $G$ un préfixe propre de $F$.
+        \begin{itemize}
+          \item Si $F \in \mathcal{F}_n$, alors $o(G) = f(G) = 0$ ou $f(G) < o(G)$ d'après $\mathcal{P}(n)$
+          \item Supposons qu'on ait $F_1 \in \mathcal{F}_n$ tel que $F = \lnot F_1$.
+            Si $G$ est vide, alors $o(G) = f(G) = 0$.
+            Sinon, $G$ s'écrit $\lnot G_1$ avec $G_1$ un préfixe strict de $F_1$.
+            L'hypothèse $\mathcal{P}(n)$ donne $o(G_1) = f(G_1) = 0$ ou $f(G_1) < o(G_1)$.
+            Or, on a $o(G) = o(G_1)$ et $f(G) = f(G_1)$, d'où $o(G) = f(G) = 0$ ou $f(G) < o(G)$.
+          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
+            On distingue les cas selon la longueur de $G$.
+            \begin{itemize}
+              \item Si $G$ est le mot vide, alors $o(G) = f(G) = 0$
+              \item Supposons que $G = \verb|(| G_1$ avec $G_1$ un préfixe strict de $F_1$.
+                L'hypothèse $\mathcal{P}(n)$ appliquée à $F_1$ et $G_1$ donne $o(G_1) = f(G_1) = 0$ ou $f(G_1) < o(G_1)$.
+                Dans les deux cas, on a $f(G_1) \le o(G_1)$, d'où $f(G) = f(G_1) < o(G_1) + 1 = o(G)$.
+              \item Supposons que $G = \verb|(| F_1$. Alors $o(F_1) = f(F_1)$, donc $f(G) = f(F_1) = o(G_1) < o(G_1) + 1 = o(G)$.
+              \item Supposons que $G = \verb|(| F_1 \sigma G_2$ avec $G_2$ un préfixe strict de $F_2$.
+                $\mathcal{P}(n)$ donne $o(G_2) = f(G_2) = 0$ ou $f(G_2) < o(G_2)$.
+                Dans les deux cas, on obtient $f(G_2) \le o(G_2)$.
+                De plus, on a $o(F_1) = f(F_1)$, donc
+                \[\begin{array}{rcl}
+                  f(G)&=&f(F_1) + f(G_2)\\
+                  &\le&o(F_1) + o(G_2)\\
+                  &<&o(F_1) + o(G_2) + 1\\
+                &=&o(G).\end{array}\]
+            \end{itemize}
+        \end{itemize}
+        Dans tous les cas, on conclut bien $o(G) = f(G) = 0$ ou $f(G) < o(G)$.
+        D'où $\mathcal{P}(n+1)$.
+    \end{itemize}
+
+    Montrons maintenant par récurrence simple, pour tout $n \in \mathds{N}$, la propriété 
+    \[\mathcal{P}(n) : \quad \forall F \in \mathcal{F}_n, \forall G < F, G \notin \mathcal{F}.\]
+    \begin{itemize}
+      \item Une formule de $\mathcal{F}_0 = \mathcal{P}$ n'a pas de préfixe propre, d'où $\mathcal{P}(0)$.
+      \item Soit $n \in \mathds{N}$ tel que $\mathcal{P}(n)$ est vrai.
+        Soient $F \in \mathcal{F}_{n+1}$ et $G$ un préfixe propre de $F$.
+        \begin{itemize}
+          \item Si $F \in \mathcal{F}_n$, alors $G$ n'est pas une formule d'après $\mathcal{P}(n)$
+          \item Supposons qu'on dispose de $F_1 \in \mathcal{F}_n$ tel que $F = \lnot F_1$.
+            Supposons que $G$ est une formule.
+            Comme une formule n'est pas vide, $G$ s'écrit $\lnot G_1$ avec $G_1$ un préfixe strict de $F_1$.
+            Avec l'existence dans le théorème de lecture unique vue plus haut, $G_1$ est une formule, ce qui contredit $\mathcal{P}(n)$ pour $F_1$ et $G_1$.
+          \item Supposons qu'on ait $F_1, F_2 \in \mathcal{F}_n$ et $\sigma \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $F = \verb|(| F_1\ \sigma\ F_2 \verb|)|$.
+            Supposons que $G$ est une formule.
+            Comme une formule n'est pas vide, $G$ commence par une parenthèse ouvrante.
+            En particulier, $o(G) \ne 0$.
+            Or, $G$ est un préfixe propre de $F$, donc $f(G) < o(G)$.
+            Ceci est impossible puisque, $G$ étant une formule, on a aussi $f(G) = o(G)$.
+        \end{itemize}
+        Dans tous les cas, $G$ n'est pas une formule, d'où $\mathcal{P}(n+1)$.
+    \end{itemize}
+
+    Nous sommes prêts à montrer que les propriétés du théorème de lecture unique sont mutuellement exclusives.
+    Les deux premières le sont et excluent les autres en considérant la première lettre des formules qu'elles décrivent.
+    Plus précisément, les formules satisfaisant la première propriété commencent par une variable, celles satisfaisant la deuxième commencent par une négation et les autres commencent par une parenthèse.
+    Pour les autres cas, considérons $F_1, F_2, G_1, G_2 \in \mathcal{F}$ et $\sigma, \sigma' \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| G_1\ \sigma'\ G_2 \verb|)|$.
+    Il s'agit de montrer que $\sigma = \sigma'$.
+    Quitte à échanger les rôles de $F_1$ et $G_1$, de $F_2$ et $G_2$ et de $\sigma$ et $\sigma'$, on peut supposer que $\verb|(| F_1$ est un préfixe de $\verb|(| G_1$.
+    Alors $F_1$ est un préfixe de $G_1$.
+    Or $F_1$ et $G_1$ sont des formules, donc $F_1$ n'est pas un préfixe propre de $G_1$, ou encore $F_1 = G_1$.
+    Par conséquent, $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| F_1\ \sigma'\ G_2 \verb|)|$, d'où $\sigma = \sigma'$.
+    On conclut bien l'unicité.
   \end{prv}
 \end{document}
