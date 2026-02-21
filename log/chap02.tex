@@ -80,7 +80,7 @@
   \end{defn}
 
   \begin{rmk}
-    Dans la définition des termes, un n'utilise les relations.
+    Dans la définition des termes, on n'utilise les relations.
   \end{rmk}
 
   \begin{exm}
@@ -105,7 +105,7 @@
   \begin{defn}
     \begin{itemize}
       \item Un terme \textit{clos} est un terme sans variable (par exemple $(0 + 0)^{-1}$).
-      \item La \textit{hauteur} d'un terme est le plis petit $k$ tel que $t \in \mathcal{T}_k$.
+      \item La \textit{hauteur} d'un terme est le plus petit $k$ tel que $t \in \mathcal{T}_k$.
     \end{itemize}
   \end{defn}
 
@@ -132,7 +132,7 @@
                 (F \lor G)\\
                 (F \land G)\\
                 \exists x\: F\\
-                \exists x\: G\\
+              \forall x\: G\\
               \end{array}
             \;\middle|\; 
             \begin{array}{c}
@@ -152,7 +152,7 @@
   \begin{exm}
     \begin{itemize}
       \item Dans $\mathcal{L}_\mathrm{g}$, un des axiomes de la théorie des groupes s'écrit \[
-        \forall x\: \exists x\: (x * y = e \land y * x = e)
+        \forall x\: \exists y\: (x * y = e \land y * x = e)
         .\]
       \item Dans $\mathcal{L}_\mathrm{co}$, l'énoncé "le corps est de caractéristique 3" s'écrit \[
         \forall x\: (x + (x + x) = 0)
@@ -166,7 +166,7 @@
   \begin{exo}
     \begin{itemize}
       \item Donner et montrer le lemme de lecture unique.
-      \item Énoncer et donner un lemme d'écriture en arbre.
+      \item Énoncer et démontrer un lemme d'écriture en arbre.
     \end{itemize}
   \end{exo}
 
@@ -203,9 +203,9 @@
   \begin{rmk}
     On ne peut pas exprimer \textit{a priori} :
     \begin{itemize}
-      \item  des quantifications sur en ensemble\footnote{En dehors de $\mathcal{L}_\mathrm{ens}$, en tout cas.} ;
+      \item  des quantifications sur un ensemble de valeurs\footnote{En dehors de $\mathcal{L}_\mathrm{ens}$, en tout cas.} ;
       \item "$\exists n\ \exists x_1\: \ldots \: \exists x_n $" une formule qui dépend d'un paramètre ;
-      \item le principe de récurrence : si on a $\mathcal{P}(0)$ pour une propriété $\mathcal{P}$ et que si $\mathcal{P}(n) \to \mathcal{P}(n+1)$ alors on a $\mathcal{P}(n)$ pour tout $n$.
+      \item le principe de récurrence : si on a $\mathcal{P}(0)$ pour une propriété $\mathcal{P}$ et que si $\mathcal{P}(n) \to \mathcal{P}(n+1)$ alors on a $\mathcal{P}(n)$ pour tout $n$.\footnote{C'est le "$\forall \mathcal{P}\: \ldots$" qui pose problème ici.}
     \end{itemize}
   \end{rmk}
 
@@ -216,18 +216,24 @@
     \begin{itemize}
       \item si $F$ est atomique, alors on définit $\mathrm{S}(F) = \{F\}$ ;
       \item si $F = F_1 \oplus F_2$ (avec $\oplus$ qui est $\lor$, $\to$ ou $\land$)
-         alors on définit~ $\mathrm{S}(F) = \mathrm{S}(F_1) \cup \mathrm{S}(F_2) \cup \{F\}$ ;
-      \item si $F = \lnot F_1$, ou $F = \mathsf{Q}x\: F_1$ avec~$\mathsf{Q} \in \{\forall, \exists\}$, alors on définit $\mathrm{S}(F) = \mathrm{S}(F_1) \cup \{F\}$.
+         alors on définit
+         \[
+         \mathrm{S}(F) = \mathrm{S}(F_1) \cup \mathrm{S}(F_2) \cup \{F\}
+         ;\] 
+      \item si $F = \lnot F_1$, ou $F = \mathsf{Q}x\: F_1$ avec~$\mathsf{Q} \in \{\forall, \exists\}$, alors on définit
+        \[
+        \mathrm{S}(F) = \mathrm{S}(F_1) \cup \{F\}
+        .\] 
     \end{itemize}
     C'est l'ensemble des formules que l'on voit comme des sous-arbres de l'arbre équivalent à la formule $F$.
   \end{defn}
 
   \begin{defn}
     \begin{itemize}
-      \item La \textit{taille} d'une formule, est le nombre de connecteurs ($\lnot$,  $\lor$,  $\land$,  $\to$), et de quantificateurs ($\forall $, $\exists $).
+      \item La \textit{taille} d'une formule est le nombre de connecteurs ($\lnot$,  $\lor$,  $\land$,  $\to$), et de quantificateurs ($\forall $, $\exists $).
       \item La racine de l'arbre est 
         \begin{itemize}
-          \item rien su la formule est atomique ;
+          \item rien si la formule est atomique ;
           \item "$\oplus$" si $F = F_1 \oplus F_2$ avec $\oplus$ un connecteur (binaire ou unaire) ;
           \item "$\mathsf{Q}$" si $F = \mathsf{Q}x\: F_1$ avec $\mathsf{Q}$ un quantificateur.
         \end{itemize}
@@ -237,7 +243,7 @@
   \begin{defn}
     \begin{itemize}
       \item Une \textit{occurrence} d'une variable est un endroit où la variable apparait dans la formule (\textit{i.e.} une feuille étiquetée par cette variable).
-      \item Une occurrence d'une variable est \textit{liée} si elle se trouve dans une sous-formule dont l'opérateur principal est un quantificateur appelé à cette variable (\textit{i.e.} un $\forall x\: F'$ ou un $\exists x\: F'$).
+      \item Une occurrence d'une variable est \textit{liée} si elle se trouve dans une sous-formule dont l'opérateur principal est un quantificateur avec cette variable (\textit{i.e.} un $\forall x\: F'$ ou un $\exists x\: F'$).
       \item Une occurrence d'une variable est \textit{libre} quand elle n'est pas liée.
       \item Une variable est libre si elle a au moins une occurrence libre, sinon elle est liée.
     \end{itemize}
@@ -269,7 +275,7 @@
       \item $F(z,z) = F[x := z] = \forall y\:(z * y = y * z) \land \forall x\: (x * x = 1)$ ;
       \item $F(y^{-1}, x) = F[x := y^{-1}] = \forall {\color{nicered} u}\:(y^{-1} * {\color{nicered} u} = {\color{nicered} u} * z) \land \forall x\: (x * x = 1)$.
     \end{itemize}
-    On a procédé à un renommage de $y$ à ${\color{red} u}$.
+    On a procédé à un renommage de $y$ à ${\color{nicered} u}$.
   \end{exm}
 
   \section{Les démonstrations en déduction naturelle.}
@@ -416,15 +422,56 @@
             \hypo{\Gamma, A \vdash C}
             \infer[left label={
               \begin{array}{r}
-                \text{avec $x$ ni libre dans $C$ ou}\\
-                \text{dans les formules de $\Gamma$}
+                \text{avec $x$ ni libre dans $C$}\\
+                \text{ni dans les formules de $\Gamma$}
               \end{array}
             }] 2[\exists_\mathsf{e}]{\Gamma \vdash C}
           \end{prooftree}
          \]
+      \item[Égalité.]
+        \[
+        \begin{prooftree}
+          \infer 0[=_\mathsf{i}]{\Gamma \vdash t = t}
+        \end{prooftree}
+        \quad\quad
+        \begin{prooftree}
+          \hypo{\Gamma \vdash A[x := t]}
+          \hypo{\Gamma \vdash t = u}
+          \infer 2[=_\mathsf{e}]{\Gamma \vdash A[x := u]}
+        \end{prooftree}
+        \]
     \end{description}
   \end{defn}
-  % TODO
+
+  \begin{rmk}
+    Si on n'a pas la condition sur $\forall_\mathsf{i}$, on peut faire
+    \[
+    \begin{prooftree}
+      \infer 0[\mathsf{ax}]{x = y \vdash x = y}
+      \infer 1[\forall_\mathsf{i}]{x = y \vdash \forall x \: x = y}
+    \end{prooftree}
+    .\] 
+
+    Si on n'a pas la condition sur $\forall_\mathsf{e}$, on peut faire
+    \[
+    \begin{prooftree}
+      \infer 0[=_\mathsf{i}]{\vdash x = x}
+      \infer 1[\exists_\mathsf{i}]{\exists y \: x = y}
+      \infer 1[\forall_\mathsf{i}]{\vdash \forall x \: \exists y \: x = y}
+      \infer 1[\forall_\mathsf{e}]{\vdash \exists y \: (1 + y) = y}
+    \end{prooftree}
+    .\]
+
+    Si on n'a pas la condition sur $\exists_\mathsf{e}$, on peut faire 
+    \[
+    \begin{prooftree}
+      \infer 0[=_\mathsf{i}]{x = 1 \vdash 0 = 0}
+      \infer 1[\exists_\mathsf{i}]{x = 1 \vdash \exists x \: x = 0}
+      \infer 0[\mathsf{ax}]{x = 1, x = 0 \vdash x = 0}
+      \infer 2[\exists_\mathsf{e}]{x = 1 \vdash x = 0}
+    \end{prooftree}
+    .\] 
+  \end{rmk}
 
 
   \section{La sémantique.}
@@ -433,7 +480,7 @@
     Soit $\mathcal{L}$ un langage de la sémantique du premier ordre.
     On appelle \textit{interprétation} (ou \textit{modèle}, ou \textit{structure}) du langage $\mathcal{L}$ l'ensemble $\mathcal{M}$ des données suivantes :
     \begin{itemize}
-      \item un ensemble non vide, noté $|\mathcal{M}|$, appelé \textit{domaine} ou \textit{ensemble de base} de $\mathcal{M}$ ;
+      \item un ensemble \textit{\textbf{non vide}}, noté $|\mathcal{M}|$, appelé \textit{domaine} ou \textit{ensemble de base} de $\mathcal{M}$ ;
       \item pour chaque symbole $c$ de constante, un élément $c_{\mathcal{M}}$ de $|\mathcal{M}|$ ;
       \item pour chaque symbole $f$ de fonction $n$-aire, une fonction $f_{\mathcal{M}} : |\mathcal{M}|^n \to |\mathcal{M}|$ ;
       \item pour chaque symbole $R$ de relation $n$-aire (sauf pour l'égalité "$=$"), un sous-ensemble $R_{\mathcal{M}}$ de $|\mathcal{M}|^n$.
@@ -466,10 +513,10 @@
     \begin{itemize}
       \item Un \textit{environnement} est une fonction de l'ensemble des variables dans $|\mathcal{M}|$.
       \item Si $e$ est un environnement et $a \in |\mathcal{M}|$, on note $e[x:=a]$ l'environnement $e'$ tel que $e'(x) = a$ et pour $y \neq x$, $e(y) = e'(y)$.
-      \item La \textit{valeur} d'un terme $t$ dans l'environnement $e$, noté $\Val_{\mathcal{M}}(t,e)$, est définie par induction sur l'ensemble des termes de la façon suivante :
+      \item La \textit{valeur} d'un terme $t$ dans l'environnement $e$, notée $\Val_{\mathcal{M}}(t,e)$, est définie par induction sur l'ensemble des termes de la façon suivante :
         \begin{itemize}
           \item $\Val_{\mathcal{M}}(c, e) = c_{\mathcal{M}}$ si $c$ est une constante ;
-          \item $\Val_{\mathcal{M}}(c,e) = e(x)$ si $x$ est une variable ;
+          \item $\Val_{\mathcal{M}}(x,e) = e(x)$ si $x$ est une variable ;
           \item $\Val_{\mathcal{M}}(f(t_1, \ldots, t_n), e) = f_{\mathcal{M}}(\Val_{\mathcal{M}}(t_1, e), \ldots, \Val_{\mathcal{M}}(t_n, e))$.
         \end{itemize}
     \end{itemize}
@@ -522,13 +569,12 @@
 
 
   \begin{rmk}
+    Ainsi définis, les connecteurs ont leur sens courant.
+
+    Dans le cas du calcul propositionnel, si $R$ est d'arité $0$, \textit{i.e.} une variable propositionnelle, comme $|\mathcal{M}|^0 = \{\emptyset\}$ alors on a deux possibilités :
     \begin{itemize}
-      \item On se débrouille pour que les connecteurs aient leur sens courant, les "mathématiques naïves".
-      \item Dans le cas du calcul propositionnel, si $R$ est d'arité $0$, \textit{i.e.} une variable propositionnelle, comme $|\mathcal{M}|^0 = \{\emptyset\}$ alors on a deux possibilité :
-        \begin{itemize}
-          \item ou bien $R = \emptyset$, et alors on convient que $\Val_{\mathcal{M}}(R, e) = 0$ ;
-          \item ou bien $R = \{\emptyset\} $, et alors on convient que $\Val_{\mathcal{M}}(R, e) = 1$.
-        \end{itemize}
+      \item ou bien $R = \emptyset$, et alors on convient que $\Val_{\mathcal{M}}(R, e) = 0$ ;
+      \item ou bien $R = \{\emptyset\} $, et alors on convient que $\Val_{\mathcal{M}}(R, e) = 1$.
     \end{itemize}
   \end{rmk}
 
@@ -545,7 +591,7 @@
   \end{rmk}
 
   \begin{nota}
-    À la place de $\Val_{\mathcal{M}}(F, e) = 1$, on notera $\mathcal{M}, e \models F$ ou bien~$\mathcal{M} \models F$.
+    À la place de $\Val_{\mathcal{M}}(F, e) = 1$, on notera $\mathcal{M}, e \models F$ ou bien~$\mathcal{M} \models F$ (quand $F$ est close).
     On dit que $\mathcal{M}$ \textit{satisfait} $F$, que $\mathcal{M}$ est un \textit{modèle} de $F$ (dans l'environnement $e$), que $F$ est est vraie dans $\mathcal{M}$.
   \end{nota}
 
@@ -593,15 +639,17 @@
   \end{defn}
 
   \begin{exm}
-    Quelques théorèmes simples :
+    On a quelques théorèmes simples :
     $\forall x \: \lnot \bot$, et $\forall x \: x = x$ et même $x = x$ car on ne demande pas que la formule soit clause.
 
     Dans $\mathcal{L}_\mathrm{g} = \{e, *, \square^{-1}\}$, on considère deux formules 
     \begin{itemize}
-      \item $F = \forall x \: \forall y \: \forall z \: ((x * (y * z) = (x * y) * z) \land x * e = e * x = x \land \exists t \: (x * t = e \land t * x = e))$ ;
-      \item et $G = \forall e' = \forall e'\: (\forall x\: (x * e' = e' * x = x) \to  e = e')$.
+      \item $F = \forall x \: \forall y \: \forall z \: \begin{pmatrix}
+          x * (y * z) = (x * y) * z\\ \land\\ x * e = e * x = x\\ \land\\ \exists t \: (x * t = e \land t * x = e)
+        \end{pmatrix} $ ;
+      \item et $G = \forall e \: \forall e'\: (\forall x\: (x * e' = e' * x = x) \to  e = e')$.
     \end{itemize}
-    Aucun des deux n'est un théorème (il n'est vrai que dans les groupes pour $F$ (c'est même la définition de groupe) et dans les monoïdes pour $G$ (unicité du neutre)), mais $F \to G$ est un théorème logique.
+    Aucun des deux n'est un théorème (il n'est vrai que dans les groupes pour $F$ (et c'est même la définition de groupe) et dans les monoïdes pour $G$ (unicité du neutre)), mais $F \to G$ est un théorème logique.
   \end{exm}
 
   \begin{defn}
@@ -660,9 +708,9 @@
             \[
               (a_1, \ldots, a_n) \in R_{\mathcal{M}} \text{ ssi } (\varphi(a_1), \ldots, \varphi(a_n)) \in R_{\mathcal{N}}
             .\]
-          \item Un \textit{$\mathcal{L}$-isomorphisme} est un $\mathcal{L}$-morphisme bijectif.
-          \item Si $\mathcal{M}$ et $\mathcal{N}$ sont \textit{isomorphes} s'il existe un $\mathcal{L}$-isomorphisme de $\mathcal{M}$ à $\mathcal{N}$.
         \end{itemize}
+      \item Un \textit{$\mathcal{L}$-isomorphisme} est un $\mathcal{L}$-morphisme bijectif.
+      \item On dit que $\mathcal{M}$ et $\mathcal{N}$ sont \textit{isomorphes} s'il existe un $\mathcal{L}$-isomorphisme de $\mathcal{M}$ à $\mathcal{N}$.
     \end{enumerate}
   \end{defn}
 
@@ -697,7 +745,7 @@
 
   \begin{nota}
     Si $\varphi$ est un morphisme de $\mathcal{M}$ dans $\mathcal{N}$ et $e$ un environnement de $\mathcal{M}$,
-    alors on note $\varphi(e)$ pour  $\varphi \circ e$. C'est un environnement de $\mathcal{N}$.
+    alors on note $\varphi(e)$ pour  $\varphi \circ e$. C'est un environnement de~$\mathcal{N}$.
   \end{nota}
 
   \begin{lem}
@@ -819,7 +867,7 @@
 
   \begin{exm}
     La théorie \[
-      T = \mathbf{Th}(\mathds{N}) := \{\text{les formules $F$ vraies dans $\mathds{N}$}\}
+      T = \mathbf{Th}(\mathds{N}) := \{F  \mid \mathds{N} \models F\}
     \] est complète mais pas pratique.
 
     De par le théorème d'\textit{incomplétude de Gödel} (c'est un sens différent du "complet" défini avant), on montre qu'on ne peut pas avoir de \textit{joli} ensemble d'axiomes pour $\mathds{N}$.
