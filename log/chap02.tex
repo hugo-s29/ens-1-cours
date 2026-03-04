@@ -80,7 +80,7 @@
   \end{defn}
 
   \begin{rmk}
-    Dans la définition des termes, on n'utilise les relations.
+    Dans la définition des termes, on n'utilise pas les relations.
   \end{rmk}
 
   \begin{exm}
@@ -92,7 +92,7 @@
   \end{exm}
 
   \begin{defn}
-    Si $t$ et $u$ sont des termes et $x$ est une variable, alors~$t[x:u]$ est le mot dans lequel les lettres de  $x$ ont été remplacées par le mot $u$.
+    Si $t$ et $u$ sont des termes et $x$ est une variable, alors~$t[x:u]$ est le mot dans lequel les occurrences de $x$ ont été remplacées par le mot $u$.
     Le mot $t[x:u]$ est un terme (preuve en exercice).
   \end{defn}
 
@@ -105,7 +105,7 @@
   \begin{defn}
     \begin{itemize}
       \item Un terme \textit{clos} est un terme sans variable (par exemple $(0 + 0)^{-1}$).
-      \item La \textit{hauteur} d'un terme est le plus petit $k$ tel que $t \in \mathcal{T}_k$.
+      \item La \textit{hauteur} d'un terme $t$ est le plus petit $k$ tel que $t \in \mathcal{T}_k$.
     \end{itemize}
   \end{defn}
 
@@ -640,7 +640,7 @@
 
   \begin{exm}
     On a quelques théorèmes simples :
-    $\forall x \: \lnot \bot$, et $\forall x \: x = x$ et même $x = x$ car on ne demande pas que la formule soit clause.
+    $\forall x \: \lnot \bot$, et $\forall x \: x = x$ et même $x = x$ car on ne demande pas que la formule soit close.
 
     Dans $\mathcal{L}_\mathrm{g} = \{e, *, \square^{-1}\}$, on considère deux formules 
     \begin{itemize}
