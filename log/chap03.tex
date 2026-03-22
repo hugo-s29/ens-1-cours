@@ -503,7 +503,7 @@
    Alors il existe $b \in \mathds{N}$ tel que, pour tout $0 \le i \le p$, $b \equiv n_i \pmod{a_i}$ (par le théorème Chinois).
 
    Choisissons $a$ et les $a_i$ (qui induisent $b$) ?
-   On pose $a = m!$.
+   On pose $a = m!$, où $m = \max(p, n_0, \ldots, n_p)$.
    Alors, on pose $a_i := a (i+1) + 1$ pour tout $0 \le i \le p$.
    Les $a_i$ sont bien deux à deux premiers.
    En effet, pour $j > i$, si  $c  \mid a_i$ et $c  \mid a_j$ avec $c$ premier, alors $c  \mid (a_i - a_j)$ donc $c  \mid a (j-i)$ et donc $c \le m$, donc $c  \mid m$.
@@ -512,7 +512,10 @@
    La fonction $\beta$ est représentée par  \[
    B(x_0, i, a, b) := \exists x_4 \: b = x_4 \otimes \succ (a \otimes (\succ i)) \land x_4 < \succ(x \otimes \succ i)
    .\]
-   On considère $B'(x_0, x_1, x_2, x_3) := B(x_0, x_1, x_2, x_3) \land \forall x_4 < x_0 \:\lnot B(x_4, x_1, x_2, x_3)$.
+   On considère
+   \[
+   B'(x_0, x_1, x_2, x_3) := B(x_0, x_1, x_2, x_3) \land \forall x_4 < x_0 \:\lnot B(x_4, x_1, x_2, x_3)
+   .\] 
    Cette dernière formule représente aussi $\beta$ mais aussi que $x_0$ sera un entier standard.
  \end{prv}
 
