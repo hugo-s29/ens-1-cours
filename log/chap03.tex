@@ -947,7 +947,8 @@
  \begin{prop}
    Si une théorie $T$ a un ensemble d'axiomes $\mathrm{Ax}_T$ alors l'ensemble \[
    \mathrm{Dem}_T = \mleft\{\, (\sharp D, \sharp F) \;\middle|\; \text{$D$ est une preuve de $F$ dans $T$ avec $\mathrm{Ax}_T$}\,\mright\} 
-   .\] 
+   \] 
+   est récursif.
  \end{prop}
  \begin{prv}
    L'idée de la preuve est la suivante :
@@ -1131,7 +1132,7 @@
      \item $\vdash \forall v_0 \: \forall v_1 \: F_{\mathcal{P}_0}(v_0, v_1) \to F_T(v_0, v_1)$ ;
      \item $F_T$ et $F_{\mathcal{P}_0}$ sont dans $\Sigma$ ;
      \item si $F$ est une formule close de $\Sigma$ alors \[
-       \mathcal{P} \vdash (F \to \exists x \: F_{\mathcal{P}_0} (x_1, \sharp F))
+       \mathcal{P} \vdash (F \to \exists x_1 \: F_{\mathcal{P}_0} (x_1, \sharp F))
        .\]
    \end{enumerate}
  \end{lem}
