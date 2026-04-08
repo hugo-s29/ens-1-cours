@@ -306,8 +306,8 @@
 
     Un ensemble de $p$-uplets $A \subseteq \mathds{N}^p$ est \textit{représenté} par $F(x_1, \ldots, x_p)$ si pour tout $p$-uplet d'entiers $(n_1, \ldots, n_p)$, on a 
     \begin{enumerate}
-      \item si $(n_1, \ldots, n_p) \in A$ alors $\mathcal{P}_0 \vdash F(n_1, \ldots, n_p)$ ;
-      \item si $(n_1, \ldots, n_p) \not\in A$ alors $\mathcal{P}_0 \vdash \lnot F(n_1, \ldots, n_p)$.
+      \item si $(n_1, \ldots, n_p) \in A$ alors $\mathcal{P}_0 \vdash F(\repr{n_1}, \ldots, \repr{n_p})$ ;
+      \item si $(n_1, \ldots, n_p) \not\in A$ alors $\mathcal{P}_0 \vdash \lnot F(\repr{n_1}, \ldots, \repr{n_p})$.
     \end{enumerate}
     On dit que $A$ est \textit{représentable} s'il existe une formule qui le représente.
   \end{defn}
@@ -369,7 +369,7 @@
       \item Une fonction récursive primitive est totale.
       \item Une fonction récursive primitive peut se fabriquer avec un seul schéma $\mu$ à la fin (\textit{c.f.} cours de FDI).
       \item \textit{Rappel}.
-        Une fonction $f : \mathds{N}^p \to \mathds{N}$ totale est représentée par la formule $F(x_0, \ldots, x_p)$ de $\mathcal{L}_0$ su pour tout $p$-uplet d'entiers $(n_1, \ldots, n_p)$ on a :
+        Une fonction $f : \mathds{N}^p \to \mathds{N}$ totale est représentée par la formule $F(x_0, \ldots, x_p)$ de $\mathcal{L}_0$ si pour tout $p$-uplet d'entiers $(n_1, \ldots, n_p)$ on a :
         \[
         \mathcal{P}_0 \vdash \forall y \: \big( F(y, \repr {n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{f(n_1, \ldots, n_p)} \big)
         .\] 
@@ -439,7 +439,7 @@
   \end{lem}
   \begin{prv}
     Soit $g : \mathds{N}^{p+1} \to \mathds{N}$ une fonction représentable totale, et soit $f : \mathds{N}^p \to \mathds{N}$ définie par \[
-      f(x_1, \ldots, x_p) := \mu x_0.\:\big( g(x_0, \ldots, x_p) = 0 \big)
+      f(x_1, \ldots, x_p) := \mu x_0.\:\big( g(x_0, \ldots, x_p) = \repr 0 \big)
     .\]
     Montrons que si $f$ est totale alors elle est représentable.
     Soit $G (y, x_0, \ldots, x_p)$ qui représente $g$.
@@ -450,7 +450,7 @@
     Considérons la formule \[
     F(y, n_1, \ldots, n_p) := G(0, y, x_1, \ldots, x_p)  \land \forall z < y, \lnot G(0, z, x_1, \ldots, x_p)
     ,\]
-    où l'on note $\forall z < y \: H$ pour  $\forall z \: (\exists u \: \lnot (h = \repr{0}) \land z \oplus h = y) \to H$.
+    où l'on note $\forall z < y \: H$ pour  $\forall z \: (\exists h \: \lnot (h = \repr{0}) \land z \oplus h = y) \to H$.
     Montrons que $F$ représente $f$.
     Soit $\mathcal{M}$ un modèle de $\mathcal{P}_0$.
     Soient $ n_1, \ldots, n_p$ des entiers et $y \in |\mathcal{M}|$.
