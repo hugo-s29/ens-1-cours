@@ -55,54 +55,73 @@
   \subsubsection{Les axiomes de Peano.}
 
   On se place dans le cas égalitaire.
-  L'ensemble $\mathcal{P}$ est composé de $\mathcal{P}_0$ un ensemble fini d'axiomes (A1--A7) et d'un schéma d'induction (SI).
+  L'ensemble $\mathcal{P}$ est composé de $\mathcal{P}_0$ un ensemble fini d'axiomes (\peano{A1}--\peano{A7}) et d'un schéma d'induction (\peano{SI}).
 
   Trois axiomes pour le successeur :
+  \phantomsection
   \begin{description}
     \item[A1.] \label{peano-A1} $\forall x \: \lnot (\succ x = \zero)$
+  \end{description}
+  \phantomsection
+  \begin{description}
     \item[A2.] \label{peano-A2} $\forall x \: \exists y \: \big(\lnot (x = \zero) \to x = \succ y\big)$
+  \end{description}
+  \phantomsection
+  \begin{description}
     \item[A3.] \label{peano-A3} $\forall x \: \forall y \: (\succ x = \succ y \to x = y)$
   \end{description}
 
   Deux axiomes pour l'addition :
+  \phantomsection
   \begin{description}
     \item[A4.] \label{peano-A4} $\forall x \: (x \oplus \zero = x)$ 
+  \end{description}
+  \phantomsection
+  \begin{description}
     \item[A5.] \label{peano-A5} $\forall x \: \forall y \: (x \oplus (\succ y) = \succ(x \oplus y))$
   \end{description}
 
   Deux axiomes pour la multiplication :
+  \phantomsection
   \begin{description}
     \item[A6.] \label{peano-A6} $\forall x \: (x \otimes \zero = \zero)$
+  \end{description}
+  \phantomsection
+  \begin{description}
     \item[A7.] \label{peano-A7} $\forall x \: \forall y \: \big(x \otimes (\succ y) = (x \otimes y) \oplus x\big)$
   \end{description}
 
   Et le schéma d'induction :
+  \phantomsection
   \begin{description}
     \item[SI.] \label{peano-SI}
       Pour toute formule $F$ de variables libres $x_0, \ldots, x_n$,
   \end{description}
-  \fitbox{$\forall x_1 \: \cdots \: \forall x_n \: \Big(
-    \big(F(\zero, \ldots, x_1, \ldots, x_n) \land \forall x \: (F(x, x_1, \ldots, x_n) \to F(\succ x, x_1, \ldots, x_n))\big)
+  \begin{gather*}
+    \forall x_1 \: \cdots \: \forall x_n \: \\
+    \Big(
+    \big(F(\zero, \ldots, x_1, \ldots, x_n) \land \forall x \: (F(x, x_1, \ldots, x_n) \to F(\succ x, x_1, \ldots, x_n))\big)\\
     \to \forall x \: F(x, x_1, \ldots, x_n)
-  \Big).$}
+    \Big).
+  \end{gather*}
 
   \begin{rmk}
     \begin{itemize}
-      \item Le schéma est le SI avec hypothèse faible, qui permet de montrer le SI avec hypothèse forte.
-        On adopte la notation $\forall y \le x \: F(y, x_1, \ldots, x_n)$ pour \[
+      \item Le schéma est le \peano{SI} avec hypothèse faible, qui permet de montrer le \peano{SI} avec hypothèse forte.
+        On adopte la notation $\forall y \le x, \: F(y, x_1, \ldots, x_n)$ pour \[
         \forall y \: \big( (\exists z \:  z \oplus y = x) \to  F(y, x_1, \ldots, x_n) \big)
         .\]
-        Le SI avec hypothèse forte est :
+        Le \peano{SI} avec hypothèse forte est :
     \end{itemize}
     \fitbox{
       $\forall x_1 \: \cdots \: \forall x_n \: \Big(
-      \big(F(\zero, \ldots, x_1, \ldots, x_n) \land \forall x \: \big((\forall y \le  x \: F(y, x_1, \ldots, x_n)) \to F(\succ x, x_1, \ldots, x_n)\big)\big)
+      \big(F(\zero, \ldots, x_1, \ldots, x_n) \land \forall x \: \big((\forall y \le  x, \: F(y, x_1, \ldots, x_n)) \to F(\succ x, x_1, \ldots, x_n)\big)\big)
       \to \forall x \: F(x, x_1, \ldots, x_n)
       \Big)$
     }
     \begin{itemize}
       \item L'ensemble $\mathcal{P}$ est non-contradictoire car $\mathds{N}$ est un modèle, appelé \textit{modèle standard}.
-      \item On peur remplacer le SI par une nouvelle règle de démonstration :
+      \item On peur remplacer le \peano{SI} par une nouvelle règle de démonstration :
         \[
         \begin{prooftree}
           \hypo{\Gamma \vdash F(\zero)}
@@ -114,7 +133,7 @@
   \end{rmk}
 
   \begin{exo}
-    Montrer l'équivalence entre SI et la nouvelle règle $\mathsf{rec}$, \textit{i.e.} on peut démontrer les mêmes théorèmes.
+    Montrer l'équivalence entre \peano{SI} et la nouvelle règle $\mathsf{rec}$, \textit{i.e.} on peut démontrer les mêmes théorèmes.
   \end{exo}
 
   \begin{nota}
@@ -173,7 +192,7 @@
         \[
         \mathcal{M} \models \forall x\: \forall y \: \forall z \: ((\lnot (x = \zero) \land x \otimes y = x \otimes z) \to y = z)
         \;;\]
-      \item la formule suivante définie un ordre total sur $\mathcal{M}$ compatible avec $+$ et $\times$ :
+      \item la formule suivante définit un ordre total sur $\mathcal{M}$ compatible avec $+$ et $\times$ :
         \[
         x \le y \text{ ssi } \exists z \: (x \oplus z = y)
         .\]
@@ -182,15 +201,16 @@
   \begin{prv}
     On prouve la commutativité de $+$ en trois étapes.
     \begin{enumerate}
-      \item On montre  $\mathcal{P} \vdash \forall x \: (\zero \oplus x = x)$.
-        On utilise le SI avec la formule $F(x) := (\zero \oplus x = x)$.
+      \item \label{item:plus-comm-1}
+        On montre $\mathcal{P} \vdash \forall x \: (\zero \oplus x = x)$.
+        On utilise le \peano{SI} avec la formule $F(x) := (\zero \oplus x = x)$.
         \begin{itemize}
-          \item On a $\mathcal{P} \vdash \zero \oplus \zero = \zero$ par A4.
-          \item On montre $\mathcal{P} \vdash \forall x \: F(x) \to F(\succ x)$, c'est à dire :
+          \item On a $\mathcal{P} \vdash \zero \oplus \zero = \zero$ par \peano{A4}.
+          \item On montre $\mathcal{P} \vdash \forall x \: (F(x) \to F(\succ x))$, c'est à dire :
             \[
             \forall x \: \big((\zero \oplus x = x) \to (\zero \oplus (\succ x) = \succ x) \big)
             .\]
-            On peut le montrer par A5.
+            On peut le montrer par \peano{A5}.
         \end{itemize}
 
         \textbf{Questions/Remarques :}
@@ -199,7 +219,8 @@
             On n'est pas forcément dans $\mathds{N}$ !
           \item Grâce au théorème de complétude, on peut raisonner sur les modèles, donc en maths naïves.
         \end{itemize}
-      \item On montre $\mathcal{P} \vdash \forall x \: \forall y \: \succ(x \oplus y) = (\succ x) \oplus y$.
+      \item \label{item:plus-comm-2}
+        On montre $\mathcal{P} \vdash \forall x \: \forall y \: (\succ(x \oplus y) = (\succ x) \oplus y)$.
         On veut utiliser le schéma d'induction avec $F(x, y) := \succ(x \oplus y) = (\succ x) \oplus y$.
         Mais ça ne marche pas\ldots (Pourquoi ?)
 
@@ -211,17 +232,17 @@
             \]
             Ceci est vrai car 
             \[
-            \succ(x \oplus \zero) \underset {\text{A4}} = \succ x \underset {\text{A4}} = (\succ x) \oplus \zero
+              \succ(x \oplus \zero) \underset {\text{\peano{A4}}} = \succ x \underset {\text{\peano{A4}}} = (\succ x) \oplus \zero
             .\]
           \item On a $\mathcal{P} \vdash F(y, x) \to F(\succ y, x)$ car : si $\succ(x \oplus y) = (\succ x) \oplus y$, alors 
         \end{itemize}
         \[
-        \succ(x \oplus (\succ y)) \underset {\text{A5}} = \succ \succ (x \oplus y) \underset{\text{hyp}} = \succ((\succ x) \oplus y) \underset {\text{A5}} (\succ x) = \oplus (\succ y)
+          \succ(x \oplus (\succ y)) \underset {\text{\peano{A5}}} = \succ \succ (x \oplus y) \underset{\text{hyp}} = \succ((\succ x) \oplus y) \underset {\text{\peano{A5}}} (\succ x) = \oplus (\succ y)
         .\]
-      \item On utilise le SI avec $F(x, y) := (x \oplus y = y \oplus x)$.
-        D'une part, on a $F(\zero, y) = (\zero \oplus y = y \oplus \zero)$ par 1 et A4.
-        D'autre part, si l'on a $x \oplus y = y \oplus x$ alors  $(\succ x) \oplus y = y \oplus (\succ x)$ par A5 et 2.
-        Par le SI, on conclut.
+      \item On utilise le \peano{SI} avec $F(x, y) := (x \oplus y = y \oplus x)$.
+        D'une part, on a $F(\zero, y) = (\zero \oplus y = y \oplus \zero)$ par \ref{item:plus-comm-1} et \peano{A4}.
+        D'autre part, si l'on a $x \oplus y = y \oplus x$ alors  $(\succ x) \oplus y = y \oplus (\succ x)$ par \peano{A5} et~\ref{item:plus-comm-2}.
+        Par le \peano{SI}, on conclut.
     \end{enumerate}
   \end{prv}
 
@@ -416,14 +437,14 @@
     Soient $f_1(x_1, \ldots, x_p), \ldots, f_n(x_1, \ldots, x_p)$ et $g(x_1, \ldots, x_n)$ des fonctions représentées par $F_1(x_0, \ldots, x_p), \ldots, F_n(x_0, \ldots, x_p)$ et $G(x_0, \ldots, G_n)$.
     On va montrer que $h = g(f_1, \ldots, f_n)$ est représentée par 
     \[
-    H(x_0, \ldots, x_o) := \exists y_0\: \cdots \: \exists y_n \: \big(
+    H(x_0, \ldots, x_p) := \exists y_0\: \cdots \: \exists y_n \: \big(
       G(x_0, y_1, \ldots, y_n) \land \bigwedge_{1 \le i \le  n} F_i(y_i, x_1, \ldots, x_p)
     \big)
     .\]
     En effet, pour tous entiers $n_1, \ldots, n_{\max(p, n)}$ :
     \begin{itemize}
-      \item $\mathcal{P}_0 \vdash \forall y \: F_i(y_1, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{f_i(n_1, \ldots, n_p)}$ ;
-      \item $\mathcal{P}_0 \vdash \forall y \: G(y_1, \repr{n_1}, \ldots, \repr{n_n}) \leftrightarrow y = \repr{g(n_1, \ldots, n_n)}$.
+      \item $\mathcal{P}_0 \vdash \forall y \: \big(F_i(y_1, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{f_i(n_1, \ldots, n_p)}\big)$ ;
+      \item $\mathcal{P}_0 \vdash \forall y \: \big( G(y_1, \repr{n_1}, \ldots, \repr{n_n}) \leftrightarrow y = \repr{g(n_1, \ldots, n_n)}\big)$.
     \end{itemize}
     Dans tout modèle $\mathcal{M}$ de $\mathcal{P}_0$, pour tout $y \in |\mathcal{M}|$, et tous $n_1, \ldots, n_p \in \mathds{N}$ on a $H(y, n_1, \ldots, n_p)$ est vraie ssi il existe $y_1, \ldots, y_n$ dans $|\mathcal{M}|$ et pour tout $i$, $F_i(y_i, x_1, \ldots, x_p)$ est vrai et $G(y, y_1, \ldots, y_n)$.
     Donc, par les hypothèses précédents, on a $H(y, n_1, \ldots, n_p)$ ssi il existe $y_1, \ldots, y_n$ dans $|\mathcal{M}|$ et pour tout $i$, $y_i = f_i(n_1, \ldots, n_p)$ et $y = g(y_1, \ldots, y_p)$, ssi \[
@@ -445,12 +466,12 @@
     Soit $G (y, x_0, \ldots, x_p)$ qui représente $g$.
     Alors, pour tous $n_1, \ldots, n_p$ on a 
     \[
-      \mathcal{P}_0 \vdash \forall y \: G(y, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{g(n_1, \ldots, n_p)}
+      \mathcal{P}_0 \vdash \forall y \: \big(G(y, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{g(n_1, \ldots, n_p)}\big)
     .\]
     Considérons la formule \[
     F(y, n_1, \ldots, n_p) := G(0, y, x_1, \ldots, x_p)  \land \forall z < y, \lnot G(0, z, x_1, \ldots, x_p)
     ,\]
-    où l'on note $\forall z < y \: H$ pour  $\forall z \: (\exists h \: \lnot (h = \repr{0}) \land z \oplus h = y) \to H$.
+    où l'on note $\forall z < y, \: H$ pour  $\forall z \: ((\exists h \: \lnot (h = \repr{0}) \land z \oplus h = y) \to H)$.
     Montrons que $F$ représente $f$.
     Soit $\mathcal{M}$ un modèle de $\mathcal{P}_0$.
     Soient $ n_1, \ldots, n_p$ des entiers et $y \in |\mathcal{M}|$.
@@ -466,7 +487,7 @@
       \item Si $y$ est un entier, c'est vrai par définition de $b$.
       \item Si $y$ n'est pas un entier, alors $y > b$.
         Donc, $g(y, x_1, \ldots, x_p) = 0$ et  $b < y$ avec  $g(b, x_1, \ldots, x_p) = 0$.
-        Ainsi, $\forall  z < y \: \lnot G(0, z, x_1, \ldots, x_p)$ est fausse, et donc $F(y, n_1, \ldots, n_p)$ est fausse.
+        Ainsi, $\forall  z < y, \: \lnot G(0, z, x_1, \ldots, x_p)$ est fausse, et donc $F(y, n_1, \ldots, n_p)$ est fausse.
     \end{itemize}
  \end{prv}
 
@@ -510,11 +531,11 @@
    Ainsi, il existe bien $b$ tel que $b \equiv n_i \pmod {a_i}$.
    On définit ainsi  $\beta(i, a, b)$ comme le reste de la division de  $b$ par $a(i+1) + 1$.
    La fonction $\beta$ est représentée par  \[
-   B(x_0, i, a, b) := \exists x_4 \: b = x_4 \otimes \succ (a \otimes (\succ i)) \land x_4 < \succ(x \otimes \succ i)
+   B(x_0, i, a, b) := \exists x_4 \: \big(b = x_4 \otimes \succ (a \otimes (\succ i)) \land x_4 < \succ(x \otimes \succ i)\big)
    .\]
    On considère
    \[
-   B'(x_0, x_1, x_2, x_3) := B(x_0, x_1, x_2, x_3) \land \forall x_4 < x_0 \:\lnot B(x_4, x_1, x_2, x_3)
+   B'(x_0, x_1, x_2, x_3) := B(x_0, x_1, x_2, x_3) \land \forall x_4 < x_0, \:\lnot B(x_4, x_1, x_2, x_3)
    .\] 
    Cette dernière formule représente aussi $\beta$ mais aussi que $x_0$ sera un entier standard.
  \end{prv}
@@ -542,12 +563,12 @@
    \begin{align*}
      \exists a \: \exists b \: \big[ &\\
     & (\exists z_0 \: B'(z_0, \repr{0}, a, b) \land G(z_0, x_1, \ldots, x_p)) \\
-       {}\land & \forall i < x_0 \: \exists z \: \exists z' \: \begin{pmatrix}
+       {}\land {} & \forall i < x_0, \: \exists z \: \exists z' \: \begin{pmatrix}
       &B'(z, i, a, b)\\
       \land &B'(z', \succ i, a, b)\\
       \land &H(z', i, z, x_1, \ldots, x_p)
     \end{pmatrix} \\
-      {}\land & B'(y, x_0, a, b)\\
+         {}\land{} & B'(y, x_0, a, b)\\
               & \hspace{-1cm}\big]
    \end{align*}
    est vraie.
@@ -592,7 +613,10 @@
    Alors, la fonction $f : \mathds{N}^{p+1} \to \mathds{N}$ définie de la façon suivante est récursive primitive (\textit{resp}. récursive primitive) :
    \[f(0, x_1, \ldots, x_p) := g(x_1, \ldots, x_p)\]
    et
-   \fitbox{$f(y, x_1, \ldots, x_p) := h(y, f(k_1(y), x_1, \ldots, x_p), \ldots, f(k_n(y), x_1, \ldots, x_p), x_1, \ldots, x_p)$}.
+   \begin{align*}
+     f(y, x_1, \ldots, x_p) := h(y, u_1, \ldots, u_n, x_1, \ldots, x_p)
+   ,\end{align*}
+   où l'on note $u_i := f(k_i(y), x_1, \ldots, x_p)$ pour tout  $i \in \llbracket 1, n\rrbracket$.
    \qed
  \end{lem}
 
@@ -620,14 +644,16 @@
    des fonctions récursives primitives (\textit{resp}. récursives) et $P_1, \ldots, P_n$ des ensembles disjoints de $\mathds{N}^p$ récursifs primitifs (\textit{resp.} récursifs) alors la fonction suivante est récursive primitive :
    \[f(0, x_1, \ldots, x_p) := g(x_1, \ldots, x_p)\]
    et 
-
-   \fitbox{$f(y, x_1, \ldots, x_p) := \begin{cases}
-     f_1(y, f(k_1(y), x_1, \ldots, x_p), \ldots, f(k_m(y), x_1, \ldots, x_p), x_1, \ldots, x_p) & \text{ si } P_1(x_1, \ldots, x_p)\\
-     f_2(y, f(k_1(y), x_1, \ldots, x_p), \ldots, f(k_m(y), x_1, \ldots, x_p), x_1, \ldots, x_p) & \text{ si } P_2(x_1, \ldots, x_p)\\
+    \[
+   f(y, x_1, \ldots, x_p) := \begin{cases}
+     f_1(y, u_1, \ldots, u_m, x_1, \ldots, x_p) & \text{si } P_1(x_1, \ldots, x_p)\\
+     f_2(y, u_1, \ldots, u_m, x_1, \ldots, x_p) & \text{si } P_2(x_1, \ldots, x_p)\\
      \quad\quad\quad\quad \vdots\\
-     f_n(y, f(k_1(y), x_1, \ldots, x_p), \ldots, f(k_m(y), x_1, \ldots, x_p), x_1, \ldots, x_p) & \text{ si } P_n(x_1, \ldots, x_p)\\
-     f_{n+1}(x_1, \ldots, x_p)
-   \end{cases}$}
+     f_n(y, u_1, \ldots, u_m, x_1, \ldots, x_p) & \text{si } P_n(x_1, \ldots, x_p)\\
+     f_{n+1}(x_1, \ldots, x_p) & \text{sinon},
+   \end{cases}
+   \] 
+   où l'on note $u_i := f(k_i(y), x_1, \ldots, x_p)$ pour tout  $i \in \llbracket 1, m\rrbracket$.
    \qed
  \end{lem}
 
@@ -1110,7 +1136,7 @@
      \item contient les formules sans quantificateurs ;
      \item est clos par $\land, \lor, \exists$ ;
      \item est clos par quantification universelle bornée, \textit{i.e.} si $F \in \Sigma$  alors \[
-       \big(\forall v_0 \: (v_0 < v_1) \to F\big) \in \Sigma
+       \big(\forall v_0 \: (v_0 < v_1 \to F)\big) \in \Sigma
        .\]
    \end{itemize}
  \end{defn}
@@ -1129,7 +1155,7 @@
  \begin{lem}
    Il existe des formules $F_T$ et $F_{\mathcal{P}_0}$ qui satisfont :
    \begin{enumerate}
-     \item $\vdash \forall v_0 \: \forall v_1 \: F_{\mathcal{P}_0}(v_0, v_1) \to F_T(v_0, v_1)$ ;
+     \item $\vdash \forall v_0 \: \forall v_1 \: (F_{\mathcal{P}_0}(v_0, v_1) \to F_T(v_0, v_1))$ ;
      \item $F_T$ et $F_{\mathcal{P}_0}$ sont dans $\Sigma$ ;
      \item si $F$ est une formule close de $\Sigma$ alors \[
        \mathcal{P} \vdash (F \to \exists x_1 \: F_{\mathcal{P}_0} (x_1, \sharp F))
@@ -1186,18 +1212,18 @@
      \item Soit $g : \mathds{N} \to \mathds{N}$ définie par $n = \sharp F(x_0) \mapsto \sharp F(\repr{n}) = \sharp F(\repr{\sharp F(x_0)})$.
        C'est \textit{la formule appliquée à elle-même}.
        La fonction $g$ est primitive récursive, donc représentée par une formule $G(x,y)$ telle que \[
-         \forall n \in \mathds{N}, \quad \mathcal{P}_0\vdash \forall x \: G(x, \repr{n}) \leftrightarrow x = \repr{g(n)}
+         \forall n \in \mathds{N}, \quad \mathcal{P}_0\vdash \forall x \: (G(x, \repr{n}) \leftrightarrow x = \repr{g(n)})
        .\]
      \item On considère la formule "il existe une preuve de $x_0$ appliquée à elle-même" :
        \[
-       \varepsilon(x_0) := \exists x_1 \: \exists x_2 \: F_T(x_1, x_2) \land G(x_2, x_0)
+       \varepsilon(x_0) := \exists x_1 \: \exists x_2 \: (F_T(x_1, x_2) \land G(x_2, x_0))
        .\]
      \item On pose $a := \sharp(\lnot \varepsilon(x_0))$, "il n'existe pas de preuve de $x_0$ appliquée à elle-même".
      \item On pose $b := g(a) = \sharp (\lnot \varepsilon(\repr{a}))$, "il n'existe pas du preuve du fait qu'il n'existe pas de preuve de $x_0$ appliquée à elle-même".
-     \item Dans $\mathcal{P}_0$, on a $\forall x_2 \: G(x_2, \repr{a}) \leftrightarrow x_2 = \repr{b}$.
-     \item Par définition, $\varepsilon(\repr{a})$ est  $\exists x_1 \: \exists x_2 \: F_T(x_1, x_2) \land G(x_0, \repr{a})$.
+     \item Dans $\mathcal{P}_0$, on a $\forall x_2 \: (G(x_2, \repr{a}) \leftrightarrow x_2 = \repr{b})$.
+     \item Par définition, $\varepsilon(\repr{a})$ est  $\exists x_1 \: \exists x_2 \: (F_T(x_1, x_2) \land G(x_0, \repr{a}))$.
        "Il existe une preuve du fait qu'il n'existe pas de preuve de nous-même".
-       Dans $\mathcal{P}_0$, $\varepsilon(\repr{a})$ est équivalent à  $\exists x_1 \: F_T(x_1, \repr{b}) \land G(\repr{b})$, ce qui est équivalent à $\exists x_1 \: F_T(x_1, \repr{b})$ car $b = g(a)$ ($\star$).
+       Dans $\mathcal{P}_0$, $\varepsilon(\repr{a})$ est équivalent à  $\exists x_1 \: (F_T(x_1, \repr{b}) \land G(\repr{b}))$, ce qui est équivalent à $\exists x_1 \: F_T(x_1, \repr{b})$ car $b = g(a)$ ($\star$).
        Ainsi, on a "$\varepsilon(\repr{a})$ ssi il y a une preuve de  $\lnot \varepsilon(\repr{a})$"
    \end{itemize}
 

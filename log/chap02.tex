@@ -902,7 +902,7 @@
         On a donc  $T \nvdash A$ implique $T \vdash \lnot A$.
       \item Si $T \vdash A$ ou $T \vdash B$, alors par la règle $\lor_\mathsf{i}^\mathsf{g}$ ou $\lor_\mathsf{i}^\mathsf{d}$, on montre que $T \vdash A \lor B$.
 
-        Réciproquement, si $T \vdash A \lor B$ et $T \nvdash A$ et $T \vdash \nvdash B$ alors, par~\ref{chap2-prop5-1}, on a $T \vdash \lnot A$ et $T \vdash \lnot B$.
+        Réciproquement, si $T \vdash A \lor B$ et $T \nvdash A$ et $T \nvdash B$ alors, par~\ref{chap2-prop5-1}, on a $T \vdash \lnot A$ et $T \vdash \lnot B$.
         On montre ainsi (en exercice) que $T\vdash \lnot (A \lor B)$ d'où $T \vdash \bot$ par $\lnot_\mathsf{e}$.
         C'est impossible car $T$ est complète donc consistante, d'où $T \vdash A \lor B$ implique $T \vdash A$ ou $T \vdash B$.
     \end{itemize}
@@ -1107,34 +1107,41 @@
         Ainsi (exercice) \[
         T_n \vdash \Big( \bigwedge_{1 \le i \le k} \big(\exists x \: F_i \to F_i(c_{F_i})\big) \Big) \to \bot
         .\]
-        Les $c_{F_i}$ ne sont pas dans $T_n$ d'où, d'après le lemme~\ref{lem:fol-var-libre-un-symb}, que \[
+        Les $c_{F_i}$ ne sont pas dans $T_n$ d'où, d'après le lemme~\ref{lem:fol-var-libre-un-symb}, \[
         T_n \vdash \forall y_1 \: \forall y_2 \: \ldots \forall y_n \: \Big( \bigwedge_{1 \le i \le k} \big(\exists x \: F_i \to F_i(y_i)\big) \Big) \to \bot
         .\]
         On peut montrer que (théorème logique)
-        \[
-          (\star) \quad\quad \vdash \forall y \: (A(y) \to \bot) \leftrightarrow (\exists y \: A(y) \to \bot)
-        ,\]
+        \begin{equation}
+          \tag{$\star$}
+          \label{chap2-star1}
+          \vdash \forall y \: (A(y) \to \bot) \leftrightarrow (\exists y \: A(y) \to \bot),
+        \end{equation}
         d'où
         \[
         T_n \vdash \Big(\exists y_1 \: \exists y_2 \: \ldots \exists y_n \: \bigwedge_{1 \le i \le k} \big(\exists x \: F_i \to F_i(y_i)\big) \Big) \to \bot
         .\]
-        On a aussi \[
-          (\star\star) \quad\quad
+        On a aussi
+        \begin{equation}
+          \tag{$\star\star$}
+          \label{chap2-star2}
           \vdash \exists y_1 \: \exists y_2 \: \big( A(y_1) \land A(y_2)\big) \leftrightarrow
-          \big(\exists y_1 \: A(y_1)\big) \land \big(\exists y_2 \: A(y_2)\big)
-        ,\]
+          \big(\exists y_1 \: A(y_1)\big) \land \big(\exists y_2 \: A(y_2)\big),
+        \end{equation}
         et pour $y$ non libre dans $A$, on a \[
         \vdash \exists y \: (A \to B) \leftrightarrow (A \to \exists y \: B)
         .\]
         On a donc \[
         T_n \vdash \Big( \bigwedge_{1 \le i \le k} (\exists x \: F_i(x) \to \exists y_i \: F_i(y_i)) \Big) \to \bot
         .\]
-        Or, \[
-          (\star{\star}\star) \quad\quad \vdash \bigwedge_{1 \le i \le k} (\exists x \: F_i(x) \to \exists y_i \: F_i(y_i))
-        .\]
+        Or,
+        \begin{equation}
+          \tag{$\star{\star}\star$}
+          \label{chap2-star3}
+          \vdash \bigwedge_{1 \le i \le k} (\exists x \: F_i(x) \to \exists y_i \: F_i(y_i))?
+        \end{equation}
         On a donc $T_n \vdash \bot$, ce qui contredit l'hypothèse, d'où $T_{n+1}$ consistante.
 
-        En exercice, on pourra montrer les théorèmes logiques $(\star)$,  $(\star\star)$, et  $(\star{\star}\star)$.
+        En exercice, on pourra montrer les théorèmes logiques (\ref{chap2-star1}), (\ref{chap2-star2}), et (\ref{chap2-star3}).
     \end{itemize}
   \end{prv}
 
