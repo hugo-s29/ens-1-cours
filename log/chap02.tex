@@ -6,15 +6,15 @@
   \section{Les termes.}
 
   On commence par définir les \textit{termes}, qui correspondent à des objets mathématiques.
-  Tandis que les formules relient des termes et correspondent plus à des énoncés mathématiques.
+  Tandis que les formules relient des termes et correspondent à des énoncés mathématiques.
 
   \begin{defn}
     Le langage $\mathcal{L}$ (du premier ordre)
     est la donnée d'une famille (pas nécessairement finie) de symboles de trois sortes :
     \begin{itemize}
-      \item les symboles de \textit{constantes}, notées $c$ ;
-      \item les symboles de \textit{fonctions}, avec un entier associé, leur \textit{arité}, notées $f(x_1, \ldots, x_n)$ où $n$ est l'arité ;
-      \item les symboles de \textit{relations}, avec leur arité, notées $R$, appelés \textit{prédicats}.
+      \item les symboles de \textit{constante} ;
+      \item les symboles de \textit{fonction}, avec un entier associé, leur \textit{arité} ;
+      \item les symboles de \textit{relation}, avec leur arité, aussi appelés \textit{prédicats}.
     \end{itemize}
     Les trois ensembles sont disjoints.
   \end{defn}
@@ -23,6 +23,7 @@
     \begin{itemize}
       \item Les constantes peuvent être vues comme des fonctions d'arité $0$.
       \item On aura toujours dans les relations : "$=$" d'arité $2$, et "$\bot$" d'arité $0$.
+        %QV : Ce n'est pas le cas dans les exemples ci-dessous.
       \item On a toujours un ensemble de variables $\mathcal{V}$.
     \end{itemize}
   \end{rmk}
@@ -51,6 +52,7 @@
     \begin{itemize}
       \item une constante $\emptyset$,
       \item trois fonctions $\cap$, $\cup$ et $\square^\mathsf{c}$,
+        %QV : Autant on peut imaginer que dans $\mathcal{L}_\mathrm{co}$ tu poses $0^{-1} = 0$, autant là le complémentaire n'est jamais bien défini.
       \item trois relations $=$, $\in$ et $\subseteq$.
     \end{itemize}
   \end{exm}
@@ -58,23 +60,23 @@
   \begin{defn}
     \begin{description}
       \item[Par le haut.]
-        L'ensemble $\mathcal{T}$ des termes sur le langage $\mathcal{L}$ est le plus petit ensemble de mots sur $\mathcal{L} \cup \mathcal{V} \cup \{\verb|(|, \verb|)|, \verb|,|\}$ tel
+        L'ensemble $\mathcal{T}$ des termes sur le langage $\mathcal{L}$ est le plus petit ensemble de mots sur $\mathcal{L} \cup \mathcal{V} \cup \{\verb|(|, \verb|)|, \verb|,|\}$ qui
         \begin{itemize}
-          \item qu'il contienne $\mathcal{V}$ et les constantes ;
-          \item qui est stable par application des fonctions, c'est-à-dire que pour des termes $t_1, \ldots, t_n$ et un symbole de fonction $f$ d'arité $n$, alors $f(t_1, \ldots, t_n)$ est un terme.\footnote{Attention : le "$\ldots$" n'est pas un terme mais juste une manière d'écrire qu'on place les termes à côté des autres.}
+          \item contienne $\mathcal{V}$ et les constantes ;
+          \item est stable par application des fonctions, c'est-à-dire que pour des termes $t_1, \ldots, t_n$ et un symbole de fonction $f$ d'arité $n$, alors $f(t_1, \ldots, t_n)$ est un terme.\footnote{Attention : le "$\ldots$" n'est pas un terme mais juste une manière d'écrire qu'on place les termes à côté des autres.}
         \end{itemize}
       \item[Par le bas.]
         On pose \[
           \mathcal{T}_0 = \mathcal{V} \cup \{c  \mid c \text{ est un symbole de constante de } \mathcal{L} \} 
         ,\] 
-        puis \[
+      puis pour tout $k \in \mathds{N}$, \[
         \mathcal{T}_{k+1} = \mathcal{T}_k \cup \mleft\{\,f(t_1, \ldots t_n) \;\middle|\;
         \begin{array}{c}
           f \text{ fonction d'arité } n\\
           t_1, \ldots, t_n \in \mathcal{T}_k
         \end{array}\,\mright\}  
         ,\] et enfin \[
-        \mathcal{T} = \bigcup_{n \in \mathds{N}} \mathcal{T}_n
+        \mathcal{T} = \bigcup_{k \in \mathds{N}} \mathcal{T}_k
         .\]
     \end{description}
   \end{defn}
@@ -122,6 +124,7 @@
     \begin{itemize}
       \item Les formules sont des mots sur l'alphabet \[ \mathcal{L} \cup \mathcal{V} \cup \{\verb|(|, \verb|)|, \verb|,|, \exists, \forall, \land, \lor, \lnot, \to \} .\] 
       \item Une \textit{formule atomique} est une formule de la forme $R(t_1, \ldots, t_n)$ où $R$ est un symbole de relation d'arité $n$ et $t_1, \ldots, t_n$ des termes.
+        %QV : La formule dépasse dans la marge, mais je ne vois pas de modification locale qui corrige le problème. Ma meilleure proposition est de rejeter la définition des formules atomiques après celle des formules pour réutiliser $\mathcal F$.
       \item L'ensemble des \textit{formules} $\mathcal{F}$ du langage $\mathcal{L}$ est défini par 
         \begin{itemize}
           \item on pose $\mathcal{F}_0$ l'ensemble des formules atomiques ;
@@ -140,7 +143,8 @@
               x \in \mathcal{V}
             \end{array}
           \,\mright\}$ ;
-        \item et on pose enfin $\mathcal{F} = \bigcup_{n \in \mathds{N}} \mathcal{F}_n$.
+          %QV : Techniquement, $k$ est libre, mais l'introduire proprement implique de manger beaucoup d'espace.
+        \item et on pose enfin $\mathcal{F} = \bigcup_{k \in \mathds{N}} \mathcal{F}_k$.
         \end{itemize}
     \end{itemize}
   \end{defn}
@@ -151,7 +155,7 @@
 
   \begin{exm}
     \begin{itemize}
-      \item Dans $\mathcal{L}_\mathrm{g}$, un des axiomes de la théorie des groupes s'écrit \[
+      \item Dans $\mathcal{L}_\mathrm{g}$, l'un des axiomes de la théorie des groupes s'écrit \[
         \forall x\: \exists y\: (x * y = e \land y * x = e)
         .\]
       \item Dans $\mathcal{L}_\mathrm{co}$, l'énoncé "le corps est de caractéristique 3" s'écrit \[
@@ -159,6 +163,7 @@
         .\] 
       \item Dans $\mathcal{L}_\mathrm{ens}$, la loi de De Morgan s'écrit \[
           \forall x\: \forall y\: (x^\mathsf{c} \cup y^\mathsf{c} = (x \cap y)^\mathsf{c})
+          %QV : cf. mon commentaire précédent sur les complémentaires.
         .\]
     \end{itemize}
   \end{exm}
@@ -184,6 +189,7 @@
     \begin{enumerate}
       \item[0.] les symboles de relations (le plus prioritaire) ;
       \item les symboles $\lnot, \exists, \forall$ ;
+        %QV : J'ai l'impression qu'il est plus standard de dire que les quantificateurs sont les moins prioritaires.
       \item les symboles $\land$ et $\lor$ ;
       \item le symbole $\to$ (le moins prioritaire).
     \end{enumerate}
@@ -205,7 +211,7 @@
     \begin{itemize}
       \item  des quantifications sur un ensemble de valeurs\footnote{En dehors de $\mathcal{L}_\mathrm{ens}$, en tout cas.} ;
       \item "$\exists n\ \exists x_1\: \ldots \: \exists x_n $" une formule qui dépend d'un paramètre ;
-      \item le principe de récurrence : si on a $\mathcal{P}(0)$ pour une propriété $\mathcal{P}$ et que si $\mathcal{P}(n) \to \mathcal{P}(n+1)$ alors on a $\mathcal{P}(n)$ pour tout $n$.\footnote{C'est le "$\forall \mathcal{P}\: \ldots$" qui pose problème ici.}
+      \item le principe de récurrence : si on a $\mathcal{P}(0)$ pour une propriété $\mathcal{P}$ et si pour tout $n$ on a $\mathcal{P}(n) \to \mathcal{P}(n+1)$ alors on a $\mathcal{P}(n)$ pour tout $n$.\footnote{C'est le "$\forall \mathcal{P}\: \ldots$" qui pose problème ici.}
     \end{itemize}
   \end{rmk}
 
@@ -234,6 +240,7 @@
       \item La racine de l'arbre est 
         \begin{itemize}
           \item rien si la formule est atomique ;
+            %QV : C'est un peu bizarre, pourquoi le seul noeud de l'arbre ne serait-il pas qualifié de racine ?
           \item "$\oplus$" si $F = F_1 \oplus F_2$ avec $\oplus$ un connecteur (binaire ou unaire) ;
           \item "$\mathsf{Q}$" si $F = \mathsf{Q}x\: F_1$ avec $\mathsf{Q}$ un quantificateur.
         \end{itemize}
@@ -273,15 +280,15 @@
     et alors 
     \begin{itemize}
       \item $F(z,z) = F[x := z] = \forall y\:(z * y = y * z) \land \forall x\: (x * x = 1)$ ;
-      \item $F(y^{-1}, x) = F[x := y^{-1}] = \forall {\color{nicered} u}\:(y^{-1} * {\color{nicered} u} = {\color{nicered} u} * z) \land \forall x\: (x * x = 1)$.
+      \item $F(y^{-1}, z) = F[x := y^{-1}] = \forall {\color{nicered} u}\:(y^{-1} * {\color{nicered} u} = {\color{nicered} u} * z) \land \forall x\: (x * x = 1)$.
     \end{itemize}
-    On a procédé à un renommage de $y$ à ${\color{nicered} u}$.
+    On a procédé à un renommage de $y$ en ${\color{nicered} u}$.
   \end{exm}
 
   \section{Les démonstrations en déduction naturelle.}
 
   \begin{defn}
-    Un \textit{séquent} est un couple noté $\Gamma \vdash F$ (où $\vdash$ se lit "montre" ou "thèse") tel que $\Gamma$ est un ensemble fini de formules appelé \textit{contexte} (\textit{i.e.} l'ensemble des hypothèses), la formule $F$ est la \textit{conséquence} du séquent.
+    Un \textit{séquent} est un couple noté $\Gamma \vdash F$ (où $\vdash$ se lit "montre" ou "thèse") où $\Gamma$ est un ensemble fini de formules appelé \textit{contexte} (\textit{i.e.} l'ensemble des hypothèses), et $F$ est une formule, appelée \textit{conséquence} du séquent.
   \end{defn}
 
   \begin{rmk}
@@ -291,6 +298,7 @@
   \begin{defn}
     On dit que $\Gamma \vdash F$ est \textit{prouvable}, \textit{démontrable} ou \textit{dérivable}, s'il peut être obtenu par une suite finie de règles (\textit{c.f.} ci-après).
     On dit qu'une formule $F$ est \textit{prouvable} si $\emptyset\vdash F$ l'est.
+    %QV : Cette notion est un peu bizarre, on ne voudrait pas plutôt utiliser le mot « prouvable » pour dire qu'une théorie prouve une formule ?
   \end{defn}
 
   \begin{defn}[Règles de la démonstration]
@@ -400,13 +408,15 @@
         \]~\[
         \begin{prooftree}
           \hypo{\Gamma \vdash \forall x\:A}
-          \infer[left label=
-          \begin{array}{r}
-            \text{quitte à renommer les}\\
-            \text{variables liées de $A$ qui}\\
-            \text{apparaissent dans $t$}
-          \end{array}
-          ] 1[\forall_\mathsf{e}]{\Gamma \vdash A[x := t]}
+          \infer%[left label=
+          %\begin{array}{r}
+          %  \text{quitte à renommer les}\\
+          %  \text{variables liées de $A$ qui}\\
+          %  \text{apparaissent dans $t$}
+          %\end{array}
+          %] 
+          %QV : C'est déjà dans la définition de substitution.
+          1[\forall_\mathsf{e}]{\Gamma \vdash A[x := t]}
         \end{prooftree}
         \]
       \item[Quantificateur existentiel.]
@@ -452,25 +462,27 @@
     \end{prooftree}
     .\] 
 
-    Si on n'a pas la condition sur $\forall_\mathsf{e}$, on peut faire
-    \[
-    \begin{prooftree}
-      \infer 0[=_\mathsf{i}]{\vdash x = x}
-      \infer 1[\exists_\mathsf{i}]{\exists y \: x = y}
-      \infer 1[\forall_\mathsf{i}]{\vdash \forall x \: \exists y \: x = y}
-      \infer 1[\forall_\mathsf{e}]{\vdash \exists y \: (1 + y) = y}
-    \end{prooftree}
-    .\]
+    %Si on n'a pas la condition sur $\forall_\mathsf{e}$, on peut faire
+    %\[
+    %\begin{prooftree}
+    %  \infer 0[=_\mathsf{i}]{\vdash x = x}
+    %  \infer 1[\exists_\mathsf{i}]{\exists y \: x = y}
+    %  \infer 1[\forall_\mathsf{i}]{\vdash \forall x \: \exists y \: x = y}
+    %  \infer 1[\forall_\mathsf{e}]{\vdash \exists y \: (1 + y) = y}
+    %\end{prooftree}
+    %.\]
+    %QV : Non, ce n'est pas une substitution valide.
 
     Si on n'a pas la condition sur $\exists_\mathsf{e}$, on peut faire 
     \[
     \begin{prooftree}
-      \infer 0[=_\mathsf{i}]{x = 1 \vdash 0 = 0}
-      \infer 1[\exists_\mathsf{i}]{x = 1 \vdash \exists x \: x = 0}
-      \infer 0[\mathsf{ax}]{x = 1, x = 0 \vdash x = 0}
-      \infer 2[\exists_\mathsf{e}]{x = 1 \vdash x = 0}
+      \infer 0[=_\mathsf{i}]{\emptyset \vdash 0 = 0}
+      \infer 1[\exists_\mathsf{i}]{\emptyset \vdash \exists x \: x = 0}
+      \infer 0[\mathsf{ax}]{\emptyset, x = 0 \vdash x = 0}
+      \infer 2[\exists_\mathsf{e}]{\emptyset \vdash x = 0}
     \end{prooftree}
     .\] 
+    %QV : Pour mettre en évidence que le problème ne vient pas du contexte.
   \end{rmk}
 
 
@@ -478,12 +490,13 @@
 
   \begin{defn}
     Soit $\mathcal{L}$ un langage de la sémantique du premier ordre.
-    On appelle \textit{interprétation} (ou \textit{modèle}, ou \textit{structure}) du langage $\mathcal{L}$ l'ensemble $\mathcal{M}$ des données suivantes :
+    On appelle \textit{interprétation} (ou \textit{structure}) du langage $\mathcal{L}$ l'ensemble $\mathcal{M}$ des données suivantes :
     \begin{itemize}
       \item un ensemble \textit{\textbf{non vide}}, noté $|\mathcal{M}|$, appelé \textit{domaine} ou \textit{ensemble de base} de $\mathcal{M}$ ;
       \item pour chaque symbole $c$ de constante, un élément $c_{\mathcal{M}}$ de $|\mathcal{M}|$ ;
-      \item pour chaque symbole $f$ de fonction $n$-aire, une fonction $f_{\mathcal{M}} : |\mathcal{M}|^n \to |\mathcal{M}|$ ;
-      \item pour chaque symbole $R$ de relation $n$-aire (sauf pour l'égalité "$=$"), un sous-ensemble $R_{\mathcal{M}}$ de $|\mathcal{M}|^n$.
+      \item pour chaque symbole $f$ de fonction d'arité $n$, une fonction $f_{\mathcal{M}} : |\mathcal{M}|^n \to |\mathcal{M}|$ ;
+      \item pour chaque symbole $R$ de relation d'arité $n$ (sauf pour l'égalité "$=$"), un sous-ensemble $R_{\mathcal{M}}$ de $|\mathcal{M}|^n$.
+        %QV : Ça me paraissait ok de ne pas hardcoder l'égalité dans les formules jusqu'ici...
     \end{itemize}
   \end{defn}
 
@@ -512,32 +525,33 @@
     Soit $\mathcal{M}$ une interprétation de $\mathcal{L}$.
     \begin{itemize}
       \item Un \textit{environnement} est une fonction de l'ensemble des variables dans $|\mathcal{M}|$.
-      \item Si $e$ est un environnement et $a \in |\mathcal{M}|$, on note $e[x:=a]$ l'environnement $e'$ tel que $e'(x) = a$ et pour $y \neq x$, $e(y) = e'(y)$.
+      \item Si $e$ est un environnement et $a \in |\mathcal{M}|$, on note $e[x:=a]$ l'environnement $e'$ tel que $e'(x) = a$ et pour tout $y \neq x$, $e(y) = e'(y)$.
       \item La \textit{valeur} d'un terme $t$ dans l'environnement $e$, notée $\Val_{\mathcal{M}}(t,e)$, est définie par induction sur l'ensemble des termes de la façon suivante :
+        %QV : Tu peux aussi étendre $e$ aux termes comme tu l'as fait avec les valuations du calcul propositionnel.
         \begin{itemize}
           \item $\Val_{\mathcal{M}}(c, e) = c_{\mathcal{M}}$ si $c$ est une constante ;
           \item $\Val_{\mathcal{M}}(x,e) = e(x)$ si $x$ est une variable ;
           \item $\Val_{\mathcal{M}}(f(t_1, \ldots, t_n), e) = f_{\mathcal{M}}(\Val_{\mathcal{M}}(t_1, e), \ldots, \Val_{\mathcal{M}}(t_n, e))$.
+            %QV : Ça dépasse de la marge.
         \end{itemize}
     \end{itemize}
   \end{defn}
 
   \begin{rmk}
-    La valeur est $\Val_{\mathcal{M}}(t, e)$ est un élément de $|\mathcal{M}|$.
+    La valeur $\Val_{\mathcal{M}}(t, e)$ est un élément de $|\mathcal{M}|$.
   \end{rmk}
 
   \begin{exm}
-    Dans $\mathcal{L}_\mathrm{arith} = \{0, 1, +, \times\}$, avec le modèle \[
+    Dans $\mathcal{L}_\mathrm{arith} = \{0, 1, +, \times\}$, avec l'interprétation \[
     \mathcal{M} : \mathds{N}, 0_\mathds{N}, 1_\mathds{N}, +_\mathds{N}, \times_\mathds{N}
     ,\] et l'environnement \[
     e : \quad x_1 \mapsto 2_\mathds{N} \quad x_2 \mapsto 0_\mathds{N} \quad x_3 \mapsto 3_\mathds{N}
     ,\] 
-    alors la valeur du terme $t := (1 \times x_1) + (x_2 \times x_3) + x_2$ est $2_\mathds{N} = (1 \times 2) + (0 \times 3) + 0 $.
+    la valeur du terme $t := (1 \times x_1) + (x_2 \times x_3) + x_2$ dans l'environnement $e$ est $2_\mathds{N} = (1_\mathds{N} \times 2_\mathds{N}) + (0_\mathds{N} \times 3_\mathds{N}) + 0_\mathds{N} $.
   \end{exm}
 
   \begin{lem}
     La valeur $\Val_{\mathcal{M}}(t, e)$ ne dépend que de la valeur de $e$ sur les variables de $t$.
-    \qed
   \end{lem}
 
   \begin{nota}
@@ -545,6 +559,7 @@
       \item Lorsque cela est possible, on oublie $\mathcal{M}$ et $e$ dans la notation, et on note $\Val(t)$.
       \item À la place de  $\Val_{\mathcal{M}}(t,e)$  quand $x_1, \ldots, x_n$ sont les variables de $t$ et $e(x_1) = a_1, \ldots, e(x_n) = a_n$, on note $t[a_1, \ldots, a_n]$ ou aussi~$t[x_1 := a_1, \ldots, x_n := a_n]$.
         C'est un \textit{terme à paramètre}, mais attention ce n'est \textit{\textbf{ni un terme, ni une substitution}}.
+        %QV : Je ne suis pas sûr de comprendre ce que tu appelles « terme à paramètre », c'est la valeur de $t$ dans l'environnement $e$.
     \end{itemize}
   \end{nota}
 
@@ -558,9 +573,9 @@
       \item $\Val_{\mathcal{M}}(R(t_1, \ldots, t_n), e) = 1$  ssi $(\Val_{\mathcal{M}}(t_1, e), \ldots, \Val_{\mathcal{M}}(t_n ,e)) \in R_{\mathcal{M}}$ ;
       \item $\Val_{\mathcal{M}}(\bot, e) = 0$ ;
       \item $\Val_{\mathcal{M}}(\lnot F, e) = 1 - \Val_{\mathcal{M}}(F, e)$ ;
-      \item $\Val_{\mathcal{M}}(F \land G, e) = 1$ ssi $\Val_{\mathcal{M}}(F, e) = 1$ et $\Val_{\mathcal{M}}(G, e) = 1$ ;
-      \item $\Val_{\mathcal{M}}(F \lor G, e) = 1$ ssi $\Val_{\mathcal{M}}(F, e) = 1$ ou $\Val_{\mathcal{M}}(G, e) = 1$ ;
-      \item $\Val_{\mathcal{M}}(F \to G, e) = 1$ ssi $\Val_{\mathcal{M}}(F, e) = 0$ ou $\Val_{\mathcal{M}}(G, e) = 1$ ;
+      \item $\Val_{\mathcal{M}}(F \land G, e) = \Val_{\mathcal{M}}(F, e) \times \Val_{\mathcal{M}}(G, e)$ ;
+      \item $\Val_{\mathcal{M}}(F \lor G, e) = \max(\Val_{\mathcal{M}}(F, e), \Val_{\mathcal{M}}(G, e))$ ;
+      \item $\Val_{\mathcal{M}}(F \to G, e) = 1$ ssi $\Val_{\mathcal{M}}(F, e) \le \Val_{\mathcal{M}}(G, e)$ ;
       \item $\Val_{\mathcal{M}}(\forall x\:F, e) = 1$ ssi pour tout $a \in |\mathcal{M}|$, $\Val_{\mathcal{M}}(F, e[x := a]) = 1$ ;
       \item $\Val_{\mathcal{M}}(\exists x\:F, e) = 1$ ssi il existe $a \in |\mathcal{M}|$, $\Val_{\mathcal{M}}(F, e[x := a]) = 1$.
     \end{itemize}
@@ -573,8 +588,8 @@
 
     Dans le cas du calcul propositionnel, si $R$ est d'arité $0$, \textit{i.e.} une variable propositionnelle, comme $|\mathcal{M}|^0 = \{\emptyset\}$ alors on a deux possibilités :
     \begin{itemize}
-      \item ou bien $R = \emptyset$, et alors on convient que $\Val_{\mathcal{M}}(R, e) = 0$ ;
-      \item ou bien $R = \{\emptyset\} $, et alors on convient que $\Val_{\mathcal{M}}(R, e) = 1$.
+      \item ou bien $R = \emptyset$, et alors $\Val_{\mathcal{M}}(R, e) = 0$ ;
+      \item ou bien $R = \{\emptyset\} $, et alors $\Val_{\mathcal{M}}(R, e) = 1$.
     \end{itemize}
   \end{rmk}
 
@@ -589,10 +604,11 @@
       \item $\;\vdots \qquad \vdots$
     \end{itemize}
   \end{rmk}
+  %QV : Ce n'est probablement pas le meilleur endroit pour faire cette remarque.
 
   \begin{nota}
-    À la place de $\Val_{\mathcal{M}}(F, e) = 1$, on notera $\mathcal{M}, e \models F$ ou bien~$\mathcal{M} \models F$ (quand $F$ est close).
-    On dit que $\mathcal{M}$ \textit{satisfait} $F$, que $\mathcal{M}$ est un \textit{modèle} de $F$ (dans l'environnement $e$), que $F$ est est vraie dans $\mathcal{M}$.
+    À la place de $\Val_{\mathcal{M}}(F, e) = 1$, on note aussi $\mathcal{M}, e \models F$ et
+    on dit que $\mathcal{M}$ \textit{satisfait} $F$, que $\mathcal{M}$ est un \textit{modèle} de $F$ (dans l'environnement $e$), ou que $F$ est vraie dans $\mathcal{M}$.
   \end{nota}
 
   \begin{lem}
@@ -608,16 +624,18 @@
 
   \begin{rmk}
     Dans le cas des formules closes, on doit passer un environnement à cause de $\forall $ et $\exists $.
+    %QV : Je ne comprends pas ce que tu veux dire par là.
   \end{rmk}
 
   \begin{nota}
     On note $F[a_1, \ldots, a_n]$ pour $\Val_{\mathcal{M}}(F, e)$ avec $e(x_1) = a_1, \ldots, e(x_n) = a_n$.
     C'est une \textit{formule à paramètres}, mais ce n'est \textit{\textbf{pas une formule}}.
+    %QV : Même remarque que pour les « termes à paramètres ».
   \end{nota}
 
 
   \begin{exm}
-    Dans $\mathcal{L} = \{S\}$ où $S$ est une relation binaire, on considère deux modèles :
+    Dans $\mathcal{L} = \{S\}$ où $S$ est une relation binaire, on considère deux interprétations :
     \begin{itemize}
       \item $\mathcal{N} : |\mathcal{N}| = \mathds{N}$ avec $S_{\mathcal{N}} = \{(x,y)  \mid x < y\}$,
       \item $\mathcal{R} : |\mathcal{R}| = \mathds{R}$ avec $S_{\mathcal{R}} = \{(x,y)  \mid x < y\}$ ;
@@ -631,7 +649,7 @@
     \[
     \mathcal{N} \not\models F \quad \mathcal{R} \models F \quad \mathcal{N} \models G \quad \mathcal{R} \not\models G
     .\]
-    En effet, la formule $F$ représente le fait d'être un ordre dense, et $G$ d'avoir un plus petit élément.
+    En effet, la formule $F$ représente le fait d'être dense pour un ordre, et $G$ d'avoir un plus petit élément.
   \end{exm}
 
   \begin{defn}
@@ -640,16 +658,17 @@
 
   \begin{exm}
     On a quelques théorèmes simples :
-    $\forall x \: \lnot \bot$, et $\forall x \: x = x$ et même $x = x$ car on ne demande pas que la formule soit close.
+    $\forall x \ \lnot \bot$, et $\forall x \ x = x$ et même $x = x$ car on ne demande pas que la formule soit close.
 
     Dans $\mathcal{L}_\mathrm{g} = \{e, *, \square^{-1}\}$, on considère deux formules 
     \begin{itemize}
       \item $F = \forall x \: \forall y \: \forall z \: \begin{pmatrix}
           x * (y * z) = (x * y) * z\\ \land\\ x * e = e * x = x\\ \land\\ \exists t \: (x * t = e \land t * x = e)
         \end{pmatrix} $ ;
-      \item et $G = \forall e \: \forall e'\: (\forall x\: (x * e' = e' * x = x) \to  e = e')$.
+      \item et $G = \forall e \: \forall e'\: (\forall x\: (x * e = x * e' = x) \to  e = e')$.
     \end{itemize}
-    Aucun des deux n'est un théorème (il n'est vrai que dans les groupes pour $F$ (et c'est même la définition de groupe) et dans les monoïdes pour $G$ (unicité du neutre)), mais $F \to G$ est un théorème logique.
+    Aucun des deux n'est un théorème (il n'est vrai que dans les groupes pour $F$ (et c'est même la définition de groupe) et dans les monoïdes pour $G$ (unicité du neutre à droite)), mais $F \to G$ est un théorème logique.
+    %QV : G n'est pas vraie que dans les monoïdes, mais mon meilleur contre-exemple est la loi qui renvoie toujours son premier argument.
   \end{exm}
 
   \begin{defn}
@@ -659,7 +678,7 @@
   \end{defn}
 
   \begin{exm}
-    Avec $\mathcal{L} = \{e, *\}$ et $\mathcal{L}' = \{e, *, \square^{-1}\}$ alors $\mathcal{L}'$ est une extension de $\mathcal{L}$.
+    Avec $\mathcal{L} = \{e, *\}$ et $\mathcal{L}' = \{e, *, \square^{-1}\}$, $\mathcal{L}'$ est une extension de $\mathcal{L}$.
     On considère 
     \begin{itemize}
       \item $\mathcal{M} : \quad |\mathcal{M}| = \mathds{Z} \quad e_{\mathcal{M}} = 0_\mathds{Z} \quad *_{\mathcal{M}} = +_\mathds{Z}$ ;
@@ -669,7 +688,7 @@
   \end{exm}
 
   \begin{prop}
-    Si $\mathcal{M}$ une interprétation de $\mathcal{L}$ est un enrichissement de $\mathcal{M}'$, une interprétation de $\mathcal{L}'$, alors pour tout environnement $e$, 
+    Si une interprétation $\mathcal{M}$ de $\mathcal{L}$ est un enrichissement d'une interprétation $\mathcal{M}'$ de $\mathcal{L}'$, alors pour tout environnement $e$, 
     \begin{enumerate}
       \item si $t$ est un terme de $\mathcal{L}$, alors $\Val_{\mathcal{M}}(t, e) = \Val_{\mathcal{M}'}(t, e)$ ;
       \item si $F$ est une formule de $\mathcal{L}$ alors $\Val_{\mathcal{M}}(F, e) = \Val_{\mathcal{M'}}(F, e)$.
@@ -697,7 +716,7 @@
   \begin{defn}
     Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$.
     \begin{enumerate}
-      \item Un \textit{$\mathcal{L}$-morphisme} de $\mathcal{M}$ est une fonction $\varphi : |\mathcal{M}| \to |\mathcal{N}|$ telle que 
+      \item Une fonction $\varphi : |\mathcal{M}| \to |\mathcal{N}|$ est appelée un \textit{$\mathcal{L}$-morphisme} de $\mathcal{M}$ dans $\mathcal{N}$ lorsque
         \begin{itemize}
           \item pour chaque symbole de constante $c$, on a $\varphi(c_{\mathcal{M}}) = c_{\mathcal{N}}$ ;
           \item pour chaque symbole $f$ de fonction $n$-aire, on a 
@@ -708,9 +727,10 @@
             \[
               (a_1, \ldots, a_n) \in R_{\mathcal{M}} \text{ ssi } (\varphi(a_1), \ldots, \varphi(a_n)) \in R_{\mathcal{N}}
             .\]
+          %QV : Avec cette définition, les fonctions croissantes ne sont pas forcément des morphises.
         \end{itemize}
       \item Un \textit{$\mathcal{L}$-isomorphisme} est un $\mathcal{L}$-morphisme bijectif.
-      \item On dit que $\mathcal{M}$ et $\mathcal{N}$ sont \textit{isomorphes} s'il existe un $\mathcal{L}$-isomorphisme de $\mathcal{M}$ à $\mathcal{N}$.
+      \item On dit que $\mathcal{M}$ et $\mathcal{N}$ sont \textit{isomorphes} s'il existe un $\mathcal{L}$-isomorphisme de $\mathcal{M}$ dans $\mathcal{N}$.
     \end{enumerate}
   \end{defn}
 
@@ -718,7 +738,7 @@
     \begin{enumerate}
       \item On ne dit rien sur "$=$" car si on impose la même condition que pour les autres relations alors nécessairement $\varphi$ est injectif.
       \item La notion dépend du langage $\mathcal{L}$.
-      \item Lorsqu'on a deux structures isomorphes, on les confonds, ce sont les mêmes, c'est un renommage.
+      \item Lorsqu'on a deux structures isomorphes, on les confond, ce sont les mêmes, c'est un renommage.
     \end{enumerate}
   \end{rmk}
 
@@ -735,7 +755,7 @@
       \item $\mathcal{N} : {]{0,+\infty}[}, 1, \times , \le$.
     \end{itemize}
     Existe-t-il un morphisme de $\mathcal{M}$ dans $\mathcal{N}$ ?
-    Oui, il suffit de poser le morphisme $\varphi : x \mapsto \mathrm{e}^x$.
+    Oui, l'exponentielle.
   \end{exm}
 
   \begin{prop}
@@ -744,31 +764,31 @@
   \end{prop}
 
   \begin{nota}
-    Si $\varphi$ est un morphisme de $\mathcal{M}$ dans $\mathcal{N}$ et $e$ un environnement de $\mathcal{M}$,
+    Si $\varphi$ est un morphisme de $\mathcal{M}$ dans $\mathcal{N}$ et $e$ est un environnement de $\mathcal{M}$,
     alors on note $\varphi(e)$ pour  $\varphi \circ e$. C'est un environnement de~$\mathcal{N}$.
   \end{nota}
 
   \begin{lem}
-    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un morphisme de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour tout terme $t$ et environnement $e$, on a \[
+    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un morphisme de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour tout terme $t$ et tout environnement $e$, on a \[
     \varphi(\Val_{\mathcal{M}}(t, e)) = \Val_{\mathcal{N}}(t, \varphi(e))
     .\]
     \qed
   \end{lem}
 
   \begin{lem}
-    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un morphisme \textit{\textbf{injectif}} de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour toute formule atomique $F$ et environnement $e$, on a \[
+    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un morphisme \textit{\textbf{injectif}} de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour toute formule atomique $F$ et tout environnement $e$, on a \[
       \mathcal{M}, e \models F \text{ ssi } \mathcal{N}, \varphi(e) \models F
     \]
   \end{lem}
 
   \begin{lem}
-    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un \textit{\textbf{isomorphisme}}\footnote{On utilise ici la \textit{surjectivité} pour le "$\exists $".} de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour toute formule $F$ et environnement $e$, on a \[
+    Soient $\mathcal{M}$ et $\mathcal{N}$ deux interprétations de $\mathcal{L}$, et $\varphi$ un \textit{\textbf{isomorphisme}}\footnote{On utilise ici la \textit{surjectivité} pour le "$\exists $".} de $\mathcal{M}$ dans $\mathcal{N}$. Alors pour toute formule $F$ et tout environnement $e$, on a \[
       \mathcal{M}, e \models F \text{ ssi } \mathcal{N}, \varphi(e) \models F
     \]
   \end{lem}
 
   \begin{crlr}
-    Deux interprétations isomorphismes satisfont les mêmes formules closes.
+    Deux interprétations isomorphes satisfont les mêmes formules closes.
   \end{crlr}
 
   \begin{exo}
@@ -802,9 +822,10 @@
   \end{prop}
 
   \begin{exm}[Construction de $\mathds{Z}$ à partir de $\mathds{N}$]
-    On pose la relation $(p, q) \sim (p', q')$ si  $p + q' = p' + q$.
+    On considère la relation $(p, q) \sim (p', q')$ si  $p + q' = p' + q$.
     C'est une relation d'équivalence sur  $\mathds{N}^2$.
-    On pose $\mathds{Z} := \mathds{N}^2 / {\sim}$ (il y a un isomorphisme $\mathds{N}^2 / {\sim} \to \mathds{Z}$ par $(p,q) \mapsto p - q$).
+    On pose $\mathds{Z} := \mathds{N}^2 / {\sim}$.
+    Il y a un isomorphisme $\mathds{N}^2 / {\sim} \to \mathds{Z}$ donné par $(p,q) \mapsto p - q$.
     Est-ce qu'on a $\mathds{N} \subseteq \mathds{N}^2 / {\sim}$ ?
     D'un point de vue ensembliste, non.
     Mais, généralement, l'inclusion signifie avoir un morphisme injectif de $\mathds{N}$ dans $\mathds{N}^2 / {\sim}$.
@@ -863,6 +884,7 @@
     La théorie des groupes n'est pas complète : par exemple, \[
     F := \forall x \: \forall y \: (x * y = y * x)
     \] est parfois vraie, parfois fausse, cela dépend du groupe considéré.
+    %QV : Ceci utilise le théorème de correction.
   \end{exm}
 
   \begin{exm}
@@ -870,7 +892,8 @@
       T = \mathbf{Th}(\mathds{N}) := \{F  \mid \mathds{N} \models F\}
     \] est complète mais pas pratique.
 
-    De par le théorème d'\textit{incomplétude de Gödel} (c'est un sens différent du "complet" défini avant), on montre qu'on ne peut pas avoir de \textit{joli} ensemble d'axiomes pour $\mathds{N}$.
+    De par le théorème d'\textit{incomplétude de Gödel}, on montre qu'on ne peut pas avoir de \textit{joli} ensemble d'axiomes pour $\mathds{N}$.
+    %QV : Le théorème dit qu'une théorie axiome-récursive qui contient PA est incomplète, c'est précisément le même sens du mot « complet ».
   \end{exm}
 
   \begin{prop} \label{prop:fol-ou-ssi-ou}
@@ -895,16 +918,14 @@
           \infer 2[\lnot_\mathsf{e}] {T' \cup T'' \vdash \bot}
         \end{prooftree}
         \]
-        On en conclut que $T \vdash \bot$, absurde car $T$ supposée complète donc consistante.
+        On en conclut que $T \vdash \bot$, absurde car $T$ est supposée complète donc consistante.
         On a donc $T \vdash \lnot A$ implique $T \nvdash A$.
         
-        Réciproquement, si $T \nvdash A$ et $T\nvdash \lnot A$, alors c'est impossible car $T$ est complète.
-        On a donc  $T \nvdash A$ implique $T \vdash \lnot A$.
+        Réciproquement, si $T\nvdash \lnot A$, alors $T \vdash A$ puisque $T$ est complète.
       \item Si $T \vdash A$ ou $T \vdash B$, alors par la règle $\lor_\mathsf{i}^\mathsf{g}$ ou $\lor_\mathsf{i}^\mathsf{d}$, on montre que $T \vdash A \lor B$.
 
-        Réciproquement, si $T \vdash A \lor B$ et $T \nvdash A$ et $T \nvdash B$ alors, par~\ref{chap2-prop5-1}, on a $T \vdash \lnot A$ et $T \vdash \lnot B$.
-        On montre ainsi (en exercice) que $T\vdash \lnot (A \lor B)$ d'où $T \vdash \bot$ par $\lnot_\mathsf{e}$.
-        C'est impossible car $T$ est complète donc consistante, d'où $T \vdash A \lor B$ implique $T \vdash A$ ou $T \vdash B$.
+        En outre, si $T \nvdash A$ et $T \nvdash B$, alors d'après~\ref{chap2-prop5-1}, on a $T \vdash \lnot A$ et $T \vdash \lnot B$.
+        On montre ainsi (en exercice) que $T\vdash \lnot (A \lor B)$ d'où $T \nvdash A \lor B$ grâce à~\ref{chap2-prop5-1}.
     \end{itemize}
   \end{prv}
 
@@ -914,7 +935,7 @@
     ~\\[-\baselineskip]
     \begin{description}
       \item[Version 1.]
-        Soit $T$ une théorie et $F$ une formule close.
+        Soient $T$ une théorie et $F$ une formule close.
         On a $T \vdash F$ ssi $T \models F$.
       \item[Version 2.]
         Une théorie $T$ est consistante (syntaxe) ssi elle est non-contradictoire (sémantique).
@@ -946,14 +967,15 @@
   \end{prop}
   \begin{prv}
     \begin{itemize}
-      \item D'une part, on montre (par contraposée) "non V2 implique non V1".
+      \item D'une part, on montre "non V2 implique non V1".
+        %QV : Certes tu raisonnes par contraposée mais ce n'est pas "non V2 implique non V1" que tu montres par contraposée.
         Soit $T$ non-contradictoire et inconsistante.
         Il existe un modèle $\mathcal{M}$ tel que $\mathcal{M} \models T$ et $T \vdash \bot$.
         Or, par définition, $\mathcal{M} \not\models \bot$ donc $T \not\models \bot$.
       \item D'autre part, on montre "V2 implique V1".
-        Soit $T$ et $F$ tels que $T \vdash F$.
-        Ainsi, $T \cup \lnot F \vdash \bot$, d'où $T \cup \{\lnot F\}$ est inconsistante, et d'où, par la version 2 de la correction, on a que $T \cup \{\lnot F\}$ contradictoire, donc on n'a pas de modèle.
-        On a alors que, touts les modèles de $T$ sont des modèles de $F$, autrement dit $T \models F$.
+        Soient $T$ et $F$ tels que $T \vdash F$.
+        Ainsi, $T \cup \lnot F \vdash \bot$, donc $T \cup \{\lnot F\}$ est inconsistante, et alors, d'après la version 2 de la correction, $T \cup \{\lnot F\}$ est contradictoire, donc n'a pas de modèle.
+        Autrement dit, tous les modèles de $T$ sont des modèles de $F$, autrement dit $T \models F$.
     \end{itemize}
   \end{prv}
 
@@ -963,16 +985,17 @@
   \begin{prv}
     \begin{itemize}
       \item Soit $T$ contradictoire. Elle n'a pas de modèle.
-        Ainsi, on a $T \models \bot$ d'où $T \vdash \bot$ par la version 1, elle est donc inconsistante.
-      \item Soit $T \models F$. Considérons $T \cup \{\lnot F\}$ : cette théorie n'a pas de modèle, donc est contradictoire, donc est inconsistante, et on a donc que $T \cup \{\lnot F\} \vdash \bot$ d'où $T \vdash F$ par $\bot_\mathsf{e}$.
+        Ainsi, on a $T \models \bot$ d'où $T \vdash \bot$ par la version 1. Elle est donc inconsistante.
+      \item Soient $T$ et $F$ telles que $T \models F$. Considérons $T \cup \{\lnot F\}$ : cette théorie n'a pas de modèle, donc est contradictoire, donc est inconsistante, et on a donc que $T \cup \{\lnot F\} \vdash \bot$ d'où $T \vdash F$ par $\bot_\mathsf{e}$.
     \end{itemize}
   \end{prv}
 
   \begin{rmk}[\textbf{Attention !}]
     On utilise "$\models$" dans deux sens.
     \begin{itemize}
-      \item Dans le sens $\textsl{modèle} \models \textsl{formule}$, on dit qu'une formule est vraie dans un modèle, c'est le sens des mathématiques classiques.
-      \item Dans le sens $\textsl{théorie} \models \textsl{formule}$, on dit qu'une formule est vraie dans tous les modèles de la théorie, c'est un sens des mathématiques plus inhabituel.
+      \item Dans le sens $\textsl{modèle} \models \textsl{formule}$, on dit qu'une formule est vraie dans un modèle, c'est le sens classique.
+      \item Dans le sens $\textsl{théorie} \models \textsl{formule}$, on dit qu'une formule est vraie dans tous les modèles de la théorie, c'est un sens plus inhabituel.
+        %QV : L'expression « mathématiques classiques » est consacrée.
     \end{itemize}
   \end{rmk}
 
@@ -983,8 +1006,9 @@
   \end{exo}
 
   \begin{lem}
-    Soient $T$ une théorie, $\mathcal{M}$ un modèle et $F$ une formule close.
+    Soient $T$ une théorie, $\mathcal{M}$ une interprétation et $F$ une formule close.
     Si $\mathcal{M} \models T$ et $T \vdash F$ alors $\mathcal{M} \models F$.
+    %QV : C'est exactement le théorème de correction...
   \end{lem}
 
   \begin{prv}
@@ -993,50 +1017,50 @@
 
     \begin{lem}
       Soient $t$ et $u$ des termes et $e$ un environnement.
-      Soient $v := t[x:=u]$ et $e' := e[x := \Val(u, e)]$.
-      Alors,  $\Val(v, e) = \Val(t, e')$.
+      Alors,  $\Val(t[x:=u], e) = \Val(t, e[x := \Val(u, e)])$.
     \end{lem}
     \begin{prv}
       En exercice.
     \end{prv}
 
     \begin{lem}
-      Soit $A$ une formule, $t$ un terme, et $e$ un environnement.
-      Si $e' := e[x := \Val(t, e)]$ alors  $\mathcal{M}, e \models A[x := t]$ ssi $\mathcal{M}, e' \models A$.
+      Soient $A$ une formule, $t$ un terme, et $e$ un environnement.
+      Alors  $\mathcal{M}, e \models A[x := t]$ ssi $\mathcal{M}, e[x := \Val(t, e)] \models A$.
     \end{lem}
     \begin{prv}
       En exercice.
     \end{prv}
 
     On termine la preuve en montrant la proposition ci-dessous.
+    %QV : C'est très décousu.
   \end{prv}
 
   Montrons cette proposition plus forte que le lemme.
 
   \begin{prop}
-    Soient $\Gamma$ un ensemble de formules et $A$ une formule.
+    Soient $\Gamma$ un ensemble de formules et $A$ une formule tels que $\Gamma \vdash A$.
     Soit $\mathcal{M}$ une interprétation et soit $e$ un environnement.
-    Si $\mathcal{M}, e \models \Gamma$, et $\Gamma \models A$ alors  $\mathcal{M}, e \models A$.
+    Si $\mathcal{M}, e \models \Gamma$, alors  $\mathcal{M}, e \models A$.
   \end{prop}
   \begin{prv}
     Par induction sur la preuve de $\Gamma \vdash A$, on montre la proposition précédente.
 
     \begin{itemize}
       \item Cas inductif $\to_\mathsf{i}$.
-        On sait que $A$ est de la forme $B \to C$, et on montre que de $\Gamma, B \vdash C$ on montre $\Gamma \vdash B \to C$.
+        On sait que $A$ est de la forme $B \to C$, et on a $\Gamma, B \vdash C$.
         Soient $\mathcal{M}$ et $e$ tels que $\mathcal{M}, e \models \Gamma$.
         Montrons que $\mathcal{M}, e \models B \to C$.
         Il faut donc montrer que si $\mathcal{M}, e \models B$ alors $\mathcal{M}, e \models C$.
         Si $\mathcal{M}, e \models B$ alors $\mathcal{M}, e \models \Gamma \cup \{B\}$.
-        Or, comme $\Gamma, B \vdash C$ alors par hypothèse d'induction, on a que $\mathcal{M}, e \models C$.
+        Or, comme $\Gamma, B \vdash C$, par hypothèse d'induction, on obtient $\mathcal{M}, e \models C$.
       \item Cas inductif $\forall_\mathsf{e}$.
-        Si $A$ est de la forme $B[x := t]$, alors de $\Gamma \vdash \forall x \: B$, on en déduit que $\Gamma \vdash B[x := t]$.
-        Soit $\mathcal{M}, e \models \Gamma$ et $a := \Val(t, e)$. Par hypothèse de récurrence, on a que  $\mathcal{M}, e \models \forall x \: B$ donc $\mathcal{M}, e[x := a] \models B$ et d'après le lemme précédent, on a que $\mathcal{M}, e \models B[x := t]$.
-      \item Les autre cas inductifs sont laissé en exercices.
+        On sait que $A$ est de la forme $B[x := t]$, avec $\Gamma \vdash \forall x \: B$.
+        Soient $\mathcal{M}$ une interprétation et $e$ un environnement tels que $\mathcal{M}, e \models \Gamma$. L'hypothèse de récurrence donne $\mathcal{M}, e \models \forall x \: B$, d'où $\mathcal{M}, e[x := \Val(t, e)] \models B$ et on conclut $\mathcal{M}, e \models B[x := t]$ grâce au lemme précédent.
+      \item Les autre cas inductifs sont laissé en exercice.
       \item Cas de base $\mathsf{ax}$.
         Si $A \in \Gamma$ et $\mathcal{M}, e \models \Gamma$ alors $\mathcal{M}, e \models A$.
       \item Cas de base $=_\mathsf{i}$.
-        On a, pour tout $\mathcal{M}, e$ que $\mathcal{M}, e \models t = t$.
+        On a, pour tous $\mathcal{M}, e$ que $\mathcal{M}, e \models t = t$.
     \end{itemize}
     \vspace{-\baselineskip}
   \end{prv}
@@ -1047,7 +1071,7 @@
   On va montrer la version 2, en \textbf{\textit{trois étapes}}.
   Soit $T$ une théorie consistante sur le langage $\mathcal{L}$.
   \begin{enumerate}
-    \item On enrichit le langage $\mathcal{L}$ en $\mathcal{L}'$  avec des constantes, appelées \textit{témoins de Henkin}, et qui nous donnerons les éléments de notre ensemble de base : les termes.
+    \item On enrichit le langage $\mathcal{L}$ en $\mathcal{L}'$  avec des constantes, appelées \textit{témoins de Henkin}, qui nous donnerons les éléments de notre ensemble de base : les termes.
     \item Pour définir complètement le modèle, on complète la théorie $T$ en une théorie $\mathrm{Th}$ sur $\mathcal{L}'$.
     \item On quotiente pour avoir la vraie égalité dans le modèle.
   \end{enumerate}
@@ -1055,7 +1079,7 @@
   Cette construction est assez similaire à la définition de $\mathds{C}$ comme le quotient $\mathds{R}[X] / (X^2 + 1)$.
 
   \begin{prop}
-    On peut étendre $\mathcal{L}$ en $\mathcal{L}'$ et $T$ en $T'$ consistante telle que, pour toute formule $F(x)$ de $\mathcal{L}'$, ayant pour seule variable libre $x$, il existe un symbole de constante $c_F$ de $\mathcal{L}'$ telle que l'on ait $T' \vdash \exists x\: F(x) \to F(c_F)$, d'où le nom de témoin.
+    On peut étendre $\mathcal{L}$ en $\mathcal{L}'$ et $T$ en $T'$ consistante tels que, pour toute formule $F(x)$ de $\mathcal{L}'$, ayant pour seule variable libre $x$, il existe un symbole de constante $c_F$ de $\mathcal{L}'$ tel que l'on ait $T' \vdash \exists x\: F(x) \to F(c_F)$, d'où le nom de témoin.
   \end{prop}
 
   \begin{prv}
@@ -1077,7 +1101,7 @@
       Si $\Gamma \vdash  A[x := c]$ alors $\Gamma \vdash \forall x\: A$.
     \end{lem}
     \begin{prv}
-      Idée de la preuve. On peut supposer que $x$ n'apparait pas dans $\Gamma$, ni dans la preuve de $\Gamma \vdash A[x := c]$, sinon on renomme $x$ en $y$ dans l'énoncé du lemme.
+      Idée de la preuve. Quitte à renommer, on peut supposer que $x$ n'apparait pas dans $\Gamma$, ni dans la preuve de $\Gamma \vdash A[x := c]$.
       Alors, de la preuve de $\Gamma \vdash A[x := c]$, on peut déduire une preuve de $\Gamma \vdash A(x)$ en replaçant $c$ par $x$. Avec la règle $\forall_\mathsf{i}$, on en conclut que $\Gamma \vdash \forall x \: A$.
     \end{prv}
 
@@ -1094,13 +1118,13 @@
     Il nous reste à montrer que la théorie $T'$ est consistante.
 
     Il suffit de montrer que tous les $T_n$ sont consistantes.
-    En effet, si $T'$ est non-consistante, il existe un ensemble fini~$T'' \subseteq T'$ et $T'' \vdash \bot$. Comme $T''$ fini, il existe un certain $n \in \mathds{N}$ tel que $T'' \subseteq T_n$ et donc $T_n \vdash \bot$.
+    En effet, si $T'$ est non-consistante, il existe un ensemble fini~$T'' \subseteq T'$ tel que $T'' \vdash \bot$. Comme $T''$ est fini, il existe un certain $n \in \mathds{N}$ tel que $T'' \subseteq T_n$ et donc $T_n \vdash \bot$.
 
     On montre par récurrence sur $n$ que $T_n$ est consistante.
     \begin{itemize}
       \item On a $T_0 = T$ qui est consistante par hypothèse.
-      \item Supposons $T_n$ consistante et que $T_{n+1} \vdash \bot$.
-        Alors, il existe des formules à une variable libre $F_1, \ldots, F_k$ écrites sur $\mathcal{L}_n$ et 
+      \item Soit $n \in \mathds{N}$ tel que $T_n$ est consistante. Suppsons $T_{n+1} \vdash \bot$.
+        Alors, il existe des formules à une variable libre $F_1, \ldots, F_k$ écrites sur $\mathcal{L}_n$ telles que 
         \[
         T_n \cup \mleft\{\,\exists x \: F_i \to F_i(c_{F_i}) \;\middle|\; 1 \le i \le k\,\mright\} \vdash \bot
         .\]
@@ -1137,7 +1161,7 @@
         \begin{equation}
           \tag{$\star{\star}\star$}
           \label{chap2-star3}
-          \vdash \bigwedge_{1 \le i \le k} (\exists x \: F_i(x) \to \exists y_i \: F_i(y_i))?
+          \vdash \bigwedge_{1 \le i \le k} (\exists x \: F_i(x) \to \exists y_i \: F_i(y_i))
         \end{equation}
         On a donc $T_n \vdash \bot$, ce qui contredit l'hypothèse, d'où $T_{n+1}$ consistante.
 
@@ -1156,12 +1180,11 @@
   On définit par récurrence
   \begin{itemize}
     \item $K_0 := T'$ ;
-    \item si $K_n$ est complète, alors $K_{n+1} := K_n$ ;
-    \item si $K_n$ n'est pas complet, alors soit le plus petit $p \in \mathds{N}$ tel que l'on ait $K_n \nvdash F_p$ et $K_n \nvdash \lnot F_p$, et on pose $K_{n+1} := K_n \cup \{F_p\}$.
+    \item pour tout $n \in \mathds{N}$ tel que $K_n$ est défini, si $K_n$ est complète, on pose $K_{n+1} := K_n$, sinon avec $p \in \mathds{N}$ minimal tel que l'on ait $K_n \nvdash F_p$ et $K_n \nvdash \lnot F_p$, on pose $K_{n+1} := K_n \cup \{F_p\}$.
   \end{itemize}
 
   \begin{lem}
-    On pose $\mathrm{Th} := \bigcup_{n \in \mathds{N}} T_n$.
+    On pose $\mathrm{Th} := \bigcup_{n \in \mathds{N}} K_n$.
     La théorie $\mathrm{Th}$ a les propriétés voulues.
   \end{lem}
 
@@ -1173,30 +1196,31 @@
         Montrons le par récurrence.
         \begin{itemize}
           \item La théorie $K_0 = T'$ est consistante par hypothèse.
-          \item Si $K_{n+1} = K_n$ alors $K_{n+1}$ est consistante par hypothèse de récurrence.
-          \item Si $K_{n+1} = K_n \cup \{F_p\}$, et si $K_n, F_p \vdash \bot$, 
+          \item Soit $n \in \mathds{N}$ tel que $K_n$ est consistante.
+            Si $K_n$ est complète, alors $K_{n+1} = K_n$ est consistante.
+            Sinon soit $p \in \mathds{N}$ tel que $K_{n+1} = K_n \cup \{F_p\}$. On a $K_n \nvdash F_p$ et $K_n \nvdash \lnot F_p$. Si $K_n, F_p \vdash \bot$, 
             alors par la règle $\lnot_\mathsf{i}$, on a $K_n \vdash \lnot F_p$, ce qui est faux.
             Ainsi $K_{n+1}$ est consistante.
         \end{itemize}
         On en conclut que $\mathrm{Th}$ est consistante.
       \item La théorie $\mathrm{Th}$ est complète.
-        Sinon, à chaque étape $K_{n+1} = K_n \cup \{F_{q_n}\}$ et il existe $F_p$ telle que $\mathrm{Th} \nvdash F_p$ et $\mathrm{Th} \nvdash \lnot F_p$.
-        Ainsi, pour tout $n \in \mathds{N}$, $K_n \nvdash F_p$ et $K_n \nvdash \lnot F_p$, d'où pour tout $n \in \mathds{N}$, $p_n \le p$ avec des $p_n$ distincts.
-        C'est absurde, il n'y a qu'un nombre fini d'entiers inférieurs à un entier donné.
+        Sinon, on dispose de $p \in \mathds{N}$ tel que $\mathrm{Th} \nvdash F_p$ et $\mathrm{Th} \nvdash \lnot F_p$.
+        Pour tout $n \in \mathds{N}$, on a $q_n \in \mathds{N}$ tel que $K_{n+1} = K_n \cup \{F_{q_n}\}$ avec $q_n$ minimal tel que $K_n \nvdash F_{q_n}$ et $K_n \nvdash \lnot F_{q_n}$.
+        La suite $q$ est strictement croissante, donc $q_{p+1} > p$, ce qui contredit la minimalité de $q_{p+1}$.
     \end{enumerate}
   \end{prv}
 
   On construit un quotient avec "$=$" comme relation d'équivalence, puis on vérifie que les fonctions et relations sont bien définies (ne dépendent pas du représentant choisit, comme pour les groupes quotients).
 
   Soit $\mathcal{E}$ l'ensemble des termes clos de $\mathcal{L}'$, qui n'est pas vide car il contient les termes $c_{x = x}$ (avec la définition de $c_F$ ci-avant).
-  On définit sur $\mathcal{E}$ une relation $\sim$, où $t \sim t'$ ssi $\mathrm{Th} \vdash t = t'$.
+  On définit sur $\mathcal{E}$ la relation $\sim$ définie par $t \sim t'$ ssi $\mathrm{Th} \vdash t = t'$.
 
   \begin{exo}
     Montrer que $\sim$ est une relation d'équivalence.
   \end{exo}
 
   On pose enfin $|\mathcal{M}| := \mathcal{E} / {\sim}$.
-  On notera $\bar{t}$ la casse de $t$.
+  On notera $\bar{t}$ la classe d'un terme clos $t$.
   On définit l'interprétation des symboles de $\mathcal{L}'$ :
   \begin{itemize}
     \item si $c$ est une constante, alors $c_{\mathcal{M}} := \bar{c}$ ;
@@ -1215,7 +1239,7 @@
     \begin{itemize}
       \item On a $\mathrm{Th} \vdash t_i = u_i$ pour tout $i$ par hypothèse
       \item donc avec $=_\mathsf{i}$, on a $\mathrm{Th} \vdash f(t_1, \ldots, t_n) = f(t_1, \ldots, t_n)$
-      \item donc avec $=_\mathsf{e}$, on a $\mathrm{Th} \vdash f(u_1, \ldots, t_n) = f(t_1, \ldots, t_n)$
+      \item donc avec $=_\mathsf{e}$, on a $\mathrm{Th} \vdash f(u_1, t_2, \ldots, t_n) = f(t_1, t_2, \ldots, t_n)$
       \item \ldots\textit{etc}\ldots
       \item donc avec $=_\mathsf{e}$, on a $\mathrm{Th} \vdash f(u_1, \ldots, u_n) = f(t_1, \ldots, t_n)$
     \end{itemize}
@@ -1237,26 +1261,25 @@
 
   \begin{lem}
     Soit $F$ une formule à $n$ variables libres et $t_1 ,\ldots, t_n$ des termes clos.
-    Alors, $\mathcal{M} \models F[\bar{t}_1, \ldots, \bar{t}_n]$ ssi $\mathrm{Th} \vdash F[t_1, \ldots, t_n]$,
-    où l'on interprète la formule à paramètre dans l'environnement $e$ avec $e(y_i) = \bar{t}_i$ alors $\mathcal{M}, e \models F(y_1, \ldots, y_n)$.
+    Alors, $\mathcal{M} \models F[\bar{t}_1, \ldots, \bar{t}_n]$ ssi $\mathrm{Th} \vdash F[t_1, \ldots, t_n]$.
   \end{lem}
   \begin{prv}
     Par induction sur $F$ en supposant que $F$ n'utilise que $\lnot$, $\lor$,  $\exists$ comme connecteurs.
-    En effet, on a pour toute formule $G$, il existe $F$ qui n'utilise que $\lnot$,  $\lor$,  $\exists$ et  $\vdash F \leftrightarrow G$, ce qui permet de conclure directement pour $G$ si le résultat est vrai sur $F$.
+    En effet, pour toute formule $G$, il existe une formule $F$ qui n'utilise que $\lnot$,  $\lor$,  $\exists$ et qui vérifie $\vdash F \leftrightarrow G$, ce qui permet de conclure directement pour $G$ si le résultat est vrai sur $F$.
 
     \begin{itemize}
-      \item  Pour $F = \bot$, alors on a $\mathrm{Th} \nvdash \bot$ car $\mathrm{Th}$ consistante et $\mathcal{M} \not\models \bot$ par définition.
-      \item Pour $F = R(u_1, \ldots, u_m)$, où les $u_i$ sont des termes non nécessairement clos 
-        et où $u_1, \ldots, u_m$ sont des termes à $n$ variables $x_1, \ldots, x_n$.
-        On pose \[
-          F[t_1, \ldots, t_n] := R(\underbrace{u_1(t_1, \ldots, t_n)}_{v_1}, \ldots, \underbrace{u_m(t_1, \ldots, t_n)}_{v_m})
+      \item  Pour $F = \bot$, on a $\mathrm{Th} \nvdash \bot$ car $\mathrm{Th}$ consistante et $\mathcal{M} \not\models \bot$ par définition.
+        %QV : Si tu définis $\bot$ comme un symbole de relation, ce cas est inclus dans le suivant.
+      \item Pour $F = R(u_1, \ldots, u_m)$, où les $u_i$ sont des termes à $n$ variables $x_1, \ldots, x_n$,
+        on a \[
+          F[t_1, \ldots, t_n] = R(\underbrace{u_1(t_1, \ldots, t_n)}_{v_1}, \ldots, \underbrace{u_m(t_1, \ldots, t_n)}_{v_m})
         \] 
         où l'on définit $v_i := u_i(t_1, \ldots, t_n)$ qui est clos car les $t_i$ sont clos.
         On veut montrer que \[
           \mathcal{M} \models \underbrace{F[\bar{t}_1, \ldots, \bar{t}_n]}_{R(\bar{v}_1, \ldots, \bar{v}_m)} \text{ ssi }
           \mathrm{Th} \vdash \underbrace{F[t_1, \ldots, t_n]}_{R(v_1, \ldots, v_m)}
         .\]
-        Or, on a l'équivalence $\mathcal{M} \models R(\bar{v}_1, \ldots, \bar{v}_m)$ ssi $(\bar{v}_1, \ldots, \bar{v}_m) \in R_{\mathcal{M}}$ ssi $\mathrm{Th} \vdash R(v_1, \ldots, v_m)$.
+        Or, on a $\mathcal{M} \models R(\bar{v}_1, \ldots, \bar{v}_m)$ ssi $(\bar{v}_1, \ldots, \bar{v}_m) \in R_{\mathcal{M}}$, i.e. ssi $\mathrm{Th} \vdash R(v_1, \ldots, v_m)$, d'où le résultat.
       \item Pour $F = F_1 \lor F_2$, et  $t_1, \ldots, t_n$ sont des termes clos, on veut montrer que 
         \begin{align*}
           &\mathcal{M} \models F_1[\bar{t}_1, \ldots, \bar{t}_n] \lor  F_2[\bar{t}_1, \ldots, \bar{t}_n]\\
@@ -1276,14 +1299,11 @@
           \item réciproquement, on utilise le lemme~\ref{prop:fol-ou-ssi-ou} car $\mathrm{Th}$ est complète.
         \end{itemize}
       \item Pour $F = \lnot G$, en exercice.
-      \item Si  $F = \exists x \: G$ et $t_1, \ldots, t_n$ des termes clos, on a 
-        \begin{itemize}
-          \item on a $\mathcal{M} \models \exists x \: G[\bar{t}_1, \ldots, \bar{t}_n, x]$ 
-          \item ssi il existe $t \in \mathcal{E}$ tel que $\mathcal{M} \models G[\bar{t}_1, \ldots, \bar{t}_n, \bar{t}]$
-          \item ssi il existe $t \in \mathcal{E}$ tel que $\mathrm{Th} \vdash G(t_1, \ldots, t_n,t)$
-        \end{itemize}
-        et donc $\mathrm{Th} \vdash \exists x \: G(t_1, \ldots, t_n, x)$ avec $\exists_\mathsf{i}$.
-        Réciproquement, si $\mathrm{Th} \vdash \exists x \: G(t_1, \ldots, t_n, x)$ alors $\mathrm{Th} \vdash G(t_1, \ldots, t_n, c_{G(t_1, \ldots, t_n, x)})$, donc il existe un terme $t$ et $\mathrm{Th} \vdash G(t_1, \ldots, t_n, t)$.
+      \item Si  $F = \exists x \: G$ et $t_1, \ldots, t_n$ sont des termes clos, on a $\mathcal{M} \models \exists x \: G[\bar{t}_1, \ldots, \bar{t}_n, x]$ 
+        ssi il existe $t$ dans $\mathcal{E}$ tel que $\mathcal{M} \models G[\bar{t}_1, \ldots, \bar{t}_n, \bar{t}]$, c'est-à-dire
+        ssi il existe $t \in \mathcal{E}$ tel que $\mathrm{Th} \vdash G(t_1, \ldots, t_n,t)$ d'après l'hypothèse de récurrence.
+        Si c'est le cas, on obtient $\mathrm{Th} \vdash \exists x \: G(t_1, \ldots, t_n, x)$ avec $\exists_\mathsf{i}$.
+        Réciproquement, si $\mathrm{Th} \vdash \exists x \: G(t_1, \ldots, t_n, x)$ alors $\mathrm{Th} \vdash G(t_1, \ldots, t_n, c_{G(t_1, \ldots, t_n, x)})$, donc il existe un terme $t$ tel que $\mathrm{Th} \vdash G(t_1, \ldots, t_n, t)$.
     \end{itemize}
   \end{prv}
 
@@ -1293,7 +1313,7 @@
   \end{lem}
 
   \begin{prv}
-    On montre que, pour toute formule $F$ de $\mathrm{Th}$, on a que $\mathcal{M} \models F$.
+    On montre que pour tout $F \in \mathrm{Th}$, on a $\mathcal{M} \models F$.
     Pour cela, on utilise le lemme précédent : si $F$ est close, alors
     \[
     \mathcal{M} \models F \text{ ssi } \mathrm{Th} \vdash F
@@ -1303,21 +1323,22 @@
   \subsection{Compacité.}
 
   \begin{thm}[Compacité (sémantique)]
-    Une théorie $T$ et contradictoire ssi elle est finiment contradictoire, \textit{i.e.} il existe $T' \subseteq_\mathrm{fini} T$ telle que $T'$ est contradictoire.
+    Une théorie $T$ est contradictoire ssi elle est finiment contradictoire, \textit{i.e.} il existe $T' \subseteq_\mathrm{fini} T$ telle que $T'$ est contradictoire.
   \end{thm}
   \begin{prv}
-    Soit $T$ contradictoire.
+    Soit $T$ une théorie. Si $T$ est finiment contradictoire, alors $T$ est contradictoire.
+    Réciproquement, supposons $T$ contradictoire.
     On utilise le théorème de complétude.
     Ainsi $T$ est inconsistante.
     Il existe donc $T' \subseteq_\mathrm{fini} T$ avec $T'$ inconsistante par le théorème de compacité syntaxique ci-dessous (qui est trivialement vrai).
-    On applique de nouveau le théorème de complétude pour en déduire que $T'$ est contradictoire.
+    On applique le théorème de correction pour en déduire que $T'$ est contradictoire.
   \end{prv}
 
   \begin{thm}[Compacité (syntaxique)]
     Une théorie $T$ est inconsistante ssi elle est finiment inconsistante.
   \end{thm}
   \begin{prv}
-    Ceci est évident car une preuve est nécessairement finie.
+    Ceci est évident car une preuve est finie.
   \end{prv}
 
   \vspace{-2\baselineskip}
@@ -1355,22 +1376,27 @@
 
   \begin{thm}
     Si une théorie $T$ a des modèles finis arbitrairement grands, alors elle a un modèle infini.
-    \qed
   \end{thm}
+
+  \begin{prv}
+    Posons, pour tout $n \in \mathds{N}^*$,
+    \[\varphi_n = \exists x_1 \: \ldots \exists x_n \: \bigwedge_{1 \le i < j \le n} x_i \ne x_j,\]
+    \noindent{}puis $T' = T \cup \{\varphi_n, n \in \mathds{N}^*\}$. Si $T''$ est une partie finie de $T'$, on dispose de $n \in \mathds{N}$ tel que pour tout $m \in \mathds{N}$ tel que $\varphi_m \in T''$, $m \le n$. Comme $T$ admet des modèles finis arbitrairement grands, on dispose d'un modèle de $T$ de cardinal au moins $n$, qui est donc modèle de $T''$. Ceci étant valable pour toute partie finie de $T'$, d'après le théorème de compacité $T'$ est non-contradictoire. Autrement dit, elle admet un modèle, qui est un modèle infini de $T$.
+  \end{prv}
 
   \begin{crlr}
     Il n'y a pas de théorie des groupes finis \textit{i.e.} un ensemble d'axiomes dont les modèles sont exactement les groupes finis.
   \end{crlr}
 
   \begin{thm}[Löwenheim-Skolem]
-    Soit $T$ une théorie dans un langage $\mathcal{L}$ et $\kappa$ un cardinal et $\kappa \ge \operatorname{card} \mathcal{L}$ et $\kappa \ge \aleph_0$.\footnote{Ici, $\aleph_0$ est le cardinal de $\mathds{N}$, on dit donc que $\kappa$ est infini.}
+    Soit $T$ une théorie dans un langage $\mathcal{L}$ et $\kappa$ un cardinal infini tel que $\kappa \ge \operatorname{card} \mathcal{L}$.
     Si $T$ a un modèle infini, alors $T$ a un modèle de cardinal $\kappa$.
   \end{thm}
 
-  \begin{exm}
+  \begin{exm}\hfill
     \begin{itemize}
-      \item Avec $T = \mathbf{Th}(\mathds{N})$, on a $\kappa = \operatorname{card} \mathds{R}$.
-      \item Avec $T = \mathbf{ZFC}$, on a $\kappa = \aleph_0 = \operatorname{card} \mathds{N}$.
+      \item Avec $T = \mathbf{Th}(\mathds{N})$, on a un modèle indénombrable de $T$.
+      \item Avec $T = \mathbf{ZFC}$, on a un modèle dénombrable de $T$.
     \end{itemize}
   \end{exm}
 \end{document}

@@ -38,7 +38,7 @@
     L'ensemble $\mathcal{F}$ des formules logiques du calcul propositionnel sur $\mathcal{P}$ est défini par 
     \begin{itemize}
       \item $\mathcal{F}_0 = \mathcal{P}$ ;
-      \item $\mathcal{F}_{n+1} = \mathcal{F}_n \cup \mleft\{\, 
+      \item pour tout $n \in \mathbb N$, $\mathcal{F}_{n+1} = \mathcal{F}_n \cup \mleft\{\, 
           \begin{array}{c}
             \lnot F_1\\
             \verb|(| F_1 \lor F_2 \verb|)|\\
@@ -128,7 +128,7 @@
           \item $\bar{\nu}$ est définie sur $\mathcal{F}_0 = \mathcal{P}$ ;
           \item si $\bar{\nu}$ est définie sur $\mathcal{F}_n$ alors pour $F \in \mathcal{F}_{n+1}$, on a la disjonction de cas
             \begin{itemize}
-              \item si $F = \lnot G$ avec $G \in \mathcal{F}_n$, et on définit $\bar{\nu}(F) = 1 - \bar{\nu}(F_1)$ ;
+              \item si $F = \lnot G$ avec $G \in \mathcal{F}_n$, on définit $\bar{\nu}(F) = 1 - \bar{\nu}(F_1)$ ;
               \item \textit{etc} pour les autres cas.
             \end{itemize}
         \end{itemize}
@@ -149,12 +149,13 @@
         $F$ & 1 & 0 & 1 & 1
       \end{tabular}
     \end{table}
+    qui liste les différentes assignations possibles de valeurs de vérité aux variables de $F$ et les valeurs de vérité correspondantes pour les sous-formules de~$F$.
   \end{exm}
 
   \begin{defn}
     \begin{itemize}
       \item Une formule $F$ est dite \textit{satisfaite par une valuation $\nu$} si  $\nu(F) = 1$.
-      \item Une \textit{tautologie} est une formule satisfaite pour toutes les valuations.
+      \item Une \textit{tautologie} est une formule satisfaite par toutes les valuations.
       \item Un ensemble $\mathcal{E}$ de formules est \textit{satisfiable} s'il existe une valuation qui satisfait toutes les formules de $\mathcal{E}$.
       \item Un ensemble $\mathcal{E}$ de formules est \textit{finiment satisfiable} si tout sous-ensemble fini de $\mathcal{E}$ est satisfiable.
       \item Une formule $F$ est \textit{conséquence sémantique} d'un ensemble de formules $\mathcal{E}$ si toute valuation qui satisfait $\mathcal{E}$ satisfait $F$.
@@ -179,7 +180,7 @@
 
     \begin{description}
       \item["$\implies$".]
-        Si $\nu$ satisfait toute formule de $\mathcal{E}$, alors tout sous-ensemble fini de $\mathcal{E}$ est satisfiable en utilisant la valuation $\nu$.
+        Si $\nu$ satisfait toute formule de $\mathcal{E}$, alors tout sous-ensemble fini de $\mathcal{E}$ est satisfait par $\nu$ donc satisfiable.
       \item["$\impliedby$".]
         Supposons $\mathcal{E}$ finiment satisfiable. Comme $\mathcal{P}$ est supposé dénombrable, notons $\mathcal{P} = \{x_1, x_2, \ldots\}$.
         On cherche une valuation $\nu$ qui satisfait toute formule de $\mathcal{E}$, et on va définir la suite des $\varepsilon_n = \nu(x_n)$ par récurrence.
@@ -188,7 +189,7 @@
     \begin{enumerate}
       \item On construit par récurrence une suite $(\varepsilon_n)_{n \ge 1}$ qui satisfait, pour tout $n \in \mathds{N}$,
         \begin{quote}
-          "pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ satisfaisant  $B$ et telle que pour tout~$i \in \llbracket 1, n\rrbracket$, $\lambda(x_i) = \varepsilon_i$".
+          "pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ satisfaisant  $B$ et telle que pour tout indice~$i \in \llbracket 1, n\rrbracket$, $\lambda(x_i) = \varepsilon_i$".
         \end{quote}
         On note cette propriété $\mathcal{R}_n$.
         \begin{itemize}
@@ -197,25 +198,25 @@
               "pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ satisfaisant  $B$",
             \end{quote}
             est vraie car $\mathcal{E}$ est supposé finiment satisfiable.
-          \item Soit $n \in \mathds{N}$. Supposons que $\varepsilon_1,\ldots,\varepsilon_n$ soient construits et qu'ils satisfont $\mathcal{R}_n$.
+          \item Soit $n \in \mathds{N}$. Supposons que $\varepsilon_1,\ldots,\varepsilon_n$ sont construits et qu'ils satisfont $\mathcal{R}_n$.
             On a la disjonction de cas suivante :
             \begin{itemize}
               \item Si pour toute partie finie $B$ de $\mathcal{E}$, il existe une valuation $\lambda$ telle que $\forall i \in \llbracket 1, n\rrbracket$, $\lambda(x_i) = \varepsilon_i$ et que  $\lambda(x_{i+1}) = 0$, alors posons $\varepsilon_{n+1} := 0$ et on a immédiatement $\mathcal{R}_{n+1}$.
-              \item S'il existe une partie $A$ de $\mathcal{E}$, telle que $(\star)$ toute valuation $\lambda$ satisfaisant $A$ et telle que $\lambda(x_i) = \varepsilon_i$ pour tout  $i \in \llbracket 1,n\rrbracket$ vérifie $\lambda(x_{n+1}) = 1$.
-                On pose donc $\varepsilon_{n+1} := 1$.
+              \item Supposons qu'il existe une partie $A$ de $\mathcal{E}$, telle que $(\star)$ toute valuation $\lambda$ satisfaisant $A$ et telle que $\lambda(x_i) = \varepsilon_i$ pour tout  $i \in \llbracket 1,n\rrbracket$ vérifie $\lambda(x_{n+1}) = 1$.
+                On pose $\varepsilon_{n+1} := 1$.
 
                 Montrons la propriété $\mathcal{R}_{n+1}$.
                 Considérons une partie finie $B$ de $\mathcal{E}$.
-                Par $\mathcal{R}_n$, il existe une valuation $\eta$ qui satisfait $A \cup B$, sous-ensemble fini de $\mathcal{E}$, et qui vérifie $\forall i \in \llbracket 1,n\rrbracket$, $\eta(x_i) = \varepsilon_i$.
+                D'après $\mathcal{R}_n$, il existe une valuation $\eta$ qui satisfait $A \cup B$, sous-ensemble fini de $\mathcal{E}$, et qui vérifie $\forall i \in \llbracket 1,n\rrbracket$, $\eta(x_i) = \varepsilon_i$.
                 En particulier $\eta$ satisfait $A$, ce qui implique par $(\star)$, que $\eta(x_{n+1}) = 1 = \varepsilon_{n+1}$.
-                Et comme $\eta$ satisfait $B$, on vérifie bien $\mathcal{R}_{n+1}$.
+                Et comme $\eta$ satisfait $B$, on obtient bien $\mathcal{R}_{n+1}$.
             \end{itemize}
         \end{itemize}
 
       \item Posons $\nu : x_i \mapsto \varepsilon_i$.
         Montrons que $\nu$ satisfait $\mathcal{E}$.
         Soit $F \in \mathcal{E}$.
-        On sait que $F$ est un mot (fini), donc contient un ensemble fini de variables.
+        On sait que $F$ est un mot (fini), donc qu'il contient un ensemble fini (non vide) de variables.
         Soit $n$ maximal tel que $x_n$ est une variable de $F$, de sorte que l'ensemble des variables de $F$ soit inclus dans $\{x_0, \ldots, x_n\}$.
         D'après $\mathcal{R}_n$, il existe une valuation $\eta$ qui satisfait $F$ et telle que $\eta(x_0) = \varepsilon_0, \ldots, \eta(x_n) = \varepsilon_n$.
         En particulier, $\nu$ et $\eta$ coïncident sur les variables de $F$.
@@ -227,7 +228,7 @@
   Dans le cas non-dénombrable, on utilise le \textit{lemme de Zorn}, un équivalent de l'\textit{axiome du choix}.
 
   \begin{defn}
-    Un ensemble ordonné $(X, \mathcal{R})$ est inductif si pour tout sous-ensemble $Y$ de $X$ totalement ordonné par $\mathcal{R}$ (\textit{i.e.} une chaîne) admet un majorant dans $X$.
+    Un ensemble ordonné $(X, \mathcal{R})$ est inductif si tout sous-ensemble $Y$ de $X$ totalement ordonné par $\mathcal{R}$ (\textit{i.e.} une chaîne) admet un majorant dans $X$.
   \end{defn}
 
   \begin{rmk}
@@ -236,7 +237,7 @@
 
   \begin{exm}
     \begin{enumerate}
-      \item $(\mathcal{P}(X), \subseteq )$ est inductif, le majorant d'une chaîne étant l'union des parties de la chaîne.
+      \item $(\mathcal{P}(X), \subseteq )$ est inductif, le majorant d'une chaîne étant l'union de ses éléments.
       \item $(\mathds{R}, \le)$ n'est pas inductif car $\mathds{R}$ n'a pas de majorant dans $\mathds{R}$.
     \end{enumerate}
   \end{exm}
@@ -268,25 +269,25 @@
     .\] 
     }
 
-    L'ensemble $\mathcal{V}$ est non-vide car il contient l'application vide de $\{0,1\}^\emptyset$ car $\mathcal{E}$ est finiment satisfiable.
+    L'ensemble $\mathcal{V}$ est non-vide car il contient l'application vide de $\{0,1\}^\emptyset$ puisque $\mathcal{E}$ est finiment satisfiable.
     On définit une relation d'ordre~$\preceq$ sur $\mathcal{V}$ par : \[
       \varphi \preceq \psi \quad \text{ ssi } \quad \psi \text{ prolonge } \varphi
     .\]
     Montrons que $(\mathcal{V}, \preceq)$ est inductif.
     Soit $\mathcal{C}$ une chaîne de $\mathcal{V}$, construisons un majorant de $\mathcal{C}$.
     Soit $\lambda$ la valuation partielle définie sur $\operatorname{dom}\lambda = \bigcup_{\varphi \in \mathcal{C}} \operatorname{dom} \varphi$, par : 
-    si $x_i \in \operatorname{dom} \lambda$ alors il existe $\varphi \in \mathcal{C}$ tel que $x_i \in \operatorname{dom} \varphi$ et on pose $\lambda(x_i) = \varphi(x_i)$.
+    si $x \in \operatorname{dom} \lambda$ alors il existe $\varphi \in \mathcal{C}$ tel que $x \in \operatorname{dom} \varphi$ et on pose $\lambda(x) = \varphi(x)$.
 
-    La valuation $\lambda$ est définie de manière unique,  \textit{i.e.} ne dépend pas du choix de $\varphi$. En effet, si $\varphi \in \mathcal{C}$ et $\psi \in \mathcal{C}$, avec $x_i \in \operatorname{dom} \varphi \cap \operatorname{dom} \psi$, alors on a $\varphi \preceq \psi$ ou $\psi \preceq \varphi$, donc $\varphi(x_i) = \psi(x_i)$.
+    La valuation $\lambda$ est définie de manière unique,  \textit{i.e.} ne dépend pas du choix de $\varphi$. En effet, pour tout $x \in \operatorname{dom} \lambda$ et tous $\varphi \in \mathcal{C}$ et $\psi \in \mathcal{C}$ tels que $x \in \operatorname{dom} \varphi \cap \operatorname{dom} \psi$, comme $\mathcal{C}$ est une chaîne on a $\varphi \preceq \psi$ ou $\psi \preceq \varphi$, donc $\varphi(x) = \psi(x)$.
 
     Notons que $\lambda$ est un majorant de $\mathcal{C}$.
     Montrons que $\lambda \in \mathcal{V}$.
     Soit $B$ une partie finie de $\mathcal{E}$. On cherche $\mu$ qui prolonge $\lambda$ et satisfait $B$.
-    L'ensemble de formules $B$ est fini, donc utilise un ensemble fini de variables, dont l'intersection avec $\operatorname{dom}(\lambda)$ est un sous-ensemble fini $\{x_{i_1}, \ldots, x_{i_n}\}$.
-    Il existe $\varphi_1, \ldots, \varphi_n$ dans $\mathcal{C}$ telle que $x_{i_1} \in \operatorname{dom} \varphi_1, \ldots, x_{i_n} \in \operatorname{dom} \varphi_n$.
+    L'ensemble de formules $B$ est fini, donc utilise un ensemble fini de variables, dont l'intersection avec $\operatorname{dom}(\lambda)$ est un sous-ensemble fini $\{x_1, \ldots, x_n\}$.
+    Il existe $\varphi_1, \ldots, \varphi_n$ dans $\mathcal{C}$ telle que $x_1 \in \operatorname{dom} \varphi_1, \ldots, x_n \in \operatorname{dom} \varphi_n$.
     Comme $\mathcal{C}$ est une chaîne, $\varphi_0 = \max_{i \in \llbracket 1,n\rrbracket} \varphi_i$ est bien défini et on a $\varphi_0 \in \mathcal{C}$.
     Dès lors, $\varphi_0 \in \mathcal{V}$ est prolongeable en $\psi_0$ qui satisfait $B$.
-    On a de plus $x_{i_1}, \ldots, x_{i_n} \in \operatorname{dom}\varphi_0$.
+    On a de plus $x_1, \ldots, x_n \in \operatorname{dom}\varphi_0$.
     On définit :
     \begin{align*}
       \mu: \mathcal{P} &\longrightarrow \{0,1\}  \\
@@ -312,7 +313,7 @@
     Soit $B$ un ensemble fini de formules de $\mathcal{E}$.
     \begin{itemize}
       \item Si $\gamma'(x) = 0$ alors il existe une valuation $\delta$ prolongeant $\gamma$ et satisfaisant $B$ telle que $\delta(x) = 0$, et donc  $\delta$ prolonge $\gamma'$.
-      \item Si $\gamma'(x) = 1$ alors il existe une partie finie $B_0$ de $\mathcal{E}$ telle que toute valuation $\delta$ prolongeant $\gamma$ et satisfaisant $B_0$ vérifie que $\delta(x) = 1$.
+      \item Si $\gamma'(x) = 1$ alors il existe une partie finie $B_0$ de $\mathcal{E}$ telle que toute valuation $\delta$ prolongeant $\gamma$ et satisfaisant $B_0$ vérifie $\delta(x) = 1$.
         On choisit une valuation qui prolonge $\gamma$ et satisfait $B \cup B_0$ ; elle prolonge $\gamma'$.
     \end{itemize}
     On a donc une contradiction avec la maximalité de $\gamma$. On en conclut que $\operatorname{dom} \gamma = \mathcal{P}$, ce qui termine la preuve du théorème.
@@ -446,11 +447,10 @@
     Les deux premières le sont et excluent les autres en considérant la première lettre des formules qu'elles décrivent.
     Plus précisément, les formules satisfaisant la première propriété commencent par une variable, celles satisfaisant la deuxième commencent par une négation et les autres commencent par une parenthèse.
     Pour les autres cas, considérons $F_1, F_2, G_1, G_2 \in \mathcal{F}$ et $\sigma, \sigma' \in \{\lor, \land, \to, \leftrightarrow\}$ tels que $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| G_1\ \sigma'\ G_2 \verb|)|$.
-    Il s'agit de montrer que $\sigma = \sigma'$.
     Quitte à échanger les rôles de $F_1$ et $G_1$, de $F_2$ et $G_2$ et de $\sigma$ et $\sigma'$, on peut supposer que $\verb|(| F_1$ est un préfixe de $\verb|(| G_1$.
     Alors $F_1$ est un préfixe de $G_1$.
     Or $F_1$ et $G_1$ sont des formules, donc $F_1$ n'est pas un préfixe propre de $G_1$, ou encore $F_1 = G_1$.
-    Par conséquent, $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| F_1\ \sigma'\ G_2 \verb|)|$, d'où $\sigma = \sigma'$.
+    Par conséquent, $\verb|(| F_1\ \sigma\ F_2 \verb|)| = \verb|(| F_1\ \sigma'\ G_2 \verb|)|$, d'où $\sigma = \sigma'$, puis $F_2 = G_2$.
     On conclut bien l'unicité.
   \end{prv}
 \end{document}

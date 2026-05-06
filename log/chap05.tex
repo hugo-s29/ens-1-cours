@@ -1,7 +1,7 @@
 \documentclass[./main]{subfiles}
 
 \begin{document}
-  \chapter{Exemple de théories décidables.}
+  \chapter{Exemples de théories décidables.}
 
   Dans ce chapitre, on traite de l'élimination des quantificateurs dans les corps réels clos (et les corps algébriquement clos).
 
@@ -39,14 +39,14 @@
     T_\mathrm{bool} := \{\forall x \: x = 0 \lor x = 1 , 0 \neq 1\} 
     ,\] 
     sur le langage $\mathcal{L} = \{0,1\}$.
-    Cette théorie admet l'élimination des quantificateurs. En effet, par exemple, une formule \[
+    Cette théorie admet l'élimination des quantificateurs. Par exemple, une formule \[
     F := \exists x_1 \: \cdots  \: \exists x_n \: (x_1 = 1 \lor x_2 = 0 \lor x_4 = 1) \land \cdots)
     ,\] est équivalente à $\top$ ou $\bot$.
   \end{exm}
 
   \begin{exm}
     Sur le langage $\mathcal{L}_\mathrm{co} = \{0, 1, +, \times, \le\}$, la théorie $T := \mathbf{Th}(\mathds{R})$ admet l'élimination des quantificateurs.
-    En effet, par exemple, la formule \[
+    Par exemple, la formule \[
     \varphi(a, b,c ) := \exists x \: (a \times x \times x + b \times x + c = 0)
     \] est équivalente à la formule sans quantificateurs 
 
@@ -60,7 +60,7 @@
   \begin{defn}
     Un \textit{corps réel clos} est un corps commutatif ordonné dans lequel on a le théorème des valeurs intermédiaires pour les polynômes à $1$ variable.
 
-    La théorie $T_\mathrm{CRC}$ est la théorie du 1er ordre et ses axiomes sont :
+    La théorie $T_\mathrm{CRC}$ est la théorie du 1er ordre dont les axiomes sont :
     \begin{itemize}
       \item axiomes de corps commutatifs ;
       \item axiomes de relation d'ordre total ;
@@ -90,7 +90,7 @@
     Exemples de corps réels clos : $\mathds{R}$ les réels, $\bar{\mathds{Q}} \cap \mathds{R}$ les nombres réels algébriquement clos.
 
     Qu'en est-il de $\mathds{C}$ ?
-    Si on a $i \ge 0$ et on a $1 \le 2$ donc $i \le 2 i$ et par multiplication par $i$ on a $-1 \le -2$, absurde !
+    Si on a $i \ge 0$ et on a $1 \le 2$ alors $i \le 2 i$ et par multiplication par $i$ on a $-1 \le -2$, absurde !
     Le même procédé fonctionne si l'on suppose $i\le 0$.
     Il n'y a pas de manière d'ordonner $\mathds{C}$ de telle sorte à ce qu'il soit un corps réel clos.
   \end{exm}
@@ -137,8 +137,8 @@
     En effet, l'axiome \peano{A1} n'est pas vérifié : on n'a pas  $\succ x \neq 0$ !
   
     Soit $F$ une formule close de $\mathcal{L}_\mathrm{co}$.
-    Montrer que $T_\mathrm{CRC} \vdash F$ ou $T_\mathrm{CRC} \vdash \lnot F$.
-    Il existe une formule sans quantificateurs $G$ et $T_\mathrm{CRC} \vdash F \leftrightarrow G$ et $G$ n'a pas de variable.
+    Montrons que $T_\mathrm{CRC} \vdash F$ ou $T_\mathrm{CRC} \vdash \lnot F$.
+    Il existe une formule sans quantificateurs $G$ telle que $T_\mathrm{CRC} \vdash F \leftrightarrow G$ et $G$ n'a pas de variable.
     Ainsi $G$ est équivalent à une conjonction de disjonction de formules équivalentes à 
     \[
     \repr n > \repr m \text{ ou } \repr n = \repr m
@@ -178,11 +178,11 @@
       \item \textit{extraction du coefficient dominant} $\mathrm{E}(P) := a_n$ ;
       \item \textit{omission du terme dominant} $\mathrm{O}(P) := a_{n-1} X^{n-1} + \cdots + a_0$ ;
       \item \textit{reste modifié} $\mathrm{MR}(P, Q)$ :\\
-        si $P = a_n X^n + \cdots + a_0$ et $Q = b_n X^n + \cdots + b_0$ où
-        \[ n = \deg P \ge m = \deg Q \ge 1\]
-        et $P \neq Q$ alors $\mathrm{MR}(P, Q)$ est l'unique polynôme de $\mathds{Z}[\bar{Y}][X]$ de degré $r < m$ tel qu'il existe $L \in \mathds{Z}[\bar{Y}][X]$ et 
+        si $P = a_n X^n + \cdots + a_0$ et $Q = b_m X^m + \cdots + b_0$ où
+        \[ n = \deg P \ge m = \deg Q\]
+        alors $\mathrm{MR}(P, Q)$ est l'unique polynôme de $\mathds{Z}[\bar{Y}][X]$ de degré $r < m$ tel qu'il existe $L \in \mathds{Z}[\bar{Y}][X]$ et 
         \[
-          (b_n)^{n m + 1} \times P = Q \times L + R
+          (b_m)^{n - m + 1} \times P = Q \times L + R
         .\]
     \end{itemize}
   \end{defn}
@@ -198,12 +198,12 @@
   \subsection{Énoncé comme lemme clé.}
 
   \begin{lem}[Informel]
-    À partir d'un ensemble de polynômes $S$, on obtient en temps fini un ensemble fini de polynômes $\mathrm{BC}S$ de degré $0$ en appliquant les quatre opérations $\mathrm{D}$, $\mathrm{E}$, $\mathrm{O}$ et $\mathrm{MR}$.
+    À partir d'un ensemble fini de polynômes $S$, on obtient en temps fini un ensemble fini de polynômes $\mathrm{BC}(S)$ de degré $0$ en appliquant les quatre opérations $\mathrm{D}$, $\mathrm{E}$, $\mathrm{O}$ et $\mathrm{MR}$.
     \footnote{I {\color{nicered}$\heartsuit$} le lemme de König.}
   \end{lem}
 
   \begin{exm}
-    À partir de $\smash{S = \{\overbrace{aX^2 + bX + 1}^{p_0}\}}$, on a 
+    À partir de $\smash{S = \{\overbrace{aX^2 + aX + 1}^{p_0}\}}$, on a 
     \begin{itemize}
       \item on commence par ajouter $p_0$ ;
       \item d'abord les dérivées, omissions et extractions : on ajoute les polynômes $2a X + a$, $a$ et $aX + 1$, $2a$, $1$ et $0$ ;
@@ -214,7 +214,7 @@
         \mathrm{MR}(a X^2 + aX + 1, a X + 1) =  a
         ,\] et on l'ajoute (il y est déjà) ;
       \item on calcule le reste modifié \[
-        \mathrm{MR}(3a X + a , a X + 1) = a^2 - 2 a
+        \mathrm{MR}(2a X + a , a X + 1) = a^2 - 2 a
         ,\] et on l'ajoute ;
       \item on ne conserve que les polynômes de degré $0$.
     \end{itemize}
@@ -222,9 +222,9 @@
     \mathrm{BC}S  = \{a, 4a^2 - a^3, a^2 - 2a\}
     .\]
 
-    On a, en théorie, $27$ conditions de signe possibles ($3^{|\mathrm{BC}S|}$) :
+    On a, en théorie, $27$ conditions de signe possibles ($3^{|\mathrm{BC}(S)|}$) :
     \begin{itemize}
-      \item $a > 0$ et $4a^2 - a^3 > 0$ et $A^2 - 2a < 0$,
+      \item $a > 0$ et $4a^2 - a^3 > 0$ et $a^2 - 2a < 0$,
       \item $a> 0$ et $4a^2 - a^3 < 0$ et $a^2 - 2a < 0$,
       \item $a = 0$ et $a^2 - a^3 > 0$ et $a^2 - 2a > 0$,
       \item \textit{etc} pour les $24$ autre cas.
@@ -244,6 +244,7 @@
     \end{array}
     .\] 
   \end{exm}
+  %QV : Tu ne dis jamais ce que tu fais de tes polynômes de $\mathds{Z}[\bar{Y}]$. Notamment, je ne suis pas sûr de savoir comment construire le tableau.
 
   \section{Corps algébriquement clos.}
 
@@ -321,7 +322,7 @@
       &= (ad + bc) X + bd - ac
     .\end{align*}
 
-    En particulier, si $a$ est de degré $q$ sur $\mathds{F}_{p^n}$ alors $\mathds{F}_{p^n}(a) = \mathds{F}_{p^{qn}}$.
+    En particulier, si $a$ est de degré $q$ sur $\mathds{F}_{p^n}$ alors $\mathds{F}_{p^n}(a) \cong \mathds{F}_{p^{qn}}$.
   \end{exm}
 
   \begin{thm}[Tarski--bis]
@@ -366,6 +367,7 @@
       aX^2 + aX + 1 & \neq & \neq & \neq & 0 & 0 \\ \hline
     \end{array}
     .\]
+  %QV : Comme pour les corps réels clos, je ne sais pas d'où ce tableau vient.
 
     Ainsi, pour $a\neq 0$, $4a^2-a^3 \neq 0$, $a^2 - 2a \neq 0$ alors on a \[
       \exists x \: (ax^2 + ax + 1 = 0 \land ax + 1 \neq 0)
@@ -386,6 +388,7 @@
 
   \begin{rmk}
     En 2010, une preuve \st{\textsf{Coq}} \textsf{Rocq} de l'élimination des quantificateurs de cette théorie a été publiée par Cyril Cohen et Assia Mahboubi.
+    %QV : C'était pas pour les corps réels clos ?
   \end{rmk}
 
   \subsection{Applications aux mathématiques.}
@@ -411,13 +414,14 @@
     \[
       (\underbrace{1 + 1 + \cdots + 1}_n \neq 0) \in T'
     .\]
+  %QV : $n$ est mal défini s'il n'y a pas de telle formule dans $T'$.
     Soit $p > n$ un nombre premier tel que $\varphi$ admet comme modèle un corps algébriquement clos $\mathds{k}$ de caractéristique $p$ (qui existe par hypothèse).
-    D'où $\mathds{k} \models \varphi$,  et
+    Alors $\mathds{k} \models \varphi$,  et
     \[
     \mathds{k} \models \{\text{Axiomes des corps}\} \cup \mleft\{\,\mathrm{Clos}_n \;\middle|\; n \in \mathds{N}\,\mright\}   
     .\]
     D'où, $\mathds{k} \models \mathrm{ACF}_p$, et donc $\mathds{k} \models T'$.
-    Ainsi $T$ finiment satisfiable donc $T$ satisfiable.
+    Ainsi $T$ est finiment satisfiable donc satisfiable.
     On en déduit que $\varphi$ admet un modèle de caractéristique $0$.
   \end{prv}
 
@@ -426,7 +430,7 @@
     Alors $P$ est bijectif.
   \end{lem}
   \begin{prv}
-    Comme $\mathds{k}^n$ est fini alors $P$ est bijectif.
+    Comme $\mathds{k}^n$ est fini, $P$ est bijectif.
   \end{prv}
 
   \begin{lem}
@@ -436,7 +440,7 @@
   \end{lem}
   \begin{prv}
     On suppose $P$ non surjectif, il existe donc $\bar{b} = (b_1, \ldots, b_n) \in \bar{\mathds{k}}^n \setminus P(\bar{\mathds{k}}^n)$ des nombres algébriques dans $\mathds{k}$.
-    Ils sont raciles de polynômes minimaux à coefficients dans $\mathds{k}$.
+    Ils sont racines de polynômes minimaux à coefficients dans $\mathds{k}$.
     Soient $\bar{a} = (a_1, \ldots, a_m)$ les coefficients de ces polynômes, ce sont des éléments de $\bar{\mathds{k}}$.
     Soient $\bar{c}$ les coefficients de $P$.
 
@@ -444,7 +448,7 @@
     On a $P : \mathds{k}^{\prime n} \to \mathds{k}^{\prime n}$ injectif pas surjectif, qui est impossible d'après le lemme précédent.
   \end{prv}
 
-  On peut donc montrer le théorème d'Ax--Grothendieck.
+  On peut maintenant montrer le théorème d'Ax--Grothendieck.
 
   Pour un degré $d$ fini et un entier $n$ fixé, on va construire la formule $\phi_{n,d}$ qui exprime qu'un polynôme de degré $\le d$ de $\mathds{k}^n$ dans $\mathds{k}^n$ qui est injectif et surjectif.
   Soit $M(n, d)$ l'ensemble fini des monômes unitaires de degré $\le d$ avec $n$ variables $x_1, \ldots, x_n$ :
@@ -452,12 +456,12 @@
   M(n, d) := \{1, x_1, x_2, x_1 x_2, \ldots, x_1^d, x_1^{d-1} x_2, \ldots\} 
   .\]
 
-  On pose la formule, notée $\varphi_{n,d}$.
+  On introduit la formule suivante, qu'on note $\varphi_{n,d}$.
   \begin{gather*}
   \forall (a_{m,i})_{m \in M(n,d), i \in \llbracket 1,n\rrbracket} \\
-  \fitbox{$\displaystyle\left(\forall x_1 \ldots x_n \forall y_1 \ldots y_n  \: \bigwedge_{i=1}^n \sum_{m \in M(n,d)} a_{m,i} m(x_i) = \sum_{m \in M(n,d)} a_{m,i} m(y_i) \to \bigwedge_{i=1}^n x_i = y_i \right)$}\\
+    \fitbox{$\displaystyle\left(\forall x_1 \ldots x_n \forall y_1 \ldots y_n  \: \bigwedge_{i=1}^n \sum_{m \in M(n,d)} a_{m,i} m = \sum_{m \in M(n,d)} a_{m,i} m[x_j := y_j]_{j \in \llbracket 1,n \rrbracket} \to \bigwedge_{i=1}^n x_i = y_i \right)$}\\
   \vertical\to\\
-  \forall y_1 \ldots y_n \exists x_1 \ldots x_n \: \bigwedge_{i=1}^n y_i = \sum_{m \in M(n,d)} a_{m, i} m(x_i).
+  \forall y_1 \ldots y_n \exists x_1 \ldots x_n \: \bigwedge_{i=1}^n y_i = \sum_{m \in M(n,d)} a_{m, i} m.
   \end{gather*}
 
   Par le troisième lemme, pour tout corps fini $\mathds{k}$, on a $\bar{\mathds{k}} \models \varphi_{n,d}$ donc pour tout $p$ premier, on a $\bar{\mathds{F}}_p \models \varphi_{n,d}$.
@@ -479,11 +483,13 @@
 
   \begin{prop}
     Si $P$ est injectif sur $\mathds{C}^n$ alors $P$ est localement injectif.
-    Et donc, pour tout $x$ (théorème des fonctions implicites), $\operatorname{Jac}(P)$ n'est jamais nul, d'où $\operatorname{Jac} P$ est un polynôme constant non nul.
+    Et donc, pour tout $x$ (théorème des fonctions implicites), $\operatorname{Jac}(P)$ n'est jamais nul, d'où le fait que $\operatorname{Jac} P$ est un polynôme constant non nul.
   \end{prop}
+  %QV : C'est plus une preuve qu'un énoncé, donc ça pourrait être une remarque.
 
   \begin{rmk}[Conjecture (problème 16 de la liste de Steve Smale)]
-    En caractéristique $0$, on a $\operatorname{Jac} P$ non nul implique  $P$ injectif.
+    En caractéristique $0$, $\operatorname{Jac} P$ non nul implique  $P$ injectif.
+    %QV : Je ne suis pas convaincu par cette utilisation de « non nul », qui techniquement signifie que $\operatorname{Jac} P$ n'est pas le polynôme nul, alors que j'ai l'impression que tu l'utilises comme $\operatorname{Jac} P$ ne s'annule pas.
   \end{rmk}
 
   \begin{rmk}
@@ -503,7 +509,7 @@
           P: \mathds{C} &\longrightarrow \mathds{C} \\
           x &\longmapsto P(x) := ax^2 + bx + c
         .\end{align*}
-        On a, si $\operatorname{Jac} P = 2ax + b$ non nul, alors $a = 0$ et $b \neq 0$.
+        Si $\operatorname{Jac} P = 2ax + b$ est non nul, alors $a = 0$ et $b \neq 0$.
         C'est le cas précédent !
       \item Avec $n = 2$ et $d = 1$, on considère
         \begin{align*}
@@ -512,12 +518,13 @@
         .\end{align*}
         On a $\operatorname{Jac} P = \begin{vmatrix} a & b \\ d & e \end{vmatrix} = ae - bd$.
         On a $\operatorname{Jac} P$ non nul implique  $ae - bd \neq 0$ ce qui implique que le système 
+        %QV : Techniquement « ce qui » fait référence à l'équivalence précédente, qui d'elle-même n'implique pas que le système est inversible.
         \[
         \begin{cases}
           ax + bj + c = 0\\
           dx + ej + f = 0\\
         \end{cases}
-        \] est inversible, donc la conjecture est vrai.
+        \] est inversible, donc la conjecture est vraie.
     \end{itemize}
   \end{exm}
 
@@ -526,4 +533,6 @@
     \item pour $d \le 2$ en 1980 ;
     \item pour $d \le 3$ dans le cas général.
   \end{itemize}
+
+  %QV : Quel est le lien avec le reste du cours de logique ?
 \end{document}
