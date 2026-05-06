@@ -16,14 +16,15 @@
   a := \mleft\{\,x \in \mathcal{U} \;\middle|\; x \not\in x\,\mright\}
   \]
   vérifie $a \in a \iff a \not\in a$, \textit{\textbf{paradoxe}}.
-  Pour éviter ce paradoxe, on choisit donc de ne pas faire $\mathcal{U}$ un ensemble.
+  Pour éviter ce paradoxe, on choisit donc de ne pas faire de $\mathcal{U}$ un ensemble.
+  %QV : Ça ne ferait pas vraiment sens, $\mathcal{U}$ est l'ensembles des éléments du modèle, pas un élément du modèle lui-même. Autrement dit, dans $x \in \mathcal{U}$, le $\in$ est l'appartenance habituelle, pas le symbole de relation du langage.
 
   \section{Les axiomes de la théorie de Zermelo-Fraenkel.}
 
   \phantomsection
   \begin{description}
     \item[ZF\,1.\label{ZF1}] \textit{Axiome d'extensionnalité} : deux ensembles sont égaux ssi ils ont les mêmes éléments \[
-      \forall x \: \forall y \: \big(\forall z \: (z \in x \leftrightarrow z \in y) \leftrightarrow x = y\big)
+      \forall x \: \forall y \: \big(x = y \leftrightarrow \forall z \: (z \in x \leftrightarrow z \in y)\big)
       .\]
   \end{description}
 
@@ -70,6 +71,7 @@
   \phantomsection
   \begin{description}
     \item[ZF\,3.\label{ZF3}]
+      %QV : ZF3 avant ZF2 ?
       \textit{Axiome des parties} : l'ensemble des parties $\wp(a)$ existe pour tout ensemble $a$
       \[
       \forall a \: \exists b \: \forall t \: (t \in b \leftrightarrow t \subseteq a)
@@ -92,8 +94,10 @@
   \phantomsection
   \begin{description}
     \item[ZF\,4'.\label{ZF4'}]
+      %QV : ZF4' avant ZF4 est aussi un peu bizarre.
       \textit{Schéma de compréhension} :
-      pour toute formule $\varphi(y, v_1, \ldots, v_n)$, on a l'ensemble $x = \mleft\{\,y \in v_{n+1} \;\middle|\; \varphi(y, v_1, \ldots, v_n)\,\mright\}$
+      pour toute formule $\varphi(y, v_1, \ldots, v_n)$ et tous ensembles $v_1, \ldots, v_{n+1}$, on a l'ensemble $x = \mleft\{\,y \in v_{n+1} \;\middle|\; \varphi(y, v_1, \ldots, v_n)\,\mright\}$
+      %QV : Les deux premières lignes débordent, mais je n'ai pas le courage de réparer.
       \[
       \forall v_1\: \ldots\: \forall v_{n+1} \: \exists x \: \forall y \: \big(y \in x \leftrightarrow (y \in v_{n+1} \land \varphi(y, v_1, \ldots, v_n))\big)
       .\] 
@@ -103,7 +107,7 @@
   \begin{rmk}
     Peut-on faire le paradoxe de Russel ?
     On ne peut pas faire $a := \{z \in \mathcal{U}  \mid z \not\in z \}$ car $\mathcal{U}$ n'est pas un ensemble !
-    Et, on ne peut pas avoir de paradoxe avec $b := \{z \in E  \mid z \not\in z\}$, car on a l'ajout de la condition $b \in E$.
+    Et, on ne peut pas avoir de paradoxe avec $b := \{z \in E  \mid z \not\in z\}$ grâce à l'ajout de la condition $z \in E$.
   \end{rmk}
 
   \begin{defn}
@@ -119,7 +123,7 @@
     \item[ZF\,4.\label{ZF4}]
       \textit{Schéma de substitution/de remplacement} :
       "la collection des images par une relation fonctionnelle des éléments d'un ensemble est aussi un ensemble".
-      Pour tout $n$-uplet $\bar{a}$, si la formule à paramètres $\varphi(w_0, w_1, \bar{a})$ définit une relation fonctionnelle $f_{\bar{a}}$ en $w_0$ et si $a_0$ est un ensemble alors la collection des images par $f_{\bar{a}}$ des éléments de $a_0$ est un ensemble nommé $a_{n+1}$
+      Pour tout $n$-uplet $\bar{a}$, si la formule à paramètres $\varphi(w_0, w_1, \bar{a})$ définit une relation fonctionnelle $f_{\bar{a}}$ en $w_0$ et si $a_0$ est un ensemble alors la collection des images par $f_{\bar{a}}$ des éléments de $a_0$ est un ensemble noté $\{ f_{\bar{a}}(x) \mid x \in a_0\}$.
   \end{description}
 
   \begin{gather*}
@@ -129,7 +133,7 @@
         (\varphi(w_0, w_1, a_1, \ldots, a_n) \land \varphi(w_0, w_2, a_1, \ldots, a_n)) \to w_1 = w_2
       \big)\\
       \vertical\to\\
-      \exists a_{n+1} \: \forall a_{n+2} (a_{n+2} \in a_{n+1} \leftrightarrow \exists w_0 \: w_0 \in a_0 \land \varphi(w_0, a_{n+2}, v_1, \ldots, v_n))\big)
+      \exists x \: \forall y (y \in x \leftrightarrow \exists w_0 \: w_0 \in a_0 \land \varphi(w_0, y, v_1, \ldots, v_n))\big)
   .\end{gather*}
 
   \begin{thm}
@@ -195,7 +199,7 @@
     .\] 
     La notation $(x,y)$ correspond à l'ensemble $\{\{x\} , \{x,y\}\} \in \wp(\wp(v_1 \cup v_2))$.
 
-    On applique \zf{4'} dans l'ensemble ambiant  $\wp(\wp(v_1 \cup v_2))$, on définit le produit comme la compréhension à l'aide de la formule 
+    On applique \zf{4'} dans l'ensemble ambiant  $\wp(\wp(v_1 \cup v_2))$, on définit le produit par compréhension à l'aide de la formule 
     \[
     \varphi(z, v_1, v_2) := \exists x \: \exists y \: \big(z = \{\{x\} , \{x,y\} \}  \land x \in v_1 \land y \in v_2\big)
     .\]
@@ -207,8 +211,6 @@
     \[
     \varphi(f, a, b) := 
     \begin{pmatrix} 
-      f \subseteq a \times b\\
-      \land\\
       \forall x \: \forall  y \: \forall y' \: \big((x, y )\in f \land (x, y') \in f  \to y = y'\big)\\
       \land\\
       \forall x \: \big(x \in a \to \exists y \: \big(y \in b \land (x,y) \in f\big)\big)
@@ -220,12 +222,8 @@
     Une \textit{fonction} \textit{partielle} d'un ensemble $a$ dans un ensemble $b$ est un sous-ensemble de $a \times b$ qui vérifie la propriété
     \[
     \varphi(f, a, b) := 
-    \begin{pmatrix} 
-      f \subseteq a \times b\\
-      \land\\
-      \forall x \: \forall  y \: \forall y' \: \big((x, y )\in f \land (x, y') \in f  \to y = y'\big)\\
-    \end{pmatrix}
-    .\]
+      \forall x \: \forall  y \: \forall y' \: \big((x, y )\in f \land (x, y') \in f  \to y = y'\big).
+    \]
 
     On note $b^a$ la collection des fonctions partielles de $a$ dans $b$.
   \end{defn}
@@ -238,8 +236,8 @@
   \end{prv}
 
   \begin{nota}[Réunion indexée]
-    Soit $a$ une famille d'ensemble indexée par l'ensemble $I$, \textit{i.e.} $a$ est une fonction de domaine $I$.
-    Si $i \in I$, on note $a_i$ pour $a(i)$.
+    Soit $a$ une famille d'ensemble indexée par l'ensemble $I$, \textit{i.e.} une fonction de domaine $I$.
+    Pour $i \in I$, on note $a_i$, ou $a(i)$, pour l'unique objet $y$ tel que $(i, y) \in a$.
   \end{nota}
 
   \begin{prop}
@@ -271,7 +269,7 @@
   \end{prv}
 
   \begin{prop}
-    Si $I$ est un ensemble et $a$ une fonction de domaine $i$ alors $\prod_{i \in I} a_i $ est un ensemble.
+    Si $I$ est un ensemble et $a$ est une fonction de domaine $i$ alors $\prod_{i \in I} a_i $ est un ensemble.
   \end{prop}
   \begin{prv}
     La collection $\prod_{i \in I} a_i$ est l'ensemble des fonctions de $I$ dans $\bigcup_{i \in  I} a_i$ telles que $f(i) \in a_i$ pour tout $i$.
@@ -279,7 +277,7 @@
 
   \phantomsection
   \begin{description}
-    \item[ZF\,5\label{ZF5}] \textit{Axiome de l'infini} : il existe un ensemble ayant une infinité d'élément
+    \item[ZF\,5\label{ZF5}] \textit{Axiome de l'infini} : il existe un ensemble ayant une infinité d'éléments
       \[
       \exists x \: (\emptyset \in x \land \forall y \: (y \in x \to y \cup \{y\} \in x ))
       .\]
@@ -295,7 +293,7 @@
     \item \quad \quad $\vdots$
   \end{itemize}
 
-  Ainsi, on a bien $n  =\{0, 1, \ldots, n-1\}$.
+  Ainsi, on a $n  =\{0, 1, \ldots, n-1\}$.
 
   \begin{rmk}
     Si on retire $\emptyset \in x$, on peut avoir $x = \emptyset$ qui satisfait la version modifiée de \zf 5.
@@ -306,6 +304,7 @@
 
   \begin{rmk}
     Les français sont les seuls à considérer que l'axiome de bonne fondation ne fait pas partie de la théorie de ZF.
+    %QV : Wat?
   \end{rmk}
 
   \section{Ordinaux et induction transfinie.}
@@ -313,7 +312,7 @@
 
   \begin{thm}[Cantor]
     \begin{enumerate}
-      \item Soient $A$ et $B$ deux ensembles et supposons qu'il existe des injections $A \to B$ et $B \to A$ alors il existe une bijection $A \to B$.
+      \item Soient $A$ et $B$ deux ensembles, supposons qu'il existe des injections $A \to B$ et $B \to A$ alors il existe une bijection $A \to B$.
       \item Il n'existe pas de surjection de $A \to \wp(A)$.
     \end{enumerate}
   \end{thm}
@@ -330,7 +329,7 @@
     Un \textit{ordre} (\textit{partiel}, \textit{strict}) sur $A$ est une relation binaire $<$ (donnée par un sous-ensemble de $A \times A$) telle que 
     \begin{enumerate}
       \item \textit{transitivité} : $\forall x \: \forall y \: \forall z \: x < y \to y < z \to x < z$ ;
-      \item \textit{anti-réflexif} : $\forall x, x \not< x$.
+      \item \textit{anti-réflexivité} : $\forall x, x \not< x$.
     \end{enumerate}
   \end{defn}
 
@@ -344,14 +343,14 @@
   \end{exm}
 
   \begin{defn}
-    Soit $(A, <)$ ordonné. Soient  $a, a' \in A$ et $B \subseteq A$.
+    Soit $(A, <)$ un ensemble ordonné. Soient  $a, a' \in A$ et $B \subseteq A$.
     On dit que 
     \begin{itemize}
-      \item $a$ est un plus petit élément de $B$ si $a \in B$ et pour tout $b \in B$ et si $b \neq a$ alors $b > a$ ;
+      \item $a$ est un plus petit élément de $B$ si $a \in B$ et pour tout $b \in B$, $b \ge a$ ;
       \item $a$ est un élément minimal de $B$ si $a \in B$  et pour tout $b \in B$, $b \not< a$ ;
       \item $a$ est un minorant de $B$ si pour tout $b \in B$, $a \le b$ ;
       \item de la même manière, on définit plus grand élément, élément maximal, majorant ;
-      \item $a$ est une borne inférieure de $B$ si $a$ est un plus grand élément de l'exemple des minorants de $B$ ;
+      \item $a$ est une borne inférieure de $B$ si $a$ est un plus grand élément de l'ensemble des minorants de $B$ ;
       \item $a$ et $a'$ sont incomparables si $a \neq a'$ et $a \not< a'$ et $a' \not< a$ ;
       \item un ordre est bien fondé si toute partie non vide de  $A$ a un élément minimal ;
       \item un bon ordre est un ordre total bien fondé.
@@ -387,6 +386,7 @@
 
   \begin{exm}
     Les entiers de Von Neumann sont des ordinaux.
+    %QV : Ceci est la seule occurrence de « Von Neuman », donc à moins de déjà savoir de quoi tu parles, on ne peut pas comprendre.
   \end{exm}
 
   \begin{prop}
@@ -397,7 +397,7 @@
       \item $\alpha \not \in \alpha$ ;
       \item si $x \in \alpha$ alors $x = \{y \in \alpha  \mid y < x\}$.
       \item si $x \in \alpha$ alors $x$ est un ordinal (on a l'abus de notation $x \in \mathcal{O}$) ;
-      \item $\beta \le \alpha$ ssi $\beta = \alpha$ ou  $\beta \in \alpha$ ;
+      \item $\beta \subset \alpha$ ssi $\beta = \alpha$ ou  $\beta \in \alpha$ ;
       \item $x = \alpha \cup \{\alpha\}$ est un ordinal noté $\alpha + 1$.
     \end{enumerate}
   \end{prop}
@@ -405,15 +405,17 @@
   \begin{prv}
     \begin{enumerate}
       \item C'est vrai.
+        %QV : Haha ^^
       \item La relation $\in$ est un bon-ordre sur $\alpha$, soit $\beta$ le plus petit élément.
-        Si $\beta \neq \emptyset$ alors il contient au moins un élément $\gamma$ d'où $\gamma < \beta$ et $\gamma \in \alpha$ (par transitivité), \textit{absurde} car $\beta$ minimal.
+        Si $\beta \neq \emptyset$ alors il contient au moins un élément $\gamma$ d'où $\gamma < \beta$ et $\gamma \in \alpha$ (par transitivité), \textit{absurde} car $\beta$ est minimal.
       \item Le reste sera vu en TD ou en exercice.
+        %QV : Oh, come on... Aussi, TD = exercice, non ?
     \end{enumerate}
   \end{prv}
 
   \begin{prop}
     \begin{itemize}
-      \item Si $\alpha$ et $\beta$ sont des ordinaux et que l'on a~$\alpha \le \beta \le \alpha + 1$ alors $\beta = \alpha$ ou  $\beta = \alpha + 1$.
+      \item Si $\alpha$ et $\beta$ sont des ordinaux et on a~$\alpha \le \beta \le \alpha + 1$ alors $\beta = \alpha$ ou  $\beta = \alpha + 1$.
       \item Si $X$ est un ensemble non vide d'ordinaux alors $\bigcap_{\alpha \in X} \alpha$ est le plus petit élément de $X$.
     \end{itemize}
     \qed
@@ -424,6 +426,7 @@
     \begin{itemize}
       \item S'il existe $\alpha$ tel que $\beta = \alpha + 1$ alors on dit que $\beta$ est un ordinal successeur ;
       \item Sinon, c'est un ordinal limite.
+        %QV : Il me semble que dans le cours de Natacha on exclut 0 des ordinaux limites.
     \end{itemize}
   \end{defn}
 
@@ -470,13 +473,14 @@
 
   \begin{prop}
     Soit $\lambda$ un ordinal non vide. On a :
+    %QV : Avec ta définition, c'est aussi vrai pour 0.
     \[
       \overbrace{\lambda \text{ est limite}}^{(1)} \quad \iff \quad \overbrace{\lambda = \bigcup_{\alpha \in \lambda} \alpha}^{(2)}
     .\] 
   \end{prop}
   \begin{prv}
     \begin{enumerate}
-      \item Par contraposée, si $\lambda$ n'est pas limite, c'est donc un successeur d'un certain ordinal $\beta$ et donc $\lambda = \beta \cup \{\beta\}$.
+      \item Par contraposée, si $\lambda$ n'est pas limite, alors c'est le successeur d'un certain ordinal $\beta$ et donc $\lambda = \beta \cup \{\beta\}$.
         On a \[
         \bigcup_{\alpha \in \lambda} \alpha = \beta \cup \bigcup_{\alpha \in \beta} \alpha = \beta \neq \lambda
         .\] 
@@ -493,10 +497,11 @@
     On suppose que :
     \begin{itemize}
       \item $\emptyset$ satisfait $\mathcal{P}$ ;
-      \item pour tout ordinal $\alpha$ tel que, pour tout $\beta < \alpha$ satisfait $\mathcal{P}$, alors $\alpha$ satisfait $\mathcal{P}$ :
+      \item pour tout ordinal $\alpha$ tel que, si tout $\beta < \alpha$ satisfait $\mathcal{P}$, alors $\alpha$ satisfait $\mathcal{P}$ :
         \[
         \forall \alpha, \: (\forall \beta < \alpha, \: \mathcal{P}(\beta)) \implies \mathcal{P}(\alpha) \;
         ;\] 
+      %QV : La première hypothèse est inclue dans la deuxième.
     \end{itemize}
     alors tous les ordinaux satisfont $\mathcal{P}$.
   \end{thm}
@@ -517,7 +522,7 @@
   \end{rmk}
 
   \begin{defn}
-    Un ordinal $\alpha$ est \textit{fini} si $\alpha = \emptyset$ ou si $\alpha$ et sous ses éléments sont des successeurs.
+    Un ordinal $\alpha$ est \textit{fini} si $\alpha$ et tous ses éléments sont vides ou des successeurs.
   \end{defn}
 
   \begin{prop}
@@ -525,6 +530,7 @@
   \end{prop}
   \begin{prv}
     En exercice.
+    %QV : N'est pas juste une compréhension avec l'axiome de l'infini ?
   \end{prv}
 
   \begin{lem}
@@ -544,6 +550,7 @@
       \item Montrons que $f$ est l'identité.
         On sait que, pour tout $\beta \in \alpha$, on a $f_{|\beta}$ strictement croissante de $\beta$ dans $f(\beta)$ et bijective, d'où $\beta = f(\beta)$ par le point précédent.
         D'où $f$ est l'identité.
+        %QV : On peut aussi le dire en remarquant que $f$ et $f^{-1}$ sont toutes les deux extensives d'après le premier point.
     \end{itemize}
   \end{prv}
 
@@ -552,12 +559,14 @@
   \end{thm}
   \begin{prv}
     Cette preuve ressemble à une induction sans en être une.
+    %QV : En fait c'en est vraiment une, une induction n'est rien d'autre qu'une preuve par l'absurde où on considère un contre-exemple minimal.
     On aura le droit d'en faire quand on aura le théorème.
 
     Si l'isomorphisme existe, il est unique grâce au lemme précédent.
     En effet, s'il y en a deux $f$ et $g$ alors $f \circ g^{-1}$ est un isomorphisme entre deux ordinaux égaux, donc c'est l'identité.
 
     Notons $\mathcal{P}(x)$ la propriété "il existe un ordinal $\alpha_x$ et un isomorphisme $f_x : S_{\le x} \to \alpha_x$" où $S_{\le x} := \{y \in X \mid y \le x\}$.
+    %QV : Il est un peu plus naturel de considérer $S_{< x}$ qui correspond à un ordinal là où $S_{\le x}$ correspond à son successeur.
     Pour montrer $\mathcal{P}(x)$ pour tout $x \in X$, on pose  
     \[
     Y := \{x \in X  \mid \mathcal{P}(x) \text{ est vraie}\}
@@ -566,15 +575,17 @@
 
     Supposons $Y \neq X$ et soit $a = \min (X \setminus Y)$.
     \begin{itemize}
-      \item Si $Y$ a un plus grand élément $b$, alors il existe un isomorphisme $f_b : S_{\le b} \to \alpha_b$ (car $\mathcal{P}(b)$).
+      \item Si $Y$ a un plus grand élément $b$, alors il existe un isomorphisme $f_b : S_{\le b} \to \alpha_b$ (car on a $\mathcal{P}(b)$).
         Or, $S_{\le a} = S_{\le b} \cup \{a\}$ (il faudrait montrer que $Y$ est un segment initial de $X$).
         Et, on construit $f_a : S_{\le a} \to \alpha_b \cup \{\alpha\}_b$ qui est un isomorphisme, donc $a \in Y$, \textit{\textbf{absurde}}.
       \item Si $Y$ n'a pas de plus grand élément, on considère $\alpha := \bigcup_{x \in Y} \alpha_x$ un ordinal.
-        Pour tout $x < \alpha$ il existe un isomorphisme de $S_{\le x}$ dans $\alpha_x$.
+        %QV : Où utilises-tu le fait que $Y$ n'a pas de plus grand élément ?
+        Pour tout $x \in Y$ il existe un isomorphisme $f_x$ de $S_{\le x}$ dans $\alpha_x$.
         Si on prend $x < y < \alpha$ alors  $(f_y)_{|S_{\le x}}$ est un isomorphisme et, par unicité, on a donc que $f_y$ prolonge $f_x$.
-        On peut définir un isomorphisme $f_{\le \alpha}$ comme limite des $f_{x}$ pour $x < \alpha$.
+        %QV : Tu utilises l'axiome du choix, ça peut être intéressant de le faire remarquer.
+        On peut définir un isomorphisme $f$ comme union des $f_{x}$ pour $x \in Y$.
         C'est un isomorphisme de $S_{< a}$ dans $\beta := \bigcup_{x < \alpha} \alpha_x$.
-        On peut prolonger $f$ en $f_X : S_{\le \alpha} \to \beta + 1$ où $\alpha \mapsto \beta$, d'où $\alpha \le Y$, \textit{\textbf{absurde}}.
+        On peut prolonger $f$ en $f_X : S_{\le a} \to \beta + 1$ où $a \mapsto \beta$, d'où $a \le Y$, \textit{\textbf{absurde}}.
     \end{itemize}
   \end{prv}
 
@@ -586,9 +597,9 @@
       \item $\mathcal{F}$ la collection des applications définies sur les ordinaux~$\beta \le \alpha$ et prenant leur valeurs dans $S$ ;
       \item $F$ une relation fonctionnelle de domaine $\mathcal{F}$ à valeur dans $S$.
     \end{itemize}
-    Alors il existe une fonction $f$ dans $\mathcal{F}$ (et une unique définie sur~$\alpha$) telle que :
+    Alors il existe une unique fonction $f$ dans $\mathcal{F}$ définie sur~$\alpha$ telle que :
     \[
-      (\star) \quad\quad \text{ pour tout } \beta < \alpha \quad\quad f(\beta) = F(f_{|\beta})
+      (\star) \quad\quad \text{ pour tout } \beta < \alpha \quad\quad F(f_{|\beta}, f(\beta))
     .\] 
   \end{lem}
 
@@ -606,7 +617,7 @@
         Soit $\tau$ l'ensemble des ordinaux $\gamma \in \alpha$ tels qu'il existe $f_\gamma \in \mathcal{F}$ définie sur $\gamma$ et vérifiant $(\star)$.
         Alors $\tau$ est un segment initial de $\alpha$ donc un ordinal.
         Par unicité si $\gamma < \gamma'$ alors $f_{\gamma'}$ prolonge $f_\gamma$.
-        On définit  $f_\tau$ par  $f_\tau(\gamma) := F(f_\gamma)$ si  $\gamma < \tau$.
+        On définit  $f_\tau$ par  $F(f_\gamma, f_\tau(\gamma))$ si  $\gamma < \tau$.
          \begin{itemize}
           \item Si $\tau \in \alpha$ alors $f_\tau$ prolonge tous les $f_\gamma$ et donc $\tau \in \tau$, \textit{\textbf{impossible}}.
           \item D'où $\tau = \alpha$.
@@ -634,6 +645,7 @@
   \section{Axiome de choix et variantes équivalentes.}
 
   Les axiomes du choix sont exprimable au premier ordre !
+  %QV : Est-ce vraiment surprenant ?
 
   \phantomsection
   \begin{description}
@@ -665,7 +677,7 @@
   \phantomsection
   \begin{description}
     \item[{\footnotesize(Lemme de)} Zermelo.\label{zermelo}]
-      Tout ensemble non vide peut être mini d'un bon ordre (\textit{i.e.} un ordre total où toute partie non vide a un plus petit élément).
+      Tout ensemble peut être muni d'un bon ordre (\textit{i.e.} un ordre total où toute partie non vide a un plus petit élément).
   \end{description}
 
   En supposant les axiomes $\text{\zf1}, \ldots, \text{\zf5}$, on va montrer les implications suivantes :
@@ -679,10 +691,10 @@
 
   \subsection{\ac 1 implique \ac 2.} \label{subsect:ac1-ac2}
 
-  On rappelle que l'ensemble $\prod_{i \in I} a_i$ est l'ensemble de fonctions $f$ de la forme $f : I \to  \bigcup_{i \in I} a_i$ tel que $f(i) \in a_i$ pour tout $i$.
+  On rappelle que l'ensemble $\prod_{i \in I} a_i$ est l'ensemble des fonctions $f$ de $I$ dans $\bigcup_{i \in I} a_i$ telles que $f(i) \in a_i$ pour tout $i$.
 
   Soit $a$ non vide. On considère $\prod_{\emptyset \neq x \subseteq a}x $ qui est non vide par \ac1.
-  Soit~$f$ un de ces éléments.
+  Soit~$f$ un de ses éléments.
   On a, pour tout $\emptyset \neq  x \subseteq a$, que $f(x) \in x$ donc~$f$ est une fonction de choix.
 
   \subsection{\ac 2 implique \ac 3.}  \label{subsect:ac2-ac3}
@@ -692,10 +704,10 @@
   On prend $c = \{f(x)  \mid x \in a\} $. Comme les $x$ sont disjoints, on obtient la propriété recherchée.
 
   \subsection{\ac 3 implique \ac 1.} \label{subsect:ac3-ac1}
-  Soit $X = \prod_{i \in I} a_i$ un produit d'ensemble non vides.
+  Soit $X = \prod_{i \in I} a_i$ un produit d'ensembles non vides.
   On considère $A := \mleft\{\,\{i\} \times a_i \;\middle|\; i \in I\,\mright\}$.
   Par \ac 3, il existe $c$ tel que, pour tout $x \in A$, $x \cap c$ a exactement un élément.
-  D'où, $c$ peut s'écrire
+  Donc, $c$ peut s'écrire
   \[
   c = \{(i, d_i)  \mid i \in I \text{ et } d_i \in a_i\}
   .\]
@@ -736,8 +748,8 @@
   S'il n'existe pas d'ordinal $\alpha$ tel que $F(\alpha) = \theta$ alors  $F$ est une injection de $\mathcal{O}$ dans $a$. \textbf{\textit{Absurde}}.
   Il existe donc $\alpha$ tel que $F(\alpha) = \theta$.
 
-  Le sous-ensemble $\{\beta \in \alpha  \mid F(\beta) = \theta\} $ a un plus petit élément $\beta$.
-  Montrons que $F_{|\beta}$ est une bijection de $\beta$ dans $\alpha$.
+  Le sous-ensemble $\{\beta \in \alpha + 1 \mid F(\beta) = \theta\} $ a un plus petit élément $\beta$.
+  Montrons que $F_{|\beta}$ est une bijection de $\beta$ dans $a$.
   \begin{itemize}
     \item D'une part, on sait que c'est une injection.
     \item D'autre part, $F(\beta) = \theta$ implique  $\{F(\gamma)  \mid \gamma < \beta\} = a$ donc $F_{|\beta}$ est une surjection.
@@ -758,15 +770,15 @@
   .\] 
   Montrons que l'ensemble $(X, \subsetneq)$ est inductif.
 
-  Soit $Y \subseteq X$ est totalement ordonné. Montrons que $Y$ a un majorant dans $X$.
+  Soit $Y \subseteq X$ totalement ordonné. Montrons que $Y$ a un majorant dans $X$.
   On pose $z = \bigcup_{y \in Y} y$ qui majore $Y$. On a bien $z \in X$ (on ne duplique pas les éléments).
   On en conclut que $X$ est inductif.
   Soit $d$ un élément maximal de $X$ (il existe par \zorn).
 
   \begin{itemize}
     \item S'il existe $x \in a$ tel que $x \cap d = \emptyset$ alors prenons $u \in x$ et posons $d_1 := d \cup \{u\}$.
-      D'où $d_1 \in X$ et $d \subsetneq d_1$ donc $d$ non maximal, \textit{\textbf{absurde}}.
-    \item Pour tout $x \in a$, on a $|d \cap x| = 1$, d'où $d$ est l'ensemble recherché (appelé $c$ dans \ac 3).
+      On obtient $d_1 \in X$ et $d \subsetneq d_1$ donc $d$ n'est pas maximal, \textit{\textbf{absurde}}.
+    \item Pour tout $x \in a$, on a $|d \cap x| = 1$, donc $d$ est l'ensemble recherché (appelé $c$ dans \ac 3).
   \end{itemize}
 
   \subsection{\ac 2 implique \zorn.} \label{subsect:ac2-zorn}
@@ -776,7 +788,7 @@
   \begin{rmk}[Idée]
     On construit une chaîne dans $a$ (\textit{i.e.} un ensemble totalement ordonné) de taille maximale (c'est ici qu'on utilise la fonction de choix de \ac 2).
     Elle a un majorant car $a$ est inductif.
-    Ce majorant va être l'élément maximal.
+    Ce majorant est l'élément maximal.
   \end{rmk}
 
   Soit $f : \wp(a) \to a$ une fonction de choix donnée par \ac 2.
@@ -784,9 +796,9 @@
 
   \begin{rmk}[Idée -- suite]
     \begin{itemize}
-      \item On part de $\emptyset$ : tout élément de $a$ a un majorant strict de $\emptyset$ en choisissant $a_1 = f(a)$.
-      \item Soit $X_1$ l'ensemble des majorants de $\{a_1\}$. On pose $a_2 := f(X_1)$.
-      \item Soit $X_2$ l'ensemble des majorants de $\{a_1,a_2\}$. On pose $a_3 := f(X_2)$.
+      \item On part de $\emptyset$ : $a_1 = f(a)$ est un majorant strict de $\emptyset$.
+      \item Soit $X_1$ l'ensemble des majorants stricts de $\{a_1\}$. On pose $a_2 := f(X_1)$.
+      \item Soit $X_2$ l'ensemble des majorants stricts de $\{a_1,a_2\}$. On pose $a_3 := f(X_2)$.
     \end{itemize}
   \end{rmk}
 
@@ -797,7 +809,7 @@
     x &\longmapsto f(\{y \in a  \mid y \text{ est un majorant strict de $x$ dans } a\} )
   .\end{align*}
 
-  On définit par induction la chaîne maximale (dernier lemme de la section précédente).
+  On définit par induction une chaîne maximale (dernier lemme de la section précédente).
   Soit $\theta \not\in a$.
   On définit :
   \[
@@ -809,7 +821,7 @@
 
   La fonction $F$ n'est pas une injection de $\mathcal{O}$ dans $a$ donc il existe un ordinal $\alpha$ tel que $F(\alpha) = \theta$.
   Comme $\alpha + 1$ est un ordinal, l'ensemble~$\{\beta \in \alpha + 1  \mid F(\beta) = \theta\}$ a un plus petit élément $\alpha_0$.
-  D'où l'ensemble $\{F(\beta)  \mid \beta < \alpha_0\}$ n'a pas de majorant strict mais a un majorant $M$ car $a$ inductif.
+  L'ensemble $\{F(\beta)  \mid \beta < \alpha_0\}$ n'a pas de majorant strict mais a un majorant $M$ car $a$ inductif.
   Et, $a$ n'a pas d'élément plus grand que $a$.
   Ainsi $M$ est maximal dans $a$.
 
