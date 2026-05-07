@@ -22,8 +22,7 @@
   \begin{rmk}
     \begin{itemize}
       \item Les constantes peuvent être vues comme des fonctions d'arité $0$.
-      \item On aura toujours dans les relations : "$=$" d'arité $2$, et "$\bot$" d'arité $0$.
-        %QV : Ce n'est pas le cas dans les exemples ci-dessous.
+      \item On aura toujours, sauf si précisé autrement, les relations "$=$" d'arité $2$, et "$\bot$" d'arité $0$.
       \item On a toujours un ensemble de variables $\mathcal{V}$.
     \end{itemize}
   \end{rmk}
@@ -53,6 +52,7 @@
       \item une constante $\emptyset$,
       \item trois fonctions $\cap$, $\cup$ et $\square^\mathsf{c}$,
         %QV : Autant on peut imaginer que dans $\mathcal{L}_\mathrm{co}$ tu poses $0^{-1} = 0$, autant là le complémentaire n'est jamais bien défini.
+        %HS : Pour l'instant, c'est juste de la notation, on n'a pas encore associé une sémantique. Après, à voir si c'est utile, je n'ai pas l'impression que -ᶜ, ∪, ∩ et ⊆ ne soient utiles dans le chap 4. Potentiellement, c'est juste là pour donner plus d'exemples.
       \item trois relations $=$, $\in$ et $\subseteq$.
     \end{itemize}
   \end{exm}
@@ -121,31 +121,30 @@
   \section{Les formules.}
 
   \begin{defn}
+    Les formules sont des mots sur l'alphabet \[ \mathcal{L} \cup \mathcal{V} \cup \{\verb|(|, \verb|)|, \verb|,|, \exists, \forall, \land, \lor, \lnot, \to \}. \]
+
+    L'ensemble des \textit{formules} $\mathcal{F}$ du langage $\mathcal{L}$ est défini par 
     \begin{itemize}
-      \item Les formules sont des mots sur l'alphabet \[ \mathcal{L} \cup \mathcal{V} \cup \{\verb|(|, \verb|)|, \verb|,|, \exists, \forall, \land, \lor, \lnot, \to \} .\] 
-      \item Une \textit{formule atomique} est une formule de la forme $R(t_1, \ldots, t_n)$ où $R$ est un symbole de relation d'arité $n$ et $t_1, \ldots, t_n$ des termes.
-        %QV : La formule dépasse dans la marge, mais je ne vois pas de modification locale qui corrige le problème. Ma meilleure proposition est de rejeter la définition des formules atomiques après celle des formules pour réutiliser $\mathcal F$.
-      \item L'ensemble des \textit{formules} $\mathcal{F}$ du langage $\mathcal{L}$ est défini par 
-        \begin{itemize}
-          \item on pose $\mathcal{F}_0$ l'ensemble des formules atomiques ;
-          \item on pose $\mathcal{F}_{k+1} = \mathcal{F}_k \cup \mleft\{\,
-              \begin{array}{c}
-                (\lnot F)\\
-                (F \to G)\\
-                (F \lor G)\\
-                (F \land G)\\
-                \exists x\: F\\
-              \forall x\: G\\
-              \end{array}
-            \;\middle|\; 
+      \item on pose $\mathcal{F}_0$ l'ensemble des \textit{formules atomiques}, c'est-à-dire l'ensemble des formules de la forme $R(t_1, \ldots, t_n)$ où $R$ est un symbole de relation d'arité $n$ et $t_1, \ldots, t_n$ des termes ;
+      \item on pose, pour tout $k \in \mathds{N}$,
+        \[
+          \mathcal{F}_{k+1} := \mathcal{F}_k \cup \mleft\{\,
             \begin{array}{c}
-              F,G \in \mathcal{F}_k\\
-              x \in \mathcal{V}
+              (\lnot F)\\
+              (F \to G)\\
+              (F \lor G)\\
+              (F \land G)\\
+              \exists x\: F\\
+            \forall x\: G\\
             \end{array}
-          \,\mright\}$ ;
-          %QV : Techniquement, $k$ est libre, mais l'introduire proprement implique de manger beaucoup d'espace.
-        \item et on pose enfin $\mathcal{F} = \bigcup_{k \in \mathds{N}} \mathcal{F}_k$.
-        \end{itemize}
+          \;\middle|\; 
+          \begin{array}{c}
+            F,G \in \mathcal{F}_k\\
+            x \in \mathcal{V}
+          \end{array}
+        \,\mright\} \;
+        ;\] 
+      \item et on pose enfin $\mathcal{F} := \bigcup_{k \in \mathds{N}} \mathcal{F}_k$.
     \end{itemize}
   \end{defn}
 
@@ -164,6 +163,7 @@
       \item Dans $\mathcal{L}_\mathrm{ens}$, la loi de De Morgan s'écrit \[
           \forall x\: \forall y\: (x^\mathsf{c} \cup y^\mathsf{c} = (x \cap y)^\mathsf{c})
           %QV : cf. mon commentaire précédent sur les complémentaires.
+          %HS : cf. mon commentaire précédent sur les complémentaires.
         .\]
     \end{itemize}
   \end{exm}
@@ -190,6 +190,8 @@
       \item[0.] les symboles de relations (le plus prioritaire) ;
       \item les symboles $\lnot, \exists, \forall$ ;
         %QV : J'ai l'impression qu'il est plus standard de dire que les quantificateurs sont les moins prioritaires.
+        %HS : Je suis totalement d'accord, j'ai dû corriger ça plusieurs fois, j'avais des quantificateurs qui prennaient toutes la formule, mais ça ne correspond pas à la convention donnée
+        %HS : Je ne pense pas que ça soit une "bonne" idée de changer ça dans les notes de cours uniquement, sinon les formules au tableau/en exam pourront être interprétées différemment.
       \item les symboles $\land$ et $\lor$ ;
       \item le symbole $\to$ (le moins prioritaire).
     \end{enumerate}
@@ -239,8 +241,10 @@
       \item La \textit{taille} d'une formule est le nombre de connecteurs ($\lnot$,  $\lor$,  $\land$,  $\to$), et de quantificateurs ($\forall $, $\exists $).
       \item La racine de l'arbre est 
         \begin{itemize}
-          \item rien si la formule est atomique ;
+          \item "$F$" si la formule $F$ est atomique ;
             %QV : C'est un peu bizarre, pourquoi le seul noeud de l'arbre ne serait-il pas qualifié de racine ?
+            %HS : Il l'est, mais ce n'est pas très net... dans ce cas on aurait S(formule atomique F) = ∅ j'ai l'impression
+            %HS : Je change la définition
           \item "$\oplus$" si $F = F_1 \oplus F_2$ avec $\oplus$ un connecteur (binaire ou unaire) ;
           \item "$\mathsf{Q}$" si $F = \mathsf{Q}x\: F_1$ avec $\mathsf{Q}$ un quantificateur.
         \end{itemize}
@@ -299,6 +303,7 @@
     On dit que $\Gamma \vdash F$ est \textit{prouvable}, \textit{démontrable} ou \textit{dérivable}, s'il peut être obtenu par une suite finie de règles (\textit{c.f.} ci-après).
     On dit qu'une formule $F$ est \textit{prouvable} si $\emptyset\vdash F$ l'est.
     %QV : Cette notion est un peu bizarre, on ne voudrait pas plutôt utiliser le mot « prouvable » pour dire qu'une théorie prouve une formule ?
+    %HS : Je suis d'accord que le mot "prouvable" est bizarre... dérivable fait plus penser à dériver un séquent, donc je ne sais pas s'il y a mieux. (ou prouvable pour le cas particulier de la théorie vide.)
   \end{defn}
 
   \begin{defn}[Règles de la démonstration]
@@ -408,17 +413,12 @@
         \]~\[
         \begin{prooftree}
           \hypo{\Gamma \vdash \forall x\:A}
-          \infer%[left label=
-          %\begin{array}{r}
-          %  \text{quitte à renommer les}\\
-          %  \text{variables liées de $A$ qui}\\
-          %  \text{apparaissent dans $t$}
-          %\end{array}
-          %] 
+          \infer 1[\forall_\mathsf{e}]{\Gamma \vdash A[x := t]}
           %QV : C'est déjà dans la définition de substitution.
-          1[\forall_\mathsf{e}]{\Gamma \vdash A[x := t]}
+          %HS : J'ai rajouté la remarque/rappel en dessous
         \end{prooftree}
         \]
+        Rappelons que pour la substitution $A[x := t]$, on devra potentiellement renommer des variable liées de $A$ qui apparaissent dans $t$.
       \item[Quantificateur existentiel.]
         \[
           \begin{prooftree}
@@ -462,27 +462,17 @@
     \end{prooftree}
     .\] 
 
-    %Si on n'a pas la condition sur $\forall_\mathsf{e}$, on peut faire
-    %\[
-    %\begin{prooftree}
-    %  \infer 0[=_\mathsf{i}]{\vdash x = x}
-    %  \infer 1[\exists_\mathsf{i}]{\exists y \: x = y}
-    %  \infer 1[\forall_\mathsf{i}]{\vdash \forall x \: \exists y \: x = y}
-    %  \infer 1[\forall_\mathsf{e}]{\vdash \exists y \: (1 + y) = y}
-    %\end{prooftree}
-    %.\]
-    %QV : Non, ce n'est pas une substitution valide.
-
     Si on n'a pas la condition sur $\exists_\mathsf{e}$, on peut faire 
     \[
     \begin{prooftree}
       \infer 0[=_\mathsf{i}]{\emptyset \vdash 0 = 0}
       \infer 1[\exists_\mathsf{i}]{\emptyset \vdash \exists x \: x = 0}
-      \infer 0[\mathsf{ax}]{\emptyset, x = 0 \vdash x = 0}
+      \infer 0[\mathsf{ax}]{x = 0 \vdash x = 0}
       \infer 2[\exists_\mathsf{e}]{\emptyset \vdash x = 0}
     \end{prooftree}
     .\] 
     %QV : Pour mettre en évidence que le problème ne vient pas du contexte.
+    %HS : Oui
   \end{rmk}
 
 
@@ -490,13 +480,14 @@
 
   \begin{defn}
     Soit $\mathcal{L}$ un langage de la sémantique du premier ordre.
-    On appelle \textit{interprétation} (ou \textit{structure}) du langage $\mathcal{L}$ l'ensemble $\mathcal{M}$ des données suivantes :
+    On appelle \textit{interprétation} (ou \textit{structure}, ou \textit{modèle}) du langage $\mathcal{L}$ l'ensemble $\mathcal{M}$ des données suivantes :
     \begin{itemize}
       \item un ensemble \textit{\textbf{non vide}}, noté $|\mathcal{M}|$, appelé \textit{domaine} ou \textit{ensemble de base} de $\mathcal{M}$ ;
       \item pour chaque symbole $c$ de constante, un élément $c_{\mathcal{M}}$ de $|\mathcal{M}|$ ;
       \item pour chaque symbole $f$ de fonction d'arité $n$, une fonction $f_{\mathcal{M}} : |\mathcal{M}|^n \to |\mathcal{M}|$ ;
       \item pour chaque symbole $R$ de relation d'arité $n$ (sauf pour l'égalité "$=$"), un sous-ensemble $R_{\mathcal{M}}$ de $|\mathcal{M}|^n$.
         %QV : Ça me paraissait ok de ne pas hardcoder l'égalité dans les formules jusqu'ici...
+        %HS : Je n'ai pas compris :(
     \end{itemize}
   \end{defn}
 
@@ -528,11 +519,15 @@
       \item Si $e$ est un environnement et $a \in |\mathcal{M}|$, on note $e[x:=a]$ l'environnement $e'$ tel que $e'(x) = a$ et pour tout $y \neq x$, $e(y) = e'(y)$.
       \item La \textit{valeur} d'un terme $t$ dans l'environnement $e$, notée $\Val_{\mathcal{M}}(t,e)$, est définie par induction sur l'ensemble des termes de la façon suivante :
         %QV : Tu peux aussi étendre $e$ aux termes comme tu l'as fait avec les valuations du calcul propositionnel.
+        %HS : Je n'ai pas compris :(
+
         \begin{itemize}
-          \item $\Val_{\mathcal{M}}(c, e) = c_{\mathcal{M}}$ si $c$ est une constante ;
-          \item $\Val_{\mathcal{M}}(x,e) = e(x)$ si $x$ est une variable ;
-          \item $\Val_{\mathcal{M}}(f(t_1, \ldots, t_n), e) = f_{\mathcal{M}}(\Val_{\mathcal{M}}(t_1, e), \ldots, \Val_{\mathcal{M}}(t_n, e))$.
-            %QV : Ça dépasse de la marge.
+          \item si $c$ est une constante, $\Val_{\mathcal{M}}(c, e) := c_{\mathcal{M}}$ ;
+          \item si $x$ est une variable $\Val_{\mathcal{M}}(x,e) = e(x)$ ;
+          \item si $f$ est une fonction $n$-aire,
+            \[
+            \Val_{\mathcal{M}}(f(t_1, \ldots, t_n), e) = f_{\mathcal{M}}(\Val_{\mathcal{M}}(t_1, e), \ldots, \Val_{\mathcal{M}}(t_n, e))
+            .\] 
         \end{itemize}
     \end{itemize}
   \end{defn}
@@ -560,6 +555,9 @@
       \item À la place de  $\Val_{\mathcal{M}}(t,e)$  quand $x_1, \ldots, x_n$ sont les variables de $t$ et $e(x_1) = a_1, \ldots, e(x_n) = a_n$, on note $t[a_1, \ldots, a_n]$ ou aussi~$t[x_1 := a_1, \ldots, x_n := a_n]$.
         C'est un \textit{terme à paramètre}, mais attention ce n'est \textit{\textbf{ni un terme, ni une substitution}}.
         %QV : Je ne suis pas sûr de comprendre ce que tu appelles « terme à paramètre », c'est la valeur de $t$ dans l'environnement $e$.
+        %HS : La notation t[x_1 := ..., ...] peut faire penser à une substitution (même notation qu'une substitution) d'une variable par un terme
+        %     ou à la notation F(x_1, ...) pour les formules.
+        %HS : Je suis d'accord que le nom "terme à paramètre", c'est pas très clair.
     \end{itemize}
   \end{nota}
 
@@ -573,7 +571,7 @@
       \item $\Val_{\mathcal{M}}(R(t_1, \ldots, t_n), e) = 1$  ssi $(\Val_{\mathcal{M}}(t_1, e), \ldots, \Val_{\mathcal{M}}(t_n ,e)) \in R_{\mathcal{M}}$ ;
       \item $\Val_{\mathcal{M}}(\bot, e) = 0$ ;
       \item $\Val_{\mathcal{M}}(\lnot F, e) = 1 - \Val_{\mathcal{M}}(F, e)$ ;
-      \item $\Val_{\mathcal{M}}(F \land G, e) = \Val_{\mathcal{M}}(F, e) \times \Val_{\mathcal{M}}(G, e)$ ;
+      \item $\Val_{\mathcal{M}}(F \land G, e) = \min(\Val_{\mathcal{M}}(F, e), \Val_{\mathcal{M}}(G, e))$ ;
       \item $\Val_{\mathcal{M}}(F \lor G, e) = \max(\Val_{\mathcal{M}}(F, e), \Val_{\mathcal{M}}(G, e))$ ;
       \item $\Val_{\mathcal{M}}(F \to G, e) = 1$ ssi $\Val_{\mathcal{M}}(F, e) \le \Val_{\mathcal{M}}(G, e)$ ;
       \item $\Val_{\mathcal{M}}(\forall x\:F, e) = 1$ ssi pour tout $a \in |\mathcal{M}|$, $\Val_{\mathcal{M}}(F, e[x := a]) = 1$ ;
@@ -593,19 +591,6 @@
     \end{itemize}
   \end{rmk}
 
-  \begin{rmk}
-    On verra plus tard qu'on peut construire les entiers avec 
-    \begin{itemize}
-      \item $0 : \emptyset$,
-      \item $1 : \{\emptyset\}$,
-      \item $2 : \{\emptyset, \{\emptyset\}\}$,
-      \item $\;\vdots \quad \vdots$
-      \item  $n + 1 : n \cup \{n\}$,
-      \item $\;\vdots \qquad \vdots$
-    \end{itemize}
-  \end{rmk}
-  %QV : Ce n'est probablement pas le meilleur endroit pour faire cette remarque.
-
   \begin{nota}
     À la place de $\Val_{\mathcal{M}}(F, e) = 1$, on note aussi $\mathcal{M}, e \models F$ et
     on dit que $\mathcal{M}$ \textit{satisfait} $F$, que $\mathcal{M}$ est un \textit{modèle} de $F$ (dans l'environnement $e$), ou que $F$ est vraie dans $\mathcal{M}$.
@@ -623,14 +608,16 @@
   \end{crlr}
 
   \begin{rmk}
-    Dans le cas des formules closes, on doit passer un environnement à cause de $\forall $ et $\exists $.
+    Dans le cas des formules closes, pour obtenir la valeur de $F$, on doit quand même utiliser un environnement lorsqu'on doit traiter un $\forall $ ou un $\exists$.
     %QV : Je ne comprends pas ce que tu veux dire par là.
+    %HS : J'espère que c'est plus clair
   \end{rmk}
 
   \begin{nota}
     On note $F[a_1, \ldots, a_n]$ pour $\Val_{\mathcal{M}}(F, e)$ avec $e(x_1) = a_1, \ldots, e(x_n) = a_n$.
     C'est une \textit{formule à paramètres}, mais ce n'est \textit{\textbf{pas une formule}}.
     %QV : Même remarque que pour les « termes à paramètres ».
+    %HS : Même réponse que pour les « termes à paramètres ».
   \end{nota}
 
 
@@ -667,8 +654,9 @@
         \end{pmatrix} $ ;
       \item et $G = \forall e \: \forall e'\: (\forall x\: (x * e = x * e' = x) \to  e = e')$.
     \end{itemize}
-    Aucun des deux n'est un théorème (il n'est vrai que dans les groupes pour $F$ (et c'est même la définition de groupe) et dans les monoïdes pour $G$ (unicité du neutre à droite)), mais $F \to G$ est un théorème logique.
+    Aucune des deux n'est un théorème ($F$ n'est vrai que dans les groupes, et c'est même la définition de groupe, et $G$ est vraie en particulier dans les monoïdes (unicité du neutre à droite)\footnote{ Et, il existe des modèles qui ne vérifient pas $G$, il suffit par exemple de définir $x *_{\mathcal{M}} y := x$ où $\mathcal{M}$ a au moins deux éléments}), mais $F \to G$ est un théorème logique.
     %QV : G n'est pas vraie que dans les monoïdes, mais mon meilleur contre-exemple est la loi qui renvoie toujours son premier argument.
+    %HS : Fixed, j'espère que c'est plus clair.
   \end{exm}
 
   \begin{defn}
@@ -728,6 +716,7 @@
               (a_1, \ldots, a_n) \in R_{\mathcal{M}} \text{ ssi } (\varphi(a_1), \ldots, \varphi(a_n)) \in R_{\mathcal{N}}
             .\]
           %QV : Avec cette définition, les fonctions croissantes ne sont pas forcément des morphises.
+          %HS : On veut ça ?
         \end{itemize}
       \item Un \textit{$\mathcal{L}$-isomorphisme} est un $\mathcal{L}$-morphisme bijectif.
       \item On dit que $\mathcal{M}$ et $\mathcal{N}$ sont \textit{isomorphes} s'il existe un $\mathcal{L}$-isomorphisme de $\mathcal{M}$ dans $\mathcal{N}$.
@@ -883,8 +872,9 @@
   \begin{exm}
     La théorie des groupes n'est pas complète : par exemple, \[
     F := \forall x \: \forall y \: (x * y = y * x)
-    \] est parfois vraie, parfois fausse, cela dépend du groupe considéré.
+    \] est parfois vraie, parfois fausse, cela dépend du groupe considéré.\footnote{On applique ici le théorème de correction, vu plus tard.}
     %QV : Ceci utilise le théorème de correction.
+    %HS : Footnoté
   \end{exm}
 
   \begin{exm}
@@ -894,6 +884,8 @@
 
     De par le théorème d'\textit{incomplétude de Gödel}, on montre qu'on ne peut pas avoir de \textit{joli} ensemble d'axiomes pour $\mathds{N}$.
     %QV : Le théorème dit qu'une théorie axiome-récursive qui contient PA est incomplète, c'est précisément le même sens du mot « complet ».
+    %HS : Je suis d'accord. Avec un peu de recul sur le cours, je ne comprends pas trop la distinction entre les "deux notions de complet" qu'on a eu en cours
+    %HS : Je pense que c'est là uniquement pour ne pas qu'on confonde le théorème de complétude de Gödel et l'incomplétude de Gödel.
   \end{exm}
 
   \begin{prop} \label{prop:fol-ou-ssi-ou}
@@ -969,6 +961,7 @@
     \begin{itemize}
       \item D'une part, on montre "non V2 implique non V1".
         %QV : Certes tu raisonnes par contraposée mais ce n'est pas "non V2 implique non V1" que tu montres par contraposée.
+        %HS : oui...
         Soit $T$ non-contradictoire et inconsistante.
         Il existe un modèle $\mathcal{M}$ tel que $\mathcal{M} \models T$ et $T \vdash \bot$.
         Or, par définition, $\mathcal{M} \not\models \bot$ donc $T \not\models \bot$.
@@ -996,20 +989,20 @@
       \item Dans le sens $\textsl{modèle} \models \textsl{formule}$, on dit qu'une formule est vraie dans un modèle, c'est le sens classique.
       \item Dans le sens $\textsl{théorie} \models \textsl{formule}$, on dit qu'une formule est vraie dans tous les modèles de la théorie, c'est un sens plus inhabituel.
         %QV : L'expression « mathématiques classiques » est consacrée.
+        %HS : À transmettre à Natacha PORTIER, c'est elle qui le dit
     \end{itemize}
   \end{rmk}
 
   \subsection{Preuve du théorème de correction.}
 
-  \begin{exo}
-    Montrer que le lemme ci-dessous implique la version 1 de la correction.
-  \end{exo}
+  Montrons la version 1 du théorème de correction.
 
-  \begin{lem}
+  \begin{prop}
     Soient $T$ une théorie, $\mathcal{M}$ une interprétation et $F$ une formule close.
     Si $\mathcal{M} \models T$ et $T \vdash F$ alors $\mathcal{M} \models F$.
     %QV : C'est exactement le théorème de correction...
-  \end{lem}
+    %HS : Oui (modulo un ∀ qui bouge), je retire l'exercice
+  \end{prop}
 
   \begin{prv}
     Comme d'habitude, pour montrer quelque chose sur les formules closes, on commence par les formules et même les termes.
@@ -1031,40 +1024,36 @@
       En exercice.
     \end{prv}
 
-    On termine la preuve en montrant la proposition ci-dessous.
-    %QV : C'est très décousu.
+    On termine la preuve en montrant le lemme (plus fort que la proposition) ci-dessous.
+
+    \begin{lem}
+      Soient $\Gamma$ un ensemble de formules et $A$ une formule tels que $\Gamma \vdash A$.
+      Soit $\mathcal{M}$ une interprétation et soit $e$ un environnement.
+      Si $\mathcal{M}, e \models \Gamma$, alors  $\mathcal{M}, e \models A$.
+    \end{lem}
+    \begin{prv}
+      Par induction sur la preuve de $\Gamma \vdash A$, on montre la proposition précédente.
+
+      \begin{itemize}
+        \item Cas inductif $\to_\mathsf{i}$.
+          On sait que $A$ est de la forme $B \to C$, et on a $\Gamma, B \vdash C$.
+          Soient $\mathcal{M}$ et $e$ tels que $\mathcal{M}, e \models \Gamma$.
+          Montrons que $\mathcal{M}, e \models B \to C$.
+          Il faut donc montrer que si $\mathcal{M}, e \models B$ alors $\mathcal{M}, e \models C$.
+          Si $\mathcal{M}, e \models B$ alors $\mathcal{M}, e \models \Gamma \cup \{B\}$.
+          Or, comme $\Gamma, B \vdash C$, par hypothèse d'induction, on obtient $\mathcal{M}, e \models C$.
+        \item Cas inductif $\forall_\mathsf{e}$.
+          On sait que $A$ est de la forme $B[x := t]$, avec $\Gamma \vdash \forall x \: B$.
+          Soient $\mathcal{M}$ une interprétation et $e$ un environnement tels que $\mathcal{M}, e \models \Gamma$. L'hypothèse de récurrence donne $\mathcal{M}, e \models \forall x \: B$, d'où $\mathcal{M}, e[x := \Val(t, e)] \models B$ et on conclut $\mathcal{M}, e \models B[x := t]$ grâce au lemme précédent.
+        \item Les autre cas inductifs sont laissé en exercice.
+        \item Cas de base $\mathsf{ax}$.
+          Si $A \in \Gamma$ et $\mathcal{M}, e \models \Gamma$ alors $\mathcal{M}, e \models A$.
+        \item Cas de base $=_\mathsf{i}$.
+          On a, pour tous $\mathcal{M}, e$ que $\mathcal{M}, e \models t = t$.
+      \end{itemize}
+      \vspace{-\baselineskip}
+    \end{prv}
   \end{prv}
-
-  Montrons cette proposition plus forte que le lemme.
-
-  \begin{prop}
-    Soient $\Gamma$ un ensemble de formules et $A$ une formule tels que $\Gamma \vdash A$.
-    Soit $\mathcal{M}$ une interprétation et soit $e$ un environnement.
-    Si $\mathcal{M}, e \models \Gamma$, alors  $\mathcal{M}, e \models A$.
-  \end{prop}
-  \begin{prv}
-    Par induction sur la preuve de $\Gamma \vdash A$, on montre la proposition précédente.
-
-    \begin{itemize}
-      \item Cas inductif $\to_\mathsf{i}$.
-        On sait que $A$ est de la forme $B \to C$, et on a $\Gamma, B \vdash C$.
-        Soient $\mathcal{M}$ et $e$ tels que $\mathcal{M}, e \models \Gamma$.
-        Montrons que $\mathcal{M}, e \models B \to C$.
-        Il faut donc montrer que si $\mathcal{M}, e \models B$ alors $\mathcal{M}, e \models C$.
-        Si $\mathcal{M}, e \models B$ alors $\mathcal{M}, e \models \Gamma \cup \{B\}$.
-        Or, comme $\Gamma, B \vdash C$, par hypothèse d'induction, on obtient $\mathcal{M}, e \models C$.
-      \item Cas inductif $\forall_\mathsf{e}$.
-        On sait que $A$ est de la forme $B[x := t]$, avec $\Gamma \vdash \forall x \: B$.
-        Soient $\mathcal{M}$ une interprétation et $e$ un environnement tels que $\mathcal{M}, e \models \Gamma$. L'hypothèse de récurrence donne $\mathcal{M}, e \models \forall x \: B$, d'où $\mathcal{M}, e[x := \Val(t, e)] \models B$ et on conclut $\mathcal{M}, e \models B[x := t]$ grâce au lemme précédent.
-      \item Les autre cas inductifs sont laissé en exercice.
-      \item Cas de base $\mathsf{ax}$.
-        Si $A \in \Gamma$ et $\mathcal{M}, e \models \Gamma$ alors $\mathcal{M}, e \models A$.
-      \item Cas de base $=_\mathsf{i}$.
-        On a, pour tous $\mathcal{M}, e$ que $\mathcal{M}, e \models t = t$.
-    \end{itemize}
-    \vspace{-\baselineskip}
-  \end{prv}
-  Cette proposition permet de conclure la preuve du lemme précédent.
 
   \subsection{Preuve du théorème de complétude.}
 
@@ -1268,8 +1257,6 @@
     En effet, pour toute formule $G$, il existe une formule $F$ qui n'utilise que $\lnot$,  $\lor$,  $\exists$ et qui vérifie $\vdash F \leftrightarrow G$, ce qui permet de conclure directement pour $G$ si le résultat est vrai sur $F$.
 
     \begin{itemize}
-      \item  Pour $F = \bot$, on a $\mathrm{Th} \nvdash \bot$ car $\mathrm{Th}$ consistante et $\mathcal{M} \not\models \bot$ par définition.
-        %QV : Si tu définis $\bot$ comme un symbole de relation, ce cas est inclus dans le suivant.
       \item Pour $F = R(u_1, \ldots, u_m)$, où les $u_i$ sont des termes à $n$ variables $x_1, \ldots, x_n$,
         on a \[
           F[t_1, \ldots, t_n] = R(\underbrace{u_1(t_1, \ldots, t_n)}_{v_1}, \ldots, \underbrace{u_m(t_1, \ldots, t_n)}_{v_m})

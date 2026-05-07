@@ -5,6 +5,7 @@
   \begin{itemize}
     \item \textsc{Dedekind} (1988) et \textsc{Peano} (1889) formalisent l'arithmétique.
       %QV : Est-ce que tu as la date ?
+      %HS : Ça se trouve, mais est-ce que c'est utile d'avoir la date exacte ?
     \item En 1900, David \textsc{Hilbert}, lors du 2ème ICM à Paris, donne un programme dont le 2nd problème est la \textit{cohérence de l'arithmétique}.
     \item En 1901, \textsc{Russel} donne son paradoxe concernant l'"ensemble" de tous les ensembles.
     \item En 1930, \textsc{Hilbert} est toujours optimiste : "On doit savoir, on saura !"
@@ -12,8 +13,8 @@
 
   La formalisation de l'arithmétique engendre deux questions :
   \begin{enumerate}
-    \item Est-ce que tout théorème est prouvable ? ($\triangleright$ complétude)
-    \item Existe-t-il un algorithme pour décider si un théorème est prouvable ? ($\triangleright$ décidabilité)
+    \item est-ce que tout théorème est prouvable ? ($\triangleright$ complétude)
+    \item existe-t-il un algorithme pour décider si un théorème est prouvable ? ($\triangleright$ décidabilité)
   \end{enumerate}
 
   Le second point est appelé "\textit{Entscheidungsproblem}", le problème de décision, en 1928.
@@ -38,7 +39,7 @@
   \begin{itemize}
     \item $\zero$ est un symbole de constante ;
     \item $\succ$ est un symbole de fonction unaire ;
-    \item $\oplus$ et $\otimes$ sont deux symboles de fonction binaires.
+    \item $\oplus$ et $\otimes$ sont deux symboles de fonctions binaires.
   \end{itemize}
 
   On verra plus tard que l'on peut ajouter une relation binaire $\le$.
@@ -98,12 +99,16 @@
     \item[SI.] \label{peano-SI}
       Pour toute formule $F$ de variables libres $x_0, \ldots, x_n$,
   \end{description}
-  \[\begin{array}{l}
-    \forall x_1 \: \cdots \: \forall x_n \: \\
+  \[
+    \forall x_1 \: \cdots \: \forall x_n \:
+    \left(
+    \begin{array}{l}
     \quad F(\zero, x_1, \ldots, x_n) \to\\
     \quad \forall x \: \left(F(x, x_1, \ldots, x_n) \to F(\succ x, x_1, \ldots, x_n)\right) \to\\
     \quad \forall x \: F(x, x_1, \ldots, x_n).
-  \end{array}\]
+  \end{array}
+    \right)
+  \]
 
   \begin{rmk}
     \begin{itemize}
@@ -115,11 +120,10 @@
     \end{itemize}
     \fitbox{
       $\forall x_1 \: \cdots \: \forall x_n \:
-      \Big(F(\zero, x_1, \ldots, x_n) \to \forall x \: \big((\forall y < x, \: F(y, x_1, \ldots, x_n)) \to F(x, x_1, \ldots, x_n)\big)
+      \Big(\forall x \: \big((\forall y < x, \: F(y, x_1, \ldots, x_n)) \to F(x, x_1, \ldots, x_n)\big)
       \to \forall x \: F(x, x_1, \ldots, x_n)
       \Big)$
     }
-    %QV : L'hypothèse $F(\zero, x_1, \ldots, x_n)$ n'est même pas utile, c'est une conséquence de l'hérédité.
     \begin{itemize}
       \item L'ensemble $\mathcal{P}$ est non-contradictoire car $\mathds{N}$ est un modèle, appelé \textit{modèle standard}.
       \item On peur remplacer le \peano{SI} par une nouvelle règle de démonstration :
@@ -161,9 +165,9 @@
         .\]
         Montrons que $T$ a un modèle.
         Par le théorème de compacité de la logique du premier ordre, il suffit de montrer que $T$ est finiment satisfiable.
-        Soit $T' \subseteq_\mathrm{fini} T$. On dispose de $n \in \mathds{N}$ tel que pour tout $k \in \mathds{N}$ tel que $\lnot(c = \repr{k}) \in T'$, $k \le n$.
-        On étend l'interprétation $\mathds{N}$ de $\mathcal{L}_0$ en une interprétation de $\mathcal{L}$ en posant $c_{\mathds{N}} = n + 1$.
-        $\mathds{N}$ est un modèle de $T'$.
+        Soit $T' \subseteq_\mathrm{fini} T$. On dispose de $n \in \mathds{N}$ tel que si $\lnot(c = \repr{k}) \in T'$, alors $k \le n$.
+        On étend l'interprétation $\mathds{N}$ de $\mathcal{L}_0$ en une interprétation de $\mathcal{L}$ en posant $c_{\mathds{N}} := n + 1$.
+        Alors, $\mathds{N}$ est un modèle de $T'$.
         Ainsi, $T'$ est satisfiable et donc $T$ aussi avec un modèle $\mathcal{M}$.
 
         Montrons que $\mathds{N}$ et $\mathcal{M}$ ne sont pas $\mathcal{L}_0$-isomorphes.
@@ -188,7 +192,7 @@
         ;\]
       \item tout élément non nul est régulier pour la multiplication : 
         \[
-        \mathcal{M} \models \forall x\: \forall y \: \forall z \: (\lnot (x = \zero) \to x \otimes y = x \otimes z \to y = z)
+        \mathcal{M} \models \forall x\: \forall y \: \forall z \: (\lnot (x = \zero) \wedge x \otimes y = x \otimes z \to y = z)
         \;;\]
       \item la formule suivante définit un ordre total sur $\mathcal{M}$ compatible avec $+$ et $\times$ :
         \[
@@ -357,18 +361,16 @@
         \item $f(0, x_1, \ldots, x_p) := g(x_1, \ldots, x_p)$ ;
         \item $f(x_0 + 1, x_1, \ldots, x_p) := h(x_0, f(x_0, \ldots, x_p), x_1, \ldots, x_p)$.
       \end{itemize}
-      %QV : Techniquement, tu ne fais pas le lien entre $f$ et la récurrence.
     \item[Composition.]
       Soient $f_1, \ldots, f_n$ des fonctions partielles de $p$ variables et $g$ une fonction partielle de $n$ variables.
       Alors, la fonction composée $g(f_1, \ldots, f_n)$ est définie en $(x_1, \ldots, x_p)$ ssi les fonctions $f_i$ le sont et $g$ est définie en $\big( f_1(x_1, \ldots, x_p), \ldots, f_n(x_1, \ldots, x_p)\big)$.
-      %QV : Techniquement, tu ne définis pas la composée.
     \item[Schéma $\mu$.]
       Soit $f(x_1, \ldots x_{p+1})$ une fonction partielle.
       Soit \[
-        g(x_1, \ldots, x_p) := \mu y.\: (f(x_1, \ldots, x_p, y) = 0)
+        g(x_1, \ldots, x_p) := \mu y.\: (f(y, x_1, \ldots, x_p) = 0)
       .\]
-      Elle est définie en $(x_1, \ldots, x_p)$ si et seulement s'il existe $y$ tel que $f(x_1, \ldots, x_p, y) = 0$ et tous les $f(x_1, \ldots, x_p, x)$ sont définies pour $x \le y$.
-      Dans ce cas, $g(x_1, \ldots, x_p)$ est le plus petit $y$ tel que $f(x_1, \ldots, x_p, y) = 0$.
+      Elle est définie en $(x_1, \ldots, x_p)$ si et seulement s'il existe $y$ tel que $f(y, x_1, \ldots, x_p) = 0$ et tous les $f(x, x_1, \ldots, x_p)$ sont définies pour $x \le y$.
+      Dans ce cas, $g(x_1, \ldots, x_p)$ est le plus petit $y$ tel que $f(y, x_1, \ldots, x_p) = 0$.
   \end{description}
 
   \begin{defn}
@@ -391,40 +393,8 @@
     \begin{itemize}
       \item Une fonction récursive primitive est totale.
       \item Une fonction récursive peut se fabriquer avec un seul schéma $\mu$ à la fin (\textit{c.f.} cours de FDI).
-      \item \textit{Rappel}.
-        Une fonction $f : \mathds{N}^p \to \mathds{N}$ totale est représentée par la formule $F(x_0, \ldots, x_p)$ de $\mathcal{L}_0$ si pour tout $p$-uplet d'entiers $(n_1, \ldots, n_p)$ on a :
-        \[
-        \mathcal{P}_0 \vdash \forall y \: \big( F(y, \repr {n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{f(n_1, \ldots, n_p)} \big)
-        .\] 
-      \item \textit{Rappel}.
-        Si $\mathcal{M} \models \mathcal{P}_0$ alors l'ensemble de $|\mathcal{M}|$ constitué de l'interprétation des termes standards est une sous-interprétation de $\mathcal{M}$ qui en est un segment initial et qui est isomorphe à $\mathds{N}$.
-      \item \textit{Rappel}.
-        Une sous-interprétation $\mathcal{N}$ est un segment initial de~$\mathcal{M}$ si 
-        \begin{itemize}
-          \item $a \in \mathcal{N}$ et $b \in \mathcal{M} \setminus \mathcal{N}$ alors $b \ge a$ ;
-          \item $a \in \mathcal{N}$ et $c \le a$ alors $c \in \mathcal{N}$.
-        \end{itemize}
-        %QV : Vu la longueur de ton cours, je ne pense pas que ces rappels soient nécessaires.
     \end{itemize}
   \end{rmk}
-
-  \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-      \filldraw[draw=deepblue,fill=NavyBlue!5] (0, 0) rectangle (5, 1.5);
-      \node[deepblue] at (4.6, 1.2) {$\mathcal{M}$};
-      \filldraw[draw=deepgreen,fill=ForestGreen!5] (0.1, 0.1) rectangle (2.5, 1.4);
-      \node[deepgreen] at (0.5, 1.10) {$\mathcal{N}$};
-      \node[fill,deepblue,circle,inner sep=1pt] (C) at (1, 0.35) {};
-      \node[deepblue] at (1.5, 0.35) {$\le$};
-      \node[deepblue] at (2.5, 0.35) {$\le$};
-      \node[fill,deepblue,circle,inner sep=1pt] (A) at (2, 0.35) {};
-      \node[fill,deepblue,circle,inner sep=1pt] (B) at (3, 0.35) {};
-      \node[deepblue,above=3pt of A] {$a$};
-      \node[deepblue,above=3pt of B] {$b$};
-      \node[deepblue,above=3pt of C] {$c$};
-    \end{tikzpicture}
-  \end{figure}
 
   \begin{thm}
     Toute fonction récursive totale est représentable.
@@ -439,13 +409,15 @@
   \begin{prv}
     Soient $f_1(x_1, \ldots, x_p), \ldots, f_n(x_1, \ldots, x_p)$ et $g(x_1, \ldots, x_n)$ des fonctions représentées par $F_1(x_0, \ldots, x_p), \ldots, F_n(x_0, \ldots, x_p)$ et $G(x_0, \ldots, G_n)$.
     On va montrer que $h = g(f_1, \ldots, f_n)$ est représentée par 
-    \[
-    H(x_0, \ldots, x_p) := \exists y_0\: \cdots \: \exists y_n \: \big(
+
+    \begin{center}
+      \footnotesize
+      $\displaystyle H(x_0, \ldots, x_p) := \exists y_0\: \cdots \: \exists y_n \: \big(
       G(x_0, y_1, \ldots, y_n) \land \bigwedge_{1 \le i \le  n} F_i(y_i, x_1, \ldots, x_p)
-    \big)
-    %QV : La formule déborde dans la marge.
-    .\]
-    Pour tous entiers $n_1, \ldots, n_{\max(p, n)}$ :
+      \big)$
+    \end{center}
+
+    En effet, pour tous entiers $n_1, \ldots, n_{\max(p, n)}$ :
     \begin{itemize}
       \item $\mathcal{P}_0 \vdash \forall y \: \big(F_i(y_1, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{f_i(n_1, \ldots, n_p)}\big)$ ;
       \item $\mathcal{P}_0 \vdash \forall y \: \big( G(y_1, \repr{n_1}, \ldots, \repr{n_n}) \leftrightarrow y = \repr{g(n_1, \ldots, n_n)}\big)$.
@@ -453,7 +425,7 @@
     Dans tout modèle $\mathcal{M}$ de $\mathcal{P}_0$, pour tout $y \in |\mathcal{M}|$, et tous $n_1, \ldots, n_p \in \mathds{N}$, $H(y, n_1, \ldots, n_p)$ est vraie ssi il existe $y_1, \ldots, y_n$ dans $|\mathcal{M}|$ tels que pour tout $i$, $F_i(y_i, x_1, \ldots, x_p)$ est vrai et $G(y, y_1, \ldots, y_n)$ est vrai.
     Donc, avec les hypothèses précédents, on a $H(y, n_1, \ldots, n_p)$ ssi il existe $y_1, \ldots, y_n$ dans $|\mathcal{M}|$ tels que pour tout $i$, $y_i = f_i(n_1, \ldots, n_p)$, et $y = g(y_1, \ldots, y_p)$, i.e. ssi \[
     y = g(f_1(n_1, \ldots, n_p), \ldots, f_n(n_1, \ldots, n_p))
-    \]  ou encore ssi $y = h(n_1,\ldots,n_p)$.
+    \] ssi $y = h(n_1,\ldots,n_p)$.
     On conclut \[
       \mathcal{P}_0 \vdash \forall y\: \big(H(y, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{h(n_1, \ldots, n_p)}\big)
     .\]
@@ -466,17 +438,19 @@
     Soit $g : \mathds{N}^{p+1} \to \mathds{N}$ une fonction représentable totale, et soit $f : \mathds{N}^p \to \mathds{N}$ définie par \[
       f(x_1, \ldots, x_p) := \mu x_0.\:\big( g(x_0, \ldots, x_p) = \repr 0 \big)
     .\]
-  %QV : Dans la définition, c'est la dernière variable que tu minimises.
     Supposons $f$ totale et montrons qu'elle est représentable.
     Soit $G (y, x_0, \ldots, x_p)$ qui représente $g$.
     Alors, pour tous $n_1, \ldots, n_p$ on a 
     \[
       \mathcal{P}_0 \vdash \forall y \: \big(G(y, \repr{n_1}, \ldots, \repr{n_p}) \leftrightarrow y = \repr{g(n_1, \ldots, n_p)}\big)
     .\]
-    Considérons la formule \[
-    F(y, x_1, \ldots, x_p) := G(0, y, x_1, \ldots, x_p)  \land \forall z < y, \lnot G(0, z, x_1, \ldots, x_p)
-    %QV : La formule dépasse dans la marge.
-    ,\]
+    Considérons la formule
+
+    \begin{center}
+      \small
+      $F(y, x_1, \ldots, x_p) := G(0, y, x_1, \ldots, x_p)  \land \forall z < y, \lnot G(0, z, x_1, \ldots, x_p)$,
+    \end{center}
+
     où l'on note $\forall z < y, \: H$ pour  $\forall z \: ((\exists h \: y = \succ (z \oplus h)) \to H)$.
     Montrons que $F$ représente $f$.
     Soit $\mathcal{M}$ un modèle de $\mathcal{P}_0$.
@@ -544,11 +518,13 @@
    Cette dernière formule représente aussi $\beta$ mais implique aussi que $x_0$ est un entier standard.
    %QV : Ceci mérite une justification.
    %QV : Il faut aussi expliquer pourquoi $\beta$ est primitive récursive.
+   %HS : Je suis d'accord, c'est une histoire de "schéma µ borné" qui peut se faire en primitif récursif
  \end{prv}
 
 
- \vspace{1cm}
-  On reprend la preuve du lemme~\ref{lem:repr-rec}.
+ On reprend la preuve du lemme~\ref{lem:repr-rec}.
+
+ \vspace{7pt}
  \begin{prv}
    Soient $f, g, h$ telles que 
     \begin{itemize}
@@ -567,7 +543,7 @@
    \end{itemize}
    c'est-à-dire ssi la formule
    \begin{align*}
-     \exists a \: \exists b \: \big[ &\\
+     F := \quad \exists a \: \exists b \: \big[ &\\
     & (\exists z_0 \: B'(z_0, \repr{0}, a, b) \land G(z_0, x_1, \ldots, x_p)) \\
        {}\land {} & \forall i < x_0, \: \exists z \: \exists z' \: \left(\begin{array}{rl}
       &B'(z, i, a, b)\\
@@ -578,10 +554,7 @@
               & \hspace{-1cm}\big]
    \end{align*}
    est vraie.
-   Montrons que $F$ représente $f$.
-   %QV : Est-ce que ce n'est pas ce que tu viens de faire avec l'équivalence précédente ?
-
-   Soit $\mathcal{M} \models \mathcal{P}_0$, et $n_0, \ldots, n_p$ des entiers et $c \in |\mathcal{M}|$.
+   En effet, soient $\mathcal{M} \models \mathcal{P}_0$, et $n_0, \ldots, n_p$ des entiers et $c \in |\mathcal{M}|$.
    \begin{itemize}
      \item Si $c$ interprète $\repr{f(n_0, \ldots, n_p)}$ alors en choisissant $a$ et $b$ avec le lemme précédent sur la fonction $\beta$, on a bien  $F(c, n_0, \ldots, n_p)$.
      \item Réciproquement, si $\mathcal{M} \models F(d, \repr{n_0}, \ldots, \repr{n_p})$ alors il existe $a, b, z_0$ tels que  $B'(z_0, \repr{0}, a, b)$ et  $G(z_0, n_1, \ldots, n_p)$, et donc $z_0 = g(n_1, \ldots, n_p)$.
@@ -750,16 +723,15 @@
    Les ensembles suivants sont récursifs primitifs :
    \footnotesize
    \begin{itemize}
-     \item $\theta_0 := \{(\sharp t, n)  \mid \text{$t$ est un terme et $x_n$ n'a pas d'occurrence dans $t$}\}$
-     \item $\theta_1 := \{(\sharp t, n)  \mid \text{$t$ est un terme et $x_n$ a une occurrence dans $t$}\}$
-     \item $\phi_0 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ n'a pas d'occurrence dans $F$}\} $
-     \item $\phi_1 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ n'a pas d'occurrence libre dans $F$}\} $
-     \item $\phi_2 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ n'a pas d'occurrence liée dans $F$}\} $
-     \item $\phi_3 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ a une occurrence libre dans $F$}\} $
-     \item $\phi_4 := \{(\sharp F, n)  \mid \text{$F$ est une formule et $x_n$ a une occurrence liée dans $F$}\} $
-     \item $\phi_5 := \{\sharp F  \mid \text{ $F$ est une formule close }\} $
+     \item $\theta_0 := \mleft\{\,(\sharp t, n) \;\middle|\; \begin{array}{l} \text{$t$ est un terme et $x_n$ n'a}\\ \text{pas d'occurrence dans $t$} \end{array} \,\mright\}$ ;
+     \item $\theta_1 := \mleft\{\,(\sharp t, n) \;\middle|\; \begin{array}{l} \text{$t$ est un terme et $x_n$ a}\\ \text{une occurrence dans $t$} \end{array} \,\mright\}$ ;
+     \item $\phi_0 := \mleft\{\,(\sharp F, n) \;\middle|\; \begin{array}{l} \text{$F$ est une formule et $x_n$ n'a}\\ \text{pas d'occurrence dans $F$} \end{array} \,\mright\}$ ;
+     \item $\phi_1 := \mleft\{\,(\sharp F, n) \;\middle|\; \begin{array}{l} \text{$F$ est une formule et $x_n$ n'a}\\ \text{pas d'occurrence libre dans $F$} \end{array} \,\mright\}$ ;
+     \item $\phi_2 := \mleft\{\,(\sharp F, n) \;\middle|\; \begin{array}{l} \text{$F$ est une formule et $x_n$ n'a}\\ \text{pas d'occurrence liée dans $F$} \end{array} \,\mright\}$ ;
+     \item $\phi_3 := \mleft\{\,(\sharp F, n) \;\middle|\; \begin{array}{l} \text{$F$ est une formule et $x_n$ a}\\ \text{une occurrence libre dans $F$} \end{array} \,\mright\}$ ;
+     \item $\phi_4 := \mleft\{\,(\sharp F, n) \;\middle|\; \begin{array}{l} \text{$F$ est une formule et $x_n$ a}\\ \text{une occurrence liée dans $F$} \end{array} \,\mright\}$ ;
+     \item $\phi_5 := \mleft\{\,\sharp F \;\middle|\; \begin{array}{l} \text{$F$ est une formule close} \end{array} \,\mright\}$.
    \end{itemize}
-   %QV : Il y a quelques lignes qui dépassent.
  \end{lem}
  \begin{prv}
    On montre le résultat pour $\theta_0$ (le reste en exercice).
@@ -787,9 +759,14 @@
          \item si $\beta_3^1(x) = n+1$ alors  $\mathrm{Subst_t}(n, y, x) := y$,
          \item sinon $\mathrm{Subst_t}(n, y, x) := x$ ;
        \end{itemize}
-     \item si $\beta_3^3(x) = 1$ alors $\mathrm{Subst_t}(n, y, x) := \alpha_3(\mathrm{Subst_t}(n, y, \beta_3^1(x)), 0, 1)$ ;
-     \item sinon\\ {\small $\mathrm{Subst_t}(n, y, x) := \alpha_3(\mathrm{Subst_t}(n, y, \beta_3^1(x)), \mathrm{Subst_t}(n, y, \beta_3^2(x)), \beta_3^3(x))$}~;
-       %QV : Les deux équations précédentes débordent.
+     \item si $\beta_3^3(x) = 1$ alors \[
+     \mathrm{Subst_t}(n, y, x) := \alpha_3(\mathrm{Subst_t}(n, y, \beta_3^1(x)), 0, 1) \;;
+     \] 
+     \item sinon 
+       \begin{center}
+         \footnotesize
+         $\mathrm{Subst_t}(n, y, x) := \alpha_3(\mathrm{Subst_t}(n, y, \beta_3^1(x)), \mathrm{Subst_t}(n, y, \beta_3^2(x)), \beta_3^3(x))$ ;
+       \end{center}
    \end{itemize}
 
    Puis, on définit $\mathrm{Subst_f}$ par, pour $(n, y, x)$,
@@ -803,7 +780,7 @@
          \item si $\beta_3^2(x) = n$, $x_n$ est liée dans $F$ donc $\mathrm{Subst_f}(n, y, x) := x$ ;
          \item sinon $\mathrm{Subst_f}(n, y, x) := \alpha_3(\mathrm{Subst_f}(n, y, \beta_3^1(x)), \beta_3^2(x), \beta_3^3(x))$ ;
        \end{itemize}
-     \item sinon $\mathrm{Subst_f}(n, y, x) := x$ ;
+     \item sinon $\mathrm{Subst_f}(n, y, x) := x$.
    \end{itemize}
  \end{prv}
 
@@ -1129,10 +1106,6 @@
 
  \begin{rmk}
    Si $\mathds{N} \models T$, ce théorème implique le 1er théorème d'incomplétude car $\mathds{N} \not\models \lnot \mathrm{Coh}(T)$, donc $T \not\models \lnot \mathrm{Coh}(T)$ et donc $T$ est incomplète.
-
-   Dans le cas général, ce n'est pas vrai : $T \cup \{\lnot \mathrm{Coh}(T)\}$ est une théorie consistante.
-   %QV : J'ai du mal à comprendre ce qui n'est pas vrai, vu que tu répètes le théorème.
-   Par exemple, $\mathcal{P} \cup \{\lnot \mathrm{Coh}(\mathcal{P})\} $ est consistante mais $\mathds{N}$ n'en est pas un modèle.
  \end{rmk}
 
  \begin{defn}
@@ -1197,10 +1170,13 @@
  \end{lem}
  \begin{prv}
    Par induction sur $F(x_1, \ldots, x_p) \in \Sigma$.
-   %QV : C'est l'un des points cruciaux de la preuve...
+   Les cas intéressants sont les quantificateurs. Pour "$\exists$", on applique que $|\mathcal{N}| \subseteq |\mathcal{M}|$.
+   Pour le "$\forall$" \textit{borné}, on utilise la finalité de l'extension $\mathcal{M}$ de $\mathcal{N}$.
  \end{prv}
 
  On termine la preuve du point~3.
+ \vspace{7pt}
+
  \begin{prv}
    On pose \[
    \mathcal{P}_1 := \mathcal{P}_0 \cup \mleft\{\,F \to \exists x \: F_F(x_1, \sharp F) \;\middle|\; F \text{ formule close de } \Sigma\,\mright\}
@@ -1238,9 +1214,10 @@
      \item Prouvons que $T \vdash \mathrm{Coh}(T) \to \lnot \varepsilon(\repr a)$.
        Il suffit de montrer que $\mathcal{P} \vdash \varepsilon(\repr{a}) \to \lnot \mathrm{Coh}(T)$.
        Soit $T_1 := \mathcal{P} \cup \{\varepsilon(\repr{a})\}$.
-       Alors d'après ($\star$), $T_1 \vdash \exists v_1 \: F_T(v_1, \repr b)$ et $b = \sharp (\lnot \varepsilon(\repr{a}))$
-       On a donc une preuve de $\varepsilon(\repr{a})$ et une preuve de  $\lnot \varepsilon(\repr a)$, donc de $\lnot \mathrm{Coh}(T)$.
+       Alors d'après ($\star$), $T_1 \vdash \exists v_1 \: F_T(v_1, \repr b)$ et $b = \sharp (\lnot \varepsilon(\repr{a}))$.
+       On a donc une preuve de $\varepsilon(\repr{a})$ et une preuve de  $\lnot \varepsilon(\repr a)$, donc de $\lnot \mathrm{Coh}(T)$ en donnant (l'encodage de) ces deux preuves.
        %QV : Comment obtiens-tu cette preuve ? Où utilises-tu la forme particulière de Coh ?
+       %HS : Problème d'entiers non-standards ? J'ai corrigé pour la remarque sur Coh
      \item On va montrer que $T \vdash \lnot \varepsilon(\repr{a})$ mène à un paradoxe.
        Si c'est vrai, soit $C$ le numéro d'une preuve de $\lnot \varepsilon(\repr{a})$ dans  $T$.
        Alors, $\mathcal{P}_0 \vdash F_T(\repr{c}, \repr{b})$.
