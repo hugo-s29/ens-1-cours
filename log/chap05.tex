@@ -90,8 +90,8 @@
     Exemples de corps réels clos : $\mathds{R}$ les réels, $\bar{\mathds{Q}} \cap \mathds{R}$ les nombres réels algébriquement clos.
 
     Qu'en est-il de $\mathds{C}$ ?
-    Si on a $i \ge 0$ et on a $1 \le 2$ alors $i \le 2 i$ et par multiplication par $i$ on a $-1 \le -2$, absurde !
-    Le même procédé fonctionne si l'on suppose $i\le 0$.
+    Si on a $\mathrm{i} \ge 0$ et on a $1 \le 2$ alors $\mathrm{i} \le 2 \mathrm{i}$ et par multiplication par $\mathrm{i}$ on a $-1 \le -2$, absurde !
+    Le même procédé fonctionne si l'on suppose $\mathrm{i}\le 0$.
     Il n'y a pas de manière d'ordonner $\mathds{C}$ de telle sorte à ce qu'il soit un corps réel clos.
   \end{exm}
 
@@ -139,7 +139,7 @@
     Soit $F$ une formule close de $\mathcal{L}_\mathrm{co}$.
     Montrons que $T_\mathrm{CRC} \vdash F$ ou $T_\mathrm{CRC} \vdash \lnot F$.
     Il existe une formule sans quantificateurs $G$ telle que $T_\mathrm{CRC} \vdash F \leftrightarrow G$ et $G$ n'a pas de variable.
-    Ainsi $G$ est équivalent à une conjonction de disjonction de formules équivalentes à 
+    Ainsi $G$ est équivalente à une conjonction de disjonction de formules équivalentes à 
     \[
     \repr n > \repr m \text{ ou } \repr n = \repr m
     .\]
@@ -164,7 +164,7 @@
   Idée de la méthode :
   \begin{itemize}
     \item On part d'un polynôme, par exemple $a x^2 + b x + 1$.
-    \item On calcule des "quantités importantes" (des polynômes de degré $0$ en $x$), ici $a$ et $a^2 - 4a$.
+    \item On calcule des "quantités importantes" $\mathrm{BC}(S)$ (des polynômes de degré $0$ en $x$), ici $a$ et $a^2 - 4a$.
     \item On trouve des "conditions de signe" qui permettent de satisfaire la formule, ici $a \neq 0 \land a^2 - 4a \ge 0$.
   \end{itemize}
 
@@ -180,7 +180,7 @@
       \item \textit{reste modifié} $\mathrm{MR}(P, Q)$ :\\
         si $P = a_n X^n + \cdots + a_0$ et $Q = b_m X^m + \cdots + b_0$ où
         \[ n = \deg P \ge m = \deg Q\]
-        alors $\mathrm{MR}(P, Q)$ est l'unique polynôme de $\mathds{Z}[\bar{Y}][X]$ de degré $r < m$ tel qu'il existe $L \in \mathds{Z}[\bar{Y}][X]$ et 
+        alors $\mathrm{MR}(P, Q)$ est l'unique polynôme $R$ de $\mathds{Z}[\bar{Y}][X]$ de degré $r < m$ tel qu'il existe $L \in \mathds{Z}[\bar{Y}][X]$ et 
         \[
           (b_m)^{n - m + 1} \times P = Q \times L + R
         .\]
@@ -198,7 +198,7 @@
   \subsection{Énoncé comme lemme clé.}
 
   \begin{lem}[Informel]
-    À partir d'un ensemble fini de polynômes $S$, on obtient en temps fini un ensemble fini de polynômes $\mathrm{BC}(S)$ de degré $0$ en appliquant les quatre opérations $\mathrm{D}$, $\mathrm{E}$, $\mathrm{O}$ et $\mathrm{MR}$.
+    À partir d'un ensemble fini de polynômes $S$, on obtient en temps fini un ensemble fini de polynômes $\mathrm{BC}(S)$ de degré $0$ en $X$ en appliquant les quatre opérations $\mathrm{D}$, $\mathrm{E}$, $\mathrm{O}$ et $\mathrm{MR}$.
     \footnote{I {\color{nicered}$\heartsuit$} le lemme de König.}
   \end{lem}
 
@@ -219,7 +219,7 @@
       \item on ne conserve que les polynômes de degré $0$.
     \end{itemize}
     Dans l'exemple on obtient (après suppression des termes inutiles pour les comparaisons à $0$), \[
-    \mathrm{BC}S  = \{a, 4a^2 - a^3, a^2 - 2a\}
+    \mathrm{BC}(S)  = \{a, 4a^2 - a^3, a^2 - 2a\}
     .\]
 
     On a, en théorie, $27$ conditions de signe possibles ($3^{|\mathrm{BC}(S)|}$) :
@@ -244,7 +244,10 @@
     \end{array}
     .\] 
   \end{exm}
+
   %QV : Tu ne dis jamais ce que tu fais de tes polynômes de $\mathds{Z}[\bar{Y}]$. Notamment, je ne suis pas sûr de savoir comment construire le tableau.
+  %HS : Ce sont les polynômes qui servent à faire les conditions de signe, ces conditions permettent d'en déduire les autres lignes
+  %HS : J'ai rajouté un BC(S) dans "idée de la méthode" c.f. avant et je pense qu'avec l'exemple c'est relativement suffisant comme explication
 
   \section{Corps algébriquement clos.}
 
@@ -368,6 +371,7 @@
     \end{array}
     .\]
   %QV : Comme pour les corps réels clos, je ne sais pas d'où ce tableau vient.
+    %HS : Même réponse que pour les corps réels clos :)
 
     Ainsi, pour $a\neq 0$, $4a^2-a^3 \neq 0$, $a^2 - 2a \neq 0$ alors on a \[
       \exists x \: (ax^2 + ax + 1 = 0 \land ax + 1 \neq 0)
@@ -387,8 +391,13 @@
   \end{exo}
 
   \begin{rmk}
-    En 2010, une preuve \st{\textsf{Coq}} \textsf{Rocq} de l'élimination des quantificateurs de cette théorie a été publiée par Cyril Cohen et Assia Mahboubi.
+    En 2010, une preuve \st{\textsf{Coq}} \textsf{Rocq} de l'élimination des quantificateurs de cette théorie a été publiée par Cyril Cohen et Assia Mahboubi :
+    \begin{center}
+      \textit{A formal quantifier elimination for algebraically closed fields}.
+    \end{center}
     %QV : C'était pas pour les corps réels clos ?
+    %HS : J'ai l'impression qu'ils ont travaillé sur les deux (j'ai vu un papier de 2011 en regardant),
+    %HS : même si là on parle bien de la formalisation des corps algébriquement clos de 2010 (c.f. référence que j'ai ajouté).
   \end{rmk}
 
   \subsection{Applications aux mathématiques.}
@@ -410,11 +419,13 @@
     Montrons que $T$ a un modèle.
     Pour cela, on montre que $T$ est finiment satisfiable.
     Soit $T' \subseteq_\mathrm{fini} T$.
-    Soit $n$ le plus grand entier tel que
+    Soit $n$ le plus grand entier (s'il existe) tel que
     \[
       (\underbrace{1 + 1 + \cdots + 1}_n \neq 0) \in T'
     .\]
+    Si $T'$ ne contient aucune de ces formules, poser $n := 1$.
   %QV : $n$ est mal défini s'il n'y a pas de telle formule dans $T'$.
+    % HS : Fixé normalement
     Soit $p > n$ un nombre premier tel que $\varphi$ admet comme modèle un corps algébriquement clos $\mathds{k}$ de caractéristique $p$ (qui existe par hypothèse).
     Alors $\mathds{k} \models \varphi$,  et
     \[
@@ -456,7 +467,7 @@
   M(n, d) := \{1, x_1, x_2, x_1 x_2, \ldots, x_1^d, x_1^{d-1} x_2, \ldots\} 
   .\]
 
-  On introduit la formule suivante, qu'on note $\varphi_{n,d}$.
+  On introduit la formule suivante, qu'on note $\varphi_{n,d}$ :
   \begin{gather*}
   \forall (a_{m,i})_{m \in M(n,d), i \in \llbracket 1,n\rrbracket} \\
     \fitbox{$\displaystyle\left(\forall x_1 \ldots x_n \forall y_1 \ldots y_n  \: \bigwedge_{i=1}^n \sum_{m \in M(n,d)} a_{m,i} m = \sum_{m \in M(n,d)} a_{m,i} m[x_j := y_j]_{j \in \llbracket 1,n \rrbracket} \to \bigwedge_{i=1}^n x_i = y_i \right)$}\\
@@ -481,15 +492,17 @@
     C'est un polynôme.
   \end{defn}
 
-  \begin{prop}
+  \begin{rmk}
     Si $P$ est injectif sur $\mathds{C}^n$ alors $P$ est localement injectif.
-    Et donc, pour tout $x$ (théorème des fonctions implicites), $\operatorname{Jac}(P)$ n'est jamais nul, d'où le fait que $\operatorname{Jac} P$ est un polynôme constant non nul.
-  \end{prop}
+    Et donc, pour tout $x$ (théorème des fonctions implicites), $\operatorname{Jac} P$ n'est jamais nul, d'où le fait que $\operatorname{Jac} P$ est un polynôme constant non nul.
+  \end{rmk}
   %QV : C'est plus une preuve qu'un énoncé, donc ça pourrait être une remarque.
+  % HS : Oui
 
   \begin{rmk}[Conjecture (problème 16 de la liste de Steve Smale)]
-    En caractéristique $0$, $\operatorname{Jac} P$ non nul implique  $P$ injectif.
+    En caractéristique $0$, $\operatorname{Jac} P$ ne s'annule pas implique  $P$ injectif.
     %QV : Je ne suis pas convaincu par cette utilisation de « non nul », qui techniquement signifie que $\operatorname{Jac} P$ n'est pas le polynôme nul, alors que j'ai l'impression que tu l'utilises comme $\operatorname{Jac} P$ ne s'annule pas.
+    %HS : dans des notes de cours précédentes, il y avait écrit "ne s'annule jamais" donc oui, on ne doit s'annuler en aucun point
   \end{rmk}
 
   \begin{rmk}
@@ -517,8 +530,9 @@
           x &\longmapsto P(x,y) := (ax + by +c, dx + ey + f)
         .\end{align*}
         On a $\operatorname{Jac} P = \begin{vmatrix} a & b \\ d & e \end{vmatrix} = ae - bd$.
-        On a $\operatorname{Jac} P$ non nul implique  $ae - bd \neq 0$ ce qui implique que le système 
+        On a $\operatorname{Jac} P$ non nul implique  $ae - bd \neq 0$ et donc le système 
         %QV : Techniquement « ce qui » fait référence à l'équivalence précédente, qui d'elle-même n'implique pas que le système est inversible.
+        %HS : Chipotage ! Mais j'ai retiré le "ce qui" problématique, j'espère que c'est mieux
         \[
         \begin{cases}
           ax + bj + c = 0\\
@@ -535,4 +549,5 @@
   \end{itemize}
 
   %QV : Quel est le lien avec le reste du cours de logique ?
+  %HS : Aucune idée, il faudrait demander à Natacha
 \end{document}

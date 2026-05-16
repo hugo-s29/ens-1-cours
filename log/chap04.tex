@@ -18,6 +18,7 @@
   vérifie $a \in a \iff a \not\in a$, \textit{\textbf{paradoxe}}.
   Pour éviter ce paradoxe, on choisit donc de ne pas faire de $\mathcal{U}$ un ensemble.
   %QV : Ça ne ferait pas vraiment sens, $\mathcal{U}$ est l'ensembles des éléments du modèle, pas un élément du modèle lui-même. Autrement dit, dans $x \in \mathcal{U}$, le $\in$ est l'appartenance habituelle, pas le symbole de relation du langage.
+  %HS : Je suis d'accord, mais je pense que ça va, ce n'est que le texte introductif.
 
   \section{Les axiomes de la théorie de Zermelo-Fraenkel.}
 
@@ -70,19 +71,18 @@
 
   \phantomsection
   \begin{description}
-    \item[ZF\,3.\label{ZF3}]
-      %QV : ZF3 avant ZF2 ?
-      \textit{Axiome des parties} : l'ensemble des parties $\wp(a)$ existe pour tout ensemble $a$
+    \item[ZF\,2.\label{ZF2}] \textit{Axiome de la réunion} : l'ensemble $y = \bigcup_{z \in x} z$ existe 
       \[
-      \forall a \: \exists b \: \forall t \: (t \in b \leftrightarrow t \subseteq a)
+      \forall x \: \exists y \: \forall t\: (t \in y \leftrightarrow\exists z (t \in z \land z \in x))
       .\]
   \end{description}
 
   \phantomsection
   \begin{description}
-    \item[ZF\,2.\label{ZF2}] \textit{Axiome de la réunion} : l'ensemble $y = \bigcup_{z \in x} z$ existe 
+    \item[ZF\,3.\label{ZF3}]
+      \textit{Axiome des parties} : l'ensemble des parties $\wp(a)$ existe pour tout ensemble $a$
       \[
-      \forall x \: \exists y \: \forall t\: (t \in y \leftrightarrow\exists z (t \in z \land z \in x))
+      \forall a \: \exists b \: \forall t \: (t \in b \leftrightarrow t \subseteq a)
       .\]
   \end{description}
 
@@ -95,9 +95,12 @@
   \begin{description}
     \item[ZF\,4'.\label{ZF4'}]
       %QV : ZF4' avant ZF4 est aussi un peu bizarre.
+      %HS : Oui, mais ZF4 est plus simple à comprendre 
       \textit{Schéma de compréhension} :
-      pour toute formule $\varphi(y, v_1, \ldots, v_n)$ et tous ensembles $v_1, \ldots, v_{n+1}$, on a l'ensemble $x = \mleft\{\,y \in v_{n+1} \;\middle|\; \varphi(y, v_1, \ldots, v_n)\,\mright\}$
+      pour tout $(n+1)$-uplet d'ensembles $(v_1, \ldots, v_{n+1})$, et toute formule de la forme $\varphi(y, v_1, \ldots, v_n)$, on a l'ensemble
+      $x = \mleft\{\,y \in v_{n+1} \;\middle|\; \varphi(y, v_1, \ldots, v_n)\,\mright\}$
       %QV : Les deux premières lignes débordent, mais je n'ai pas le courage de réparer.
+      %HS : C'est réparé :)
       \[
       \forall v_1\: \ldots\: \forall v_{n+1} \: \exists x \: \forall y \: \big(y \in x \leftrightarrow (y \in v_{n+1} \land \varphi(y, v_1, \ldots, v_n))\big)
       .\] 
@@ -107,7 +110,7 @@
   \begin{rmk}
     Peut-on faire le paradoxe de Russel ?
     On ne peut pas faire $a := \{z \in \mathcal{U}  \mid z \not\in z \}$ car $\mathcal{U}$ n'est pas un ensemble !
-    Et, on ne peut pas avoir de paradoxe avec $b := \{z \in E  \mid z \not\in z\}$ grâce à l'ajout de la condition $z \in E$.
+    Et, on ne peut pas avoir de paradoxe avec $b := \{z \in E  \mid z \not\in z\}$ grâce à l'ajout de la condition "$z \in E$".
   \end{rmk}
 
   \begin{defn}
@@ -208,9 +211,13 @@
 
   \begin{defn}
     Une \textit{fonction} (sous-entendue \textit{totale}) d'un ensemble $a$ dans un ensemble $b$ est un sous-ensemble de $a \times b$ qui vérifie la propriété
+    %HS : Rien n'empêche que l'ensemble vide ne soit pas dans f par exemple, la condition f \subseteq a \times b m'est justifiée
+    %HS : On peut dire qu'on ignore les éléments qui sont pas (x, y) mais c'est bof (et tu perds l'extentionalité au passage)
     \[
     \varphi(f, a, b) := 
     \begin{pmatrix} 
+      f \subseteq a \times b\\
+      \land\\
       \forall x \: \forall  y \: \forall y' \: \big((x, y )\in f \land (x, y') \in f  \to y = y'\big)\\
       \land\\
       \forall x \: \big(x \in a \to \exists y \: \big(y \in b \land (x,y) \in f\big)\big)
@@ -222,11 +229,19 @@
     Une \textit{fonction} \textit{partielle} d'un ensemble $a$ dans un ensemble $b$ est un sous-ensemble de $a \times b$ qui vérifie la propriété
     \[
     \varphi(f, a, b) := 
-      \forall x \: \forall  y \: \forall y' \: \big((x, y )\in f \land (x, y') \in f  \to y = y'\big).
-    \]
+    \begin{pmatrix} 
+      f \subseteq a \times b\\
+      \land\\
+      \forall x \: \forall  y \: \forall y' \: \big((x, y )\in f \land (x, y') \in f  \to y = y'\big)\\
+    \end{pmatrix}
+    .\]
 
     On note $b^a$ la collection des fonctions partielles de $a$ dans $b$.
   \end{defn}
+
+  \begin{nota}
+    Pour $f \subseteq a \times b$ une fonction et $x \in a$, on note $f(x)$ l'unique élément $y \in b$ tel que $(x, y) \in f$.
+  \end{nota}
 
   \begin{prop}
     La collection $b^a$ est un ensemble, \textit{i.e.} si $a$ et $b$ sont dans $\mathcal{U}$ alors $b^a$ aussi.
@@ -237,7 +252,7 @@
 
   \begin{nota}[Réunion indexée]
     Soit $a$ une famille d'ensemble indexée par l'ensemble $I$, \textit{i.e.} une fonction de domaine $I$.
-    Pour $i \in I$, on note $a_i$, ou $a(i)$, pour l'unique objet $y$ tel que $(i, y) \in a$.
+    Pour $i \in I$, on note $a_i$ au lieu de $a(i)$.
   \end{nota}
 
   \begin{prop}
@@ -269,7 +284,7 @@
   \end{prv}
 
   \begin{prop}
-    Si $I$ est un ensemble et $a$ est une fonction de domaine $i$ alors $\prod_{i \in I} a_i $ est un ensemble.
+    Si $I$ est un ensemble et $a$ est une fonction de domaine $I$ alors $\prod_{i \in I} a_i $ est un ensemble.
   \end{prop}
   \begin{prv}
     La collection $\prod_{i \in I} a_i$ est l'ensemble des fonctions de $I$ dans $\bigcup_{i \in  I} a_i$ telles que $f(i) \in a_i$ pour tout $i$.
@@ -293,7 +308,7 @@
     \item \quad \quad $\vdots$
   \end{itemize}
 
-  Ainsi, on a $n  =\{0, 1, \ldots, n-1\}$.
+  Ainsi, on a $n  =\{0, 1, \ldots, n-1\}$. C'est la représentation des entiers de von Neumann.
 
   \begin{rmk}
     Si on retire $\emptyset \in x$, on peut avoir $x = \emptyset$ qui satisfait la version modifiée de \zf 5.
@@ -305,6 +320,7 @@
   \begin{rmk}
     Les français sont les seuls à considérer que l'axiome de bonne fondation ne fait pas partie de la théorie de ZF.
     %QV : Wat?
+    %HS : Malheureusement c'est vrai parfois...
   \end{rmk}
 
   \section{Ordinaux et induction transfinie.}
@@ -387,6 +403,7 @@
   \begin{exm}
     Les entiers de Von Neumann sont des ordinaux.
     %QV : Ceci est la seule occurrence de « Von Neuman », donc à moins de déjà savoir de quoi tu parles, on ne peut pas comprendre.
+    %HS : Fixed
   \end{exm}
 
   \begin{prop}
@@ -397,7 +414,7 @@
       \item $\alpha \not \in \alpha$ ;
       \item si $x \in \alpha$ alors $x = \{y \in \alpha  \mid y < x\}$.
       \item si $x \in \alpha$ alors $x$ est un ordinal (on a l'abus de notation $x \in \mathcal{O}$) ;
-      \item $\beta \subset \alpha$ ssi $\beta = \alpha$ ou  $\beta \in \alpha$ ;
+      \item $\beta \subseteq \alpha$ ssi $\beta = \alpha$ ou  $\beta \in \alpha$ ;
       \item $x = \alpha \cup \{\alpha\}$ est un ordinal noté $\alpha + 1$.
     \end{enumerate}
   \end{prop}
@@ -410,6 +427,7 @@
         Si $\beta \neq \emptyset$ alors il contient au moins un élément $\gamma$ d'où $\gamma < \beta$ et $\gamma \in \alpha$ (par transitivité), \textit{absurde} car $\beta$ est minimal.
       \item Le reste sera vu en TD ou en exercice.
         %QV : Oh, come on... Aussi, TD = exercice, non ?
+        %HS : ...
     \end{enumerate}
   \end{prv}
 
@@ -422,11 +440,12 @@
   \end{prop}
 
   \begin{defn}
-    Soit $\beta$ un ordinal.
+    Soit $\beta$ un ordinal non vide.
     \begin{itemize}
       \item S'il existe $\alpha$ tel que $\beta = \alpha + 1$ alors on dit que $\beta$ est un ordinal successeur ;
       \item Sinon, c'est un ordinal limite.
         %QV : Il me semble que dans le cours de Natacha on exclut 0 des ordinaux limites.
+        %HS : Oui ça me semble douteux aussi
     \end{itemize}
   \end{defn}
 
@@ -497,11 +516,12 @@
     On suppose que :
     \begin{itemize}
       \item $\emptyset$ satisfait $\mathcal{P}$ ;
-      \item pour tout ordinal $\alpha$ tel que, si tout $\beta < \alpha$ satisfait $\mathcal{P}$, alors $\alpha$ satisfait $\mathcal{P}$ :
+      \item pour tout ordinal non vide $\alpha$ tel que, si tout $\beta < \alpha$ satisfait $\mathcal{P}$, alors $\alpha$ satisfait $\mathcal{P}$ :
         \[
         \forall \alpha, \: (\forall \beta < \alpha, \: \mathcal{P}(\beta)) \implies \mathcal{P}(\alpha) \;
         ;\] 
       %QV : La première hypothèse est inclue dans la deuxième.
+      %HS : plus maintenant :)
     \end{itemize}
     alors tous les ordinaux satisfont $\mathcal{P}$.
   \end{thm}
@@ -531,6 +551,7 @@
   \begin{prv}
     En exercice.
     %QV : N'est pas juste une compréhension avec l'axiome de l'infini ?
+    %HS : Oui normalement, mais je pense que c'est surtout un ordinal qui est limite, et en plus le plus petit.
   \end{prv}
 
   \begin{lem}
@@ -558,12 +579,13 @@
     Tout ensemble bien ordonné est isomorphe à un ordinal. Cet ordinal ainsi que l'isomorphisme sont uniques.
   \end{thm}
   \begin{prv}
-    Cette preuve ressemble à une induction sans en être une.
+    Cette preuve ressemble à une induction sans en être une.\footnote{Ceci vient du fait qu'une preuve par induction correspond à considérer un contre-exemple minimal, ce qui est exactement ce que l'on fait dans le reste de la preuve.}
     %QV : En fait c'en est vraiment une, une induction n'est rien d'autre qu'une preuve par l'absurde où on considère un contre-exemple minimal.
+    %HS : J'aime bien cette explication, je la vole :) (surtout que c'est ce que fait la preuve)
     On aura le droit d'en faire quand on aura le théorème.
 
     Si l'isomorphisme existe, il est unique grâce au lemme précédent.
-    En effet, s'il y en a deux $f$ et $g$ alors $f \circ g^{-1}$ est un isomorphisme entre deux ordinaux égaux, donc c'est l'identité.
+    En effet, s'il y en a deux $f$ et $g$ alors $f \circ g^{-1}$ est un automorphisme, donc c'est l'identité.
 
     Notons $\mathcal{P}(x)$ la propriété "il existe un ordinal $\alpha_x$ et un isomorphisme $f_x : S_{\le x} \to \alpha_x$" où $S_{\le x} := \{y \in X \mid y \le x\}$.
     %QV : Il est un peu plus naturel de considérer $S_{< x}$ qui correspond à un ordinal là où $S_{\le x}$ correspond à son successeur.
@@ -577,12 +599,14 @@
     \begin{itemize}
       \item Si $Y$ a un plus grand élément $b$, alors il existe un isomorphisme $f_b : S_{\le b} \to \alpha_b$ (car on a $\mathcal{P}(b)$).
         Or, $S_{\le a} = S_{\le b} \cup \{a\}$ (il faudrait montrer que $Y$ est un segment initial de $X$).
-        Et, on construit $f_a : S_{\le a} \to \alpha_b \cup \{\alpha\}_b$ qui est un isomorphisme, donc $a \in Y$, \textit{\textbf{absurde}}.
+        Et, on construit $f_a : S_{\le a} \to \alpha_b \cup \{\alpha_b\}$ qui est un isomorphisme, donc $a \in Y$, \textit{\textbf{absurde}}.
       \item Si $Y$ n'a pas de plus grand élément, on considère $\alpha := \bigcup_{x \in Y} \alpha_x$ un ordinal.
         %QV : Où utilises-tu le fait que $Y$ n'a pas de plus grand élément ?
+        %HS : J'ai l'impression que c'est utilisé uniquement pour avoir x < \alpha (c.f. ci-dessous)
         Pour tout $x \in Y$ il existe un isomorphisme $f_x$ de $S_{\le x}$ dans $\alpha_x$.
         Si on prend $x < y < \alpha$ alors  $(f_y)_{|S_{\le x}}$ est un isomorphisme et, par unicité, on a donc que $f_y$ prolonge $f_x$.
         %QV : Tu utilises l'axiome du choix, ça peut être intéressant de le faire remarquer.
+        %HS : Oui pourquoi pas... à voir s'il y a un intérêt
         On peut définir un isomorphisme $f$ comme union des $f_{x}$ pour $x \in Y$.
         C'est un isomorphisme de $S_{< a}$ dans $\beta := \bigcup_{x < \alpha} \alpha_x$.
         On peut prolonger $f$ en $f_X : S_{\le a} \to \beta + 1$ où $a \mapsto \beta$, d'où $a \le Y$, \textit{\textbf{absurde}}.
@@ -644,8 +668,10 @@
 
   \section{Axiome de choix et variantes équivalentes.}
 
-  Les axiomes du choix sont exprimable au premier ordre !
+  Les axiomes du choix sont exprimable au premier ordre. On donne trois formulations "directes" et deux lemmes.
+  Dans la suite de cette section, nous allons montrer que ces énoncés sont équivalents.
   %QV : Est-ce vraiment surprenant ?
+  %HS : C'est vrai que c'est peut-être un peu trop enthousiaste
 
   \phantomsection
   \begin{description}
